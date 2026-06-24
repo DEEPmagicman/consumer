@@ -522,9 +522,6 @@ final class VenueService {
             String?
         ) -> Void
     ) {
-        
-        Loader.show()
-        
         AFWrapper.getRequest(
             APIBuilder.deepLinkURL(id),
             params: nil,
@@ -684,9 +681,6 @@ final class VenueService {
             _ venueId: String?
         ) -> Void
     ) {
-        
-        Loader.show()
-        
         AFWrapper.getRequest(
             APIBuilder.deepLinkURL(id),
             params: nil,

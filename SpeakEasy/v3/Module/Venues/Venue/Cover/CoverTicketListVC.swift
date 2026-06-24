@@ -32,6 +32,7 @@ final class CoverTicketListVC: UIViewController {
     private let stickyTopBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let stickyTicketsTitleContainer = UIView()
     private let stickyTicketsTitleLabel = UILabel()
+    private let venueService = VenueService()
 
     // MARK: - Public
 
@@ -59,9 +60,9 @@ final class CoverTicketListVC: UIViewController {
     private var currentStep: FlowStep = .coverTickets
     private var tableViewHeightObserver: NSKeyValueObservation?
     private var lastTableContentHeight: CGFloat = 0
-    private var lastScrollBottomInset: CGFloat = -1
     private var isCheckoutNavigationInProgress = false
     private var isFreeBookingInProgress = false
+    private var isSocketRefreshInProgress = false
 
     private var isVenueOpen: Bool {
         venueDetails?.venueSettings?.bookingStatus?.uppercased() == "OPEN"
@@ -168,7 +169,7 @@ final class CoverTicketListVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight(animated: false)
-        updateScrollAllowance()
+        normalizeScrollInsets()
         updateStickyNavigation(for: scrollView.contentOffset.y)
         updateVenueLogoCornerRadius()
     }
@@ -176,6 +177,12 @@ final class CoverTicketListVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isCheckoutNavigationInProgress = false
+        registerSocketDelegate()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unregisterSocketDelegate()
     }
 
     deinit {
@@ -187,12 +194,22 @@ final class CoverTicketListVC: UIViewController {
 
 private extension CoverTicketListVC {
 
+    func registerSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+
+    func unregisterSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+    }
+
     func setupScrollBehavior() {
         scrollView.delegate = self
         scrollView.isScrollEnabled = true
         scrollView.bounces = false
         scrollView.alwaysBounceVertical = false
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.delaysContentTouches = false
         if #available(iOS 11.0, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
@@ -241,9 +258,13 @@ private extension CoverTicketListVC {
         venueImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
 
         venueName.text = venueDetails?.name ?? ""
-        timeLbl.text = venueDetails?.timezone
+        let displayCity = venueDetails?.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let locationText = displayCity?.isEmpty == false
+            ? displayCity
+            : venueDetails?.timezone
+        timeLbl.text = locationText
         navVenueNameLbl.text = venueDetails?.name ?? ""
-        navTimeLbl.text = venueDetails?.timezone
+        navTimeLbl.text = locationText
 
         if let hexColor = venueDetails?.venueSettings?.whiteLabelColor {
             timeLbl.textColor = UIColor(hex: hexColor)
@@ -331,8 +352,11 @@ private extension CoverTicketListVC {
     }
 
     func setupCoverTickets() {
+        let selectedTicketIds = Set(selectedCoverTickets.map { $0.id })
+
         guard let list = venueDetails?.coverTicket else {
             coverTickets = []
+            coverTicketCount.removeAll()
             tableView.reloadData()
             updateCheckoutState()
             return
@@ -341,6 +365,17 @@ private extension CoverTicketListVC {
         coverTickets = list.filter {
             !($0.isDeleted ?? false) &&
             $0.status == "ENABLED"
+        }
+
+        if !selectedTicketIds.isEmpty {
+            var remappedCounts: [Int: Int] = [:]
+            coverTickets.enumerated().forEach { index, ticket in
+                guard selectedTicketIds.contains(ticket.id) else { return }
+                remappedCounts[index] = selectedCoverTickets.first(where: { $0.id == ticket.id })?.selectedQuantity ?? 0
+            }
+            coverTicketCount = remappedCounts.filter { $0.value > 0 }
+        } else {
+            coverTicketCount.removeAll()
         }
 
         tableView.reloadData()
@@ -377,27 +412,39 @@ private extension CoverTicketListVC {
         if animated {
             UIView.animate(withDuration: 0.2) {
                 updates()
-                self.updateScrollAllowance()
+                self.normalizeScrollInsets()
             }
         } else {
             updates()
-            updateScrollAllowance()
+            normalizeScrollInsets()
         }
     }
 
-    func updateScrollAllowance() {
-        guard scrollView.bounds.height > 0 else { return }
-
-        let sectionOrigin = ticketsSectionView.convert(CGPoint.zero, to: scrollView)
-        let targetOffset = max(scrollView.contentOffset.y + sectionOrigin.y, 0)
-        let requiredBottomInset = max(0, targetOffset + scrollView.bounds.height - scrollView.contentSize.height)
-        let bottomInset = ceil(requiredBottomInset)
-
-        guard abs(bottomInset - lastScrollBottomInset) > 1 else { return }
-
-        lastScrollBottomInset = bottomInset
+    func normalizeScrollInsets() {
+        let bottomInset: CGFloat = 0
         scrollView.contentInset.bottom = bottomInset
         scrollView.scrollIndicatorInsets.bottom = bottomInset
+        clampScrollOffsetIfNeeded()
+    }
+
+    func clampScrollOffsetIfNeeded() {
+        let minOffsetY = -scrollView.contentInset.top
+        let maxOffsetY = max(
+            minOffsetY,
+            scrollView.contentSize.height + scrollView.contentInset.bottom - scrollView.bounds.height
+        )
+
+        if scrollView.contentOffset.y > maxOffsetY {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: maxOffsetY),
+                animated: false
+            )
+        } else if scrollView.contentOffset.y < minOffsetY {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: minOffsetY),
+                animated: false
+            )
+        }
     }
 
     func refreshScrollLayout(animated: Bool) {
@@ -406,7 +453,7 @@ private extension CoverTicketListVC {
 
         let updates = {
             self.view.layoutIfNeeded()
-            self.updateScrollAllowance()
+            self.normalizeScrollInsets()
             self.updateStickyNavigation(for: self.scrollView.contentOffset.y)
             self.updateStickyTicketsTitle()
         }
@@ -435,6 +482,29 @@ private extension CoverTicketListVC {
         navBarHiddenView.alpha = progress
         headerView.alpha = 1 - progress
         updateStickyTicketsTitle()
+    }
+
+    func settleStickyNavigation() {
+        let headerHeight = max(headerView.bounds.height, 1)
+        let navHeight = max(navBarHiddenView.bounds.height, 1)
+        let threshold = max(headerHeight - navHeight, 1)
+        let progress = min(max(scrollView.contentOffset.y / threshold, 0), 1)
+        let shouldCollapse = progress >= 0.5
+        let targetAlpha: CGFloat = shouldCollapse ? 1 : 0
+
+        navBarHiddenView.isHidden = targetAlpha == 0
+
+        UIView.animate(
+            withDuration: 0.18,
+            delay: 0,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
+            self.navBarHiddenView.alpha = targetAlpha
+            self.headerView.alpha = 1 - targetAlpha
+        } completion: { _ in
+            self.navBarHiddenView.isHidden = targetAlpha == 0
+            self.updateStickyTicketsTitle()
+        }
     }
 
     func syncStickyTicketsTitle() {
@@ -468,11 +538,63 @@ extension CoverTicketListVC: UIScrollViewDelegate {
         guard scrollView === self.scrollView else { return }
         updateStickyNavigation(for: max(scrollView.contentOffset.y, 0))
     }
+
+    func scrollViewDidEndDragging(
+        _ scrollView: UIScrollView,
+        willDecelerate decelerate: Bool
+    ) {
+        guard scrollView === self.scrollView, !decelerate else { return }
+        settleStickyNavigation()
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView === self.scrollView else { return }
+        settleStickyNavigation()
+    }
+
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        guard scrollView === self.scrollView else { return }
+        settleStickyNavigation()
+    }
 }
 
 // MARK: - API
 
 private extension CoverTicketListVC {
+
+    func refreshVenueFromSocket(clearSelection: Bool) {
+        guard !isSocketRefreshInProgress else { return }
+
+        let venueUniqueId = venueDetails?.uniqueId ?? ""
+        guard !venueUniqueId.isEmpty else { return }
+
+        isSocketRefreshInProgress = true
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, _, venueDetail in
+            guard let self else { return }
+
+            self.isSocketRefreshInProgress = false
+
+            guard isSuccess, let venueDetail else { return }
+
+            self.venueDetails = venueDetail
+            self.setupScreen()
+
+            if clearSelection {
+                self.coverTicketCount.removeAll()
+                self.upSellTicketCount.removeAll()
+                self.currentStep = .coverTickets
+            }
+
+            self.setupCoverTickets()
+            self.getUpsellTickets()
+            self.updateCheckoutState()
+            self.refreshScrollLayoutAfterUpdates()
+        }
+    }
 
     func getUpsellTickets() {
         guard let venueId = venueDetails?.id, !venueId.isEmpty else {
@@ -571,7 +693,7 @@ private extension CoverTicketListVC {
                 self.continueToCheckoutBtn.alpha = 1
                 self.continueToCheckoutBtn.transform = .identity
                 self.view.layoutIfNeeded()
-                self.updateScrollAllowance()
+                self.normalizeScrollInsets()
             } completion: { _ in
                 self.refreshScrollLayoutAfterUpdates()
             }
@@ -713,17 +835,48 @@ extension CoverTicketListVC {
         }
     }
 
-    private func plusBtnClicked(at indexPath: IndexPath) {
+    private func applyCoverSelectionExclusivity(for index: Int) {
+        guard coverTickets.indices.contains(index) else { return }
+
+        let isCustomTicket = coverTickets[index].isCustom == true
+
+        Array(coverTicketCount.keys).forEach { selectedIndex in
+            guard coverTickets.indices.contains(selectedIndex),
+                  selectedIndex != index
+            else {
+                return
+            }
+
+            let selectedIsCustom = coverTickets[selectedIndex].isCustom == true
+            if selectedIsCustom != isCustomTicket {
+                coverTicketCount.removeValue(forKey: selectedIndex)
+            }
+        }
+    }
+
+    private func incrementCoverTicket(at indexPath: IndexPath) {
         guard isVenueOpen else { return }
+        guard indexPath.row < coverTickets.count else { return }
+        guard coverTickets[indexPath.row].status == "ENABLED" else { return }
+
+        applyCoverSelectionExclusivity(for: indexPath.row)
         guard canSelectMoreTickets() else { return }
 
+        coverTicketCount[indexPath.row] = (coverTicketCount[indexPath.row] ?? 0) + 1
+        updateCheckoutState()
+        tableView.reloadData()
+        refreshScrollLayoutAfterUpdates()
+    }
+
+    private func plusBtnClicked(at indexPath: IndexPath) {
         switch currentStep {
         case .coverTickets:
-            guard indexPath.row < coverTickets.count else { return }
-            guard coverTickets[indexPath.row].status == "ENABLED" else { return }
-            coverTicketCount[indexPath.row] = (coverTicketCount[indexPath.row] ?? 0) + 1
+            incrementCoverTicket(at: indexPath)
+            return
 
         case .addOns:
+            guard isVenueOpen else { return }
+            guard canSelectMoreTickets() else { return }
             guard indexPath.row < upSellTickets.count else { return }
             upSellTicketCount[indexPath.row] = (upSellTicketCount[indexPath.row] ?? 0) + 1
         }
@@ -736,12 +889,24 @@ extension CoverTicketListVC {
     private func minusBtnClicked(at indexPath: IndexPath) {
         switch currentStep {
         case .coverTickets:
+            guard indexPath.row < coverTickets.count else { return }
             let current = coverTicketCount[indexPath.row] ?? 0
-            coverTicketCount[indexPath.row] = max(0, current - 1)
+            let newCount = max(0, current - 1)
+            if newCount > 0 {
+                coverTicketCount[indexPath.row] = newCount
+            } else {
+                coverTicketCount.removeValue(forKey: indexPath.row)
+            }
 
         case .addOns:
+            guard indexPath.row < upSellTickets.count else { return }
             let current = upSellTicketCount[indexPath.row] ?? 0
-            upSellTicketCount[indexPath.row] = max(0, current - 1)
+            let newCount = max(0, current - 1)
+            if newCount > 0 {
+                upSellTicketCount[indexPath.row] = newCount
+            } else {
+                upSellTicketCount.removeValue(forKey: indexPath.row)
+            }
         }
 
         updateCheckoutState()
@@ -873,15 +1038,14 @@ extension CoverTicketListVC: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         guard isVenueOpen else { return }
-        guard canSelectMoreTickets() else { return }
 
         switch currentStep {
         case .coverTickets:
-            guard indexPath.row < coverTickets.count else { return }
-            guard coverTickets[indexPath.row].status == "ENABLED" else { return }
-            coverTicketCount[indexPath.row] = (coverTicketCount[indexPath.row] ?? 0) + 1
+            incrementCoverTicket(at: indexPath)
+            return
 
         case .addOns:
+            guard canSelectMoreTickets() else { return }
             guard indexPath.row < upSellTickets.count else { return }
             upSellTicketCount[indexPath.row] = (upSellTicketCount[indexPath.row] ?? 0) + 1
         }
@@ -935,6 +1099,43 @@ extension CoverTicketListVC: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
         onClickContinueBtn()
+    }
+}
+
+// MARK: - WebSocket
+
+extension CoverTicketListVC: WebSocketCallBackDelegate {
+
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        guard isCurrentVenueCoverTicketUpdate(ticket) else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        guard isCurrentVenueAddOnUpdate(ticket) else { return }
+        refreshVenueFromSocket(clearSelection: currentStep == .addOns)
+    }
+
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        guard venueDetails?.id == venueId else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        guard venueDetails?.id == venueId || venueDetails?.uniqueId == uniqueId else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    private func isCurrentVenueCoverTicketUpdate(_ tickets: [CoverTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.venueId == currentVenueId }
+    }
+
+    private func isCurrentVenueAddOnUpdate(_ tickets: [UpSellTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.addOns?.venueId == currentVenueId }
     }
 }
 

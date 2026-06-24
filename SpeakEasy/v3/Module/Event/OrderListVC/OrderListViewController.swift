@@ -60,6 +60,10 @@ final class OrderListViewController: UIViewController {
     private var savedPaymentMethods: [PaymentMethod] = []
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
+    private var isCancellingTransaction = false
+    private var wasInteractivePopGestureEnabled = true
+    private var countdownTimer: Timer?
+    private var remainingSeconds: Int = 5 * 60
 
     // MARK: - UI state
     private var isTermsAccepted = true
@@ -82,6 +86,8 @@ final class OrderListViewController: UIViewController {
     private var appliedPromoCode = ""
     private var eventQuestions: [Questions] = []
     private var questionAnswers: [String: Any] = [:]
+    private let holdTimerView = UIView()
+    private let holdTimerLabel = UILabel()
 
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -100,6 +106,8 @@ final class OrderListViewController: UIViewController {
         setupHeaderData()
         calculateTotal()
         setupTermsText()
+        setupHoldTimerView()
+        startCountdown()
         fetchPaymentIntentAndSetup(promoCode: "")
         fetchEventQuestions()
         getBooking(id: bookingId)
@@ -116,10 +124,22 @@ final class OrderListViewController: UIViewController {
         setupPosterBackground()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
+    }
+
     deinit {
         ticketTableView.removeObserver(self, forKeyPath: "contentSize")
         feesAndTaxesTableView.removeObserver(self, forKeyPath: "contentSize")
         questionContentSizeObservation?.invalidate()
+        countdownTimer?.invalidate()
     }
 
     // MARK: - Setup
@@ -292,6 +312,81 @@ final class OrderListViewController: UIViewController {
         }
     }
 
+    private func setupHoldTimerView() {
+        guard holdTimerView.superview == nil,
+              let contentStack = yourOrderView.superview as? UIStackView else { return }
+
+        holdTimerView.translatesAutoresizingMaskIntoConstraints = false
+        holdTimerView.backgroundColor = UIColor.black.withAlphaComponent(0.28)
+        holdTimerView.layer.cornerRadius = 16
+        holdTimerView.layer.cornerCurve = .continuous
+        holdTimerView.layer.borderWidth = 1
+        holdTimerView.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
+        holdTimerView.clipsToBounds = true
+
+        holdTimerLabel.translatesAutoresizingMaskIntoConstraints = false
+        holdTimerLabel.textColor = AppColor.primaryWhiteColor
+        holdTimerLabel.font = Constant.Font.geistMedium(size: 14)
+        holdTimerLabel.textAlignment = .center
+        holdTimerLabel.numberOfLines = 1
+
+        holdTimerView.addSubview(holdTimerLabel)
+        NSLayoutConstraint.activate([
+            holdTimerLabel.topAnchor.constraint(equalTo: holdTimerView.topAnchor, constant: 12),
+            holdTimerLabel.leadingAnchor.constraint(equalTo: holdTimerView.leadingAnchor, constant: 16),
+            holdTimerLabel.trailingAnchor.constraint(equalTo: holdTimerView.trailingAnchor, constant: -16),
+            holdTimerLabel.bottomAnchor.constraint(equalTo: holdTimerView.bottomAnchor, constant: -12)
+        ])
+
+        if let orderIndex = contentStack.arrangedSubviews.firstIndex(of: yourOrderView) {
+            contentStack.insertArrangedSubview(holdTimerView, at: orderIndex)
+        } else {
+            contentStack.insertArrangedSubview(holdTimerView, at: 0)
+        }
+
+        updateTimerLabel()
+    }
+
+    private func startCountdown() {
+        countdownTimer?.invalidate()
+        updateTimerLabel()
+
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            guard let self else { return }
+            self.remainingSeconds -= 1
+
+            if self.remainingSeconds <= 0 {
+                timer.invalidate()
+                self.remainingSeconds = 0
+                self.updateTimerLabel()
+                self.timerExpired()
+            } else {
+                self.updateTimerLabel()
+            }
+        }
+    }
+
+    private func updateTimerLabel() {
+        let minutes = remainingSeconds / 60
+        let seconds = remainingSeconds % 60
+        holdTimerLabel.text = "Tickets held for \(minutes) mins \(seconds) secs"
+    }
+
+    private func timerExpired() {
+        guard !isCancellingTransaction else { return }
+
+        let okAction = UIAlertAction(title: "Ok", style: .default) { [weak self] _ in
+            self?.cancelBookingAndReturnToEventDetails()
+        }
+
+        Alert.showAlertSheet(
+            style: .alert,
+            title: "Sorry, your ticket reservation has expired, please try again",
+            message: "",
+            actions: [okAction]
+        )
+    }
+
     private func setupPosterBackground() {
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -332,10 +427,12 @@ final class OrderListViewController: UIViewController {
         termsAndConditionsLbl.textColor = .white
         termsAndConditionsLbl.isUserInteractionEnabled = true
         termsAndConditionsLbl.numberOfLines = collapsedLines
+        termsAndConditionsLbl.lineBreakMode = .byWordWrapping
         venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
         venueMessageLbl.textColor = .white
         venueMessageLbl.isUserInteractionEnabled = true
         venueMessageLbl.numberOfLines = collapsedLines
+        venueMessageLbl.lineBreakMode = .byWordWrapping
 
         let termsTap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
         termsAndConditionsLbl.addGestureRecognizer(termsTap)
@@ -381,7 +478,14 @@ final class OrderListViewController: UIViewController {
 
         let needsToggle = shouldShowAgreementToggle(for: text, label: label)
         let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded || !needsToggle ? text : collapsedAgreementPreview(from: text)
+        let bodyText = isExpanded || !needsToggle
+            ? text
+            : collapsedAgreementPreview(
+                from: text,
+                label: label,
+                font: Constant.Font.geistMedium(size: 12),
+                toggleText: toggleText
+            )
         let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
 
         let attributed = NSMutableAttributedString(
@@ -400,7 +504,11 @@ final class OrderListViewController: UIViewController {
         }
 
         label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.lineBreakMode = .byWordWrapping
         label.attributedText = attributed
+        label.invalidateIntrinsicContentSize()
+        label.superview?.invalidateIntrinsicContentSize()
+        label.superview?.setNeedsLayout()
     }
 
     private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
@@ -412,15 +520,56 @@ final class OrderListViewController: UIViewController {
             attributes: [.font: font],
             context: nil
         ).height
-        return textHeight > (font.lineHeight * CGFloat(collapsedLines)) + 2
+        return textHeight > collapsedAgreementHeight(for: font)
     }
 
-    private func collapsedAgreementPreview(from text: String) -> String {
+    private func collapsedAgreementPreview(
+        from text: String,
+        label: UILabel,
+        font: UIFont,
+        toggleText: String
+    ) -> String {
         let cleanText = cleanAgreementText(text)
-        let maxCharacters = 140
-        guard cleanText.count > maxCharacters else { return cleanText }
-        let endIndex = cleanText.index(cleanText.startIndex, offsetBy: maxCharacters)
-        return String(cleanText[..<endIndex]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+        let width = label.bounds.width > 0 ? label.bounds.width : max(view.bounds.width - 64, 240)
+        let maxHeight = collapsedAgreementHeight(for: font)
+
+        func height(for value: String) -> CGFloat {
+            (value as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: font],
+                context: nil
+            ).height
+        }
+
+        guard height(for: "\(cleanText) \(toggleText)") > maxHeight else {
+            return cleanText
+        }
+
+        var low = 0
+        var high = cleanText.count
+        var best = ""
+
+        while low <= high {
+            let mid = (low + high) / 2
+            let endIndex = cleanText.index(cleanText.startIndex, offsetBy: mid)
+            let candidate = String(cleanText[..<endIndex])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let display = "\(candidate)... \(toggleText)"
+
+            if height(for: display) <= maxHeight {
+                best = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+        }
+
+        return best.isEmpty ? "..." : "\(best)..."
+    }
+
+    private func collapsedAgreementHeight(for font: UIFont) -> CGFloat {
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
     }
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
@@ -524,7 +673,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
-        Navigate.to.back(self)
+        showCancelTransactionPrompt()
     }
 
     @IBAction func onClickApplyBtn(_ sender: Any) {
@@ -627,6 +776,48 @@ final class OrderListViewController: UIViewController {
             if isSuccess {
                 self.booking = booking
             }
+        }
+    }
+
+    private func showCancelTransactionPrompt() {
+        guard !isPaymentInitiated, !isCancellingTransaction else { return }
+        presentTransactionCancelConfirmation { [weak self] in
+            self?.cancelBookingAndReturnToEventDetails()
+        }
+    }
+
+    private func handlePaymentCanceled() {
+        isPaymentInitiated = false
+        Alert.showToast("Payment canceled.")
+        cancelBookingAndReturnToEventDetails()
+    }
+
+    private func cancelBookingAndReturnToEventDetails() {
+        guard !isCancellingTransaction else { return }
+        isCancellingTransaction = true
+        countdownTimer?.invalidate()
+
+        guard let bookingId, !bookingId.isEmpty else {
+            isCancellingTransaction = false
+            returnToEventDetails(animated: false)
+            return
+        }
+
+        paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.isCancellingTransaction = false
+                self.returnToEventDetails(animated: false)
+            }
+        }
+    }
+
+    private func returnToEventDetails(animated: Bool) {
+        guard let navigationController else { return }
+        if let eventDetailsVC = navigationController.viewControllers.last(where: { $0 is EventDetailsVC }) {
+            navigationController.popToViewController(eventDetailsVC, animated: animated)
+        } else {
+            navigationController.popViewController(animated: animated)
         }
     }
 
@@ -837,8 +1028,27 @@ final class OrderListViewController: UIViewController {
             return !hasValidAnswer(for: question)
         }) else { return true }
 
-        Alert.showToast("Please answer: \(invalidQuestion.question)")
+        showRequiredQuestionAlert(for: invalidQuestion)
         return false
+    }
+
+    private func showRequiredQuestionAlert(for question: Questions) {
+        let action = UIAlertAction(title: "Answer Now", style: .default) { [weak self] _ in
+            self?.scrollToQuestion(question)
+        }
+
+        Alert.showAlertSheet(
+            style: .alert,
+            title: "Additional information required",
+            message: "Please answer: \(question.question)",
+            actions: [action]
+        )
+    }
+
+    private func scrollToQuestion(_ question: Questions) {
+        guard let row = eventQuestions.firstIndex(where: { $0.id == question.id }) else { return }
+        let indexPath = IndexPath(row: row, section: 0)
+        questionTableView.scrollToRow(at: indexPath, at: .middle, animated: true)
     }
 
     private func hasValidAnswer(for question: Questions) -> Bool {
@@ -896,7 +1106,7 @@ final class OrderListViewController: UIViewController {
     // MARK: - Stripe Checkout
 
     private func startPaymentFlow() {
-        guard !isPaymentInitiated else { return }
+        guard !isPaymentInitiated, !isCancellingTransaction else { return }
 
         guard isTermsAccepted || termsAndConditions.isHidden else {
             Alert.showToast("Please accept the terms and conditions")
@@ -911,10 +1121,12 @@ final class OrderListViewController: UIViewController {
         guard validateQuestionAnswers() else { return }
 
         isPaymentInitiated = true
+        showPurchaseLoading()
         submitQuestionAnswersIfNeeded { [weak self] isSubmitted in
             guard let self else { return }
             guard isSubmitted else {
                 self.isPaymentInitiated = false
+                self.hidePurchaseLoading()
                 return
             }
             self.continuePaymentFlow()
@@ -929,6 +1141,7 @@ final class OrderListViewController: UIViewController {
 
         guard let paymentSheet else {
             isPaymentInitiated = false
+            hidePurchaseLoading()
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
@@ -940,9 +1153,11 @@ final class OrderListViewController: UIViewController {
             case .completed:
                 self.confirmPaymentAndNavigate()
             case .canceled:
-                self.isPaymentInitiated = false
+                self.hidePurchaseLoading()
+                self.handlePaymentCanceled()
             case .failed:
                 self.isPaymentInitiated = false
+                self.hidePurchaseLoading()
                 Alert.showToast("Payment failed. Please try again.")
             }
         }
@@ -953,6 +1168,7 @@ final class OrderListViewController: UIViewController {
     private func confirmPaymentAndNavigate() {
         guard let bookingId else {
             isPaymentInitiated = false
+            hidePurchaseLoading()
             Alert.showToast("Missing booking information.")
             return
         }
@@ -971,7 +1187,8 @@ final class OrderListViewController: UIViewController {
                 self.isPaymentInitiated = false
 
                 if isSuccess {
-                    Navigate.to.ticketConfirmationVC(
+                    self.countdownTimer?.invalidate()
+                    Navigate.to.showQRCode(
                         self,
                         booking: nil,
                         bookingId: bookingId,
@@ -984,39 +1201,14 @@ final class OrderListViewController: UIViewController {
         }
     }
 
-    private let purchaseLoadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.color = .white
-        indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
-
     private func showPurchaseLoading() {
         checkOutView.isUserInteractionEnabled = false
-        if purchaseLoadingIndicator.superview == nil {
-            view.addSubview(purchaseLoadingIndicator)
-            NSLayoutConstraint.activate([
-                purchaseLoadingIndicator.centerXAnchor.constraint(equalTo: checkOutView.centerXAnchor),
-                purchaseLoadingIndicator.centerYAnchor.constraint(equalTo: checkOutView.centerYAnchor)
-            ])
-        }
-        purchaseLoadingIndicator.alpha = 0
-        purchaseLoadingIndicator.startAnimating()
-        UIView.animate(withDuration: 0.2) {
-            self.checkOutView.alpha = 0.4
-            self.purchaseLoadingIndicator.alpha = 1
-        }
+        checkOutView.showLoader()
     }
 
     private func hidePurchaseLoading() {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.checkOutView.alpha = 1
-            self.purchaseLoadingIndicator.alpha = 0
-        }, completion: { _ in
-            self.purchaseLoadingIndicator.stopAnimating()
-            self.checkOutView.isUserInteractionEnabled = true
-        })
+        checkOutView.hideLoader()
+        checkOutView.isUserInteractionEnabled = true
     }
 
 }
@@ -1108,6 +1300,195 @@ extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
         startPaymentFlow()
+    }
+}
+
+// MARK: - Transaction Cancel Popup
+
+final class TransactionCancelPopupVC: UIViewController {
+
+    private let dimmedView = UIView()
+    private let popupView = GradientBorderCardView()
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
+    private let keepCheckoutBtn = PrimaryButton()
+    private let cancelTransactionBtn = PrimaryButton()
+
+    private let titleText: String
+    private let subtitleText: String
+    private let keepTitle: String
+    private let cancelTitle: String
+    private let onCancelTransaction: () -> Void
+
+    init(
+        title: String = "Cancel transaction?",
+        subtitle: String = "Your reserved tickets will be released and this checkout will close.",
+        keepTitle: String = "Continue to checkout",
+        cancelTitle: String = "Cancel transaction",
+        onCancelTransaction: @escaping () -> Void
+    ) {
+        self.titleText = title
+        self.subtitleText = subtitle
+        self.keepTitle = keepTitle
+        self.cancelTitle = cancelTitle
+        self.onCancelTransaction = onCancelTransaction
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .overFullScreen
+        modalTransitionStyle = .crossDissolve
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animateIn()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+
+    private func setupUI() {
+        view.backgroundColor = .clear
+
+        dimmedView.alpha = 0
+        dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        dimmedView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(dimmedView)
+
+        let outsideTap = UITapGestureRecognizer(target: self, action: #selector(onClickKeepCheckout))
+        dimmedView.addGestureRecognizer(outsideTap)
+        dimmedView.isUserInteractionEnabled = true
+
+        popupView.translatesAutoresizingMaskIntoConstraints = false
+        popupView.fillColor = AppColor.primaryColor.withAlphaComponent(0.5).cgColor
+        popupView.showsBlur = true
+        popupView.blurAlpha = 0.9
+        popupView.cornerRadius = 30
+        popupView.layer.cornerCurve = .continuous
+        popupView.clipsToBounds = true
+        popupView.alpha = 0
+        view.addSubview(popupView)
+
+        titleLabel.text = titleText
+        titleLabel.textColor = AppColor.primaryWhiteColor
+        titleLabel.font = Constant.Font.geistMedium(size: 22)
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        popupView.addSubview(titleLabel)
+
+        subtitleLabel.text = subtitleText
+        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 15)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        popupView.addSubview(subtitleLabel)
+
+        keepCheckoutBtn.configure(title: keepTitle, fontSize: 17, cornerRadius: 16)
+        keepCheckoutBtn.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.08)
+        keepCheckoutBtn.setTitleColor(AppColor.primaryWhiteColor, for: .normal)
+        keepCheckoutBtn.addTarget(self, action: #selector(onClickKeepCheckout), for: .touchUpInside)
+        popupView.addSubview(keepCheckoutBtn)
+
+        cancelTransactionBtn.configure(title: cancelTitle, fontSize: 17, cornerRadius: 16)
+        cancelTransactionBtn.backgroundColor = UIColor.systemRed.withAlphaComponent(0.95)
+        cancelTransactionBtn.setTitleColor(.white, for: .normal)
+        cancelTransactionBtn.addTarget(self, action: #selector(onClickCancelTransaction), for: .touchUpInside)
+        popupView.addSubview(cancelTransactionBtn)
+
+        NSLayoutConstraint.activate([
+            dimmedView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimmedView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimmedView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dimmedView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            popupView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            titleLabel.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 34),
+            titleLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 24),
+            titleLabel.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -24),
+
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            subtitleLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 24),
+            subtitleLabel.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -24),
+
+            keepCheckoutBtn.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 26),
+            keepCheckoutBtn.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 18),
+            keepCheckoutBtn.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -18),
+            keepCheckoutBtn.heightAnchor.constraint(equalToConstant: 50),
+
+            cancelTransactionBtn.topAnchor.constraint(equalTo: keepCheckoutBtn.bottomAnchor, constant: 12),
+            cancelTransactionBtn.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 18),
+            cancelTransactionBtn.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -18),
+            cancelTransactionBtn.heightAnchor.constraint(equalToConstant: 50),
+            cancelTransactionBtn.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -18)
+        ])
+    }
+
+    private func animateIn() {
+        popupView.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 0.82,
+            initialSpringVelocity: 0.4,
+            options: .curveEaseOut
+        ) {
+            self.dimmedView.alpha = 1
+            self.popupView.alpha = 1
+            self.popupView.transform = .identity
+        }
+    }
+
+    private func dismissSheet(completion: (() -> Void)? = nil) {
+        UIView.animate(withDuration: 0.24, delay: 0, options: [.curveEaseIn]) {
+            self.dimmedView.alpha = 0
+            self.popupView.alpha = 0
+            self.popupView.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+        } completion: { _ in
+            self.dismiss(animated: false, completion: completion)
+        }
+    }
+
+    @objc private func onClickKeepCheckout() {
+        dismissSheet()
+    }
+
+    @objc private func onClickCancelTransaction() {
+        keepCheckoutBtn.isUserInteractionEnabled = false
+        cancelTransactionBtn.showLoader(userInteraction: false)
+        let completion = onCancelTransaction
+        dismissSheet(completion: completion)
+    }
+}
+
+extension UIViewController {
+
+    func presentTransactionCancelConfirmation(
+        title: String = "Cancel transaction?",
+        subtitle: String = "Your reserved tickets will be released and this checkout will close.",
+        onCancelTransaction: @escaping () -> Void
+    ) {
+        let vc = TransactionCancelPopupVC(
+            title: title,
+            subtitle: subtitle,
+            onCancelTransaction: onCancelTransaction
+        )
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        present(vc, animated: false)
     }
 }
 

@@ -203,19 +203,18 @@ class TicketsTVC: UITableViewCell {
         // Price + selection UI
         if price == 0 {
             priceLbl.text = "FREE"
-            rsvpBtnView.isHidden = false
-            plusView.isHidden = true
         } else {
             priceLbl.text = "\(currency)\(price.decimalFormat(true))"
-            rsvpBtnView.isHidden = true
-            plusView.isHidden = false
-            plusBtn.isHidden = false
+        }
 
-            if selectedCount > 0 {
-                quantityLbl.isHidden = false
-                quantityLbl.text = "\(selectedCount)"
-                minusView.isHidden = false
-            }
+        rsvpBtnView.isHidden = true
+        plusView.isHidden = false
+        plusBtn.isHidden = false
+
+        if selectedCount > 0 {
+            quantityLbl.isHidden = false
+            quantityLbl.text = "\(selectedCount)"
+            minusView.isHidden = false
         }
 
         // Extra fees

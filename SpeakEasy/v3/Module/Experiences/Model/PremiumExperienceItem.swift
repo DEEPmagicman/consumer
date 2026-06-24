@@ -17,6 +17,7 @@ struct PremiumExperienceItem {
     let priceText: String
     let imageUrl: String
     let event: Event?
+    let seatingAreas: [SeatingArea]
 
     // MARK: - Designated Initializer
 
@@ -28,7 +29,8 @@ struct PremiumExperienceItem {
         guestText: String,
         priceText: String,
         imageUrl: String,
-        event: Event?
+        event: Event?,
+        seatingAreas: [SeatingArea] = []
     ) {
         self.id = id
         self.title = title
@@ -38,28 +40,46 @@ struct PremiumExperienceItem {
         self.priceText = priceText
         self.imageUrl = imageUrl
         self.event = event
+        self.seatingAreas = seatingAreas
     }
 }
 
 extension PremiumExperienceItem {
 
-    init(event: Event) {
+    init(event: Event, seatingAreas: [SeatingArea] = []) {
         self.init(
             id: event.id,
             title: event.title,
             venueName: Self.resolvedVenueName(event: event),
             dateText: Self.resolvedDateText(event: event),
-            guestText: Self.resolvedGuestText(event: event),
-            priceText: Self.resolvedPriceText(event: event),
+            guestText: Self.resolvedGuestText(
+                event: event,
+                seatingAreas: seatingAreas
+            ),
+            priceText: Self.resolvedPriceText(
+                event: event,
+                seatingAreas: seatingAreas
+            ),
             imageUrl: Self.resolvedImageUrl(key: event.flyer?.key),
-            event: event
+            event: event,
+            seatingAreas: seatingAreas
         )
     }
 
     init?(dictionary: [String: Any]) {
+        let eventDictionary = Self.resolvedEventDictionary(from: dictionary)
+        let eventSeatingAreas = Self.resolvedSeatingAreas(
+            dictionary: eventDictionary
+        )
+        let seatingAreas = eventSeatingAreas.isEmpty
+            ? Self.resolvedSeatingAreas(dictionary: dictionary)
+            : eventSeatingAreas
 
-        if let event = Self.decodeEvent(from: dictionary) {
-            self.init(event: event)
+        if let event = Self.decodeEvent(from: eventDictionary) {
+            self.init(
+                event: event,
+                seatingAreas: seatingAreas
+            )
             return
         }
 
@@ -78,10 +98,17 @@ extension PremiumExperienceItem {
             ) ?? "Premium Experience",
             venueName: Self.resolvedVenueName(dictionary: dictionary),
             dateText: Self.resolvedDateText(dictionary: dictionary),
-            guestText: Self.resolvedGuestText(dictionary: dictionary),
-            priceText: Self.resolvedPriceText(dictionary: dictionary),
+            guestText: Self.resolvedGuestText(
+                dictionary: dictionary,
+                seatingAreas: seatingAreas
+            ),
+            priceText: Self.resolvedPriceText(
+                dictionary: dictionary,
+                seatingAreas: seatingAreas
+            ),
             imageUrl: Self.resolvedImageUrl(dictionary: dictionary),
-            event: nil
+            event: nil,
+            seatingAreas: seatingAreas
         )
     }
 }
@@ -92,11 +119,143 @@ private extension PremiumExperienceItem {
         guard dictionary["startDateTime"] != nil else { return nil }
 
         do {
-            let data = try JSONSerialization.data(withJSONObject: dictionary)
+            let data = try JSONSerialization.data(
+                withJSONObject: eventPayloadForDecoding(dictionary)
+            )
             return try JSONDecoder().decode(Event.self, from: data)
         } catch {
             return nil
         }
+    }
+
+    static func resolvedEventDictionary(
+        from dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        if let nested = dictionary["event"] as? [String: Any] {
+            return nested
+        }
+
+        return dictionary
+    }
+
+    static func resolvedSeatingAreas(
+        dictionary: [String: Any]
+    ) -> [SeatingArea] {
+
+        let raw =
+        dictionary["seatingArea"] ??
+        dictionary["seatingAreas"]
+
+        guard let rawList = raw as? [[String: Any]] else {
+            return []
+        }
+
+        return [SeatingArea].parse(
+            rawList.map(sanitizedSeatingAreaPayload)
+        ) ?? []
+    }
+
+    static func eventPayloadForDecoding(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var payload = dictionary
+
+        payload["description"] = stringValue(payload["description"]) ?? ""
+        payload["isEnableOnlineTables"] =
+        boolValue(payload["isEnableOnlineTables"]) ?? false
+        payload["isEnable3DMap"] =
+        boolValue(payload["isEnable3DMap"]) ?? false
+        payload["isEnableReservationRequest"] =
+        boolValue(payload["isEnableReservationRequest"]) ?? false
+
+        if let venue = payload["venue"] as? [String: Any] {
+            payload["venue"] = sanitizedVenuePayload(venue)
+        }
+
+        if let customVenue = payload["customVenue"] as? [String: Any] {
+            payload["customVenue"] = sanitizedCustomVenuePayload(customVenue)
+        }
+
+        if let flyer = payload["flyer"] as? [String: Any] {
+            payload["flyer"] = sanitizedFlyerPayload(flyer)
+        }
+
+        if let seatingAreas = payload["seatingArea"] as? [[String: Any]] {
+            payload["seatingArea"] =
+            seatingAreas.map(sanitizedSeatingAreaPayload)
+        } else if let seatingAreas = payload["seatingAreas"] as? [[String: Any]] {
+            payload["seatingAreas"] =
+            seatingAreas.map(sanitizedSeatingAreaPayload)
+        }
+
+        return payload
+    }
+
+    static func sanitizedVenuePayload(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var venue = dictionary
+        venue["id"] = stringValue(venue["id"]) ?? ""
+        venue["uniqueId"] =
+        stringValue(venue["uniqueId"]) ?? stringValue(venue["id"]) ?? ""
+        venue["name"] = stringValue(venue["name"]) ?? ""
+        venue["address"] = stringValue(venue["address"]) ?? ""
+        venue["city"] = stringValue(venue["city"]) ?? ""
+        venue["pinCode"] = stringValue(venue["pinCode"])
+        venue["code"] = stringValue(venue["code"])
+        venue["status"] = stringValue(venue["status"]) ?? "ENABLED"
+        venue["createdAt"] = stringValue(venue["createdAt"]) ?? ""
+        venue["updatedAt"] = stringValue(venue["updatedAt"]) ?? ""
+        venue["lat"] = stringValue(venue["lat"]) ?? "0"
+        venue["lng"] = stringValue(venue["lng"]) ?? "0"
+        venue["isDeleted"] = boolValue(venue["isDeleted"]) ?? false
+
+        return venue
+    }
+
+    static func sanitizedCustomVenuePayload(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var venue = dictionary
+        venue["pinCode"] = stringValue(venue["pinCode"])
+        venue["lat"] = stringValue(venue["lat"])
+        venue["lng"] = stringValue(venue["lng"])
+
+        return venue
+    }
+
+    static func sanitizedFlyerPayload(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var flyer = dictionary
+        flyer["aspectRatio"] = stringValue(flyer["aspectRatio"])
+
+        return flyer
+    }
+
+    static func sanitizedSeatingAreaPayload(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var area = dictionary
+
+        [
+            "inquiryEnabled",
+            "hideCheckout",
+            "hidePricing",
+            "isDeleted"
+        ].forEach { key in
+            if let value = boolValue(area[key]) {
+                area[key] = value
+            }
+        }
+
+        return area
     }
 
     static func resolvedVenueName(event: Event) -> String {
@@ -179,7 +338,10 @@ private extension PremiumExperienceItem {
         return formatted == "No date Found" ? startDate : formatted
     }
 
-    static func resolvedGuestText(event: Event) -> String {
+    static func resolvedGuestText(
+        event: Event,
+        seatingAreas: [SeatingArea]
+    ) -> String {
         let ranges = (event.eventTicket ?? []).compactMap { ticket -> (Int, Int)? in
             guard
                 let minGuests = ticket.miniPurchaseQuantity,
@@ -192,10 +354,17 @@ private extension PremiumExperienceItem {
             return (Swift.max(minGuests, 1), maxGuests)
         }
 
-        return resolvedGuestText(from: ranges)
+        return resolvedGuestText(
+            from: ranges.isEmpty
+            ? guestRanges(from: seatingAreas)
+            : ranges
+        )
     }
 
-    static func resolvedGuestText(dictionary: [String: Any]) -> String {
+    static func resolvedGuestText(
+        dictionary: [String: Any],
+        seatingAreas: [SeatingArea]
+    ) -> String {
         if let text = firstString(
             in: dictionary,
             keys: ["guestText", "guestRange", "capacityText"]
@@ -246,7 +415,25 @@ private extension PremiumExperienceItem {
             }
         }
 
-        return resolvedGuestText(from: ranges)
+        return resolvedGuestText(
+            from: ranges.isEmpty
+            ? guestRanges(from: seatingAreas)
+            : ranges
+        )
+    }
+
+    static func guestRanges(
+        from seatingAreas: [SeatingArea]
+    ) -> [(Int, Int)] {
+
+        seatingAreas.compactMap { area in
+            guard let maxGuests = area.maxGuest, maxGuests > 0 else {
+                return nil
+            }
+
+            let minGuests = area.defaultGuest ?? 1
+            return (Swift.max(minGuests, 1), maxGuests)
+        }
     }
 
     static func resolvedGuestText(from ranges: [(Int, Int)]) -> String {
@@ -262,15 +449,21 @@ private extension PremiumExperienceItem {
         return "\(minGuests)-\(maxGuests) guests"
     }
 
-    static func resolvedPriceText(event: Event) -> String {
+    static func resolvedPriceText(
+        event: Event,
+        seatingAreas: [SeatingArea]
+    ) -> String {
         guard let price = event.lowestPriceTicket?.price, price > 0 else {
-            return "Request"
+            return resolvedPriceText(from: seatingAreas)
         }
 
         return formattedPrice(price)
     }
 
-    static func resolvedPriceText(dictionary: [String: Any]) -> String {
+    static func resolvedPriceText(
+        dictionary: [String: Any],
+        seatingAreas: [SeatingArea]
+    ) -> String {
         let price = doubleValue(
             dictionary["price"] ??
             dictionary["startingPrice"] ??
@@ -288,6 +481,29 @@ private extension PremiumExperienceItem {
             .filter { $0 > 0 } ?? []
 
         guard let minPrice = ticketPrices.min() else {
+            return resolvedPriceText(from: seatingAreas)
+        }
+
+        return formattedPrice(minPrice)
+    }
+
+    static func resolvedPriceText(
+        from seatingAreas: [SeatingArea]
+    ) -> String {
+
+        let prices = seatingAreas
+            .filter { $0.hidePricing != true }
+            .flatMap { area in
+                [
+                    area.depositWithFees,
+                    area.deposit,
+                    area.minimum
+                ]
+            }
+            .compactMap { $0 }
+            .filter { $0 > 0 }
+
+        guard let minPrice = prices.min() else {
             return "Request"
         }
 
@@ -367,6 +583,30 @@ private extension PremiumExperienceItem {
         return nil
     }
 
+    static func boolValue(_ value: Any?) -> Bool? {
+        if let value = value as? Bool {
+            return value
+        }
+
+        if let value = value as? NSNumber {
+            return value.boolValue
+        }
+
+        guard let text = stringValue(value)?
+            .lowercased() else {
+            return nil
+        }
+
+        switch text {
+        case "true", "1", "yes":
+            return true
+        case "false", "0", "no":
+            return false
+        default:
+            return nil
+        }
+    }
+
     static func intValue(_ value: Any?) -> Int? {
         if let value = value as? Int { return value }
         if let value = value as? Double { return Int(value) }
@@ -391,4 +631,3 @@ private extension PremiumExperienceItem {
         return Double(text)
     }
 }
-

@@ -20,9 +20,6 @@ final class SettingsService {
             _ errorMsg: String?
         ) -> Void
     ) {
-
-        Loader.show()
-
         let params = [
             "email": email
         ]
@@ -236,9 +233,6 @@ final class SettingsService {
             _ errorMsg: String?
         ) -> Void
     ) {
-
-        Loader.show()
-
         let params = [
             "currentPassword": currentPassword,
             "newPassword": newPassword,

@@ -43,12 +43,11 @@ class EventLineUpCVC: UICollectionViewCell {
 
         if let url = URL(string: finalURLString), !finalURLString.isEmpty {
 
-            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder")) { [weak self] _, _, _, _ in
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "premiumExpBg")) { [weak self] _, _, _, _ in
                 self?.imageShimmerView.isHidden = true
             }
-
         } else {
-            imageView.image = UIImage(named: "placeholder")
+            imageView.image = UIImage(named: "premiumExpBg")
             imageShimmerView.isHidden = true
         }
     }

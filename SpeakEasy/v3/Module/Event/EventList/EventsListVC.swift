@@ -32,6 +32,10 @@ final class EventsListVC: UIViewController {
     @IBOutlet weak var cityTitleLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var topRightSideBtn: AppIconButton!
+    @IBOutlet weak var topTitleView: LiquidGlassBackgroundView!
+    @IBOutlet weak var topViewLeftSideConstraint: NSLayoutConstraint!
+    @IBOutlet weak var topViewRightSideConstraint: NSLayoutConstraint!
+    
 
     private var eventList: [Event] = []
 
@@ -166,7 +170,7 @@ final class EventsListVC: UIViewController {
         discoverService.fetchDiscoverEvents(
             city: resolvedCity(),
             skip: skip,
-            timeWindow: eventTimeWindow(),
+            eventListType: eventListType(),
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
 
@@ -219,12 +223,12 @@ final class EventsListVC: UIViewController {
         }
     }
 
-    private func eventTimeWindow() -> DiscoverEventTimeWindow {
+    private func eventListType() -> DiscoverEventListType {
         switch listMode {
         case .cityEvents:
-            return .cityEvents()
+            return .eventsInCity
         case .tonight:
-            return .tonight()
+            return .eventsTonight
         }
     }
 
@@ -268,6 +272,10 @@ final class EventsListVC: UIViewController {
         case .cityEvents:
             titleLbl.text = "Events in \(resolvedCity())"
             cityTitleLbl.isHidden = true
+            self.topTitleView.cornerRadius = 20
+            topViewLeftSideConstraint.constant = 20
+            topViewRightSideConstraint.constant = 20
+            
         case .tonight:
             titleLbl.text = "Events Tonight"
             cityTitleLbl.text = resolvedCity()

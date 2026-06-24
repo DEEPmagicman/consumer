@@ -69,22 +69,22 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIx-wo-u5Z">
-                                <rect key="frame" x="107.33333333333331" y="107.33333333333331" width="200" height="200"/>
+                                <rect key="frame" x="82.333333333333314" y="82.333333333333314" width="250" height="250.00000000000006"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRCodeAP" translatesAutoresizingMaskIntoConstraints="NO" id="gtb-Ov-8zW">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
                                     </imageView>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dg0-sK-BXm">
-                                        <rect key="frame" x="19.999999999999986" y="0.0" width="160" height="200"/>
+                                        <rect key="frame" x="20" y="0.0" width="210" height="250"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Mr-5e-ZdY">
-                                                <rect key="frame" x="66.666666666666686" y="0.0" width="26.333333333333329" height="56"/>
+                                                <rect key="frame" x="91.666666666666671" y="0.0" width="26.333333333333329" height="56"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="40"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchased on 11:29PM June 21" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRP-Cm-wT1">
-                                                <rect key="frame" x="0.0" y="59.999999999999986" width="160" height="140.33333333333331"/>
+                                                <rect key="frame" x="0.0" y="59.999999999999986" width="210" height="190.33333333333331"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -107,11 +107,11 @@
                                     <constraint firstItem="dg0-sK-BXm" firstAttribute="top" secondItem="ZIx-wo-u5Z" secondAttribute="top" id="997-3U-OFx"/>
                                     <constraint firstItem="dg0-sK-BXm" firstAttribute="centerY" secondItem="ZIx-wo-u5Z" secondAttribute="centerY" id="D7d-XI-rAc"/>
                                     <constraint firstItem="dg0-sK-BXm" firstAttribute="centerX" secondItem="ZIx-wo-u5Z" secondAttribute="centerX" id="ImD-1s-FX2"/>
-                                    <constraint firstAttribute="width" constant="200" id="JvZ-Ny-wRm"/>
+                                    <constraint firstAttribute="width" constant="250" id="JvZ-Ny-wRm"/>
                                     <constraint firstAttribute="trailing" secondItem="gtb-Ov-8zW" secondAttribute="trailing" id="QfH-WU-DST"/>
                                     <constraint firstAttribute="bottom" secondItem="gtb-Ov-8zW" secondAttribute="bottom" id="WH7-CS-dl7"/>
                                     <constraint firstItem="gtb-Ov-8zW" firstAttribute="leading" secondItem="ZIx-wo-u5Z" secondAttribute="leading" id="Ycy-Yl-FOb"/>
-                                    <constraint firstAttribute="height" constant="200" id="hHJ-xn-dY1"/>
+                                    <constraint firstAttribute="height" constant="250" id="hHJ-xn-dY1"/>
                                     <constraint firstItem="dg0-sK-BXm" firstAttribute="leading" secondItem="ZIx-wo-u5Z" secondAttribute="leading" constant="20" id="vV0-RX-bzr"/>
                                     <constraint firstAttribute="bottom" secondItem="dg0-sK-BXm" secondAttribute="bottom" id="zms-No-hZg"/>
                                 </constraints>

@@ -6,6 +6,10 @@
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Speakeasy uses Calendar access to add purchased event tickets to your calendar.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Speakeasy uses Calendar access to add purchased event tickets to your calendar.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

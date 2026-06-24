@@ -33,6 +33,7 @@
                 <outlet property="groupTableView" destination="HgD-UR-Bvg" id="Etu-Ye-1wI"/>
                 <outlet property="groupTableViewHeight" destination="Hbc-GD-lXb" id="HCf-wx-yHx"/>
                 <outlet property="protectedTicketView" destination="3EF-mc-0tR" id="M0Q-WJ-hUq"/>
+                <outlet property="scrollView" destination="quD-X3-Sg2" id="dkg-qz-pv3"/>
                 <outlet property="ticketTableView" destination="E8z-Q1-vlH" id="ph2-ib-Oqf"/>
                 <outlet property="ticketTableViewHeight" destination="UNE-9M-F2X" id="rMt-3L-EQd"/>
                 <outlet property="totalAmountLbl" destination="DCW-W8-z2t" id="fQx-C2-f6Y"/>
@@ -216,7 +217,7 @@
                                 <constraint firstItem="RPA-K5-Qvo" firstAttribute="top" secondItem="Nc1-TR-YLd" secondAttribute="top" id="xNE-TE-yKq"/>
                             </constraints>
                         </view>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quD-X3-Sg2">
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="quD-X3-Sg2">
                             <rect key="frame" x="20" y="108.66666666666669" width="353" height="567.33333333333326"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lBb-Pv-dV5">
@@ -250,7 +251,7 @@
                                 <constraint firstAttribute="bottom" secondItem="lBb-Pv-dV5" secondAttribute="bottom" id="7mq-WI-PIm"/>
                                 <constraint firstAttribute="trailing" secondItem="lBb-Pv-dV5" secondAttribute="trailing" id="KvQ-wa-5Z3"/>
                                 <constraint firstItem="lBb-Pv-dV5" firstAttribute="leading" secondItem="quD-X3-Sg2" secondAttribute="leading" id="PBa-Pb-N9T"/>
-                                <constraint firstItem="lBb-Pv-dV5" firstAttribute="width" secondItem="quD-X3-Sg2" secondAttribute="width" priority="250" id="PwN-23-5L7"/>
+                                <constraint firstItem="lBb-Pv-dV5" firstAttribute="width" secondItem="quD-X3-Sg2" secondAttribute="width" id="PwN-23-5L7"/>
                                 <constraint firstItem="lBb-Pv-dV5" firstAttribute="top" secondItem="quD-X3-Sg2" secondAttribute="top" id="cjZ-rL-bf1"/>
                             </constraints>
                         </scrollView>

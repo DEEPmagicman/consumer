@@ -55,6 +55,11 @@ struct DiscoverEventTimeWindow {
     }
 }
 
+enum DiscoverEventListType: String {
+    case eventsTonight = "EVENTS_TONIGHT"
+    case eventsInCity = "EVENTS_IN_CITY"
+}
+
 final class DiscoverService {
 
     func fetchDiscover(
@@ -130,7 +135,8 @@ final class DiscoverService {
         city: String,
         skip: Int,
         take: Int = 10,
-        timeWindow: DiscoverEventTimeWindow,
+        timeWindow: DiscoverEventTimeWindow? = nil,
+        eventListType: DiscoverEventListType? = nil,
         isPremiumOnly: Bool? = nil,
         search: String? = nil,
         timeZone: String = TimeZone.current.identifier,
@@ -147,11 +153,15 @@ final class DiscoverService {
             "take": take
         ]
 
-        if let startDateTime = timeWindow.startDateTime {
+        if let eventListType {
+            params["eventListType"] = eventListType.rawValue
+        }
+
+        if let startDateTime = timeWindow?.startDateTime {
             params["startDateTime"] = startDateTime
         }
 
-        if let endDateTime = timeWindow.endDateTime {
+        if let endDateTime = timeWindow?.endDateTime {
             params["endDateTime"] = endDateTime
         }
 
@@ -263,6 +273,143 @@ final class DiscoverService {
             completion(false, nil, nil)
         }
     }
+
+    func fetchArtistEvents(
+        artistId: String,
+        venueId: String,
+        skip: Int,
+        take: Int = 10,
+        startDateTime: String = DiscoverEventTimeWindow.apiString(from: Date()),
+        timeZone: String = TimeZone.current.identifier,
+        completion: @escaping (
+            Bool,
+            String?,
+            DiscoverPage<Event>?
+        ) -> Void
+    ) {
+
+        let trimmedArtistId = artistId.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedVenueId = venueId.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedArtistId.isEmpty,
+              !trimmedVenueId.isEmpty else {
+            completion(
+                false,
+                "Artist or venue not found",
+                nil
+            )
+            return
+        }
+
+        let params: [String: Any] = [
+            "venueId": trimmedVenueId,
+            "startDateTime": startDateTime,
+            "skip": skip,
+            "take": take
+        ]
+
+        AFWrapper.getRequest(
+            APIBuilder.artistEventsURL(artistId: trimmedArtistId),
+            params: params,
+            headers: Header.header(timeZone: timeZone)
+        ) { response in
+
+            guard let responseDic = response as? [String: Any],
+                  let list = responseDic["list"] as? [[String: Any]],
+                  let events = Self.parseEvents(list) else {
+
+                completion(false, "Invalid Response", nil)
+                return
+            }
+
+            completion(
+                true,
+                nil,
+                DiscoverPage(
+                    list: events,
+                    hasMore: responseDic["hasMany"] as? Bool ?? false,
+                    total: responseDic["total"] as? Int ?? events.count,
+                    count: responseDic["count"] as? Int ?? events.count
+                )
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, nil, nil)
+        }
+    }
+
+    func fetchArtists(
+        venueId: String,
+        skip: Int,
+        take: Int = 10,
+        startDateTime: String = DiscoverEventTimeWindow.apiString(from: Date()),
+        timeZone: String = TimeZone.current.identifier,
+        completion: @escaping (
+            Bool,
+            String?,
+            DiscoverPage<Artists>?
+        ) -> Void
+    ) {
+
+        let trimmedVenueId = venueId.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedVenueId.isEmpty else {
+            completion(false, "Venue not found", nil)
+            return
+        }
+
+        let params: [String: Any] = [
+            "venueId": trimmedVenueId,
+            "startDateTime": startDateTime,
+            "skip": skip,
+            "take": take
+        ]
+
+        AFWrapper.getRequest(
+            APIBuilder.artistsURL,
+            params: params,
+            headers: Header.header(timeZone: timeZone)
+        ) { response in
+
+            guard let responseDic = response as? [String: Any],
+                  let list = responseDic["list"] as? [[String: Any]],
+                  let artists = Self.parseArtists(list) else {
+
+                completion(false, "Invalid Response", nil)
+                return
+            }
+
+            completion(
+                true,
+                nil,
+                DiscoverPage(
+                    list: artists,
+                    hasMore: responseDic["hasMany"] as? Bool ?? false,
+                    total: responseDic["total"] as? Int ?? artists.count,
+                    count: responseDic["count"] as? Int ?? artists.count
+                )
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, nil, nil)
+        }
+    }
 }
 
 private extension DiscoverService {
@@ -292,6 +439,20 @@ private extension DiscoverService {
         return decode(
             [ClipVenue].self,
             from: list.map { normalizedVenue($0) }
+        )
+    }
+
+    static func parseArtists(
+        _ list: [[String: Any]]
+    ) -> [Artists]? {
+
+        if let artists = decode([Artists].self, from: list) {
+            return artists
+        }
+
+        return decode(
+            [Artists].self,
+            from: list.map { normalizedArtist($0) }
         )
     }
 
@@ -365,16 +526,49 @@ private extension DiscoverService {
             venue["logo"] = normalizedMedia(logo)
         }
 
-//        if let attachments =
-//            venue["venueAttachment"] as? [[String: Any]] {
-//
-//            venue["venueAttachment"] =
-//            attachments.map { normalizedMedia($0) }
-//        } else if let logo = venue["logo"] as? [String: Any] {
-////            venue["venueAttachment"] = [normalizedMedia(logo)]
-//        }
+        if let attachments =
+            venue["venueAttachment"] as? [[String: Any]] {
+
+            venue["venueAttachment"] =
+            attachments.map { normalizedMedia($0) }
+        } else if let logo = venue["logo"] as? [String: Any] {
+//            venue["venueAttachment"] = [normalizedMedia(logo)]
+        }
 
         return venue
+    }
+
+    static func normalizedArtist(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var artist = dictionary
+
+        artist["id"] = stringValue(artist["id"])
+        artist["name"] = stringValue(artist["name"])
+        artist["instagramUsername"] = stringValue(artist["instagramUsername"])
+        artist["status"] = stringValue(artist["status"], fallback: "ENABLED")
+        artist["source"] = stringValue(artist["source"])
+
+        if let image = artist["artistImage"] as? [String: Any] {
+            artist["artistImage"] = normalizedMedia(image)
+        } else if artist["artistImage"] is NSNull {
+            artist["artistImage"] = nil
+        }
+
+        return artist
+    }
+
+    static func stringValue(
+        _ value: Any?,
+        fallback: String = ""
+    ) -> String {
+
+        if let value = value as? String {
+            return value
+        }
+
+        return fallback
     }
 
     static func normalizedMedia(

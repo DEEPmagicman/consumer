@@ -354,7 +354,6 @@ private extension SelectLocationVC {
         venueService.fetchCityList { [weak self] cityList, isSuccess, errMsg in
 
             guard let self else {
-                Loader.hide()
                 return
             }
 

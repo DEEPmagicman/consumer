@@ -146,7 +146,7 @@ final class ProfileMenuVC: UIViewController {
 
         stack.addArrangedSubview(makeTopAction(title: "My orders", icon: UIImage(resource: .myOrderIc), tag: 0))
         stack.addArrangedSubview(makeTopAction(title: "Saved", icon: UIImage(resource: .savedIc), tag: 1))
-        stack.addArrangedSubview(makeTopAction(title: "Venues", icon: UIImage(resource: .venuesIc), tag: 2))
+        stack.addArrangedSubview(makeTopAction(title: "Favorites", icon: UIImage(resource: .venuesIc), tag: 2))
 
         contentView.addSubview(topActionsCard)
 

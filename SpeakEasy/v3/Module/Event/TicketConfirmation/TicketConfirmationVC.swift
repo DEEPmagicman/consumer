@@ -36,6 +36,7 @@ class TicketConfirmationVC: UIViewController {
 
     private var expandedFAQIndex: Int?
     private var isUpdatingTableHeight = false
+    private var wasInteractivePopGestureEnabled = true
 
     private let paymentService = PaymentService()
     
@@ -49,7 +50,14 @@ class TicketConfirmationVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         ticketCardView.playEntryAnimation()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
     }
     
     private func setupData() {
@@ -94,8 +102,8 @@ class TicketConfirmationVC: UIViewController {
         
         if let hexColor = event?.whiteLabelColor {
             let color = UIColor(hex: hexColor)
-            viewTicketBtnView.backgroundColor = color
-            dateandtimeLbl.textColor = color
+//            viewTicketBtnView.backgroundColor = color
+//            dateandtimeLbl.textColor = color
         }
         
         let timezone = venueDetails?.useTimezone ?? ""
@@ -189,11 +197,23 @@ class TicketConfirmationVC: UIViewController {
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        Navigate.to.back(self)
+        returnToDiscoverScreen()
     }
     
     @IBAction func onClickBackBtn(_ sender: Any) {
-        Navigate.to.back(self)
+        returnToDiscoverScreen()
+    }
+
+    private func returnToDiscoverScreen() {
+        if let tabBarController {
+            tabBarController.selectedIndex = 0
+        }
+
+        if let navigationController {
+            navigationController.popToRootViewController(animated: false)
+        } else {
+            dismiss(animated: false)
+        }
     }
     
     private func getBooking(id: String) {
@@ -620,4 +640,3 @@ final class TicketCardView: UIView {
         imageView.image = UIImage(named: name)
     }
 }
-

@@ -43,6 +43,8 @@ final class PremiumEventContainerVC: UIViewController {
     // MARK: Segment
 
     private let segmentView = PremiumEventSegmentView()
+    
+    private var segmentHeightConstraint: NSLayoutConstraint!
 
     // MARK: Child Container
 
@@ -54,7 +56,7 @@ final class PremiumEventContainerVC: UIViewController {
 
     private lazy var listVC = PremiumReservationVC()
 
-    private lazy var inquiryVC = PremiumInquiryVC()
+    private lazy var inquiryVC = TableRequestVC()
 
     private var currentVC: UIViewController?
 
@@ -65,8 +67,14 @@ final class PremiumEventContainerVC: UIViewController {
     private(set) var visibleSeatingAreas: [SeatingArea] = []
 
     private(set) var hiddenSeatingAreas: [SeatingArea] = []
+    
+    private(set) var bookableSeatingAreas: [SeatingArea] = []
+    
+    private var hasLoadedSeatingAreas = false
         
     var event: Event?
+    
+    var providedSeatingAreas: [SeatingArea]?
 
     // MARK: Life Cycle
 
@@ -76,12 +84,10 @@ final class PremiumEventContainerVC: UIViewController {
         setupUI()
 
         configureHeader()
-
-        fetchSeatingAreas()
         
         setupChildren()
-
-        switchTo(.list, animated: false)
+        
+        loadSeatingAreas()
     }
 
     override func viewDidLayoutSubviews() {
@@ -150,6 +156,16 @@ private extension PremiumEventContainerVC {
         )
     }
     
+    private func loadSeatingAreas() {
+        
+        if let providedSeatingAreas {
+            applySeatingAreas(providedSeatingAreas)
+            return
+        }
+
+        fetchSeatingAreas()
+    }
+    
     private func fetchSeatingAreas() {
 
         guard let event else {
@@ -177,26 +193,36 @@ private extension PremiumEventContainerVC {
                 return
             }
 
-            let filtered = self.filterSeatingAreas(list)
-
-            self.seatingAreas = list
-            self.visibleSeatingAreas = filtered.visible
-            self.hiddenSeatingAreas = filtered.filteredOut
-
-            self.passDataToChildren()
+            self.applySeatingAreas(list)
         }
+    }
+    
+    private func applySeatingAreas(_ list: [SeatingArea]) {
+        
+        let filtered = filterSeatingAreas(list)
+
+        seatingAreas = list
+        visibleSeatingAreas = filtered.visible
+        hiddenSeatingAreas = filtered.filteredOut
+        bookableSeatingAreas =
+        filtered.visible.filter {
+            $0.hideCheckout != true
+        }
+        hasLoadedSeatingAreas = true
+
+        passDataToChildren()
+        updateAvailableSegments()
     }
     
     private func passDataToChildren() {
 
         mapVC.event = event
-        mapVC.seatingAreas = visibleSeatingAreas
+        mapVC.seatingAreas = bookableSeatingAreas
 
         listVC.event = event
-        listVC.seatingAreas = visibleSeatingAreas
+        listVC.seatingAreas = bookableSeatingAreas
 
         inquiryVC.event = event
-        inquiryVC.seatingAreas = hiddenSeatingAreas
     }
     
     private func filterSeatingAreas(
@@ -337,7 +363,6 @@ private extension PremiumEventContainerVC {
             segmentView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 10),
             segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            segmentView.heightAnchor.constraint(equalToConstant: 46),
 
             // Container
 
@@ -347,6 +372,11 @@ private extension PremiumEventContainerVC {
             containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 
         ])
+        
+        segmentHeightConstraint = segmentView.heightAnchor.constraint(
+            equalToConstant: 46
+        )
+        segmentHeightConstraint.isActive = true
     }
 }
 
@@ -391,7 +421,7 @@ private extension PremiumEventContainerVC {
 
 extension PremiumEventContainerVC {
 
-    enum Segment {
+    enum Segment: Equatable {
 
         case map
 
@@ -402,6 +432,60 @@ extension PremiumEventContainerVC {
 }
 
 private extension PremiumEventContainerVC {
+    
+    func updateAvailableSegments() {
+        
+        let segments = availableSegments()
+        let selected = segments.first ?? .list
+        let shouldShowSegment = segments.count > 1
+        
+        segmentHeightConstraint.constant = shouldShowSegment ? 46 : 0
+        segmentView.isHidden = !shouldShowSegment
+        segmentView.configure(
+            availableSegments: segments,
+            selectedSegment: selected,
+            animated: false
+        )
+        
+        view.layoutIfNeeded()
+        switchTo(selected, animated: false)
+    }
+    
+    func availableSegments() -> [Segment] {
+        
+        let isOnlineTablesEnabled =
+        event?.isEnableOnlineTables == true
+        
+        let hasSeatingAreas =
+        !bookableSeatingAreas.isEmpty
+        
+        let hasInquiry =
+        event?.isEnableReservationRequest == true
+        
+        var segments: [Segment] = []
+        
+        if isOnlineTablesEnabled,
+           hasSeatingAreas {
+            segments.append(.map)
+        }
+        
+        if isOnlineTablesEnabled,
+           hasSeatingAreas {
+            segments.append(.list)
+        }
+        
+        if hasInquiry {
+            segments.append(.inquiry)
+        }
+        
+        if segments.isEmpty,
+           hasLoadedSeatingAreas,
+           hasInquiry {
+            return [.inquiry]
+        }
+        
+        return segments.isEmpty ? [.list] : segments
+    }
 
     func switchTo(
         _ segment: Segment,

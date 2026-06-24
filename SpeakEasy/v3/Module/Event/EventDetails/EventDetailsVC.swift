@@ -95,6 +95,9 @@ class EventDetailsVC: UIViewController {
     private var ticketTableObserver: NSKeyValueObservation?
     private var groupTableObserver: NSKeyValueObservation?
     private var additionalButtonsTableObserver: NSKeyValueObservation?
+    private let eventTitleMarqueeLabel = PremiumMarqueeLabel()
+    private let youTubeShimmerView = ShimmerViewV3(frame: .zero, lighter: true)
+    private var isYouTubePlayerReady = false
 
     var venueDetails: ClipVenue?
     var event: Event?
@@ -191,7 +194,7 @@ class EventDetailsVC: UIViewController {
 //        fetchSeatingAreas()
         getEventDetail()
         
-        setupData()
+        setupEventHeaderData()
         setupCollectionViews()
         setupTableView()
         startTicketTableObserver()
@@ -200,6 +203,10 @@ class EventDetailsVC: UIViewController {
         startAdditionalButtonsTableObserver()
         setupUI()
         setupSkeletonView()
+        setupTitleMarqueeLabel()
+        setupYouTubeShimmerView()
+        setupEventDetailsTypography()
+        enableInteractiveSwipeBack()
         showSkeleton()
         
         additionalButtonsTableView.delegate = self
@@ -227,11 +234,13 @@ class EventDetailsVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startAutoScrollIfNeeded()
+        enableInteractiveSwipeBack()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.layoutIfNeeded()
+        updateVenueLogoCornerRadius()
     }
 
     deinit {
@@ -268,7 +277,8 @@ class EventDetailsVC: UIViewController {
 
         ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
-            self.ticketTableHeightConstraint.constant = tableView.contentSize.height
+            self.ticketTableHeightConstraint.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -278,7 +288,8 @@ class EventDetailsVC: UIViewController {
 
         groupTableObserver = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
-            self.groupTableViewHeight.constant = tableView.contentSize.height
+            self.groupTableViewHeight.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -294,7 +305,8 @@ class EventDetailsVC: UIViewController {
 
             guard let self = self else { return }
 
-            self.additionalButtonsTableHeight.constant = tableView.contentSize.height
+            self.additionalButtonsTableHeight.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -339,7 +351,7 @@ class EventDetailsVC: UIViewController {
     private func setupUI() {
         savedEventId = event?.savedEventId
         isSaved =
-        event?.isSaved == true ||
+        event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
     }
@@ -351,6 +363,131 @@ class EventDetailsVC: UIViewController {
         saveBtn.tintColor =  .white
         saveBtn.alpha = isSaveLoading ? 0.65 : 1
         saveBtn.isUserInteractionEnabled = !isSaveLoading
+    }
+
+    private func setupEventDetailsTypography() {
+        titleLbl.font = Constant.Font.geistMedium(size: 22)
+        eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 22)
+        venueTitleLbl.font = Constant.Font.geistSemiBold(size: 12)
+        venueName.font = Constant.Font.geistMedium(size: 14)
+        venueNameLbl.font = Constant.Font.geistMedium(size: 18)
+        updateVenueLogoCornerRadius()
+    }
+
+    private func updateVenueLogoCornerRadius() {
+        venueLogoImg.layer.cornerRadius = min(
+            venueLogoImg.bounds.width,
+            venueLogoImg.bounds.height
+        ) / 2
+        venueLogoImg.clipsToBounds = true
+    }
+
+    private func enableInteractiveSwipeBack() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard eventTitleMarqueeLabel.superview == nil,
+              let stackView = pageTitleName.superview as? UIStackView,
+              let index = stackView.arrangedSubviews.firstIndex(of: pageTitleName)
+        else { return }
+
+        eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 24)
+        eventTitleMarqueeLabel.textColor = AppColor.primaryWhiteColor
+        eventTitleMarqueeLabel.animationSpeed = 25
+        eventTitleMarqueeLabel.animationDelay = 1.4
+        eventTitleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.insertArrangedSubview(eventTitleMarqueeLabel, at: index)
+        pageTitleName.isHidden = true
+
+        NSLayoutConstraint.activate([
+            eventTitleMarqueeLabel.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    private func setupYouTubeShimmerView() {
+        guard youTubeShimmerView.superview == nil else { return }
+
+        youTubeShimmerView.translatesAutoresizingMaskIntoConstraints = false
+        youTubeShimmerView.layer.cornerRadius = 12
+        youTubeShimmerView.isHidden = true
+        youTubePlayerView.addSubview(youTubeShimmerView)
+
+        NSLayoutConstraint.activate([
+            youTubeShimmerView.topAnchor.constraint(equalTo: youTubePlayerView.topAnchor),
+            youTubeShimmerView.leadingAnchor.constraint(equalTo: youTubePlayerView.leadingAnchor),
+            youTubeShimmerView.trailingAnchor.constraint(equalTo: youTubePlayerView.trailingAnchor),
+            youTubeShimmerView.bottomAnchor.constraint(equalTo: youTubePlayerView.bottomAnchor)
+        ])
+    }
+
+    private func showYouTubeShimmer() {
+        isYouTubePlayerReady = false
+        youTubeShimmerView.isHidden = false
+        youTubeShimmerView.alpha = 1
+        youTubeShimmerView.startShimmer()
+        youTubePlayerView.bringSubviewToFront(youTubeShimmerView)
+    }
+
+    private func hideYouTubeShimmer() {
+        guard !youTubeShimmerView.isHidden else { return }
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            self.youTubeShimmerView.alpha = 0
+        } completion: { _ in
+            self.youTubeShimmerView.stopShimmer()
+            self.youTubeShimmerView.layer.removeAllAnimations()
+            self.youTubeShimmerView.isHidden = true
+            self.youTubeShimmerView.alpha = 1
+        }
+    }
+
+    private func setSection(
+        _ sectionView: UIView,
+        hidden: Bool,
+        animated: Bool = true
+    ) {
+        if sectionView.isHidden == hidden {
+            sectionView.alpha = hidden ? 0 : 1
+            return
+        }
+
+        let shouldAnimate =
+        animated &&
+        view.window != nil &&
+        !contentStackView.isHidden
+
+        guard shouldAnimate else {
+            sectionView.alpha = hidden ? 0 : 1
+            sectionView.isHidden = hidden
+            return
+        }
+
+        view.layoutIfNeeded()
+
+        if !hidden {
+            sectionView.alpha = 0
+            sectionView.isHidden = false
+        }
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            sectionView.alpha = hidden ? 0 : 1
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            sectionView.isHidden = hidden
+            sectionView.alpha = hidden ? 0 : 1
+            self.contentStackView.layoutIfNeeded()
+        }
     }
 
     
@@ -457,6 +594,14 @@ class EventDetailsVC: UIViewController {
             }
 
             self.applyEventDetailBundle(detail)
+            if let show = self.event?.showEventAttendees {
+                self.attendeesView.isHidden = !show
+                if show {
+                    self.getEventAttendees()
+                }
+            } else {
+                self.attendeesView.isHidden = true
+            }
         }
 
         /*
@@ -522,10 +667,10 @@ class EventDetailsVC: UIViewController {
         savedEventId ?? event?.savedEventId
 
         let currentIsSaved =
-        isSaved || event?.isSaved == true
+        isSaved || event?.hasSavedEvent == true
 
         let detailHasSavedState =
-        detail.event.isSaved != nil ||
+        detail.event.hasSavedEvent != nil ||
         detail.event.savedEventId != nil
 
         event = detail.event
@@ -537,7 +682,7 @@ class EventDetailsVC: UIViewController {
 
         if !detailHasSavedState,
            currentIsSaved {
-            event?.isSaved = true
+            event?.hasSavedEvent = true
         }
 
         if let venue = detail.event.venue {
@@ -546,9 +691,10 @@ class EventDetailsVC: UIViewController {
 
         savedEventId = event?.savedEventId
         isSaved =
-        event?.isSaved == true ||
+        event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
+        setupTicketsButton()
 
         eventTicketId =
         detail.event.eventTicket?
@@ -1083,6 +1229,62 @@ class EventDetailsVC: UIViewController {
         let withoutImage = list.filter { !$0.hasImage }
         return withImage + withoutImage
     }
+    
+    private func setupEventHeaderData() {
+        guard let event = event else { return }
+        titleLbl.text = event.title
+        eventTitleMarqueeLabel.setText(event.title)
+        if let imageUrlString = event.venue?.logo?.key.imageURL,
+           let url = URL(string: imageUrlString) {
+            venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
+                guard let self = self else { return }
+            }
+            
+        } else {
+            venueLogo.isHidden = true
+        }
+        venueTitleLbl.text = event.venue?.name.uppercased() ?? ""
+        pageTitleName.text = event.title
+
+        if let customText = event.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            timingLbl.text = customText
+        } else {
+            let timezone = venueDetails?.useTimezone ?? ""
+
+            let dateText = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            )
+
+            let startTime = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            )
+
+            if !dateText.isEmpty && !startTime.isEmpty {
+                let hideEnd = event.hideEventEnd == true
+                let hasEndTime = !(event.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+                if hideEnd || !hasEndTime {
+                    timingLbl.text = "\(dateText) at \(startTime)"
+                } else {
+                    let endTime = event.endDateTime?.convertDateFormat(
+                        from: .yyyyMMddHHmmss,
+                        to: .hmma,
+                        customTimeZone: timezone
+                    ) ?? ""
+
+                    timingLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+                }
+            } else {
+                timingLbl.text = ""
+            }
+        }
+    }
+    
 
     private func setupData() {
         guard let event = event else { return }
@@ -1091,6 +1293,7 @@ class EventDetailsVC: UIViewController {
 
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event.title
+        eventTitleMarqueeLabel.setText(event.title)
         fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
@@ -1128,13 +1331,16 @@ class EventDetailsVC: UIViewController {
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = venueDetails?.name.uppercased() ?? ""
 
-        webSiteView.isHidden = event.additionalButtons?.isEmpty ?? true
+        let additionalButtons = enabledAdditionalButtons
+        additionalButtonsTableView.isHidden = additionalButtons.isEmpty
+        additionalButtonsTableView.reloadData()
+        additionalButtonsTableHeight.constant = additionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
+        setSection(webSiteView, hidden: additionalButtons.isEmpty)
         
         configureVIPTablesView()
         setupGalleryGrid()
 
         let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
-        ticketHidenView.isHidden = !showInlineTickets
 
         if showInlineTickets {
             setupInlineTicketData()
@@ -1142,20 +1348,31 @@ class EventDetailsVC: UIViewController {
             tickets = []
             normalTickets = []
             groupedNormalTickets = []
+            ticketTableView.isHidden = true
+            groupTableView.isHidden = true
             ticketTableView.reloadData()
             groupTableView.reloadData()
             ticketTableHeightConstraint.constant = 0
             groupTableViewHeight.constant = 0
             protectedTicketView.isHidden = true
+            lockIcon.isHidden = true
+            setSection(ticketHidenView, hidden: true)
         }
 
         if let youtubeVideoLink = event.youtubeVideoLink, !youtubeVideoLink.isEmpty {
             youTubeSuperView.isHidden = false
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
-                playerView.load(withVideoId: id)
+                showYouTubeShimmer()
+                playerView.load(
+                    withVideoId: id,
+                    playerVars: youtubePlayerVars()
+                )
+            } else {
+                hideYouTubeShimmer()
             }
         } else {
+            hideYouTubeShimmer()
             youTubeSuperView.isHidden = true
         }
 
@@ -1185,30 +1402,40 @@ class EventDetailsVC: UIViewController {
         }
         
         
-        let coordinate: CLLocationCoordinate2D
+        let coordinate: CLLocationCoordinate2D?
         let title: String
+        let mapImageURL: String?
 
         if let custom = event.customVenue,
            venueDetails?.venueSettings?.isOrganizer == true {
             
-            coordinate = CLLocationCoordinate2D(
+            coordinate = CLLocationCoordinate2D.valid(
                 latitude: Double(custom.lat ?? "") ?? 0,
                 longitude: Double(custom.lng ?? "") ?? 0
             )
             
             title = custom.name ?? "Venue"
+            let mapImageKey = event.flyer?.key ?? ""
+            mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
             
         } else {
             
-            coordinate = CLLocationCoordinate2D(
+            coordinate = CLLocationCoordinate2D.valid(
                 latitude: venueDetails?.latitude ?? 0,
                 longitude: venueDetails?.longitude ?? 0
             )
             
             title = venueDetails?.name ?? "Venue"
+            let mapImageKey = venueDetails?.logo?.key ?? venueDetails?.venueAttachment?.first?.key ?? event.flyer?.key ?? ""
+            mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
         }
 
-        updateLocationOnMap(to: coordinate, with: title)
+        if let coordinate {
+            updateLocationOnMap(to: coordinate, with: title, imageURL: mapImageURL)
+        } else {
+            mapView.isHidden = true
+            eventAddressView.isHidden = true
+        }
 
         if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -1251,7 +1478,7 @@ class EventDetailsVC: UIViewController {
         if let hexColor = event.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
-            checkOutBtn.backgroundColor = color
+//            checkOutBtn.backgroundColor = color
 //            buyNowBtnLbl.textColor = color.suitableTextColor()
             webSiteView.borderColor = color
             checkOutBtn.indicator = MaterialLoadingIndicator(color: .black)
@@ -1261,7 +1488,6 @@ class EventDetailsVC: UIViewController {
         }
 
         setupSocialLinks()
-        setupTicketsButton()
 
 //        if event.eventTicket == nil {
 //        } else {
@@ -1329,14 +1555,7 @@ class EventDetailsVC: UIViewController {
         checkOutBtn.isEnabled = true
         checkOutBtn.isUserInteractionEnabled = true
 
-        guard let tickets = event.eventTicket, !tickets.isEmpty else {
-            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-            checkOutBtn.isEnabled = false
-            checkOutBtn.isUserInteractionEnabled = false
-            soldOutView.isHidden = false
-            soldOutLbl.text = Constant.String.salePaused.uppercased()
-            return
-        }
+      
 
         if event.isPausedSellingAllTickets == true {
             checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
@@ -1368,6 +1587,15 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.soldOut.uppercased()
+            return
+        }
+        
+        guard let tickets = event.eventTicket, !tickets.isEmpty else {
+            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.salePaused.uppercased()
             return
         }
 
@@ -1403,7 +1631,7 @@ class EventDetailsVC: UIViewController {
             return false
         }()
         
-        vipTablesView.isHidden = !(shouldShowVIPTablesView && isEventDetailAPICalled)
+        setSection(vipTablesView, hidden: !(shouldShowVIPTablesView && isEventDetailAPICalled))
         
         // MARK: - Subtitle
         
@@ -1498,23 +1726,33 @@ class EventDetailsVC: UIViewController {
         protectedTicketView.isHidden = protectedVisibleCandidates.isEmpty
         lockIcon.isHidden = protectedVisibleCandidates.isEmpty
 
+        ticketTableView.isHidden = normalTickets.isEmpty
         groupTableView.isHidden = groupedNormalTickets.isEmpty
 
         ticketTableView.reloadData()
         groupTableView.reloadData()
         updateTicketTableHeight()
         updateGroupTableHeight()
+
+        let hasInlineContent =
+        !normalTickets.isEmpty ||
+        !groupedNormalTickets.isEmpty ||
+        !protectedVisibleCandidates.isEmpty
+
+        setSection(ticketHidenView, hidden: !hasInlineContent)
         updateContinueBtnState()
     }
 
     private func updateTicketTableHeight() {
         ticketTableView.layoutIfNeeded()
-        ticketTableHeightConstraint.constant = ticketTableView.contentSize.height
+        ticketTableHeightConstraint.constant =
+        ticketTableView.isHidden ? 0 : ticketTableView.contentSize.height
     }
 
     private func updateGroupTableHeight() {
         groupTableView.layoutIfNeeded()
-        groupTableViewHeight.constant = groupTableView.contentSize.height
+        groupTableViewHeight.constant =
+        groupTableView.isHidden ? 0 : groupTableView.contentSize.height
     }
 
     private func syncUpdatedTicketToEvent(_ updatedTicket: EventTicket) {
@@ -1918,7 +2156,12 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickVIPtable(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.tableCheckOutVC(self, event: event, seatingAreas: self.seatingAreas, seatingAreasFilteredOut: seatingAreasFilteredOut)
+            Navigate.to.premiumEventContainerVC(
+                self,
+                event: event,
+                seatingAreas: seatingAreas
+            )
+
         }
     }
     
@@ -1939,10 +2182,8 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickWebSiteLinkView(_ sender: Any) {
-        if let button = event?.additionalButtons?.first(where: { $0.isEnable }),
-           let url = URL(string: button.link) {
-            UIApplication.shared.open(url)
-        }
+        guard let button = enabledAdditionalButtons.first else { return }
+        openAdditionalButton(button)
     }
         
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
@@ -2091,7 +2332,7 @@ class EventDetailsVC: UIViewController {
 
             self.savedEventId = id
             self.event?.savedEventId = id
-            self.event?.isSaved = true
+            self.event?.hasSavedEvent = true
             self.isSaved = true
             self.updateSaveUI()
             if let event = self.event {
@@ -2124,7 +2365,7 @@ class EventDetailsVC: UIViewController {
 
             self.savedEventId = nil
             self.event?.savedEventId = nil
-            self.event?.isSaved = false
+            self.event?.hasSavedEvent = false
             self.isSaved = false
             self.updateSaveUI()
             if let event = self.event {
@@ -2175,7 +2416,7 @@ class EventDetailsVC: UIViewController {
         isSaveLoading = false
         isSaved = previousState
         savedEventId = previousSavedEventId
-        event?.isSaved = previousState
+        event?.hasSavedEvent = previousState
         event?.savedEventId = previousSavedEventId
         updateSaveUI()
     }
@@ -2189,7 +2430,7 @@ class EventDetailsVC: UIViewController {
 //        APIManager.shared.saveVenue(venueId: venueId) { [weak self] success in
 //            guard let self = self else { return }
 //            self.isSaveLoading = false
-//            
+//
 //            if !success {
 //                self.isSaved = previousState
 //                self.updateSaveUI()
@@ -2201,7 +2442,7 @@ class EventDetailsVC: UIViewController {
 //        APIManager.shared.unsaveVenue(venueId: venueId) { [weak self] success in
 //            guard let self = self else { return }
 //            self.isSaveLoading = false
-//            
+//
 //            if !success {
 //                self.isSaved = previousState
 //                self.updateSaveUI()
@@ -2356,17 +2597,14 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
+    func updateLocationOnMap(
+        to coordinate: CLLocationCoordinate2D,
+        with title: String?,
+        imageURL: String?
+    ) {
+        mapView.isHidden = false
         mapView.delegate = self
-        if #available(iOS 16.0, *) {
-            let config = MKStandardMapConfiguration(elevationStyle: .flat)
-            config.emphasisStyle = .muted
-            config.pointOfInterestFilter = .excludingAll
-            mapView.preferredConfiguration = config
-        } else {
-            mapView.mapType = .mutedStandard
-            mapView.pointOfInterestFilter = .excludingAll
-        }
+        mapView.applySpeakEasyDarkStyle(showPointsOfInterest: false)
 
         mapView.showsCompass = false
         mapView.showsScale = false
@@ -2374,16 +2612,20 @@ class EventDetailsVC: UIViewController {
         mapView.showsBuildings = false
         mapView.isRotateEnabled = false
         mapView.isPitchEnabled = false
-        mapView.removeAnnotations(mapView.annotations)
+        let oldAnnotations = mapView.annotations.filter { !($0 is MKUserLocation) }
+        mapView.removeAnnotations(oldAnnotations)
 
-        let point = MKPointAnnotation()
-        point.title = title
-        point.coordinate = coordinate
+        let point = EventDetailsMapAnnotation(
+            coordinate: coordinate,
+            title: title,
+            imageURL: imageURL
+        )
         mapView.addAnnotation(point)
 
         let region = MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+            latitudinalMeters: 2600,
+            longitudinalMeters: 2600
         )
 
         mapView.setRegion(region, animated: false)
@@ -2546,7 +2788,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         if tableView == additionalButtonsTableView {
-            return event?.additionalButtons?.filter({ $0.isEnable }).count ?? 0
+            return enabledAdditionalButtons.count
         }
 
         return 0
@@ -2694,20 +2936,19 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
-            let buttons = event?.additionalButtons?.filter({ $0.isEnable }) ?? []
+            let buttons = enabledAdditionalButtons
             let item = buttons[indexPath.row]
 
             cell.selectionStyle = .none
-
-            cell.webSiteTitleLbl.text = item.title
-//            cell.webSiteDiscriptionLbl.text = item.
 
             let tintColor = UIColor(
                 hex: event?.whiteLabelColor ?? "#FFFFFF"
             )
 
-            cell.linkImageView.image = UIImage(named: "ic_link")?.withRenderingMode(.alwaysTemplate)
-            cell.linkImageView.tintColor = tintColor
+            cell.configure(with: item, tintColor: tintColor)
+            cell.onTap = { [weak self] in
+                self?.openAdditionalButton(item)
+            }
 
             return cell
         }
@@ -2770,6 +3011,13 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView == additionalButtonsTableView {
+            let buttons = enabledAdditionalButtons
+            guard buttons.indices.contains(indexPath.row) else { return }
+            openAdditionalButton(buttons[indexPath.row])
+            return
+        }
+
         if tableView == faqsTableView {
             if expandedFAQIndex == indexPath.row {
                 expandedFAQIndex = nil
@@ -2794,6 +3042,38 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
           guard currentCount == 0 else { return }
 
           handlePlus(ticket: ticket)
+    }
+}
+
+private extension EventDetailsVC {
+
+    var enabledAdditionalButtons: [AdditionalButton] {
+        event?.additionalButtons?.filter { button in
+            button.isEnable &&
+            !button.link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        } ?? []
+    }
+
+    func openAdditionalButton(_ button: AdditionalButton) {
+        let link = button.link.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let url = normalizedAdditionalButtonURL(from: link) else {
+            Alert.showToast("Invalid link")
+            return
+        }
+
+        UIApplication.shared.open(url)
+    }
+
+    func normalizedAdditionalButtonURL(from link: String) -> URL? {
+        guard !link.isEmpty else { return nil }
+
+        if let url = URL(string: link),
+           url.scheme != nil {
+            return url
+        }
+
+        return URL(string: "https://\(link)")
     }
 }
 
@@ -2861,6 +3141,11 @@ extension EventDetailsVC {
 extension EventDetailsVC: YTPlayerViewDelegate {
 
     func setupYouTubePlayer() {
+        if playerView != nil {
+            playerView.delegate = self
+            return
+        }
+
         playerView = YTPlayerView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         playerView.delegate = self
@@ -2873,48 +3158,178 @@ extension EventDetailsVC: YTPlayerViewDelegate {
             playerView.leadingAnchor.constraint(equalTo: youTubePlayerView.leadingAnchor),
             playerView.trailingAnchor.constraint(equalTo: youTubePlayerView.trailingAnchor)
         ])
+        youTubePlayerView.bringSubviewToFront(youTubeShimmerView)
+    }
 
-        let videoID = "dQw4w9WgXcQ"
-
-        playerView.load(
-            withVideoId: videoID,
-            playerVars: [
-                "playsinline": 1,
-                "autoplay": 0,
-                "controls": 1,
-                "modestbranding": 1,
-                "rel": 0
-            ]
-        )
+    func youtubePlayerVars() -> [AnyHashable: Any] {
+        [
+            "playsinline": 1,
+            "autoplay": 0,
+            "controls": 1,
+            "modestbranding": 1,
+            "rel": 0
+        ]
     }
 
     func extractVideoID(from url: String) -> String? {
-        return URLComponents(string: url)?
-            .queryItems?
+        guard let components = URLComponents(string: url) else {
+            return nil
+        }
+
+        if let id = components.queryItems?
             .first(where: { $0.name == "v" })?
-            .value
+            .value,
+           !id.isEmpty {
+            return id
+        }
+
+        let pathComponents = components.path
+            .split(separator: "/")
+            .map(String.init)
+
+        if components.host?.contains("youtu.be") == true {
+            return pathComponents.first
+        }
+
+        if let markerIndex = pathComponents.firstIndex(where: {
+            $0 == "embed" || $0 == "shorts"
+        }),
+           pathComponents.indices.contains(markerIndex + 1) {
+            return pathComponents[markerIndex + 1]
+        }
+
+        return nil
+    }
+
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+        isYouTubePlayerReady = true
+        hideYouTubeShimmer()
+    }
+
+    func playerView(
+        _ playerView: YTPlayerView,
+        receivedError error: YTPlayerError
+    ) {
+        hideYouTubeShimmer()
     }
 }
 
 extension EventDetailsVC: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let id = "venuePin"
-
-        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
-
-        if view == nil {
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+        guard let annotation = annotation as? EventDetailsMapAnnotation else {
+            return nil
         }
 
-        view?.annotation = annotation
+        let id = "EventDetailsImagePin"
+        let view = mapView.dequeueReusableAnnotationView(
+            withIdentifier: id
+        ) as? EventDetailsImageAnnotationView ?? EventDetailsImageAnnotationView(
+            annotation: annotation,
+            reuseIdentifier: id
+        )
 
-        if let marker = view as? MKMarkerAnnotationView {
-            marker.markerTintColor = .systemBlue
-            marker.titleVisibility = .hidden
-        }
-
+        view.annotation = annotation
+        view.configure(imageURL: annotation.imageURL)
         return view
+    }
+}
+
+extension EventDetailsVC: UIGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer === navigationController?.interactivePopGestureRecognizer {
+            return (navigationController?.viewControllers.count ?? 0) > 1
+        }
+
+        return true
+    }
+}
+
+private final class EventDetailsMapAnnotation: NSObject, MKAnnotation {
+
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    let imageURL: String?
+
+    init(
+        coordinate: CLLocationCoordinate2D,
+        title: String?,
+        imageURL: String?
+    ) {
+        self.coordinate = coordinate
+        self.title = title
+        self.imageURL = imageURL
+        super.init()
+    }
+}
+
+private final class EventDetailsImageAnnotationView: MKAnnotationView {
+
+    private let imageView = UIImageView()
+    private let ringView = UIView()
+
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = UIImage(named: "newSpeakeasy")
+    }
+
+    func configure(imageURL: String?) {
+        imageView.sd_setImage(
+            with: URL(string: imageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
+    }
+
+    private func setup() {
+        frame = CGRect(x: 0, y: 0, width: 46, height: 46)
+        centerOffset = CGPoint(x: 0, y: -18)
+        canShowCallout = false
+
+        ringView.frame = bounds
+        ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
+        ringView.layer.cornerRadius = bounds.width / 2
+        ringView.layer.borderColor = UIColor.white.withAlphaComponent(0.86).cgColor
+        ringView.layer.borderWidth = 2
+        ringView.layer.shadowColor = UIColor.black.cgColor
+        ringView.layer.shadowOpacity = 0.35
+        ringView.layer.shadowRadius = 8
+        ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        addSubview(ringView)
+
+        imageView.frame = bounds.insetBy(dx: 5, dy: 5)
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = imageView.bounds.width / 2
+        imageView.image = UIImage(named: "newSpeakeasy")
+        addSubview(imageView)
+    }
+}
+
+private extension CLLocationCoordinate2D {
+    static func valid(
+        latitude: CLLocationDegrees,
+        longitude: CLLocationDegrees
+    ) -> CLLocationCoordinate2D? {
+        guard CLLocationCoordinate2DIsValid(
+            CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        ) else {
+            return nil
+        }
+
+        guard latitude != 0 || longitude != 0 else { return nil }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -2922,27 +3337,33 @@ extension EventDetailsVC: MKMapViewDelegate {
 final class EventDetailsSkeletonView: UIView {
 
     private var allShimmerViews: [ShimmerViewV3] = []
-    private var didSetup = false
+    private var lastLayoutWidth: CGFloat = 0
+    private var isShimmering = false
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        guard !didSetup, bounds.width > 0 else { return }
-        didSetup = true
+        guard bounds.width > 0 else { return }
+        guard abs(bounds.width - lastLayoutWidth) > 1 else { return }
+        lastLayoutWidth = bounds.width
         setupUI()
     }
 
     private func setupUI() {
+        allShimmerViews.forEach { $0.removeFromSuperview() }
+        allShimmerViews.removeAll()
+
         backgroundColor = .clear
 
         let W = bounds.width
         let pad: CGFloat = 16
-        var y: CGFloat = 16
+        let contentWidth = max(0, W - pad * 2)
+        var y: CGFloat = 0
 
         // ─────────────────────────────
         // 1. VIP Banner
         // ─────────────────────────────
 
-        let bannerWidth = W - pad * 2
+        let bannerWidth = contentWidth
         let bannerHeight: CGFloat = 60
 
         make(
@@ -2980,9 +3401,9 @@ final class EventDetailsSkeletonView: UIView {
         make(CGRect(x: pad, y: y, width: 80, height: 14), corner: 6)
         y += 24
 
-        make(CGRect(x: pad, y: y, width: W * 0.7, height: 10), corner: 5)
+        make(CGRect(x: pad, y: y, width: contentWidth * 0.7, height: 10), corner: 5)
         y += 16
-        make(CGRect(x: pad, y: y, width: W * 0.5, height: 10), corner: 5)
+        make(CGRect(x: pad, y: y, width: contentWidth * 0.5, height: 10), corner: 5)
 
         y += 28
 //
@@ -3007,7 +3428,7 @@ final class EventDetailsSkeletonView: UIView {
             ), corner: avatarSize/2)
         }
 
-        make(CGRect(x: W - pad - 80, y: y + 8, width: 80, height: 10), corner: 5)
+        make(CGRect(x: pad + contentWidth - 80, y: y + 8, width: 80, height: 10), corner: 5)
 
         y += avatarSize + 24
         
@@ -3019,9 +3440,9 @@ final class EventDetailsSkeletonView: UIView {
 
         make(
             CGRect(
-                x: 16,
+                x: pad,
                 y: y,
-                width: W - 32,
+                width: contentWidth,
                 height: continueBtnHeight
             ),
             corner: 22
@@ -3047,6 +3468,10 @@ final class EventDetailsSkeletonView: UIView {
 //        make(CGRect(x: pad, y: y + 14, width: 70, height: 8), corner: 5)
 //
 //        make(CGRect(x: W - pad - 80, y: y, width: 80, height: 30), corner: 15)
+
+        if isShimmering {
+            allShimmerViews.forEach { $0.startShimmer() }
+        }
     }
 
     // MARK: - Helpers (same as Home)
@@ -3070,11 +3495,13 @@ final class EventDetailsSkeletonView: UIView {
     // MARK: - Control
 
     func startShimmer() {
+        isShimmering = true
         isHidden = false
         allShimmerViews.forEach { $0.startShimmer() }
     }
 
     func stopShimmer() {
+        isShimmering = false
         allShimmerViews.forEach { $0.stopShimmer() }
         isHidden = true
     }

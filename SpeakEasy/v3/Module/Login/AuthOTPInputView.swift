@@ -47,7 +47,8 @@ final class AuthOTPInputView: UIView {
     }
 
     func configure(phone: String, countryCode: String) {
-        phoneNumLbl.text = "Enter the 6 digits code sent to \(countryCode)...\(phone.suffix(2))"
+//        phoneNumLbl.text = "Enter the 6 digits code sent to \(countryCode)...\(phone.suffix(2))"
+        phoneNumLbl.text = "Enter the 6 digits code sent to \(countryCode)\(phone)"
     }
 
     func updateTimer(_ text: String) {

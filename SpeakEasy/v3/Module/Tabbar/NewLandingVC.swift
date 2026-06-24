@@ -55,6 +55,7 @@ final class NewLandingVC: UIViewController {
 
         setupUserData()
         observeProfileUpdate()
+        observePremiumTabRequests()
     }
 
     override func viewDidLayoutSubviews() {
@@ -87,7 +88,7 @@ final class NewLandingVC: UIViewController {
 
         let experiences = makeSystemNav(
             root: experiencesVC,
-            title: "Experiences",
+            title: "Premium",
             image: UIImage(resource: .experiencesIcon)
         )
 
@@ -198,7 +199,7 @@ final class NewLandingVC: UIViewController {
 
         customTabBar.configure(items: [
             FloatingTabItem(title: "Discover", icon: UIImage(resource: .discoverIconV3)),
-            FloatingTabItem(title: "Experiences", icon: UIImage(resource: .experiencesIcon)),
+            FloatingTabItem(title: "Premium", icon: UIImage(resource: .experiencesIcon)),
             FloatingTabItem(title: "Search", icon: UIImage(resource: .searchIconV3))
         ])
 
@@ -263,8 +264,28 @@ final class NewLandingVC: UIViewController {
         )
     }
 
+    private func observePremiumTabRequests() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onOpenPremiumTabRequest(_:)),
+            name: .openPremiumTabFromDiscover,
+            object: nil
+        )
+    }
+
     @objc private func onProfileUpdated() {
         setupUserData()
+    }
+
+    @objc private func onOpenPremiumTabRequest(_ notification: Notification) {
+        let city = notification.userInfo?["city"] as? String
+        experiencesVC.applyCity(city)
+
+        if let systemTabVC {
+            systemTabVC.selectedIndex = 1
+        } else {
+            selectTab(index: 1)
+        }
     }
 
     private func setupUserData() {

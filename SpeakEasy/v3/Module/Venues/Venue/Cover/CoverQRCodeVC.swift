@@ -100,8 +100,42 @@ final class CoverQRCodeVC: UIViewController {
 
     // MARK: - Setup
     private func setupUI() {
+        setupHeaderLabels()
         venueName.text = venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-")
         cityLbl.text = venue?.city
+    }
+
+    private func setupHeaderLabels() {
+        venueName.numberOfLines = 2
+        venueName.lineBreakMode = .byWordWrapping
+        venueName.textAlignment = .center
+        venueName.adjustsFontSizeToFitWidth = true
+        venueName.minimumScaleFactor = 0.75
+
+        cityLbl.numberOfLines = 1
+        cityLbl.lineBreakMode = .byTruncatingTail
+        cityLbl.textAlignment = .center
+        cityLbl.adjustsFontSizeToFitWidth = true
+        cityLbl.minimumScaleFactor = 0.8
+
+        NSLayoutConstraint.activate([
+            venueName.leadingAnchor.constraint(
+                greaterThanOrEqualTo: view.leadingAnchor,
+                constant: 72
+            ),
+            venueName.trailingAnchor.constraint(
+                lessThanOrEqualTo: view.trailingAnchor,
+                constant: -24
+            ),
+            cityLbl.leadingAnchor.constraint(
+                greaterThanOrEqualTo: view.leadingAnchor,
+                constant: 24
+            ),
+            cityLbl.trailingAnchor.constraint(
+                lessThanOrEqualTo: view.trailingAnchor,
+                constant: -24
+            )
+        ])
     }
 
     private func setupPosterBackground() {
@@ -226,6 +260,7 @@ final class CoverQRCodeVC: UIViewController {
         self.booking = booking
         venue = booking.venueObject ?? venue
         venueName.text = booking.venueObject?.name ?? venueNameText ?? "-"
+        cityLbl.text = booking.venueObject?.city ?? venue?.city
 
         if isAddOnsAvailable || !addOnsBookingId.isEmpty || !(booking.addOnsBookingId ?? "").isEmpty {
             isAddOnsAvailable = true
@@ -331,7 +366,7 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Pager Height
     private func handlePagerCellHeightChange(at index: Int, height: CGFloat) {
 
-        let totalHeight = height + 400
+        let totalHeight = fallbackPagerHeight
 
         guard pagerItemHeights[index] != totalHeight else { return }
 
@@ -339,8 +374,8 @@ final class CoverQRCodeVC: UIViewController {
 
         guard currentPage == index else { return }
 
-//        pagerViewheight.constant = totalHeight
-        updatePagerItemSize(height: fallbackPagerHeight)
+        pagerViewheight.constant = totalHeight
+        updatePagerItemSize(height: totalHeight)
 
         UIView.performWithoutAnimation {
             self.view.layoutIfNeeded()
@@ -351,7 +386,7 @@ final class CoverQRCodeVC: UIViewController {
 
         let height = pagerItemHeights[index] ?? fallbackPagerHeight
 
-//        pagerViewheight.constant = height
+        pagerViewheight.constant = height
         updatePagerItemSize(height: height)
     }
 
@@ -412,7 +447,23 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        dismiss(animated: true)
+        returnToDiscoverScreen()
+    }
+
+    private func returnToDiscoverScreen() {
+        let presenter = presentingViewController
+
+        dismiss(animated: false) {
+            if let navigationController = presenter as? UINavigationController {
+                navigationController.tabBarController?.selectedIndex = 0
+                navigationController.popToRootViewController(animated: false)
+            } else if let navigationController = presenter?.navigationController {
+                navigationController.tabBarController?.selectedIndex = 0
+                navigationController.popToRootViewController(animated: false)
+            } else if let tabBarController = presenter?.tabBarController {
+                tabBarController.selectedIndex = 0
+            }
+        }
     }
 
     @IBAction func onClickAddToWalletBtn(_ sender: Any) {

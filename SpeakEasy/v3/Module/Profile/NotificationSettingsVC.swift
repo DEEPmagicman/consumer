@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 final class NotificationSettingsVC: UIViewController {
 
@@ -20,19 +21,11 @@ final class NotificationSettingsVC: UIViewController {
         NotificationSettingSection(
             title: "How should we notify you?",
             items: [
-                NotificationSettingItem(title: "Push notifications", isOn: true),
-                NotificationSettingItem(title: "Email notifications", isOn: true)
-            ]
-        ),
-        NotificationSettingSection(
-            title: "What would you like updates on?",
-            items: [
-                NotificationSettingItem(title: "Events", isOn: true),
-                NotificationSettingItem(title: "Venues", isOn: true),
-                NotificationSettingItem(title: "Creators", isOn: true),
-                NotificationSettingItem(title: "Premium experiences", isOn: false),
-                NotificationSettingItem(title: "Artists", isOn: false),
-                NotificationSettingItem(title: "Promotions", isOn: false)
+                NotificationSettingItem(
+                    title: "Push notifications",
+                    type: .push,
+                    isOn: UserDefault.shared.isNotificationOn
+                )
             ]
         )
     ]
@@ -41,6 +34,7 @@ final class NotificationSettingsVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         buildSections()
+        refreshPushNotificationState()
     }
 
     override func viewDidLayoutSubviews() {
@@ -123,13 +117,85 @@ final class NotificationSettingsVC: UIViewController {
         for sectionIndex in sections.indices {
             let sectionView = NotificationSettingsSectionView(section: sections[sectionIndex])
             sectionView.onToggle = { [weak self] itemIndex, isOn in
-                self?.sections[sectionIndex].items[itemIndex].isOn = isOn
+                guard let self else { return }
+                let item = self.sections[sectionIndex].items[itemIndex]
 
-                // API payload point:
-                // self?.updateNotificationSetting(sectionIndex: sectionIndex, itemIndex: itemIndex, isOn: isOn)
+                switch item.type {
+                case .push:
+                    self.updatePushNotification(isOn: isOn)
+                }
             }
 
             mainStack.addArrangedSubview(sectionView)
+        }
+    }
+
+    private func refreshPushNotificationState() {
+        guard #available(iOS 10.0, *) else {
+            updatePushState(UserDefault.shared.isNotificationOn, rebuild: true)
+            return
+        }
+
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            var isSystemEnabled = settings.authorizationStatus == .authorized
+            if #available(iOS 12.0, *) {
+                isSystemEnabled = isSystemEnabled || settings.authorizationStatus == .provisional
+            }
+
+            DispatchQueue.main.async {
+                self?.updatePushState(isSystemEnabled && UserDefault.shared.isNotificationOn, rebuild: true)
+            }
+        }
+    }
+
+    private func updatePushNotification(isOn: Bool) {
+        if isOn {
+            requestPushNotificationPermission()
+        } else {
+            UIApplication.shared.unregisterForRemoteNotifications()
+            updatePushState(false, rebuild: false)
+        }
+    }
+
+    private func requestPushNotificationPermission() {
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: [.alert, .badge, .sound]
+            ) { [weak self] isAllowed, _ in
+                DispatchQueue.main.async {
+                    if isAllowed {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        Alert.showToast("Push notifications are disabled.")
+                    }
+                    self?.updatePushState(isAllowed, rebuild: true)
+                }
+            }
+        } else {
+            let settings = UIUserNotificationSettings(
+                types: [.alert, .badge, .sound],
+                categories: nil
+            )
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                appDelegate.application?.registerUserNotificationSettings(settings)
+            }
+            updatePushState(true, rebuild: false)
+        }
+    }
+
+    private func updatePushState(_ isOn: Bool, rebuild: Bool) {
+        UserDefault.shared.isNotificationOn = isOn
+
+        for sectionIndex in sections.indices {
+            for itemIndex in sections[sectionIndex].items.indices
+            where sections[sectionIndex].items[itemIndex].type == .push {
+                sections[sectionIndex].items[itemIndex].isOn = isOn
+            }
+        }
+
+        if rebuild {
+            buildSections()
         }
     }
 
@@ -138,6 +204,8 @@ final class NotificationSettingsVC: UIViewController {
     }
 }
 
+extension NotificationSettingsVC: UNUserNotificationCenterDelegate { }
+
 struct NotificationSettingSection {
     let title: String
     var items: [NotificationSettingItem]
@@ -145,5 +213,10 @@ struct NotificationSettingSection {
 
 struct NotificationSettingItem {
     let title: String
+    let type: NotificationSettingType
     var isOn: Bool
+}
+
+enum NotificationSettingType {
+    case push
 }

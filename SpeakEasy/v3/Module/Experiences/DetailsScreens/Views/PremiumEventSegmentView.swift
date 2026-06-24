@@ -49,6 +49,13 @@ final class PremiumEventSegmentView: UIView {
 
     private var selectedIndex = 1
     
+    private var availableSegments:
+    [PremiumEventContainerVC.Segment] = [
+        .map,
+        .list,
+        .inquiry
+    ]
+    
     private let selectedGradientLayer = CAGradientLayer()
     
     override init(frame: CGRect) {
@@ -67,10 +74,12 @@ final class PremiumEventSegmentView: UIView {
         super.layoutSubviews()
         
         let horizontalPadding: CGFloat = 4
-        let width = (glassView.bounds.width - (horizontalPadding * 2)) / 3
+        let count = CGFloat(max(availableSegments.count, 1))
+        let width = (glassView.bounds.width - (horizontalPadding * 2)) / count
+        let visibleIndex = visibleIndex(for: selectedIndex)
         
         selectedWidth.constant = width
-        selectedLeading.constant = horizontalPadding + (CGFloat(selectedIndex) * width)
+        selectedLeading.constant = horizontalPadding + (CGFloat(visibleIndex) * width)
         DispatchQueue.main.async {
             self.selectedGradientLayer.frame = self.selectedView.bounds
             self.selectedGradientLayer.cornerRadius = self.selectedView.bounds.height / 2
@@ -217,10 +226,12 @@ private extension PremiumEventSegmentView {
         layoutIfNeeded()
 
         let horizontalPadding: CGFloat = 4
-        let width = (glassView.bounds.width - (horizontalPadding * 2)) / 3
+        let count = CGFloat(max(availableSegments.count, 1))
+        let width = (glassView.bounds.width - (horizontalPadding * 2)) / count
+        let visibleIndex = visibleIndex(for: selectedIndex)
 
         selectedWidth.constant = width
-        selectedLeading.constant = horizontalPadding + (CGFloat(selectedIndex) * width)
+        selectedLeading.constant = horizontalPadding + (CGFloat(visibleIndex) * width)
 
         let animations = {
 
@@ -273,28 +284,33 @@ private extension PremiumEventSegmentView {
         guard sender.tag != selectedIndex else {
             return
         }
+        
+        guard let segment = segment(for: sender.tag),
+              availableSegments.contains(segment) else {
+            return
+        }
 
         selectedIndex = sender.tag
 
         updateSelection(animated: true)
 
-        switch sender.tag {
+        switch segment {
 
-        case 0:
+        case .map:
 
             delegate?.premiumSegmentView(
                 self,
                 didSelect: .map
             )
 
-        case 1:
+        case .list:
 
             delegate?.premiumSegmentView(
                 self,
                 didSelect: .list
             )
 
-        default:
+        case .inquiry:
 
             delegate?.premiumSegmentView(
                 self,
@@ -305,6 +321,35 @@ private extension PremiumEventSegmentView {
 }
 
 extension PremiumEventSegmentView {
+    
+    func configure(
+        availableSegments: [PremiumEventContainerVC.Segment],
+        selectedSegment: PremiumEventContainerVC.Segment,
+        animated: Bool = false
+    ) {
+        
+        self.availableSegments = availableSegments.isEmpty
+            ? [.list]
+            : availableSegments
+        
+        mapButton.isHidden =
+        !self.availableSegments.contains(.map)
+        
+        listButton.isHidden =
+        !self.availableSegments.contains(.list)
+        
+        inquiryButton.isHidden =
+        !self.availableSegments.contains(.inquiry)
+        
+        let resolvedSegment = self.availableSegments.contains(selectedSegment)
+            ? selectedSegment
+            : (self.availableSegments.first ?? .list)
+        
+        select(
+            resolvedSegment,
+            animated: animated
+        )
+    }
 
     func select(
         _ segment: PremiumEventContainerVC.Segment,
@@ -324,5 +369,30 @@ extension PremiumEventSegmentView {
         }
 
         updateSelection(animated: animated)
+    }
+}
+
+private extension PremiumEventSegmentView {
+    
+    func visibleIndex(for tag: Int) -> Int {
+        guard let segment = segment(for: tag),
+              let index = availableSegments.firstIndex(of: segment) else {
+            return 0
+        }
+        
+        return index
+    }
+    
+    func segment(for tag: Int) -> PremiumEventContainerVC.Segment? {
+        switch tag {
+        case 0:
+            return .map
+        case 1:
+            return .list
+        case 2:
+            return .inquiry
+        default:
+            return nil
+        }
     }
 }

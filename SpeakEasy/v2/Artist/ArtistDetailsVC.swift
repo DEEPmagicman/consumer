@@ -7,106 +7,358 @@
 
 import UIKit
 
-final class ArtistDetailsVC: UIViewController {
+struct ArtistDetailsContext {
+    let id: String
+    let venueId: String
+    let name: String
+    let imageKey: String?
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var segmentView: UIView!
+    var imageURL: String? {
+        guard let imageKey,
+              !imageKey.isEmpty else { return nil }
 
-    private var upcomingEvents: [String] = []
-    private var pastEvents: [String] = []
+        if imageKey.lowercased().hasPrefix("http://") ||
+            imageKey.lowercased().hasPrefix("https://") {
+            return imageKey
+        }
 
-    private let segmentControl = SSSegmentedControl()
-
-    enum SegmentType: Int {
-        case upcoming = 0
-        case past = 1
+        return imageKey.imageURL
     }
 
-    private var selectedSegment: SegmentType = .upcoming
+    init(
+        id: String,
+        venueId: String,
+        name: String,
+        imageKey: String?
+    ) {
+        self.id = id
+        self.venueId = venueId
+        self.name = name
+        self.imageKey = imageKey
+    }
+
+    init(artist: Artists, venueId: String) {
+        self.id = artist.id ?? ""
+        self.venueId = venueId
+        self.name = artist.name
+        self.imageKey = artist.artistImage?.key
+    }
+}
+
+final class ArtistDetailsVC: UIViewController {
+
+    @IBOutlet weak var segmentView: UIView!
+
+    var artist: ArtistDetailsContext?
+
+    private let discoverService = DiscoverService()
+    private let collectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewLayout()
+    )
+
+    private weak var artistImageView: UIImageView?
+    private weak var artistNameLabel: UILabel?
+
+    private var events: [Event] = []
+    private var skip = 0
+    private var hasMore = true
+    private var isLoading = false
+    private var isInitialLoading = true
+    private var isPaginating = false
+    private var lastCollectionLayoutWidth: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupTableView()
-        setupSegmentControl()
-        loadDummyData()
+        captureHeaderViews()
+        setupHeader()
+        setupCollectionView()
+        getEvents(reset: true)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        segmentView.layer.cornerRadius = segmentView.bounds.height / 2
-        segmentView.clipsToBounds = true
-
-        segmentControl.layer.cornerRadius = segmentView.bounds.height / 2
-        segmentControl.clipsToBounds = true
+        artistImageView?.layer.cornerRadius = (artistImageView?.bounds.height ?? 0) / 2
+        artistImageView?.clipsToBounds = true
+        refreshCollectionLayoutIfNeeded()
     }
 
-    private func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .clear
-        tableView.separatorStyle = .none
-        tableView.showsVerticalScrollIndicator = false
-
-        tableView.register(
-            VenueEventTVC.nib,
-            forCellReuseIdentifier: VenueEventTVC.identifier
+    private func captureHeaderViews() {
+        artistImageView = view.findFirstImageView(
+            where: { abs($0.bounds.width - 100) < 2 || $0.tag == 1001 }
         )
+        artistNameLabel = view.findFirstLabel(where: { $0.text == "Katy Perry" })
     }
 
-    private func setupSegmentControl() {
-        segmentControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentView.addSubview(segmentControl)
+    private func setupHeader() {
+        artistNameLabel?.text = artist?.name ?? "Artist"
+        artistNameLabel?.font = Constant.Font.geistMedium(size: 22)
+        artistNameLabel?.numberOfLines = 2
+
+        artistImageView?.contentMode = .scaleAspectFill
+        artistImageView?.sd_cancelCurrentImageLoad()
+
+        guard let imageURL = artist?.imageURL,
+              let url = URL(string: imageURL) else {
+            artistImageView?.image = Constant.Icon.uploadImage
+            return
+        }
+
+        artistImageView?.sd_setImage(
+            with: url,
+            placeholderImage: Constant.Icon.uploadImage
+        ) { [weak self] image, _, _, _ in
+            guard image == nil else { return }
+            self?.artistImageView?.image = Constant.Icon.uploadImage
+        }
+    }
+
+    private func setupCollectionView() {
+        guard let container = segmentView.superview else { return }
+
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.prefetchDataSource = self
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
+
+        collectionView.register(
+            OrderCardCollectionCell.self,
+            forCellWithReuseIdentifier: OrderCardCollectionCell.identifier
+        )
+        collectionView.register(
+            OrderCardShimmerCell.self,
+            forCellWithReuseIdentifier: OrderCardShimmerCell.identifier
+        )
+        collectionView.register(
+            EmptyCollectionReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier
+        )
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier
+        )
+
+        let layout = PinterestLayout()
+        layout.numberOfColumns = 2
+        layout.sectionInsets = UIEdgeInsets(
+            top: 10,
+            left: 24,
+            bottom: 34,
+            right: 24
+        )
+        layout.interItemSpacing = 14
+        layout.lineSpacing = 22
+        layout.delegate = self
+        collectionView.collectionViewLayout = layout
+
+        container.addSubview(collectionView)
 
         NSLayoutConstraint.activate([
-            segmentControl.topAnchor.constraint(equalTo: segmentView.topAnchor),
-            segmentControl.leadingAnchor.constraint(equalTo: segmentView.leadingAnchor),
-            segmentControl.trailingAnchor.constraint(equalTo: segmentView.trailingAnchor),
-            segmentControl.bottomAnchor.constraint(equalTo: segmentView.bottomAnchor)
+            collectionView.topAnchor.constraint(equalTo: segmentView.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+    }
+
+    private func getEvents(reset: Bool = false) {
+        guard !isLoading || reset else { return }
+        guard hasMore || reset else { return }
+
+        let artistId = artist?.id ?? ""
+        let venueId = artist?.venueId ?? ""
+
+        guard !artistId.isEmpty,
+              !venueId.isEmpty else {
+            isInitialLoading = false
+            events.removeAll()
+            reloadUI()
+            return
+        }
+
+        isLoading = true
+
+        if reset {
+            skip = 0
+            hasMore = true
+            isInitialLoading = true
+            isPaginating = false
+            events.removeAll()
+            reloadUI()
+        }
+
+        discoverService.fetchArtistEvents(
+            artistId: artistId,
+            venueId: venueId,
+            skip: skip,
+            timeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, errMsg, page in
+
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                let oldCount = self.events.count
+                self.isLoading = false
+
+                guard isSuccess,
+                      let page else {
+                    self.isInitialLoading = false
+                    self.isPaginating = false
+                    self.updateEmptyState()
+                    if let errMsg {
+                        Alert.showToast(errMsg)
+                    }
+                    return
+                }
+
+                let incomingEvents = reset
+                    ? page.list
+                    : page.list.filter { newEvent in
+                        !self.events.contains { $0.id == newEvent.id }
+                    }
+
+                if reset {
+                    self.events = incomingEvents
+                } else {
+                    self.events.append(contentsOf: incomingEvents)
+                }
+
+                self.skip = self.events.count
+                self.hasMore = page.hasMore
+
+                let wasInitialLoading = self.isInitialLoading
+                self.isInitialLoading = false
+
+                if wasInitialLoading || reset {
+                    self.isPaginating = false
+                    self.reloadUI()
+                    return
+                }
+
+                let newCount = self.events.count
+                let indexPaths = (oldCount..<newCount).map {
+                    IndexPath(item: $0, section: 0)
+                }
+
+                guard !indexPaths.isEmpty else {
+                    self.isPaginating = false
+                    self.invalidateFooter()
+                    self.updateEmptyState()
+                    return
+                }
+
+                self.insertEventItems(indexPaths)
+            }
+        }
+    }
+
+    private func reloadUI() {
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.reloadData()
+            collectionView.layoutIfNeeded()
+        }
+        updateEmptyState()
+    }
+
+    private func insertEventItems(_ indexPaths: [IndexPath]) {
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates {
+                collectionView.insertItems(at: indexPaths)
+            } completion: { [weak self] _ in
+                guard let self else { return }
+                self.isPaginating = false
+                self.invalidateFooter()
+                self.updateEmptyState()
+            }
+        }
+    }
+
+    private func updateEmptyState() {
+        collectionView.backgroundView = !isInitialLoading && events.isEmpty
+            ? makeEmptyStateView()
+            : nil
+    }
+
+    private func makeEmptyStateView() -> UIView {
+        let container = UIView(frame: collectionView.bounds)
+        container.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No events found"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistMedium(size: 18)
+        titleLabel.textAlignment = .center
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "This artist does not have upcoming events here yet."
+        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+
+        container.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -40),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
         ])
 
-        segmentControl.numberOfSegments = 2
-        segmentControl.segmentsTitle = "Upcoming,Past"
-        segmentControl.currentIndex = 0
-        segmentControl.buttonPadding = 4
+        return container
+    }
 
-        segmentControl.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        segmentControl.currentIndexBackgroundColor = UIColor.white.withAlphaComponent(0.2)
-        segmentControl.currentIndexTitleColor = .white
-        segmentControl.otherIndexTitleColor = .lightGray
-
-        segmentControl.didTapSegment = { [weak self] index in
-            guard let self = self else { return }
-
-            self.selectedSegment = SegmentType(rawValue: index) ?? .upcoming
-            self.tableView.reloadData()
+    private func invalidateFooter() {
+        if let layout = collectionView.collectionViewLayout as? PinterestLayout {
+            layout.invalidateFooter()
+        } else {
+            collectionView.collectionViewLayout.invalidateLayout()
         }
     }
 
-    private func loadDummyData() {
-        upcomingEvents = [
-            "E11EVEN HALLOWEEN WEEK FT FAT JOE LIVE",
-            "SUMMER NIGHT PARTY",
-            "LATIN VIBES LIVE"
-        ]
+    private func refreshCollectionLayoutIfNeeded() {
+        let width = collectionView.bounds.width
 
-        pastEvents = [
-            "RETRO NIGHT LIVE",
-            "DJ FEST 2025",
-            "FRIDAY BLACKOUT"
-        ]
+        guard width > 0,
+              abs(width - lastCollectionLayoutWidth) > 0.5 else {
+            return
+        }
 
-        tableView.reloadData()
+        lastCollectionLayoutWidth = width
+
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.layoutIfNeeded()
+        }
     }
 
-    private func currentEvents() -> [String] {
-        switch selectedSegment {
-        case .upcoming:
-            return upcomingEvents
-        case .past:
-            return pastEvents
-        }
+    private func loadNextPageIfNeeded() {
+        guard !isInitialLoading else { return }
+        guard !isPaginating else { return }
+        guard !isLoading else { return }
+        guard hasMore else { return }
+        guard !events.isEmpty else { return }
+
+        isPaginating = true
+        collectionView.collectionViewLayout.invalidateLayout()
+
+        getEvents(reset: false)
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
@@ -114,48 +366,238 @@ final class ArtistDetailsVC: UIViewController {
     }
 
     @IBAction func onClickShareBtn(_ sender: Any) {
-        // Share action
+        guard let artist else { return }
+        Utility.main.shareSocialWith(text: artist.name)
     }
 }
 
-extension ArtistDetailsVC: UITableViewDelegate, UITableViewDataSource {
+extension ArtistDetailsVC: UICollectionViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentEvents().count
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        if isInitialLoading {
+            return 6
+        }
+
+        return events.count
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
 
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: VenueEventTVC.identifier,
+        if isInitialLoading {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                for: indexPath
+            )
+        }
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: OrderCardCollectionCell.identifier,
             for: indexPath
-        ) as! VenueEventTVC
+        ) as! OrderCardCollectionCell
 
-        cell.selectionStyle = .none
-        cell.backgroundColor = .clear
+        guard events.indices.contains(indexPath.item) else {
+            return cell
+        }
 
-        let event = currentEvents()[indexPath.row]
-        print("Event:", event)
-
+        cell.configureDiscoverEvent(events[indexPath.item])
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let event = currentEvents()[indexPath.row]
-        print("Selected event:", event)
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: PaginationShimmerFooterView.identifier,
+                for: indexPath
+            ) as! PaginationShimmerFooterView
+
+            footer.isHidden = !(isPaginating && hasMore)
+            return footer
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier,
+            for: indexPath
+        )
+        header.isHidden = true
+        return header
+    }
+}
+
+extension ArtistDetailsVC: UICollectionViewDelegate {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        guard !isInitialLoading else { return }
+        guard events.indices.contains(indexPath.item) else { return }
+
+        Navigate.eventDetailsVC(self, event: events[indexPath.item])
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        heightForRowAt indexPath: IndexPath
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+        let threshold: CGFloat = 400
+
+        guard offsetY > contentHeight - visibleHeight - threshold else {
+            return
+        }
+
+        loadNextPageIfNeeded()
+    }
+}
+
+extension ArtistDetailsVC: UICollectionViewDataSourcePrefetching {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        prefetchItemsAt indexPaths: [IndexPath]
+    ) {
+        guard !isInitialLoading else { return }
+
+        if indexPaths.contains(where: { $0.item >= events.count - 4 }) {
+            loadNextPageIfNeeded()
+        }
+    }
+}
+
+extension ArtistDetailsVC: PinterestLayoutDelegate {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        heightForItemAt indexPath: IndexPath,
+        with width: CGFloat
     ) -> CGFloat {
-        return UITableView.automaticDimension
+
+        if isInitialLoading {
+            let imageHeight = width * 1.2
+            return imageHeight + 90
+        }
+
+        guard events.indices.contains(indexPath.item) else {
+            return 0.1
+        }
+
+        let event = events[indexPath.item]
+        let imageHeight = width * 1.2
+        let title = event.title
+        let venue = event.venue?.name ?? ""
+        let dateText = event.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .MMMDDATHMMA,
+            useDayLightSavingTime: true,
+            customTimeZone: event.venue?.useTimezone ?? ""
+        )
+
+        let titleHeight = textHeight(
+            title,
+            width: width,
+            font: Constant.Font.geistMedium(size: 15)
+        )
+        let venueHeight = textHeight(
+            venue,
+            width: width,
+            font: Constant.Font.geistMedium(size: 14)
+        )
+        let dateHeight = textHeight(
+            dateText,
+            width: width,
+            font: Constant.Font.geistMedium(size: 14)
+        )
+
+        return ceil(
+            imageHeight +
+            16 +
+            titleHeight +
+            3 +
+            venueHeight +
+            10 +
+            dateHeight
+        )
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForHeaderIn section: Int
+    ) -> CGFloat {
+        return 0.1
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForFooterIn section: Int
+    ) -> CGFloat {
+        return isPaginating && hasMore ? 300 : 0
+    }
+
+    private func textHeight(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
+        text.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [.font: font],
+            context: nil
+        ).height
+    }
+}
+
+private extension UIView {
+
+    func findFirstImageView(
+        where predicate: (UIImageView) -> Bool
+    ) -> UIImageView? {
+        if let imageView = self as? UIImageView,
+           predicate(imageView) {
+            return imageView
+        }
+
+        for subview in subviews {
+            if let imageView = subview.findFirstImageView(where: predicate) {
+                return imageView
+            }
+        }
+
+        return nil
+    }
+
+    func findFirstLabel(
+        where predicate: (UILabel) -> Bool
+    ) -> UILabel? {
+        if let label = self as? UILabel,
+           predicate(label) {
+            return label
+        }
+
+        for subview in subviews {
+            if let label = subview.findFirstLabel(where: predicate) {
+                return label
+            }
+        }
+
+        return nil
     }
 }

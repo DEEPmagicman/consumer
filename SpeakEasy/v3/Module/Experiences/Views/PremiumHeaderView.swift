@@ -352,14 +352,17 @@ final class PremiumLocationView: UIControl {
         addSubview(glassView)
 
         glassView.translatesAutoresizingMaskIntoConstraints = false
+        glassView.isUserInteractionEnabled = false
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.isUserInteractionEnabled = false
         iconView.image = UIImage(resource: .locationIcon)
         iconView.tintColor = .white
         iconView.contentMode = .scaleAspectFit
         addSubview(iconView)
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.isUserInteractionEnabled = false
         titleLabel.font = Constant.Font.geistMedium(size: 14)
         titleLabel.textColor = .white.withAlphaComponent(0.9)
         addSubview(titleLabel)

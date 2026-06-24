@@ -284,7 +284,7 @@ final class EventService {
                 self.savedEventId(from: responseDic) {
 
                 event.savedEventId = savedEventId
-                event.isSaved = true
+                event.hasSavedEvent = true
             }
 
             let seatingAreas =

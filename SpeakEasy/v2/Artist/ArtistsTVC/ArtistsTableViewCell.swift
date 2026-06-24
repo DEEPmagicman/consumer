@@ -13,10 +13,20 @@ final class ArtistsTableViewCell: UITableViewCell {
     @IBOutlet weak var artistImageView: UIImageView!
     @IBOutlet weak var artistNameLabel: UILabel!
 
+    var onViewEvents: (() -> Void)?
+
     // MARK: - Life Cycle
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        artistImageView.sd_cancelCurrentImageLoad()
+        artistImageView.image = nil
+        artistNameLabel.text = nil
+        onViewEvents = nil
     }
 
     // MARK: - Setup
@@ -31,18 +41,31 @@ final class ArtistsTableViewCell: UITableViewCell {
     }
 
     // MARK: - Configure
-    func configure(name: String, image: UIImage? = nil) {
+    func configure(name: String, image: UIImage? = nil, imageURL: String? = nil) {
 
         artistNameLabel.text = name
+        artistImageView.sd_cancelCurrentImageLoad()
 
-        if let image = image {
+        if let image {
             artistImageView.image = image
+        } else if let imageURL,
+                  !imageURL.isEmpty,
+                  let url = URL(string: imageURL) {
+            artistImageView.sd_setImage(
+                with: url,
+                placeholderImage: Constant.Icon.uploadImage
+            ) { [weak self] image, _, _, _ in
+                guard image == nil else { return }
+                self?.artistImageView.image = Constant.Icon.uploadImage
+            }
+        } else {
+            artistImageView.image = Constant.Icon.uploadImage
         }
     }
 
     // MARK: - Actions
     @IBAction func onTapViewAllButton(_ sender: UIButton) {
-
+        onViewEvents?()
     }
 
     // MARK: - Selection

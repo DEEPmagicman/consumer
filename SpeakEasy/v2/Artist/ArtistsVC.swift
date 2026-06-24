@@ -12,14 +12,20 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
     @IBOutlet weak var tableView: UITableView!
 
     weak var scrollDelegate: ChildScrollDelegate?
+    var venueId = ""
 
-    // MARK: - Data
-    private var artists: [String] = []
+    private let discoverService = DiscoverService()
+    private var artists: [ArtistDetailsContext] = []
+    private var skip = 0
+    private var hasMore = true
+    private var isLoading = false
+    private var isInitialLoading = true
+    private let take = 10
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        loadArtists()
+        fetchArtists(reset: true)
     }
 
     // MARK: - Segmented Scroll Source
@@ -42,21 +48,166 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
             UINib(nibName: "ArtistsTableViewCell", bundle: nil),
             forCellReuseIdentifier: "ArtistsTableViewCell"
         )
+        tableView.register(
+            ArtistListShimmerCell.self,
+            forCellReuseIdentifier: ArtistListShimmerCell.identifier
+        )
+
     }
 
-    // MARK: - Data
-    private func loadArtists() {
+    private func fetchArtists(reset: Bool = false) {
+        guard !isLoading || reset else { return }
+        guard hasMore || reset else { return }
 
-        artists = [
-            "Artist 1",
-            "Artist 2",
-            "Artist 3",
-            "Artist 4",
-            "Artist 5",
-            "Artist 6"
-        ]
+        let trimmedVenueId = venueId.trimmingCharacters(in: .whitespacesAndNewlines)
 
+        guard !trimmedVenueId.isEmpty else {
+            isInitialLoading = false
+            artists.removeAll()
+            reloadUI()
+            return
+        }
+
+        isLoading = true
+
+        if reset {
+            skip = 0
+            hasMore = true
+            isInitialLoading = true
+            artists.removeAll()
+            reloadUI()
+        } else {
+            tableView.tableFooterView = makeFooterView()
+        }
+
+        discoverService.fetchArtists(
+            venueId: trimmedVenueId,
+            skip: skip,
+            take: take,
+            timeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, errMsg, page in
+
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                self.isLoading = false
+                self.isInitialLoading = false
+
+                guard isSuccess,
+                      let page else {
+                    self.reloadUI()
+                    if let errMsg {
+                        Alert.showToast(errMsg)
+                    }
+                    return
+                }
+
+                let incoming = page.list.map {
+                    ArtistDetailsContext(artist: $0, venueId: trimmedVenueId)
+                }
+
+                if reset {
+                    self.artists = incoming
+                } else {
+                    self.artists.append(
+                        contentsOf: incoming.filter { newArtist in
+                            !self.artists.contains { $0.id == newArtist.id }
+                        }
+                    )
+                }
+
+                self.skip = self.artists.count
+                self.hasMore = page.hasMore
+                self.reloadUI()
+            }
+        }
+    }
+
+    private func reloadUI() {
         tableView.reloadData()
+        updateEmptyState()
+        tableView.tableFooterView = makeFooterView()
+    }
+
+    private func updateEmptyState() {
+        tableView.backgroundView =
+        !isInitialLoading && artists.isEmpty
+        ? makeEmptyStateView()
+        : nil
+    }
+
+    private func makeEmptyStateView() -> UIView {
+        let container = UIView(frame: tableView.bounds)
+        container.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No artists found"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistMedium(size: 18)
+        titleLabel.textAlignment = .center
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "This venue does not have artists listed yet."
+        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+
+        container.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -48),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+        ])
+
+        return container
+    }
+
+    private func makeFooterView() -> UIView? {
+        guard isLoading && !isInitialLoading else { return nil }
+
+        let footer = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 56))
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+
+        footer.addSubview(indicator)
+
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: footer.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: footer.centerYAnchor)
+        ])
+
+        return footer
+    }
+
+    private func loadNextPageIfNeeded(_ scrollView: UIScrollView) {
+        guard !isInitialLoading,
+              !isLoading,
+              hasMore,
+              !artists.isEmpty else {
+            return
+        }
+
+        let threshold: CGFloat = 220
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+
+        if offsetY > contentHeight - visibleHeight - threshold {
+            fetchArtists(reset: false)
+        }
     }
 }
 
@@ -65,11 +216,26 @@ extension ArtistsVC: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
+        if isInitialLoading {
+            return 6
+        }
+
         return artists.count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if isInitialLoading {
+            let shimmerCell =
+            tableView.dequeueReusableCell(
+                withIdentifier: ArtistListShimmerCell.identifier,
+                for: indexPath
+            ) as? ArtistListShimmerCell
+
+            shimmerCell?.startShimmer()
+            return shimmerCell ?? UITableViewCell()
+        }
 
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: "ArtistsTableViewCell",
@@ -78,13 +244,90 @@ extension ArtistsVC: UITableViewDataSource {
             return UITableViewCell()
         }
 
-        let artistName = artists[indexPath.row]
+        let artist = artists[indexPath.row]
 
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
-        cell.configure(name: artistName)
+        cell.configure(
+            name: artist.name,
+            imageURL: artist.imageURL
+        )
+        cell.onViewEvents = { [weak self] in
+            guard let self else { return }
+            Navigate.to.gotoArtistDetailsVC(self, artist: artist)
+        }
 
         return cell
+    }
+}
+
+private final class ArtistListShimmerCell: UITableViewCell {
+
+    private let avatarShimmer = ShimmerViewV3()
+    private let titleShimmer = ShimmerViewV3()
+    private let subtitleShimmer = ShimmerViewV3(frame: .zero, lighter: true)
+    private let buttonShimmer = ShimmerViewV3()
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            avatarShimmer,
+            titleShimmer,
+            subtitleShimmer,
+            buttonShimmer
+        ]
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        shimmerViews.forEach { $0.stopShimmer() }
+    }
+
+    private func setupUI() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        selectionStyle = .none
+
+        avatarShimmer.layer.cornerRadius = 24
+        buttonShimmer.layer.cornerRadius = 17
+
+        shimmerViews.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            avatarShimmer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            avatarShimmer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            avatarShimmer.widthAnchor.constraint(equalToConstant: 48),
+            avatarShimmer.heightAnchor.constraint(equalToConstant: 48),
+
+            titleShimmer.leadingAnchor.constraint(equalTo: avatarShimmer.trailingAnchor, constant: 14),
+            titleShimmer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
+            titleShimmer.widthAnchor.constraint(equalToConstant: 150),
+            titleShimmer.heightAnchor.constraint(equalToConstant: 16),
+
+            subtitleShimmer.leadingAnchor.constraint(equalTo: titleShimmer.leadingAnchor),
+            subtitleShimmer.topAnchor.constraint(equalTo: titleShimmer.bottomAnchor, constant: 10),
+            subtitleShimmer.widthAnchor.constraint(equalToConstant: 92),
+            subtitleShimmer.heightAnchor.constraint(equalToConstant: 12),
+
+            buttonShimmer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            buttonShimmer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            buttonShimmer.widthAnchor.constraint(equalToConstant: 92),
+            buttonShimmer.heightAnchor.constraint(equalToConstant: 34)
+        ])
+    }
+
+    func startShimmer() {
+        shimmerViews.forEach { $0.startShimmer() }
     }
 }
 
@@ -93,11 +336,20 @@ extension ArtistsVC: UITableViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollDelegate?.childScrollViewDidScroll(scrollView)
+        loadNextPageIfNeeded(scrollView)
     }
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
 
-        Navigate.to.gotoArtistDetailsVC(self)
+        guard !isInitialLoading else { return }
+        guard artists.indices.contains(indexPath.row) else { return }
+
+        Navigate.to.gotoArtistDetailsVC(self, artist: artists[indexPath.row])
+    }
+
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 83
     }
 }

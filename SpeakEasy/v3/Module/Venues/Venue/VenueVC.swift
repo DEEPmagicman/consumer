@@ -23,9 +23,9 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var followBtn: UIButton!
     @IBOutlet weak var followBtnLbl: UILabel!
-
     @IBOutlet weak var bgView: UIView!
-
+    @IBOutlet weak var venueCityLbl: UILabel!
+        
     var presenter = MVPPresenter()
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
@@ -63,18 +63,40 @@ final class VenueVC: UIViewController {
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
+    var isPresentedPremium = false
     private var isFollowing = false
     private var isFollowLoading = false
+    private var isSocketRefreshInProgress = false
     private var followedVenueId: String?
+    private var hasLocalFollowState = false
+    private let followActivityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.hidesWhenStopped = false
+        indicator.alpha = 0
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         captureContainerTopConstraint()
+        setupFollowButtonAnimation()
         setupNavTitleView()
         setupPosterBackground()
         setUpData()
         setupTabsIfNeeded()
         getVenueDetails()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        registerSocketDelegate()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unregisterSocketDelegate()
     }
 
     override func viewDidLayoutSubviews() {
@@ -93,7 +115,8 @@ final class VenueVC: UIViewController {
         ) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else { return }
 
-            if isSuccess, let venue = venueDetail {
+            if isSuccess, var venue = venueDetail {
+                self.applyLocalFollowStateIfNeeded(to: &venue)
                 self.venueDetails = venue
                 self.setUpData()
                 self.setupTabsIfNeeded()
@@ -111,12 +134,18 @@ final class VenueVC: UIViewController {
         venueName.text = displayVenueName
         updateNavTitleText()
         syncFollowState()
-        updateFollowUI()
+        updateFollowUI(animated: false)
         updateCoverTicketViewVisibility()
         updatePosterBackgroundImage()
 
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueLogo.sd_setImage(with: URL(string: logoUrl), completed: nil)
+        
+        let displayCity = venueDetails?.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let locationText = displayCity?.isEmpty == false
+            ? displayCity
+            : venueDetails?.timezone
+        venueCityLbl.text = locationText
 
 //        if let url = URL(string: imageUrlString) {
 //            bgImage.sd_setImage(with: url, placeholderImage: UIImage(named: "newSpeakeasy"))
@@ -178,6 +207,7 @@ final class VenueVC: UIViewController {
 
         let vc3 = ArtistsVC(nibName: "ArtistsVC", bundle: nil)
         vc3.title = "Artists"
+        vc3.venueId = venueDetails?.id ?? ""
         vc3.scrollDelegate = self
 
         tabControllers = [vc1, vc2, vc3]
@@ -258,6 +288,11 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
+        if isPresentedPremium {
+            dismissPremium()
+            return
+        }
+
         Navigate.to.back(self)
     }
 
@@ -287,7 +322,8 @@ final class VenueVC: UIViewController {
 
         isFollowLoading = true
         isFollowing.toggle()
-        updateFollowUI()
+        animateFollowTap()
+        updateFollowUI(animated: true)
 
         if isFollowing {
             followVenueAPI(
@@ -317,8 +353,100 @@ final class VenueVC: UIViewController {
 
 }
 
+// MARK: - WebSocket
+extension VenueVC: WebSocketCallBackDelegate {
+
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        guard isCurrentVenueCoverTicketUpdate(ticket) else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        guard isCurrentVenueAddOnUpdate(ticket) else { return }
+        refreshVenueFromSocket(resetTickets: false)
+    }
+
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        guard venueDetails?.id == venueId else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        guard venueDetails?.id == venueId || venueDetails?.uniqueId == uniqueId else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func didUpdateEvent(eventId: String) {
+        refreshVenueEventTabs()
+    }
+
+    func didUpdateEventTicket(ticket: EventTicket) {
+        refreshVenueEventTabs()
+    }
+}
+
 // MARK: - Sticky Header Coordination
 private extension VenueVC {
+
+    func registerSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+
+    func unregisterSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+    }
+
+    func refreshVenueFromSocket(resetTickets: Bool) {
+        guard !isSocketRefreshInProgress else { return }
+
+        let venueUniqueId = (venueDetails?.uniqueId ?? uniqueId) ?? ""
+        guard !venueUniqueId.isEmpty else { return }
+
+        isSocketRefreshInProgress = true
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, _, venueDetail in
+            guard let self else { return }
+
+            self.isSocketRefreshInProgress = false
+
+            guard isSuccess, let venueDetail else { return }
+
+            var refreshedVenue = venueDetail
+            self.applyLocalFollowStateIfNeeded(to: &refreshedVenue)
+            self.venueDetails = refreshedVenue
+            self.setUpData()
+
+            if resetTickets {
+                self.refreshVenueEventTabs()
+            }
+        }
+    }
+
+    func refreshVenueEventTabs() {
+        tabControllers.forEach { controller in
+            if let eventsVC = controller as? VenueEventsVC {
+                eventsVC.refreshFromSocket()
+            } else if let experiencesVC = controller as? VenueExperiencesVC {
+                experiencesVC.refreshFromSocket()
+            }
+        }
+    }
+
+    func isCurrentVenueCoverTicketUpdate(_ tickets: [CoverTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.venueId == currentVenueId }
+    }
+
+    func isCurrentVenueAddOnUpdate(_ tickets: [UpSellTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.addOns?.venueId == currentVenueId }
+    }
 
     func syncFollowState() {
         followedVenueId =
@@ -329,15 +457,128 @@ private extension VenueVC {
         followedVenueId != nil
     }
 
-    func updateFollowUI() {
-        followBtnLbl?.text =
-        isFollowing ? "Following" : "Follow"
+    func applyLocalFollowStateIfNeeded(to venue: inout ClipVenue) {
+        guard hasLocalFollowState else { return }
 
-        followBtn?.isUserInteractionEnabled =
-        !isFollowLoading
+        venue.isFollowing = isFollowing
+        venue.followedVenueId = followedVenueId
+    }
 
-        followBtnLbl?.alpha =
-        isFollowLoading ? 0.65 : 1
+    func applyFollowState(
+        isFollowing: Bool,
+        followedVenueId: String?,
+        notify: Bool,
+        animated: Bool = true
+    ) {
+        self.isFollowing = isFollowing
+        self.followedVenueId = followedVenueId
+        venueDetails?.isFollowing = isFollowing
+        venueDetails?.followedVenueId = followedVenueId
+        hasLocalFollowState = true
+        updateFollowUI(animated: animated)
+
+        if notify, let venue = venueDetails {
+            onFollowStateChanged?(venue, isFollowing)
+        }
+    }
+
+    func setupFollowButtonAnimation() {
+        guard let followContainer = followBtn?.superview else { return }
+
+        followBtnLbl?.numberOfLines = 1
+        followBtnLbl?.lineBreakMode = .byClipping
+        followBtnLbl?.setContentCompressionResistancePriority(.required, for: .horizontal)
+        followBtnLbl?.setContentHuggingPriority(.required, for: .horizontal)
+
+        guard followActivityIndicator.superview == nil else { return }
+
+        followContainer.addSubview(followActivityIndicator)
+
+        NSLayoutConstraint.activate([
+            followActivityIndicator.centerXAnchor.constraint(equalTo: followContainer.centerXAnchor),
+            followActivityIndicator.centerYAnchor.constraint(equalTo: followContainer.centerYAnchor)
+        ])
+    }
+
+    func updateFollowUI(animated: Bool = true) {
+        let newTitle = isFollowing ? "Following" : "Follow"
+        let textChanged = followBtnLbl?.text != newTitle
+
+        followBtn?.isUserInteractionEnabled = !isFollowLoading
+
+        let applyTitle = {
+            self.followBtnLbl?.text = newTitle
+            self.followBtnLbl?.alpha = self.isFollowLoading ? 0 : 1
+            self.followActivityIndicator.alpha = self.isFollowLoading ? 1 : 0
+            self.followBtn?.superview?.layoutIfNeeded()
+        }
+
+        if isFollowLoading {
+            followActivityIndicator.startAnimating()
+        } else {
+            followActivityIndicator.stopAnimating()
+        }
+
+        guard animated else {
+            applyTitle()
+            if !isFollowLoading {
+                followActivityIndicator.stopAnimating()
+            }
+            return
+        }
+
+        let animations = {
+            applyTitle()
+        }
+        let completion: (Bool) -> Void = { [weak self] _ in
+            guard let self else { return }
+            if !self.isFollowLoading {
+                self.followActivityIndicator.stopAnimating()
+            }
+        }
+
+        if textChanged {
+            UIView.transition(
+                with: followBtnLbl,
+                duration: 0.18,
+                options: [.transitionCrossDissolve, .beginFromCurrentState],
+                animations: animations,
+                completion: completion
+            )
+        } else {
+            UIView.animate(
+                withDuration: 0.18,
+                delay: 0,
+                options: [.curveEaseOut, .beginFromCurrentState],
+                animations: animations,
+                completion: completion
+            )
+        }
+    }
+
+    func animateFollowTap() {
+        guard let followContainer = followBtn?.superview else { return }
+
+        UIView.animate(
+            withDuration: 0.08,
+            delay: 0,
+            options: [.curveEaseOut, .beginFromCurrentState],
+            animations: {
+                followContainer.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+            },
+            completion: { _ in
+                UIView.animate(
+                    withDuration: 0.22,
+                    delay: 0,
+                    usingSpringWithDamping: 0.74,
+                    initialSpringVelocity: 0.6,
+                    options: [.curveEaseOut, .beginFromCurrentState],
+                    animations: {
+                        followContainer.transform = .identity
+                    }
+                )
+            }
+        )
     }
 
     func followVenueAPI(
@@ -366,14 +607,11 @@ private extension VenueVC {
                 return
             }
 
-            self.followedVenueId = id
-            self.venueDetails?.followedVenueId = id
-            self.venueDetails?.isFollowing = true
-            self.isFollowing = true
-            self.updateFollowUI()
-            if let venue = self.venueDetails {
-                self.onFollowStateChanged?(venue, true)
-            }
+            self.applyFollowState(
+                isFollowing: true,
+                followedVenueId: id,
+                notify: true
+            )
         }
     }
 
@@ -399,14 +637,11 @@ private extension VenueVC {
                 return
             }
 
-            self.followedVenueId = nil
-            self.venueDetails?.followedVenueId = nil
-            self.venueDetails?.isFollowing = false
-            self.isFollowing = false
-            self.updateFollowUI()
-            if let venue = self.venueDetails {
-                self.onFollowStateChanged?(venue, false)
-            }
+            self.applyFollowState(
+                isFollowing: false,
+                followedVenueId: nil,
+                notify: true
+            )
         }
     }
 
@@ -451,11 +686,11 @@ private extension VenueVC {
     ) {
 
         isFollowLoading = false
-        isFollowing = previousState
-        followedVenueId = previousFollowedVenueId
-        venueDetails?.isFollowing = previousState
-        venueDetails?.followedVenueId = previousFollowedVenueId
-        updateFollowUI()
+        applyFollowState(
+            isFollowing: previousState,
+            followedVenueId: previousFollowedVenueId,
+            notify: false
+        )
     }
 
     var displayVenueName: String {

@@ -281,9 +281,17 @@ UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
 
+        collectionView.deselectItem(
+            at: indexPath,
+            animated: true
+        )
+
         switch sectionData {
 
         case .events(let events):
+            guard events.indices.contains(indexPath.item) else {
+                return
+            }
 
             onTapEvent?(
                 events[indexPath.item],
@@ -291,6 +299,9 @@ UICollectionViewDelegateFlowLayout {
             )
 
         case .venues(let venues):
+            guard venues.indices.contains(indexPath.item) else {
+                return
+            }
 
             onTapVenue?(
                 venues[indexPath.item]

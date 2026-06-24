@@ -131,6 +131,8 @@ final class TicketCheckoutVC: UIViewController {
     private var paymentDetail: PaymentDetail?
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
+    private var isCancellingTransaction = false
+    private var wasInteractivePopGestureEnabled = true
     private var isPromoRequestInProgress = false
     private var isSubmittingQuestions = false
     private var isLoading = false
@@ -204,12 +206,13 @@ final class TicketCheckoutVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
+        wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
     }
 
     deinit {
@@ -399,8 +402,9 @@ final class TicketCheckoutVC: UIViewController {
     private func timerExpired() {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
             self.countdownTimer?.invalidate()
-            self.cancelBooking()
-            self.navigationController?.popToRootViewController(animated: false)
+            self.cancelBooking { [weak self] in
+                self?.returnToEventDetails(animated: false)
+            }
         }
         Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
@@ -537,7 +541,7 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
-                Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
+                Navigate.to.showQRCode(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
             } else {
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)
@@ -571,6 +575,7 @@ final class TicketCheckoutVC: UIViewController {
         ) { [weak self] isSuccess, _, id, _ in
             guard let self = self else { return }
             if isSuccess, let id = id {
+                self.countdownTimer?.invalidate()
                 Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
             } else {
                 self.isPaymentInitiated = false
@@ -581,8 +586,54 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     private func cancelBooking() {
+        cancelBooking(completion: nil)
+    }
+
+    private func cancelBooking(completion: (() -> Void)?) {
         countdownTimer?.invalidate()
-        paymentService.cancelBooking(bookingId: bookingId ?? "") { _, _ in
+        guard let bookingId, !bookingId.isEmpty else {
+            completion?()
+            return
+        }
+        paymentService.cancelBooking(bookingId: bookingId) { _, _ in
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }
+    }
+
+    private func showCancelTransactionPrompt() {
+        guard !isPaymentInitiated, !isPromoRequestInProgress, !isCancellingTransaction else { return }
+        presentTransactionCancelConfirmation { [weak self] in
+            self?.cancelBookingAndReturnToEventDetails()
+        }
+    }
+
+    private func handlePaymentCanceled() {
+        isPaymentInitiated = false
+        Alert.showToast("Payment canceled.")
+        cancelBookingAndReturnToEventDetails()
+    }
+
+    private func cancelBookingAndReturnToEventDetails() {
+        guard !isCancellingTransaction else { return }
+        isCancellingTransaction = true
+        setScreenInteractionBlocked(true)
+
+        cancelBooking { [weak self] in
+            guard let self else { return }
+            self.isCancellingTransaction = false
+            self.setScreenInteractionBlocked(false)
+            self.returnToEventDetails(animated: false)
+        }
+    }
+
+    private func returnToEventDetails(animated: Bool) {
+        guard let navigationController else { return }
+        if let eventDetailsVC = navigationController.viewControllers.last(where: { $0 is EventDetailsVC }) {
+            navigationController.popToViewController(eventDetailsVC, animated: animated)
+        } else {
+            navigationController.popViewController(animated: animated)
         }
     }
     
@@ -694,7 +745,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
-        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
+        guard !isPaymentInitiated, !isPromoRequestInProgress, !isCancellingTransaction else { return }
         
         if event?.venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false,
            checkBox.isSelected == false {
@@ -737,8 +788,7 @@ final class TicketCheckoutVC: UIViewController {
                 self.completePaymentSuccess()
 
             case .canceled:
-                self.isPaymentInitiated = false
-                self.setScreenInteractionBlocked(false)
+                self.handlePaymentCanceled()
 
             case .failed:
                 self.isPaymentInitiated = false
@@ -773,8 +823,7 @@ final class TicketCheckoutVC: UIViewController {
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
         guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
-        cancelBooking()
-        navigationController?.popToRootViewController(animated: false)
+        showCancelTransactionPrompt()
 
     }
 
@@ -807,8 +856,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @objc private func handleBackSwipe() {
-        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
-        cancelBooking()
+        showCancelTransactionPrompt()
     }
     
     private func showCheckoutShimmer() {
