@@ -14,6 +14,7 @@ import UIKit
 final class VenueHeaderVC: UIViewController {
     
     var venueDetails: ClipVenue?
+    var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
     
     @IBOutlet weak var coverTicketView: UIView!
     @IBOutlet weak var followBtnLbl: UILabel!
@@ -57,6 +58,22 @@ final class VenueHeaderVC: UIViewController {
         followBtnLbl.alpha = isLoading ? 0.65 : 1
 //        followBtn.backgroundColor = isFollowing ? .lightGray : .black
 //        followBtnLbl.textColor = isFollowing ? .black : .white
+    }
+
+    private func applyFollowState(
+        isFollowing: Bool,
+        followedVenueId: String?,
+        notify: Bool
+    ) {
+        self.isFollowing = isFollowing
+        self.followedVenueId = followedVenueId
+        venueDetails?.isFollowing = isFollowing
+        venueDetails?.followedVenueId = followedVenueId
+        updateFollowUI()
+
+        if notify, let venue = venueDetails {
+            onFollowStateChanged?(venue, isFollowing)
+        }
     }
     
     private var hasAvailableTickets: Bool {
@@ -133,11 +150,11 @@ extension VenueHeaderVC {
                 return
             }
 
-            self.followedVenueId = id
-            self.venueDetails?.followedVenueId = id
-            self.venueDetails?.isFollowing = true
-            self.isFollowing = true
-            self.updateFollowUI()
+            self.applyFollowState(
+                isFollowing: true,
+                followedVenueId: id,
+                notify: true
+            )
         }
     }
     
@@ -158,11 +175,11 @@ extension VenueHeaderVC {
                 return
             }
 
-            self.followedVenueId = nil
-            self.venueDetails?.followedVenueId = nil
-            self.venueDetails?.isFollowing = false
-            self.isFollowing = false
-            self.updateFollowUI()
+            self.applyFollowState(
+                isFollowing: false,
+                followedVenueId: nil,
+                notify: true
+            )
         }
     }
 
@@ -206,10 +223,10 @@ extension VenueHeaderVC {
         previousFollowedVenueId: String?
     ) {
         isLoading = false
-        isFollowing = previousState
-        followedVenueId = previousFollowedVenueId
-        venueDetails?.isFollowing = previousState
-        venueDetails?.followedVenueId = previousFollowedVenueId
-        updateFollowUI()
+        applyFollowState(
+            isFollowing: previousState,
+            followedVenueId: previousFollowedVenueId,
+            notify: false
+        )
     }
 }

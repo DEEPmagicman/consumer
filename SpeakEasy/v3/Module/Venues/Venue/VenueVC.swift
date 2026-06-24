@@ -25,8 +25,7 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var followBtnLbl: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var venueCityLbl: UILabel!
-    
-    
+        
     var presenter = MVPPresenter()
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
@@ -69,6 +68,7 @@ final class VenueVC: UIViewController {
     private var isFollowLoading = false
     private var isSocketRefreshInProgress = false
     private var followedVenueId: String?
+    private var hasLocalFollowState = false
     private let followActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.color = .white
@@ -115,7 +115,8 @@ final class VenueVC: UIViewController {
         ) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else { return }
 
-            if isSuccess, let venue = venueDetail {
+            if isSuccess, var venue = venueDetail {
+                self.applyLocalFollowStateIfNeeded(to: &venue)
                 self.venueDetails = venue
                 self.setUpData()
                 self.setupTabsIfNeeded()
@@ -414,7 +415,9 @@ private extension VenueVC {
 
             guard isSuccess, let venueDetail else { return }
 
-            self.venueDetails = venueDetail
+            var refreshedVenue = venueDetail
+            self.applyLocalFollowStateIfNeeded(to: &refreshedVenue)
+            self.venueDetails = refreshedVenue
             self.setUpData()
 
             if resetTickets {
@@ -452,6 +455,31 @@ private extension VenueVC {
         isFollowing =
         venueDetails?.isFollowing == true ||
         followedVenueId != nil
+    }
+
+    func applyLocalFollowStateIfNeeded(to venue: inout ClipVenue) {
+        guard hasLocalFollowState else { return }
+
+        venue.isFollowing = isFollowing
+        venue.followedVenueId = followedVenueId
+    }
+
+    func applyFollowState(
+        isFollowing: Bool,
+        followedVenueId: String?,
+        notify: Bool,
+        animated: Bool = true
+    ) {
+        self.isFollowing = isFollowing
+        self.followedVenueId = followedVenueId
+        venueDetails?.isFollowing = isFollowing
+        venueDetails?.followedVenueId = followedVenueId
+        hasLocalFollowState = true
+        updateFollowUI(animated: animated)
+
+        if notify, let venue = venueDetails {
+            onFollowStateChanged?(venue, isFollowing)
+        }
     }
 
     func setupFollowButtonAnimation() {
@@ -579,14 +607,11 @@ private extension VenueVC {
                 return
             }
 
-            self.followedVenueId = id
-            self.venueDetails?.followedVenueId = id
-            self.venueDetails?.isFollowing = true
-            self.isFollowing = true
-            self.updateFollowUI(animated: true)
-            if let venue = self.venueDetails {
-                self.onFollowStateChanged?(venue, true)
-            }
+            self.applyFollowState(
+                isFollowing: true,
+                followedVenueId: id,
+                notify: true
+            )
         }
     }
 
@@ -612,14 +637,11 @@ private extension VenueVC {
                 return
             }
 
-            self.followedVenueId = nil
-            self.venueDetails?.followedVenueId = nil
-            self.venueDetails?.isFollowing = false
-            self.isFollowing = false
-            self.updateFollowUI(animated: true)
-            if let venue = self.venueDetails {
-                self.onFollowStateChanged?(venue, false)
-            }
+            self.applyFollowState(
+                isFollowing: false,
+                followedVenueId: nil,
+                notify: true
+            )
         }
     }
 
@@ -664,11 +686,11 @@ private extension VenueVC {
     ) {
 
         isFollowLoading = false
-        isFollowing = previousState
-        followedVenueId = previousFollowedVenueId
-        venueDetails?.isFollowing = previousState
-        venueDetails?.followedVenueId = previousFollowedVenueId
-        updateFollowUI(animated: true)
+        applyFollowState(
+            isFollowing: previousState,
+            followedVenueId: previousFollowedVenueId,
+            notify: false
+        )
     }
 
     var displayVenueName: String {

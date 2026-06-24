@@ -20,32 +20,18 @@ final class PremiumExperienceService {
             _ hasMore: Bool
         ) -> Void
     ) {
-        let url = APIBuilder.eventURL(
-            includes: [
-                "venue.venueAttachment",
-                "venue.logo",
-                "flyer",
-                "eventTicket",
-                "eventTicketSettings"
-            ]
-        )
-
         let params: [String: Any] = [
             "skip": skip,
             "take": take,
-            "version": "PUBLISHED",
-            "eventStatus": "APPROVED",
-            "timeVersion": "UPCOMING",
-            "status": "ENABLED",
             "city": city,
-            "isPremiumExperience": true,
-            "orderBy": "startDateTime|asc"
+            "eventListType": DiscoverEventListType.eventsInCity.rawValue,
+            "isPremiumOnly": "true"
         ]
 
         AFWrapper.getRequest(
-            url,
+            APIBuilder.discoverEventsURL,
             params: params,
-            headers: Header.header()
+            headers: Header.header(timeZone: TimeZone.current.identifier)
         ) { response in
             let parsed = Self.parseResponse(response)
 

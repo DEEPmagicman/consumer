@@ -2156,7 +2156,11 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickVIPtable(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.premiumEventContainerVC(self, event: event)
+            Navigate.to.premiumEventContainerVC(
+                self,
+                event: event,
+                seatingAreas: seatingAreas
+            )
 
         }
     }

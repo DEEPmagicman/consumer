@@ -31,13 +31,19 @@ final class LandingHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        observeProfileUpdate()
         reloadUser()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
+        observeProfileUpdate()
         reloadUser()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func layoutSubviews() {
@@ -139,6 +145,42 @@ final class LandingHeaderView: UIView {
         mapButton.isHidden = hidden
     }
 
+    private func observeProfileUpdate() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onProfileUpdated(_:)),
+            name: .userProfileDidUpdate,
+            object: nil
+        )
+    }
+
+    @objc private func onProfileUpdated(_ notification: Notification) {
+        if let payload = notification.object as? UserProfileUpdatePayload {
+            applyProfileUpdate(payload)
+        } else {
+            reloadUser()
+        }
+    }
+
+    private func applyProfileUpdate(_ payload: UserProfileUpdatePayload) {
+        let firstName = payload.firstName ?? UserDefault.shared.user?.firstName ?? ""
+        titleLabel.text = firstName.isEmpty ? "Profile" : firstName
+
+        if let imageUrl = payload.imageUrl, !imageUrl.isEmpty {
+            imageView.isHidden = false
+            firstNameLetter.isHidden = true
+            signInIconView.isHidden = true
+            imageView.sd_setImage(
+                with: URL(string: imageUrl),
+                placeholderImage: UIImage(resource: .profileIcon),
+                options: [.refreshCached]
+            )
+            return
+        }
+
+        reloadUser()
+    }
+
     func reloadUser() {
         guard let user = UserDefault.shared.user else {
             imageView.isHidden = true
@@ -157,7 +199,11 @@ final class LandingHeaderView: UIView {
         if !imageUrl.isEmpty {
             imageView.isHidden = false
             firstNameLetter.isHidden = true
-            imageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(resource: .profileIcon))
+            imageView.sd_setImage(
+                with: URL(string: imageUrl),
+                placeholderImage: UIImage(resource: .profileIcon),
+                options: [.refreshCached]
+            )
         } else {
             imageView.isHidden = false
             imageView.image = UIImage(resource: .signInBgIcon)

@@ -827,9 +827,14 @@ final class Navigate {
         sender.present(vc, animated: true)
     }
     
-    func premiumEventContainerVC(_ sender: UIViewController, event: Event?) {
+    func premiumEventContainerVC(
+        _ sender: UIViewController,
+        event: Event?,
+        seatingAreas: [SeatingArea]? = nil
+    ) {
         let vc = PremiumEventContainerVC()
         vc.event = event
+        vc.providedSeatingAreas = seatingAreas
         sender.pushVC(vc)
     }
 }

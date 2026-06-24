@@ -464,6 +464,16 @@ private extension PremiumExpVC {
         collectionView.collectionViewLayout.invalidateLayout()
         loadPremiumExperiences(reset: false)
     }
+
+    func presentCityFilter() {
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.persistsFilterSelection = false
+        vc.selectedFilterCity = selectedCity
+        vc.initialFilterCity = selectedCity
+        vc.onSelectFilterCity = { [weak self] city in
+            self?.applyCity(city)
+        }
+    }
 }
 
 extension PremiumExpVC {
@@ -499,7 +509,7 @@ extension PremiumExpVC: PremiumHeaderViewDelegate {
     }
 
     func premiumHeaderDidTapLocation(_ view: PremiumHeaderView) {
-        Navigate.to.gotoMapVC(self)
+        presentCityFilter()
     }
 
     func premiumHeaderDidTapHelp(_ view: PremiumHeaderView) {
@@ -550,10 +560,18 @@ extension PremiumExpVC: UICollectionViewDataSource, UICollectionViewDelegate {
     ) {
         guard !isInitialLoading else { return }
         guard items.indices.contains(indexPath.item) else { return }
-        guard let event = items[indexPath.item].event else { return }
+        let item = items[indexPath.item]
+        guard let event = item.event else {
+            Alert.showToast(Constant.String.somethingWrong)
+            return
+        }
 
 //        Navigate.eventDetailsVC(self, event: event)
-        Navigate.to.premiumEventContainerVC(self, event: event)
+        Navigate.to.premiumEventContainerVC(
+            self,
+            event: event,
+            seatingAreas: item.seatingAreas
+        )
     }
 
     func collectionView(
