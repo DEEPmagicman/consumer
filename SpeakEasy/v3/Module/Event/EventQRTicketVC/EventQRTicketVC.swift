@@ -118,6 +118,7 @@ class EventQRTicketVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        WebSocketWrapper.shared.updateSocketContext(venueId: currentVenueIdForSocket())
         WebSocketWrapper.shared.delegate.removeAll { $0 === self }
         WebSocketWrapper.shared.delegate.append(self)
     }
@@ -684,6 +685,7 @@ class EventQRTicketVC: UIViewController {
 
     private func applyBooking(_ booking: Booking) {
         self.booking = booking
+        WebSocketWrapper.shared.updateSocketContext(venueId: currentVenueIdForSocket())
         self.eventTitle?.text = booking.event?.title
         if bookingId.isEmpty {
             bookingId = booking.id
@@ -692,6 +694,13 @@ class EventQRTicketVC: UIViewController {
         configureEventRows()
         refreshPosterBackground()
         renderTicketPass()
+    }
+
+    private func currentVenueIdForSocket() -> String? {
+        booking?.venueId
+        ?? booking?.venueObject?.id
+        ?? booking?.event?.venue?.id
+        ?? sourceEvent?.venue?.id
     }
 
     private func configureEventRows() {

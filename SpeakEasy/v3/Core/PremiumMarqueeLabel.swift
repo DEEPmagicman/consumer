@@ -38,6 +38,7 @@ final class PremiumMarqueeLabel: UIView {
     private let scrollView = UIScrollView()
     private let label = UILabel()
     private let duplicateLabel = UILabel()
+    private let containerView = UIView()
     private var isAnimating = false
     private var pendingStart = false
 
@@ -67,19 +68,23 @@ final class PremiumMarqueeLabel: UIView {
 private extension PremiumMarqueeLabel {
 
     func setup() {
+        backgroundColor = .clear
         clipsToBounds = true
 
+        scrollView.backgroundColor = .clear
         scrollView.isScrollEnabled = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         addSubview(scrollView)
 
+        label.backgroundColor = .clear
         label.font = font
         label.textColor = textColor
         label.numberOfLines = 1
         label.textAlignment = .left
         scrollView.addSubview(label)
 
+        duplicateLabel.backgroundColor = .clear
         duplicateLabel.font = font
         duplicateLabel.textColor = textColor
         duplicateLabel.numberOfLines = 1
@@ -134,6 +139,91 @@ extension PremiumMarqueeLabel {
 // MARK: - Public
 
 extension PremiumMarqueeLabel {
+
+    func install(
+        over sourceLabel: UILabel,
+        in parentView: UIView? = nil,
+        height: CGFloat? = nil,
+        horizontalInset: CGFloat? = nil,
+        hideSourceLabel: Bool = true
+    ) {
+        guard containerView.superview == nil,
+              let parent = parentView ?? sourceLabel.superview
+        else { return }
+
+        let resolvedHeight = height ?? max(
+            ceil(sourceLabel.font?.lineHeight ?? font.lineHeight),
+            sourceLabel.bounds.height
+        )
+
+        font = sourceLabel.font ?? font
+        textColor = sourceLabel.textColor
+        animationSpeed = 25
+        animationDelay = 1.2
+        trailingSpacing = 48
+        backgroundColor = .clear
+        scrollView.backgroundColor = .clear
+        label.backgroundColor = .clear
+        duplicateLabel.backgroundColor = .clear
+        sourceLabel.backgroundColor = .clear
+
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .clear
+        containerView.clipsToBounds = true
+        containerView.isUserInteractionEnabled = false
+
+        translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(self)
+        NSLayoutConstraint.activate([
+            topAnchor.constraint(equalTo: containerView.topAnchor),
+            leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+
+        if let stackView = parent as? UIStackView,
+           let index = stackView.arrangedSubviews.firstIndex(of: sourceLabel) {
+
+            stackView.insertArrangedSubview(containerView, at: index)
+            sourceLabel.removeFromSuperview()
+
+            NSLayoutConstraint.activate([
+                containerView.heightAnchor.constraint(equalToConstant: resolvedHeight)
+            ])
+
+            return
+        }
+
+        parent.addSubview(containerView)
+        sourceLabel.text = " "
+        sourceLabel.numberOfLines = 1
+        sourceLabel.lineBreakMode = .byTruncatingTail
+        sourceLabel.isHidden = false
+        sourceLabel.alpha = hideSourceLabel ? 0 : sourceLabel.alpha
+
+        let leadingConstraint: NSLayoutConstraint
+        let trailingConstraint: NSLayoutConstraint
+        if let horizontalInset {
+            leadingConstraint = containerView.leadingAnchor.constraint(
+                equalTo: parent.leadingAnchor,
+                constant: horizontalInset
+            )
+            trailingConstraint = containerView.trailingAnchor.constraint(
+                equalTo: parent.trailingAnchor,
+                constant: -horizontalInset
+            )
+        } else {
+            leadingConstraint = containerView.leadingAnchor.constraint(equalTo: sourceLabel.leadingAnchor)
+            trailingConstraint = containerView.trailingAnchor.constraint(equalTo: sourceLabel.trailingAnchor)
+        }
+
+        NSLayoutConstraint.activate([
+            containerView.centerYAnchor.constraint(equalTo: sourceLabel.centerYAnchor),
+            leadingConstraint,
+            trailingConstraint,
+            containerView.heightAnchor.constraint(equalToConstant: resolvedHeight)
+        ])
+    }
 
     func setText(_ text: String?) {
         stopAnimation()

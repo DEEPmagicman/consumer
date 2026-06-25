@@ -159,6 +159,7 @@
 		6A4FA1A02FC81F67007EB116 /* OrdersSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA19F2FC81F67007EB116 /* OrdersSectionHeaderView.swift */; };
 		6A4FA1A22FC82B6A007EB116 /* OrderCardShimmerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1A12FC82B6A007EB116 /* OrderCardShimmerCell.swift */; };
 		6A4FA1A42FC83EFC007EB116 /* ShimmerViewV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1A32FC83EFC007EB116 /* ShimmerViewV3.swift */; };
+		6A40D1C22FEF000000F3FAAB /* TransactionCancelPopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A40D1C12FEF000000F3FAAB /* TransactionCancelPopupVC.swift */; };
 		6A4FA1A82FC83F60007EB116 /* PaginationShimmerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1A72FC83F60007EB116 /* PaginationShimmerFooterView.swift */; };
 		6A4FA1AA2FC847D5007EB116 /* OrderCardShimmerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1A92FC847D5007EB116 /* OrderCardShimmerContentView.swift */; };
 		6A4FA1AE2FC8741A007EB116 /* OrderCardCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1AD2FC8741A007EB116 /* OrderCardCollectionCell.swift */; };
@@ -760,6 +761,7 @@
 		6A4FA19F2FC81F67007EB116 /* OrdersSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersSectionHeaderView.swift; sourceTree = "<group>"; };
 		6A4FA1A12FC82B6A007EB116 /* OrderCardShimmerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardShimmerCell.swift; sourceTree = "<group>"; };
 		6A4FA1A32FC83EFC007EB116 /* ShimmerViewV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerViewV3.swift; sourceTree = "<group>"; };
+		6A40D1C12FEF000000F3FAAB /* TransactionCancelPopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCancelPopupVC.swift; sourceTree = "<group>"; };
 		6A4FA1A72FC83F60007EB116 /* PaginationShimmerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationShimmerFooterView.swift; sourceTree = "<group>"; };
 		6A4FA1A92FC847D5007EB116 /* OrderCardShimmerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardShimmerContentView.swift; sourceTree = "<group>"; };
 		6A4FA1AD2FC8741A007EB116 /* OrderCardCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardCollectionCell.swift; sourceTree = "<group>"; };
@@ -1616,6 +1618,7 @@
 				6A6AB6C42FE40C6B00A5801F /* PremiumMarqueeLabel.swift */,
 				6A4FA19B2FC818FB007EB116 /* PinterestLayout.swift */,
 				6A4FA1A32FC83EFC007EB116 /* ShimmerViewV3.swift */,
+				6A40D1C12FEF000000F3FAAB /* TransactionCancelPopupVC.swift */,
 				6AF6AA3E2FC0336E00834BF2 /* GlobalTextFieldHandler.swift */,
 				6AF6AA3C2FC01D8300834BF2 /* LegacySwitchControl.swift */,
 				6AF6AA3A2FC015F600834BF2 /* AppDesign.swift */,
@@ -3655,6 +3658,7 @@
 				6A40D1B72FBEDEA800F3FAAB /* NotificationSettingsSectionView.swift in Sources */,
 				CEEACF462FD038690009EFB5 /* CoverQRCodeVC.swift in Sources */,
 				6A4FA1A42FC83EFC007EB116 /* ShimmerViewV3.swift in Sources */,
+				6A40D1C22FEF000000F3FAAB /* TransactionCancelPopupVC.swift in Sources */,
 				CECE370D2F6BF9640087A33A /* SJUtil.swift in Sources */,
 				6A79E28B2FCEC34C00B7F1F4 /* VenueService.swift in Sources */,
 				0437220E2F72925C00E4F985 /* GuestListPopupVC.swift in Sources */,

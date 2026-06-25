@@ -13,6 +13,7 @@ struct EventDetailBundle {
     let faqs: [EventFAQ]
     let ticketLinks: [EventTicketLink]
     let attendees: [Attendee]?
+    let totalAttendees: Int?
 }
 
 struct SavedEventRelation: Codable {
@@ -314,6 +315,9 @@ final class EventService {
                     faqs: faqs,
                     ticketLinks: ticketLinks,
                     attendees: self.decodeAttendees(
+                        from: responseDic
+                    ),
+                    totalAttendees: self.decodeAttendeesTotal(
                         from: responseDic
                     )
                 ),
@@ -799,6 +803,35 @@ final class EventService {
         return nil
     }
 
+    private func decodeAttendeesTotal(
+        from responseDic: [String: Any]
+    ) -> Int? {
+
+        if let total = responseDic["totalAttendees"] as? Int {
+            return total
+        }
+
+        if let total = responseDic["total"] as? Int {
+            return total
+        }
+
+        if let attendees = responseDic["attendees"] as? [String: Any] {
+            if let total = attendees["totalAttendees"] as? Int {
+                return total
+            }
+
+            if let total = attendees["total"] as? Int {
+                return total
+            }
+
+            if let count = attendees["count"] as? Int {
+                return count
+            }
+        }
+
+        return nil
+    }
+
     private func savedEventId(
         from responseDic: [String: Any]
     ) -> String? {
@@ -1010,6 +1043,7 @@ final class EventService {
             _ isSuccess: Bool,
             _ errMsg: String?,
             _ attendees: [Attendee]?,
+            _ total: Int?,
             _ errCode: Int?
         ) -> Void
     ) {
@@ -1036,6 +1070,7 @@ final class EventService {
                     false,
                     nil,
                     nil,
+                    nil,
                     nil
                 )
 
@@ -1058,6 +1093,7 @@ final class EventService {
                     true,
                     nil,
                     decoded.list,
+                    decoded.total ?? decoded.count,
                     nil
                 )
 
@@ -1066,6 +1102,7 @@ final class EventService {
                 completion(
                     false,
                     "Parsing failed",
+                    nil,
                     nil,
                     nil
                 )
@@ -1076,6 +1113,7 @@ final class EventService {
             completion(
                 false,
                 error?.localizedDescription,
+                nil,
                 nil,
                 nil
             )

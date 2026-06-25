@@ -125,6 +125,7 @@ final class VenueVC: UIViewController {
             if isSuccess, var venue = venueDetail {
                 self.applyLocalFollowStateIfNeeded(to: &venue)
                 self.venueDetails = venue
+                WebSocketWrapper.shared.updateSocketContext(venueId: venue.id)
                 self.setUpData()
                 self.setupTabsIfNeeded()
             } else {
@@ -342,10 +343,11 @@ final class VenueVC: UIViewController {
             guard let followedVenueId,
                   !followedVenueId.isEmpty
             else {
-                resolveAndUnfollowVenueAPI(
-                    venueUniqueId: venueUniqueId,
-                    previousState: previousState,
-                    previousFollowedVenueId: previousFollowedVenueId
+                isFollowLoading = false
+                applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
                 )
                 return
             }
@@ -396,6 +398,7 @@ extension VenueVC: WebSocketCallBackDelegate {
 private extension VenueVC {
 
     func registerSocketDelegate() {
+        WebSocketWrapper.shared.updateSocketContext(venueId: venueDetails?.id)
         WebSocketWrapper.shared.delegate.removeAll { $0 === self }
         WebSocketWrapper.shared.delegate.append(self)
     }
@@ -425,6 +428,7 @@ private extension VenueVC {
             var refreshedVenue = venueDetail
             self.applyLocalFollowStateIfNeeded(to: &refreshedVenue)
             self.venueDetails = refreshedVenue
+            WebSocketWrapper.shared.updateSocketContext(venueId: refreshedVenue.id)
             self.setUpData()
 
             if resetTickets {
@@ -488,6 +492,7 @@ private extension VenueVC {
 
             self.applyLocalFollowStateIfNeeded(to: &venueDetail)
             self.venueDetails = venueDetail
+            WebSocketWrapper.shared.updateSocketContext(venueId: venueDetail.id)
             self.syncFollowState()
             self.updateFollowUI(animated: true)
             self.updateCoverTicketViewVisibility()
@@ -620,23 +625,18 @@ private extension VenueVC {
         previousState: Bool,
         previousFollowedVenueId: String?
     ) {
-
-        venueService.followVenue(
-            uniqueId: venueUniqueId
-        ) { [weak self] isSuccess, _, relation in
-
+        venueService.followVenue(uniqueId: venueUniqueId) { [weak self] isSuccess, _, relation in
             guard let self else { return }
-
             self.isFollowLoading = false
 
             guard isSuccess,
                   let id = relation?.id,
                   !id.isEmpty
             else {
-                self.resolveFollowStateAfterFollowFailure(
-                    venueUniqueId: venueUniqueId,
-                    previousState: previousState,
-                    previousFollowedVenueId: previousFollowedVenueId
+                self.applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
                 )
                 return
             }
@@ -649,53 +649,20 @@ private extension VenueVC {
         }
     }
 
-    func resolveFollowStateAfterFollowFailure(
-        venueUniqueId: String,
-        previousState: Bool,
-        previousFollowedVenueId: String?
-    ) {
-        venueService.fetchFollowedVenueId(
-            uniqueId: venueUniqueId,
-            search: venueDetails?.name
-        ) { [weak self] followedVenueId in
-            guard let self else { return }
-
-            guard let followedVenueId,
-                  !followedVenueId.isEmpty
-            else {
-                self.rollbackFollowState(
-                    previousState: previousState,
-                    previousFollowedVenueId: previousFollowedVenueId
-                )
-                return
-            }
-
-            self.applyFollowState(
-                isFollowing: true,
-                followedVenueId: followedVenueId,
-                notify: true
-            )
-        }
-    }
-
     func unfollowVenueAPI(
         followedVenueId: String,
         previousState: Bool,
         previousFollowedVenueId: String?
     ) {
-
-        venueService.unfollowVenue(
-            followedVenueId: followedVenueId
-        ) { [weak self] isSuccess, _, _ in
-
+        venueService.unfollowVenue(followedVenueId: followedVenueId) { [weak self] isSuccess, _, _ in
             guard let self else { return }
-
             self.isFollowLoading = false
 
             guard isSuccess else {
-                self.rollbackFollowState(
-                    previousState: previousState,
-                    previousFollowedVenueId: previousFollowedVenueId
+                self.applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
                 )
                 return
             }
@@ -706,54 +673,6 @@ private extension VenueVC {
                 notify: true
             )
         }
-    }
-
-    func resolveAndUnfollowVenueAPI(
-        venueUniqueId: String,
-        previousState: Bool,
-        previousFollowedVenueId: String?
-    ) {
-
-        venueService.fetchFollowedVenueId(
-            uniqueId: venueUniqueId,
-            search: venueDetails?.name
-        ) { [weak self] followedVenueId in
-
-            guard let self else { return }
-
-            guard let followedVenueId,
-                  !followedVenueId.isEmpty
-            else {
-
-                self.rollbackFollowState(
-                    previousState: previousState,
-                    previousFollowedVenueId: previousFollowedVenueId
-                )
-                return
-            }
-
-            self.followedVenueId = followedVenueId
-            self.venueDetails?.followedVenueId = followedVenueId
-
-            self.unfollowVenueAPI(
-                followedVenueId: followedVenueId,
-                previousState: previousState,
-                previousFollowedVenueId: previousFollowedVenueId
-            )
-        }
-    }
-
-    func rollbackFollowState(
-        previousState: Bool,
-        previousFollowedVenueId: String?
-    ) {
-
-        isFollowLoading = false
-        applyFollowState(
-            isFollowing: previousState,
-            followedVenueId: previousFollowedVenueId,
-            notify: false
-        )
     }
 
     var displayVenueName: String {

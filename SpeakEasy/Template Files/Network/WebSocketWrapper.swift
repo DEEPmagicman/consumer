@@ -9,11 +9,19 @@ import Foundation
 import UIKit
 import SocketIO
 
+struct EventTicketSoldCountUpdate {
+    let ticketId: String
+    let eventId: String?
+    let soldUnits: Int?
+    let issuedUnits: Int?
+}
+
 protocol WebSocketCallBackDelegate: AnyObject {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool)
     func didGenderWiseTicketChange(venueId: String, uniqueId: String)
     func didUpdateEvent(eventId: String)
     func didUpdateEventTicket(ticket: EventTicket)
+    func didUpdateEventTicketSoldCount(_ update: EventTicketSoldCountUpdate)
     
     func updateTicketPrice(ticket: [CoverTicket])
     func updateAddOnsTicketPrice(ticket: [UpSellTicket])
@@ -36,6 +44,7 @@ final class WebSocketWrapper: NSObject {
     private var manager: SocketManager = SocketManager(socketURL: URL(string: "www.google.com")!)
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
+    private var currentVenueId: String?
     var delegate: [WebSocketCallBackDelegate] = []
     
     private var isAbleToConnect: Bool {
@@ -45,6 +54,20 @@ final class WebSocketWrapper: NSObject {
     func setUpWebSocket() {
         NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.didBecomeActiveNotification, object: nil)
+        connect()
+    }
+
+    func updateSocketContext(venueId: String?) {
+        let normalizedVenueId = venueId?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let nextVenueId = normalizedVenueId?.isEmpty == false ? normalizedVenueId : nil
+
+        guard currentVenueId != nextVenueId else { return }
+
+        currentVenueId = nextVenueId
+
+        guard socket != nil else { return }
+
+        disConnect()
         connect()
     }
     
@@ -88,6 +111,18 @@ final class WebSocketWrapper: NSObject {
                 self.delegate.forEach { $0.didUpdateEventTicket(ticket: tickets) }
             } catch {
                 return
+            }
+        }
+
+        socket?.on("EVENT_TICKET_SOLD_COUNT_CHANGED") { data, _ in
+            let updates = self.parseEventTicketSoldCountUpdates(from: data)
+            guard !updates.isEmpty else {
+                return
+            }
+            updates.forEach { update in
+                self.delegate.forEach {
+                    $0.didUpdateEventTicketSoldCount(update)
+                }
             }
         }
         
@@ -199,9 +234,16 @@ final class WebSocketWrapper: NSObject {
             }
             self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
         }
+
+        socket?.on("EVENT") { data, _ in
+            guard let eventId = self.eventIdentifier(from: data) else {
+                return
+            }
+            self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
+        }
         
         socket?.on("updatedEvent") { data, _ in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventId = content["eventId"] as? String else {
+            guard let eventId = self.eventIdentifier(from: data) else {
                 return
             }
             self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
@@ -211,7 +253,14 @@ final class WebSocketWrapper: NSObject {
     @objc func connect() {
         if !isAbleToConnect { return }
         if let socketUrl = URL(string: SharedURL.baseURL) {
-            manager = SocketManager(socketURL: socketUrl, config: [.log(true), .compress])
+            var connectParams: [String: Any] = [
+                "module": "consumer",
+                "platform": "ios"
+            ]
+            if let currentVenueId {
+                connectParams["venue"] = currentVenueId
+            }
+            manager = SocketManager(socketURL: socketUrl, config: [.compress, .connectParams(connectParams)])
             socket = manager.defaultSocket
             addEventListener()
             setArrData()
@@ -225,20 +274,104 @@ final class WebSocketWrapper: NSObject {
     }
 }
 
+private extension WebSocketWrapper {
+
+    func eventIdentifier(from data: [Any]) -> String? {
+        guard let arr = data as? [[String: Any]],
+              let dic = arr.first
+        else { return nil }
+
+        let content = (dic["content"] as? [String: Any]) ?? dic
+        let eventId =
+            content["eventId"] as? String ??
+            content["uniqueId"] as? String ??
+            content["id"] as? String
+
+        guard let eventId, !eventId.isEmpty else { return nil }
+
+        return eventId
+    }
+
+    func parseEventTicketSoldCountUpdates(from data: [Any]) -> [EventTicketSoldCountUpdate] {
+        guard let arr = data as? [[String: Any]],
+              let dic = arr.first
+        else { return [] }
+
+        if let contents = dic["content"] as? [[String: Any]] {
+            return contents.compactMap { eventTicketSoldCountUpdate(from: $0) }
+        }
+
+        if let content = dic["content"] as? [String: Any],
+           let update = eventTicketSoldCountUpdate(from: content) {
+            return [update]
+        }
+
+        if let update = eventTicketSoldCountUpdate(from: dic) {
+            return [update]
+        }
+
+        return []
+    }
+
+    func eventTicketSoldCountUpdate(from content: [String: Any]) -> EventTicketSoldCountUpdate? {
+        let ticketId =
+            content["ticketId"] as? String ??
+            content["eventTicketId"] as? String ??
+            content["id"] as? String
+
+        guard let ticketId, !ticketId.isEmpty else { return nil }
+
+        return EventTicketSoldCountUpdate(
+            ticketId: ticketId,
+            eventId: content["eventId"] as? String,
+            soldUnits: intValue(from: content["soldUnits"] ?? content["soldCount"]),
+            issuedUnits: intValue(from: content["issuedUnits"])
+        )
+    }
+
+    func intValue(from value: Any?) -> Int? {
+        if let value = value as? Int {
+            return value
+        }
+
+        if let value = value as? Double {
+            return Int(value)
+        }
+
+        if let value = value as? String {
+            return Int(value)
+        }
+
+        return nil
+    }
+}
+
 extension WebSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {}
-    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {}
-    func didUpdateEvent(eventId: String) {}
-    func didUpdateEventTicket(ticket: EventTicket) {}
-    func updateVenueStatus(venueId: String, venueStatus: String) {}
-    func updateTicketPrice(ticket: [CoverTicket]) {}
-    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {}
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) { }
+
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) { }
+
+    func didUpdateEvent(eventId: String) { }
+
+    func didUpdateEventTicket(ticket: EventTicket) { }
+
+    func didUpdateEventTicketSoldCount(_ update: EventTicketSoldCountUpdate) { }
+
+    func updateVenueStatus(venueId: String, venueStatus: String) { }
+
+    func updateTicketPrice(ticket: [CoverTicket]) { }
+
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) { }
     
-    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {}
-    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {}
-    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {}
-    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {}
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) { }
+
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) { }
+
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) { }
+
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) { }
     
-    func checkinBarBooking(barItems: [BarTabHasItem]) {}
-    func uncheckBarBooking(barItems: [BarTabHasItem]) {}
+    func checkinBarBooking(barItems: [BarTabHasItem]) { }
+
+    func uncheckBarBooking(barItems: [BarTabHasItem]) { }
 }

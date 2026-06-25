@@ -28,10 +28,15 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var extraFeesLbl: UILabel!
     @IBOutlet weak var backgroundContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
-
+    @IBOutlet weak var eventTitleView: UIView!
+    @IBOutlet weak var ticketOptionsContainerView: UIView!
+    @IBOutlet weak var ticketOptionsTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
+    
     var mode: TicketMode = .normal
     var event: Event?
     var venueDetails: ClipVenue?
+    var preselectedNormalTickets: [EventTicket] = []
 
     private var tickets: [EventTicket] = []
     private var normalTickets: [EventTicket] = []
@@ -106,6 +111,7 @@ class TicketSelectionViewController: UIViewController {
         if let venue = event?.venue {
             venueDetails = venue
         }
+        selectedNormalTickets = preselectedNormalTickets
 
         setupTableViews()
         setupTableViewObservers()
@@ -113,6 +119,13 @@ class TicketSelectionViewController: UIViewController {
         setupTitleMarqueeLabel()
         getTicketLinksAndSetup()
         setupHeaderData()
+        registerSocketDelegate()
+    }
+
+    deinit {
+        unregisterSocketDelegate()
+        ticketListHeightObservation?.invalidate()
+        groupListHeightObservation?.invalidate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -189,6 +202,7 @@ class TicketSelectionViewController: UIViewController {
         groupTableView.isHidden = true
         groupTableViewHeight.constant = 0
         ticketTableViewHeight.constant = 0
+        updateTicketOptionsLayout()
     }
 
     private func removeScrollContentHeightConstraintIfNeeded() {
@@ -404,29 +418,11 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func setupTitleMarqueeLabel() {
-        guard titleMarqueeLabel.superview == nil,
-              let parent = eventTitleLbl.superview else { return }
-
-        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleMarqueeLabel.font = eventTitleLbl.font ?? Constant.Font.geistMedium(size: 22)
-        titleMarqueeLabel.textColor = eventTitleLbl.textColor ?? .white
-        titleMarqueeLabel.animationSpeed = 25
-        titleMarqueeLabel.animationDelay = 1.2
-        titleMarqueeLabel.trailingSpacing = 48
-        parent.addSubview(titleMarqueeLabel)
-        eventTitleLbl.isHidden = true
-
-        NSLayoutConstraint.activate([
-            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventTitleLbl.centerXAnchor),
-            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventTitleLbl.centerYAnchor),
-            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventTitleLbl.leadingAnchor),
-            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventTitleLbl.trailingAnchor),
-            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventTitleLbl.heightAnchor)
-        ])
+        eventTitleView.backgroundColor = .clear
+        titleMarqueeLabel.install(over: eventTitleLbl, horizontalInset: 72)
     }
 
     private func setHeaderTitle(_ title: String?) {
-        eventTitleLbl.text = title
         titleMarqueeLabel.setText(title)
     }
 
@@ -492,6 +488,17 @@ class TicketSelectionViewController: UIViewController {
 
         protectedTicketView.isHidden =
         protectedTickets.isEmpty
+        updateTicketOptionsLayout()
+    }
+
+    private func updateTicketOptionsLayout() {
+        let shouldShowOptions =
+        !addOnTicketTitleView.isHidden ||
+        !protectedTicketView.isHidden
+
+        ticketOptionsContainerView.isHidden = !shouldShowOptions
+        ticketOptionsTopConstraint.constant = shouldShowOptions ? 24 : 14
+        scrollViewTopConstraint.constant = shouldShowOptions ? 10 : 0
     }
 
     private func formattedDateText(for event: Event) -> String {
@@ -653,6 +660,7 @@ class TicketSelectionViewController: UIViewController {
                 }
 
                 self.protectedTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
+                self.updateTicketOptionsLayout()
 
                 for data in tickets {
                     if self.event?.protectedEventTicket?.contains(where: { $0.id == data.id }) ?? false == false {
@@ -701,6 +709,7 @@ class TicketSelectionViewController: UIViewController {
         guard !displayable.isEmpty else {
 
             protectedTicketView.isHidden = true
+            updateTicketOptionsLayout()
             return
         }
 
@@ -885,6 +894,93 @@ class TicketSelectionViewController: UIViewController {
             if let idx = addOnTickets.firstIndex(where: { $0.id == id }) { addOnTickets[idx] = updated }
             tickets = addOnTickets
         }
+    }
+
+    private func applySoldCountUpdate(_ update: EventTicketSoldCountUpdate) {
+        guard isCurrentEventTicketSoldCountUpdate(update) else { return }
+
+        var didUpdate = false
+
+        if var eventTickets = event?.eventTicket {
+            didUpdate = updateTicketList(&eventTickets, with: update) || didUpdate
+            event?.eventTicket = eventTickets
+        }
+
+        if var addOnTickets = event?.eventAddOnTicket {
+            didUpdate = updateTicketList(&addOnTickets, with: update) || didUpdate
+            event?.eventAddOnTicket = addOnTickets
+        }
+
+        if var protectedTickets = event?.protectedEventTicket {
+            didUpdate = updateTicketList(&protectedTickets, with: update) || didUpdate
+            event?.protectedEventTicket = protectedTickets
+        }
+
+        didUpdate = updateTicketList(&normalTickets, with: update) || didUpdate
+        didUpdate = updateTicketList(&addOnTickets, with: update) || didUpdate
+        didUpdate = updateTicketList(&selectedNormalTickets, with: update) || didUpdate
+
+        for groupIndex in groupedNormalTickets.indices {
+            didUpdate = updateTicketList(&groupedNormalTickets[groupIndex].tickets, with: update) || didUpdate
+        }
+
+        guard didUpdate else { return }
+
+        tickets = mode == .normal ? normalTickets : addOnTickets
+        setupData()
+        updateCheckoutSummary()
+        updateContinueBtnState()
+        updateContinueButtonForMode()
+    }
+
+    private func isCurrentEventTicketSoldCountUpdate(_ update: EventTicketSoldCountUpdate) -> Bool {
+        if let eventId = update.eventId,
+           !eventId.isEmpty,
+           eventId != event?.id {
+            return false
+        }
+
+        return containsEventTicket(id: update.ticketId)
+    }
+
+    private func containsEventTicket(id: String) -> Bool {
+        (event?.eventTicket?.contains { $0.id == id } == true) ||
+        (event?.eventAddOnTicket?.contains { $0.id == id } == true) ||
+        (event?.protectedEventTicket?.contains { $0.id == id } == true) ||
+        normalTickets.contains { $0.id == id } ||
+        addOnTickets.contains { $0.id == id } ||
+        selectedNormalTickets.contains { $0.id == id } ||
+        groupedNormalTickets.contains { group in
+            group.tickets.contains { $0.id == id }
+        }
+    }
+
+    private func updateTicketList(_ tickets: inout [EventTicket], with update: EventTicketSoldCountUpdate) -> Bool {
+        guard let index = tickets.firstIndex(where: { $0.id == update.ticketId })
+        else { return false }
+
+        tickets[index] = ticket(tickets[index], applying: update)
+        return true
+    }
+
+    private func ticket(_ ticket: EventTicket, applying update: EventTicketSoldCountUpdate) -> EventTicket {
+        var ticket = ticket
+
+        if let soldUnits = update.soldUnits {
+            ticket.soldUnits = soldUnits
+        }
+
+        if let issuedUnits = update.issuedUnits {
+            ticket.issuedUnits = issuedUnits
+        }
+
+        let remaining = max((ticket.issuedUnits ?? 0) - (ticket.soldUnits ?? 0), 0)
+        if let selectedCount = ticket.selectedTicketCount,
+           selectedCount > remaining {
+            ticket.selectedTicketCount = remaining > 0 ? remaining : nil
+        }
+
+        return ticket
     }
 
     private func handlePlus(ticket: EventTicket) {
@@ -1417,5 +1513,108 @@ private final class TicketSelectionShimmerCell: UITableViewCell {
             actionView.widthAnchor.constraint(equalToConstant: 58),
             actionView.heightAnchor.constraint(equalToConstant: 38)
         ])
+    }
+}
+
+// MARK: - WebSocket
+
+extension TicketSelectionViewController: WebSocketCallBackDelegate {
+
+    func didUpdateEvent(eventId: String) {
+        guard isCurrentEventUpdate(eventId) else { return }
+        refreshEventDetailFromSocket()
+    }
+
+    func didUpdateEventTicketSoldCount(_ update: EventTicketSoldCountUpdate) {
+        applySoldCountUpdate(update)
+    }
+}
+
+private extension TicketSelectionViewController {
+
+    func isCurrentEventUpdate(_ eventId: String) -> Bool {
+        eventId == event?.uniqueId ||
+        eventId == event?.id
+    }
+
+    func refreshEventDetailFromSocket() {
+        guard let eventId = event?.uniqueId ?? event?.id else { return }
+
+        let selectedCounts = selectedTicketCountsById()
+
+        eventService.fetchV3EventDetail(
+            eventId: eventId,
+            venueTimeZone: venueDetails?.useTimezone
+        ) { [weak self] isSuccess, _, detail, _ in
+            guard let self,
+                  isSuccess,
+                  var refreshedEvent = detail?.event
+            else { return }
+
+            self.applySelectedCounts(selectedCounts, to: &refreshedEvent)
+            self.event = refreshedEvent
+
+            if let venue = refreshedEvent.venue {
+                self.venueDetails = venue
+                WebSocketWrapper.shared.updateSocketContext(venueId: venue.id)
+            }
+
+            self.applySelectedCounts(selectedCounts, to: &self.selectedNormalTickets)
+            self.setupData()
+            self.updateCheckoutSummary()
+            self.updateContinueBtnState()
+            self.updateContinueButtonForMode()
+        }
+    }
+
+    func selectedTicketCountsById() -> [String: Int] {
+        let selectedTickets =
+        (event?.eventTicket ?? []) +
+        (event?.eventAddOnTicket ?? []) +
+        (event?.protectedEventTicket ?? []) +
+        (event?.protectedeventAddOnTicket ?? []) +
+        normalTickets +
+        addOnTickets +
+        selectedNormalTickets +
+        groupedNormalTickets.flatMap { $0.tickets }
+
+        return selectedTickets.reduce(into: [String: Int]()) { result, ticket in
+            guard let id = ticket.id,
+                  let count = ticket.selectedTicketCount,
+                  count > 0
+            else { return }
+
+            result[id] = count
+        }
+    }
+
+    func applySelectedCounts(_ counts: [String: Int], to event: inout Event) {
+        applySelectedCounts(counts, to: &event.eventTicket)
+        applySelectedCounts(counts, to: &event.eventAddOnTicket)
+        applySelectedCounts(counts, to: &event.protectedEventTicket)
+        applySelectedCounts(counts, to: &event.protectedeventAddOnTicket)
+    }
+
+    func applySelectedCounts(_ counts: [String: Int], to tickets: inout [EventTicket]?) {
+        guard var updatedTickets = tickets else { return }
+        applySelectedCounts(counts, to: &updatedTickets)
+        tickets = updatedTickets
+    }
+
+    func applySelectedCounts(_ counts: [String: Int], to tickets: inout [EventTicket]) {
+        for index in tickets.indices {
+            guard let id = tickets[index].id else { continue }
+            tickets[index].selectedTicketCount = counts[id]
+        }
+    }
+
+    func registerSocketDelegate() {
+        WebSocketWrapper.shared.updateSocketContext(venueId: venueDetails?.id ?? event?.venue?.id)
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+
+    func unregisterSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
     }
 }

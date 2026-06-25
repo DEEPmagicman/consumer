@@ -127,7 +127,7 @@
                             </connections>
                         </button>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Etc-XV-giG">
-                            <rect key="frame" x="0.0" y="98.666666666666629" width="393" height="427.33333333333326"/>
+                            <rect key="frame" x="0.0" y="98.666666666666657" width="393" height="427.33333333333337"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Pw-ph-o9K">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="1232.6666666666667"/>

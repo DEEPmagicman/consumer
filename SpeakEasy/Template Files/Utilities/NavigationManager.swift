@@ -603,10 +603,16 @@ final class Navigate {
 //        sender.pushVC(vc, animated: false)
     }
     
-    func ticketSelectionVc(_ sender: UIViewController, event: Event, mode: TicketMode) {
+    func ticketSelectionVc(
+        _ sender: UIViewController,
+        event: Event,
+        mode: TicketMode,
+        selectedNormalTickets: [EventTicket] = []
+    ) {
         let vc = TicketSelectionViewController(nibName: "TicketSelectionViewController", bundle: nil)
         vc.event = event
         vc.mode = mode
+        vc.preselectedNormalTickets = selectedNormalTickets
         sender.pushVC(vc)
     }
     

@@ -137,29 +137,10 @@ class TicketConfirmationVC: UIViewController {
     }
 
     private func setupTitleMarqueeLabel() {
-        guard titleMarqueeLabel.superview == nil,
-              let parent = eventTitleLbl.superview else { return }
-
-        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleMarqueeLabel.font = eventTitleLbl.font ?? Constant.Font.geistMedium(size: 22)
-        titleMarqueeLabel.textColor = eventTitleLbl.textColor ?? .white
-        titleMarqueeLabel.animationSpeed = 25
-        titleMarqueeLabel.animationDelay = 1.2
-        titleMarqueeLabel.trailingSpacing = 48
-        parent.addSubview(titleMarqueeLabel)
-        eventTitleLbl.isHidden = true
-
-        NSLayoutConstraint.activate([
-            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventTitleLbl.centerXAnchor),
-            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventTitleLbl.centerYAnchor),
-            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventTitleLbl.leadingAnchor),
-            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventTitleLbl.trailingAnchor),
-            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventTitleLbl.heightAnchor)
-        ])
+        titleMarqueeLabel.install(over: eventTitleLbl, horizontalInset: 72)
     }
 
     private func setHeaderTitle(_ title: String?) {
-        eventTitleLbl.text = title
         titleMarqueeLabel.setText(title)
     }
     
