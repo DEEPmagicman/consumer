@@ -765,31 +765,30 @@ private extension PremiumReservationVC {
 
             print("Inquiry tapped")
 
-            // Next sprint
-            // PremiumInquiryVC will open directly.
-
             return
         }
+        
+        Navigate.to.premiumTableSeatingVC(self, event: event, seatingArea: item)
 
-        Navigate.to.tableSeatingVC(
-            self,
-            seatingArea: item,
-            event: event
-        ) { [weak self] timeSlotId,
-            guestCount,
-            _,
-            _ in
-
-            guard let self else {
-                return
-            }
-
-            createQueue(
-                area: item,
-                timeSlotId: timeSlotId,
-                guestCount: guestCount
-            )
-        }
+///* ff */  Navigate.to.premiumTableSeatingVC(
+//            self,
+//            seatingArea: item,
+//            event: event
+//        ) { [weak self] timeSlotId,
+//            guestCount,
+//            _,
+//            _ in
+//
+//            guard let self else {
+//                return
+//            }
+//
+//            createQueue(
+//                area: item,
+//                timeSlotId: timeSlotId,
+//                guestCount: guestCount
+//            )
+//        }
     }
 }
 

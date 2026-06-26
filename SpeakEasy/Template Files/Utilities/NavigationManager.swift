@@ -883,4 +883,14 @@ final class Navigate {
         vc.providedSeatingAreas = seatingAreas
         sender.pushVC(vc)
     }
+    
+    func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil) {
+        let vc = PremiumTableSeatingVC()
+        vc.seatingArea = seatingArea
+        vc.event       = event
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        sender.present(nav, animated: true)
+    }
+    
 }
