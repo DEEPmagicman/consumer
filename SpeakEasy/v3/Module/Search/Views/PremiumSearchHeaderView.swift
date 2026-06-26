@@ -194,8 +194,8 @@ final class PremiumSearchHeaderView: UIView {
             mapIcon.widthAnchor.constraint(equalToConstant: 14),
             mapIcon.heightAnchor.constraint(equalToConstant: 14),
             
-            searchView.leadingAnchor.constraint(equalTo: avatarGlassView.trailingAnchor, constant: 28),
-            searchView.trailingAnchor.constraint(equalTo: mapButton.leadingAnchor, constant: -28),
+            searchView.leadingAnchor.constraint(equalTo: avatarGlassView.trailingAnchor, constant: 16),
+            searchView.trailingAnchor.constraint(equalTo: mapButton.leadingAnchor, constant: -16),
             searchView.centerYAnchor.constraint(equalTo: centerYAnchor),
             searchView.heightAnchor.constraint(equalToConstant: 36)
         ])

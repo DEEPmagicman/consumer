@@ -866,8 +866,14 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func searchVenueVC(_ sender: UIViewController) {
+    func searchVenueVC(
+        _ sender: UIViewController,
+        keyword: String? = nil,
+        mode: SearchVenueVC.SearchMode = .followed
+    ) {
         let vc = SearchVenueVC()
+        vc.initialKeyword = keyword
+        vc.searchMode = mode
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.isHidden = true
         sender.present(nav, animated: true)

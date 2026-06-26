@@ -134,6 +134,15 @@ class EventDetailsVC: UIViewController {
     private var galleryImageViews: [UIImageView] = []
     private var galleryOverlayView: UIView?
     private var galleryMoreLabel: UILabel?
+    private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
+        let gesture = UIScreenEdgePanGestureRecognizer(
+            target: self,
+            action: #selector(handleLeftEdgeBackGesture(_:))
+        )
+        gesture.edges = .left
+        gesture.delegate = self
+        return gesture
+    }()
     
     private var eventService = EventService()
     private var paymentService = PaymentService()
@@ -209,6 +218,7 @@ class EventDetailsVC: UIViewController {
         setupYouTubeShimmerView()
         setupEventDetailsTypography()
         enableInteractiveSwipeBack()
+        setupLeftEdgeBackGestureIfNeeded()
         showSkeleton()
         
         additionalButtonsTableView.delegate = self
@@ -238,6 +248,7 @@ class EventDetailsVC: UIViewController {
         super.viewDidAppear(animated)
         startAutoScrollIfNeeded()
         enableInteractiveSwipeBack()
+        setupLeftEdgeBackGestureIfNeeded()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -390,6 +401,41 @@ class EventDetailsVC: UIViewController {
     private func enableInteractiveSwipeBack() {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    private func setupLeftEdgeBackGestureIfNeeded() {
+        guard isPresentedAsRootNavigationScreen,
+              leftEdgeBackGesture.view == nil
+        else {
+            return
+        }
+
+        view.addGestureRecognizer(leftEdgeBackGesture)
+    }
+
+    private var isPresentedAsRootNavigationScreen: Bool {
+        guard let navigationController else { return false }
+        return navigationController.viewControllers.first === self &&
+            navigationController.presentingViewController != nil
+    }
+
+    private func handleBackNavigation() {
+        if (navigationController?.viewControllers.count ?? 0) > 1 {
+            Navigate.to.back(self)
+        } else {
+            dismissPremium()
+        }
+    }
+
+    @objc private func handleLeftEdgeBackGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        guard gesture.state == .ended else { return }
+
+        let translationX = gesture.translation(in: view).x
+        let velocityX = gesture.velocity(in: view).x
+
+        guard translationX > 70 || velocityX > 450 else { return }
+
+        handleBackNavigation()
     }
 
     private func setupTitleMarqueeLabel() {
@@ -938,8 +984,11 @@ class EventDetailsVC: UIViewController {
             }
         }
 
-        event?.eventTicket = clearingSelectedCounts(in: event?.eventTicket)
-        event?.protectedEventTicket = clearingSelectedCounts(in: event?.protectedEventTicket)
+        if var updatedEvent = event {
+            updatedEvent.eventTicket = clearingSelectedCounts(in: updatedEvent.eventTicket)
+            updatedEvent.protectedEventTicket = clearingSelectedCounts(in: updatedEvent.protectedEventTicket)
+            event = updatedEvent
+        }
 
         tickets = normalTickets
         ticketTableView.reloadData()
@@ -1805,12 +1854,16 @@ class EventDetailsVC: UIViewController {
             tickets[idx] = updatedTicket
         }
 
-        if let idx = event?.eventTicket?.firstIndex(where: { $0.id == id }) {
-            event?.eventTicket?[idx] = updatedTicket
-        }
+        if var updatedEvent = event {
+            if let idx = updatedEvent.eventTicket?.firstIndex(where: { $0.id == id }) {
+                updatedEvent.eventTicket?[idx] = updatedTicket
+            }
 
-        if let idx = event?.protectedEventTicket?.firstIndex(where: { $0.id == id }) {
-            event?.protectedEventTicket?[idx] = updatedTicket
+            if let idx = updatedEvent.protectedEventTicket?.firstIndex(where: { $0.id == id }) {
+                updatedEvent.protectedEventTicket?[idx] = updatedTicket
+            }
+
+            event = updatedEvent
         }
     }
 
@@ -2317,8 +2370,7 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
-//        Navigate.to.back(self)
-        dismissPremium()
+        handleBackNavigation()
     }
 
     @IBAction func onClickShareBtn(_ sender: Any) {}
@@ -3409,6 +3461,10 @@ extension EventDetailsVC: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer === navigationController?.interactivePopGestureRecognizer {
             return (navigationController?.viewControllers.count ?? 0) > 1
+        }
+
+        if gestureRecognizer === leftEdgeBackGesture {
+            return isPresentedAsRootNavigationScreen
         }
 
         return true

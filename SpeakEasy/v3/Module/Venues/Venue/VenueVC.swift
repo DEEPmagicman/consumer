@@ -32,6 +32,7 @@ final class VenueVC: UIViewController {
     private let navTitleStackView = UIStackView()
     private let navVenueNameLabel = PremiumMarqueeLabel()
     private let navVenueCityLabel = UILabel()
+    private var navTitleWidthConstraint: NSLayoutConstraint?
 
     private let glassSegment = GlassSegmentView(titles: ["Events", "Premium", "Artists"])
 
@@ -70,6 +71,15 @@ final class VenueVC: UIViewController {
     private var isSocketRefreshInProgress = false
     private var followedVenueId: String?
     private var hasLocalFollowState = false
+    private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
+        let gesture = UIScreenEdgePanGestureRecognizer(
+            target: self,
+            action: #selector(handleLeftEdgeBackGesture(_:))
+        )
+        gesture.edges = .left
+        gesture.delegate = self
+        return gesture
+    }()
     private let followActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.color = .white
@@ -92,6 +102,7 @@ final class VenueVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        setupLeftEdgeBackGestureIfNeeded()
         registerSocketDelegate()
 
         if didAppearOnce {
@@ -296,12 +307,37 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
+        handleBackNavigation()
+    }
+
+    private func handleBackNavigation() {
         if isPresentedPremium {
             dismissPremium()
             return
         }
 
         Navigate.to.back(self)
+    }
+
+    private func setupLeftEdgeBackGestureIfNeeded() {
+        guard isPresentedPremium,
+              leftEdgeBackGesture.view == nil
+        else {
+            return
+        }
+
+        view.addGestureRecognizer(leftEdgeBackGesture)
+    }
+
+    @objc private func handleLeftEdgeBackGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        guard gesture.state == .ended else { return }
+
+        let translationX = gesture.translation(in: view).x
+        let velocityX = gesture.velocity(in: view).x
+
+        guard translationX > 70 || velocityX > 450 else { return }
+
+        handleBackNavigation()
     }
 
     @IBAction func onClickShare(_ sender: Any) {
@@ -461,7 +497,7 @@ private extension VenueVC {
 
     func syncFollowState() {
         followedVenueId =
-        venueDetails?.followedVenueId
+        venueDetails?.venueFollowedId
 
         isFollowing =
         venueDetails?.isFollowing == true ||
@@ -472,7 +508,7 @@ private extension VenueVC {
         guard hasLocalFollowState, isFollowLoading else { return }
 
         venue.isFollowing = isFollowing
-        venue.followedVenueId = followedVenueId
+        venue.venueFollowedId = followedVenueId
     }
 
     func refreshVenueFollowStateIfNeeded() {
@@ -512,7 +548,7 @@ private extension VenueVC {
         self.isFollowing = isFollowing
         self.followedVenueId = followedVenueId
         venueDetails?.isFollowing = isFollowing
-        venueDetails?.followedVenueId = followedVenueId
+        venueDetails?.venueFollowedId = followedVenueId
         hasLocalFollowState = true
         updateFollowUI(animated: animated)
 
@@ -711,6 +747,7 @@ private extension VenueVC {
         navVenueNameLabel.animationSpeed = 25
         navVenueNameLabel.animationDelay = 1.2
         navVenueNameLabel.trailingSpacing = 48
+        navVenueNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         navVenueNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         navVenueCityLabel.font = Constant.Font.geistMedium(size: 12)
@@ -724,12 +761,19 @@ private extension VenueVC {
         navTitleStackView.addArrangedSubview(navVenueCityLabel)
         view.addSubview(navTitleStackView)
 
+        let titleWidthConstraint = navTitleStackView.widthAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.widthAnchor,
+            constant: -144
+        )
+        navTitleWidthConstraint = titleWidthConstraint
+
         NSLayoutConstraint.activate([
             navTitleStackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             navTitleStackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 36),
             navTitleStackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 72),
             navTitleStackView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72),
-            navVenueNameLabel.widthAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.widthAnchor, constant: -144),
+            titleWidthConstraint,
+            navVenueNameLabel.widthAnchor.constraint(equalTo: navTitleStackView.widthAnchor),
             navVenueNameLabel.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
@@ -738,6 +782,8 @@ private extension VenueVC {
         navVenueNameLabel.setText(displayVenueName)
         navVenueCityLabel.text = displayVenueCity
         navVenueCityLabel.isHidden = displayVenueCity.isEmpty
+        navTitleStackView.setNeedsLayout()
+        navVenueNameLabel.setNeedsLayout()
     }
 
     func captureContainerTopConstraint() {
@@ -1083,6 +1129,18 @@ extension VenueVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate 
         selectedIndex = index
         glassSegment.setSelectedIndex(index, animated: true)
         resetTrackedOffset(for: currentVC)
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension VenueVC: UIGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer === leftEdgeBackGesture {
+            return isPresentedPremium
+        }
+
+        return true
     }
 }
 

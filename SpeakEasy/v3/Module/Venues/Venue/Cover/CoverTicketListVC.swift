@@ -266,10 +266,10 @@ private extension CoverTicketListVC {
         navVenueNameLbl.text = venueDetails?.name ?? ""
         navTimeLbl.text = locationText
 
-        if let hexColor = venueDetails?.venueSettings?.whiteLabelColor {
-            timeLbl.textColor = UIColor(hex: hexColor)
-            navTimeLbl.textColor = UIColor(hex: hexColor)
-        }
+//        if let hexColor = venueDetails?.venueSettings?.whiteLabelColor {
+//            timeLbl.textColor = UIColor(hex: hexColor)
+//            navTimeLbl.textColor = UIColor(hex: hexColor)
+//        }
 
         navBarHiddenView.isHidden = true
         navBarHiddenView.alpha = 0

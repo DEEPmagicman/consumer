@@ -316,7 +316,13 @@ struct AdditionalButton: Codable {
 
 struct AttendeesResponse: Codable {
     var total: Int?
+    var totalAttendees: Int?
+    var totalCount: Int?
+    var attendeesTotal: Int?
+    var attendeesCount: Int?
+    var eventAttendeesCount: Int?
     var list: [Attendee]?
+    var eventAttendees: [Attendee]?
     var hasMany: Bool?
     var count: Int?
 }

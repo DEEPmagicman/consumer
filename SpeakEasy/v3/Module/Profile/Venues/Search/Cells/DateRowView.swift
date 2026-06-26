@@ -22,6 +22,8 @@ struct SearchEventItem {
     let title: String
     let dateText: String?
     let imageURL: String?
+    var venueName: String? = nil
+    var event: Event? = nil
 }
 
 // MARK: - Service

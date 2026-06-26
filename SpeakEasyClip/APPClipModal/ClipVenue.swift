@@ -45,7 +45,7 @@ struct ClipVenue: Codable {
     var isDiscoveryClickable: Bool?
     var isFollowing: Bool?
     var isSaved: Bool?
-    var followedVenueId: String?
+    var venueFollowedId: String?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0

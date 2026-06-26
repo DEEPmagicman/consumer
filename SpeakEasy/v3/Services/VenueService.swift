@@ -164,8 +164,8 @@ final class VenueService {
             if var venue =
                 ClipVenue.parse(responseDic) {
 
-                venue.followedVenueId =
-                venue.followedVenueId ??
+                venue.venueFollowedId =
+                venue.venueFollowedId ??
                 self.followedVenueId(from: responseDic)
 
                 if venue.isFollowing == nil {
@@ -432,7 +432,7 @@ final class VenueService {
             let followedVenueId =
             venues.first {
                 $0.uniqueId == uniqueId
-            }?.followedVenueId
+            }?.venueFollowedId
 
             completion(followedVenueId)
         }
@@ -869,8 +869,25 @@ final class VenueService {
         venue["bookingCode"] =
         venue["bookingCode"] ?? ""
 
-        venue["venueAttachment"] =
-        venue["venueAttachment"] ?? []
+        if let logo =
+            venue["logo"] as? [String: Any] {
+
+            venue["logo"] =
+            normalizedMedia(logo)
+        }
+
+        if let attachments =
+            venue["venueAttachment"] as? [[String: Any]] {
+
+            venue["venueAttachment"] =
+            attachments.map {
+                normalizedMedia($0)
+            }
+
+        } else {
+
+            venue["venueAttachment"] = []
+        }
 
         if let followedRelationId {
             venue["followedVenueId"] =
@@ -883,6 +900,26 @@ final class VenueService {
         }
 
         return venue
+    }
+
+    private func normalizedMedia(
+        _ media: [String: Any]
+    ) -> [String: Any] {
+
+        var media = media
+        let key =
+        media["key"] as? String ?? ""
+
+        media["key"] =
+        key
+
+        media["name"] =
+        media["name"] ?? key
+
+        media["description"] =
+        media["description"] ?? ""
+
+        return media
     }
 
     private func followedVenueId(

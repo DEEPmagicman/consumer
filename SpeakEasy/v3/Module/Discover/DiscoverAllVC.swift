@@ -208,7 +208,7 @@ private extension DiscoverAllVC {
     }
 
     @objc func onPullToRefresh() {
-        refreshAllList(showsSkeleton: false)
+        refreshAllList(showsSkeleton: true)
     }
 }
 

@@ -157,6 +157,7 @@ final class OrderListViewController: UIViewController {
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
         feesAndTaxesHiddenView.isHidden = true
+        updateFeesAndTaxesVisibility()
 
         paymentTypeView.isUserInteractionEnabled = false
         updatePaymentMethodUI()
@@ -632,7 +633,6 @@ final class OrderListViewController: UIViewController {
             tableViewHeight.constant = table.contentSize.height
         } else if table === feesAndTaxesTableView {
             feesAndTaxesTableViewHeight.constant = table.contentSize.height
-            print("fees rows: \(feesAndTaxes.count), contentSize: \(table.contentSize.height)")
         }
         view.layoutIfNeeded()
     }
@@ -652,6 +652,19 @@ final class OrderListViewController: UIViewController {
     private func updateOrderSummaryAmounts(total: Double, fees: Double) {
         orderFeesAmountLbl.text = "\(currency)\(fees.decimalFormat(true))"
         orderTotalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+    }
+
+    private func updateFeesAndTaxesVisibility() {
+        let shouldHide = feesAndTaxes.isEmpty
+        feesAndTaxesStackView.isHidden = shouldHide
+
+        if shouldHide {
+            feesAndTaxesHiddenView.isHidden = true
+            feesAndTaxesHiddenView.alpha = 0
+            feesAndTaxesHiddenView.transform = .identity
+            feesDropDowenIc.transform = .identity
+            feesAndTaxesTableViewHeight.constant = 0
+        }
     }
 
     // MARK: - Checkbox UI
@@ -739,6 +752,8 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickFeesAndTaxesView(_ sender: Any) {
+        guard !feesAndTaxes.isEmpty else { return }
+
         let shouldShow = feesAndTaxesHiddenView.isHidden
         UIView.animate(withDuration: 0.2) {
             self.feesDropDowenIc.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -938,12 +953,14 @@ final class OrderListViewController: UIViewController {
             feesAndTaxes = []
             feesAndTaxesHiddenView.isHidden = true
             feesAndTaxesTableView.reloadData()
+            updateFeesAndTaxesVisibility()
             paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
             return
         }
 
         feesAndTaxes = buildFeesArray(from: detail)
         feesAndTaxesTableView.reloadData()
+        updateFeesAndTaxesVisibility()
 
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         let feesAmount = feesAndTaxes.reduce(0) { $0 + $1.amount }

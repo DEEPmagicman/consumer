@@ -807,29 +807,71 @@ final class EventService {
         from responseDic: [String: Any]
     ) -> Int? {
 
-        if let total = responseDic["totalAttendees"] as? Int {
-            return total
-        }
+        let totalKeys = [
+            "totalAttendees",
+            "attendeesTotal",
+            "attendeesCount",
+            "eventAttendeesCount",
+            "totalCount",
+            "count",
+            "total"
+        ]
 
-        if let total = responseDic["total"] as? Int {
-            return total
+        for key in totalKeys {
+            if let total = intValue(from: responseDic[key]) {
+                return total
+            }
         }
 
         if let attendees = responseDic["attendees"] as? [String: Any] {
-            if let total = attendees["totalAttendees"] as? Int {
-                return total
+            for key in totalKeys {
+                if let total = intValue(from: attendees[key]) {
+                    return total
+                }
             }
+        }
 
-            if let total = attendees["total"] as? Int {
-                return total
+        if let eventAttendees = responseDic["eventAttendees"] as? [String: Any] {
+            for key in totalKeys {
+                if let total = intValue(from: eventAttendees[key]) {
+                    return total
+                }
             }
+        }
 
-            if let count = attendees["count"] as? Int {
-                return count
+        if let event = responseDic["event"] as? [String: Any] {
+            for key in totalKeys {
+                if let total = intValue(from: event[key]) {
+                    return total
+                }
+            }
+        }
+
+        if let count = responseDic["_count"] as? [String: Any] {
+            if let total = intValue(from: count["attendees"]) ??
+                intValue(from: count["eventAttendees"]) {
+                return total
             }
         }
 
         return nil
+    }
+
+    private func intValue(from value: Any?) -> Int? {
+        switch value {
+        case let value as Int:
+            return value
+        case let value as Double:
+            return Int(value)
+        case let value as Float:
+            return Int(value)
+        case let value as NSNumber:
+            return value.intValue
+        case let value as String:
+            return Int(value.trimmingCharacters(in: .whitespacesAndNewlines))
+        default:
+            return nil
+        }
     }
 
     private func savedEventId(
@@ -1092,8 +1134,14 @@ final class EventService {
                 completion(
                     true,
                     nil,
-                    decoded.list,
-                    decoded.total ?? decoded.count,
+                    decoded.list ?? decoded.eventAttendees,
+                    decoded.total ??
+                    decoded.totalAttendees ??
+                    decoded.attendeesTotal ??
+                    decoded.attendeesCount ??
+                    decoded.eventAttendeesCount ??
+                    decoded.totalCount ??
+                    decoded.count,
                     nil
                 )
 

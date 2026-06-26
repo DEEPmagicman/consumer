@@ -9,15 +9,25 @@ import UIKit
 
 final class SearchVenueVC: BaseSearchSheetVC {
 
+    enum SearchMode {
+        case followed
+        case global
+    }
+
     private let searchField = UITextField()
     private let tableView = UITableView()
     private let emptyView = SearchEmptyStateView()
 
     private var venues: [SearchVenueItem] = []
     private var searchWorkItem: DispatchWorkItem?
-    
+    private var hasMoreVenues = false
     private var isLoading = false
+    private var isLoadingMore = false
+    private let pageSize = 10
     private let venueService = VenueService()
+
+    var initialKeyword: String?
+    var searchMode: SearchMode = .followed
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +39,17 @@ final class SearchVenueVC: BaseSearchSheetVC {
         setupSearchField()
         setupTable()
         setupEmpty()
-        
-        searchVenues("")
+
+        let keyword =
+        initialKeyword?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        searchField.text = keyword
+
+        if keyword.isEmpty {
+            emptyView.isHidden = false
+            tableView.isHidden = true
+        } else {
+            searchVenues(keyword, skip: 0, reset: true)
+        }
     }
 
     private func setupSearchField() {
@@ -43,7 +62,8 @@ final class SearchVenueVC: BaseSearchSheetVC {
         searchField.layer.borderWidth = 0.5
         searchField.layer.cornerCurve = .continuous
         searchField.clipsToBounds = true
-        searchField.placeholder = "Search followed venues"
+        searchField.placeholder =
+        searchMode == .followed ? "Search followed venues" : "Search venues"
         searchField.leftView = makeSearchIcon()
         searchField.leftViewMode = .always
         searchField.addTarget(self, action: #selector(onSearchChanged), for: .editingChanged)
@@ -117,37 +137,45 @@ final class SearchVenueVC: BaseSearchSheetVC {
         }
 
         let work = DispatchWorkItem { [weak self] in
-            self?.searchVenues(keyword)
+            self?.searchVenues(keyword, skip: 0, reset: true)
         }
 
         searchWorkItem = work
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: work)
     }
 
-    private func searchVenues(_ keyword: String) {
-        isLoading = true
+    private func searchVenues(
+        _ keyword: String,
+        skip: Int,
+        reset: Bool
+    ) {
+        if reset {
+            isLoading = true
+            isLoadingMore = false
+            venues.removeAll()
+        } else {
+            isLoadingMore = true
+        }
+
         tableView.isHidden = false
         tableView.reloadData()
-        
-        venueService.fetchFollowedVenues(
-            skip: 0,
-            take: 10,
-            search: keyword
-        ) { [weak self] isSuccess, _, venues, _ in
+
+        fetchVenues(
+            keyword: keyword,
+            skip: skip
+        ) { [weak self] isSuccess, _, venues, hasMore in
             guard let self else { return }
 
             self.isLoading = false
+            self.isLoadingMore = false
 
-            self.venues = isSuccess
-            ? venues.map {
-                SearchVenueItem(
-                    id: $0.uniqueId,
-                    name: $0.name,
-                    imageURL: $0.logo?.key.imageURL,
-                    venue: $0
-                )
+            if reset {
+                self.venues = isSuccess ? venues : []
+            } else if isSuccess {
+                self.venues.append(contentsOf: venues)
             }
-            : []
+
+            self.hasMoreVenues = isSuccess ? hasMore : false
 
             let hasResults = !self.venues.isEmpty
 
@@ -169,6 +197,65 @@ final class SearchVenueVC: BaseSearchSheetVC {
             self.tableView.isHidden = !hasResults
             self.tableView.reloadData()
         }
+    }
+
+    private func fetchVenues(
+        keyword: String,
+        skip: Int,
+        completion: @escaping (
+            Bool,
+            String?,
+            [SearchVenueItem],
+            Bool
+        ) -> Void
+    ) {
+
+        switch searchMode {
+        case .followed:
+            venueService.fetchFollowedVenues(
+                skip: skip,
+                take: pageSize,
+                search: keyword
+            ) { isSuccess, errorMessage, venues, hasMore in
+                completion(
+                    isSuccess,
+                    errorMessage,
+                    venues.map {
+                        SearchVenueItem(
+                            id: $0.uniqueId,
+                            name: $0.name,
+                            imageURL: ($0.logo?.key ?? $0.venueAttachment?.first?.key)?.imageURL,
+                            venue: $0
+                        )
+                    },
+                    hasMore
+                )
+            }
+
+        case .global:
+            SearchFlowService.shared.searchVenues(
+                keyword: keyword,
+                skip: skip,
+                take: pageSize,
+                completion: completion
+            )
+        }
+    }
+
+    private func loadMoreVenuesIfNeeded() {
+        let keyword =
+        searchField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !keyword.isEmpty,
+              !isLoading,
+              !isLoadingMore,
+              hasMoreVenues else { return }
+
+        searchVenues(
+            keyword,
+            skip: venues.count,
+            reset: false
+        )
     }
 
     private func makeSearchIcon() -> UIView {
@@ -212,27 +299,45 @@ extension SearchVenueVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if venues.count <= indexPath.row { return }
         let venue = venues[indexPath.row]
+        
+        Navigate.to.eventsListVC(
+            self, venue: venue
+        )
 
-        let presenter =
-        navigationController?.presentingViewController ??
-        presentingViewController
+//        let presenter =
+//        navigationController?.presentingViewController ??
+//        presentingViewController
+//
+//        dismiss(animated: true) {
+//            if let venueDetails = venue.venue {
+//                let venueListVC =
+//                presenter as? VenueListVC ??
+//                (presenter as? UINavigationController)?.topViewController as? VenueListVC
+//
+//                Navigate.to.venueVC(
+//                    presenter ?? self,
+//                    venueDetails: venueDetails
+//                ) { updatedVenue, isFollowing in
+//                    venueListVC?.handleFollowStateChange(
+//                        venue: updatedVenue,
+//                        isFollowing: isFollowing
+//                    )
+//                }
+//            }
+//        }
+    }
 
-        dismiss(animated: true) {
-            if let venueDetails = venue.venue {
-                let venueListVC =
-                presenter as? VenueListVC ??
-                (presenter as? UINavigationController)?.topViewController as? VenueListVC
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold: CGFloat = 120
+        let offsetY = scrollView.contentOffset.y
+        let visibleHeight = scrollView.bounds.height
+        let contentHeight = scrollView.contentSize.height
 
-                Navigate.to.venueVC(
-                    presenter ?? self,
-                    venueDetails: venueDetails
-                ) { updatedVenue, isFollowing in
-                    venueListVC?.handleFollowStateChange(
-                        venue: updatedVenue,
-                        isFollowing: isFollowing
-                    )
-                }
-            }
+        guard contentHeight > 0,
+              offsetY + visibleHeight + threshold >= contentHeight else {
+            return
         }
+
+        loadMoreVenuesIfNeeded()
     }
 }

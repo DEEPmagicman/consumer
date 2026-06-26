@@ -154,7 +154,7 @@ final class DiscoverDateFilterVC: UIViewController {
     }
 
     @objc private func onPullToRefresh() {
-        fetchEvents(reset: true, showsInitialShimmer: false)
+        fetchEvents(reset: true, showsInitialShimmer: true)
     }
 
     private func fetchEvents(

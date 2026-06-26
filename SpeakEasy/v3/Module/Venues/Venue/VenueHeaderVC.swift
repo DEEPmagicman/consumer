@@ -45,7 +45,7 @@ final class VenueHeaderVC: UIViewController {
     private func setupUI() {
         coverTicketView.isHidden = !hasAvailableTickets
         
-        followedVenueId = venueDetails?.followedVenueId
+        followedVenueId = venueDetails?.venueFollowedId
         isFollowing =
         venueDetails?.isFollowing == true ||
         followedVenueId != nil
@@ -68,7 +68,7 @@ final class VenueHeaderVC: UIViewController {
         self.isFollowing = isFollowing
         self.followedVenueId = followedVenueId
         venueDetails?.isFollowing = isFollowing
-        venueDetails?.followedVenueId = followedVenueId
+        venueDetails?.venueFollowedId = followedVenueId
         updateFollowUI()
 
         if notify, let venue = venueDetails {
@@ -208,7 +208,7 @@ extension VenueHeaderVC {
             }
 
             self.followedVenueId = followedVenueId
-            self.venueDetails?.followedVenueId = followedVenueId
+            self.venueDetails?.venueFollowedId = followedVenueId
 
             self.unfollowVenueAPI(
                 followedVenueId: followedVenueId,

@@ -484,6 +484,14 @@ struct APIBuilder {
         baseURL + route + "/saved"
     }
 
+    static var consumerSearchURL: String {
+        baseURL + route + "/search"
+    }
+
+    static var consumerSearchVenuesURL: String {
+        baseURL + route + "/search/venues"
+    }
+
     static var v3SavedEventsURL: String {
         v3baseURL + route + "/saved/events"
     }
