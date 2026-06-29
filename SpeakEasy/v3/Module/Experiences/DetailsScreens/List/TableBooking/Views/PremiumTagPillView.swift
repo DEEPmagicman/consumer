@@ -12,6 +12,12 @@ import UIKit
 
 final class PremiumTagPillView: UIView {
 
+    private let glassView = LiquidGlassBackgroundView(
+        cornerRadius: 14,
+        fillColor: UIColor.white.withAlphaComponent(0.05),
+        borderColor: UIColor.white.withAlphaComponent(0.10),
+        borderWidth: 0.8
+    )
     private let iconView  = UIImageView()
     private let textLabel = UILabel()
 
@@ -22,26 +28,33 @@ final class PremiumTagPillView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     private func setup() {
-        backgroundColor = UIColor.white.withAlphaComponent(0.08)
-        layer.cornerRadius = 14
-        clipsToBounds = true
+        backgroundColor = .clear
+        clipsToBounds = false
 
-        iconView.tintColor      = UIColor.white.withAlphaComponent(0.65)
+        glassView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(glassView)
+
+        iconView.tintColor      = .white
         iconView.contentMode    = .scaleAspectFit
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
-        textLabel.font      = Constant.Font.geistRegular(size: 12)
-        textLabel.textColor = UIColor.white.withAlphaComponent(0.75)
+        textLabel.font      = Constant.Font.geistRegular(size: 9)
+        textLabel.textColor = .white
         textLabel.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(iconView)
         addSubview(textLabel)
 
         NSLayoutConstraint.activate([
+            glassView.topAnchor.constraint(equalTo: topAnchor),
+            glassView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            glassView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            glassView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             iconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: 13),
-            iconView.heightAnchor.constraint(equalToConstant: 13),
+            iconView.widthAnchor.constraint(equalToConstant: 12),
+            iconView.heightAnchor.constraint(equalToConstant: 12),
 
             textLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 5),
             textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
@@ -54,6 +67,16 @@ final class PremiumTagPillView: UIView {
     func configure(icon: String, text: String) {
         iconView.image = UIImage(systemName: icon)
         textLabel.text = text
+    }
+
+    func configure(style: PremiumInfoPillView.Style, text: String) {
+        textLabel.text = text
+        switch style {
+        case .guests:
+            iconView.image = UIImage(resource: .guestIcon).withRenderingMode(.alwaysTemplate)
+        case .time:
+            iconView.image = UIImage(resource: .icClock1).withRenderingMode(.alwaysTemplate)
+        }
     }
 }
 
@@ -117,20 +140,27 @@ final class PremiumStepperRow: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         cardView.addSubview(titleLabel)
 
-        // Stepper
-        func makeBtn(_ title: String, action: Selector) -> UIButton {
-            let b = UIButton(type: .system)
-            b.setTitle(title, for: .normal)
-            b.setTitleColor(.white, for: .normal)
-            b.setTitleColor(UIColor.white.withAlphaComponent(0.3), for: .disabled)
-            b.titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .light)
-            b.translatesAutoresizingMaskIntoConstraints = false
-            b.addTarget(self, action: action, for: .touchUpInside)
-            return b
+        func configureStepperButton(_ button: UIButton, title: String, imageName: String, action: Selector) {
+            button.setTitle(nil, for: .normal)
+            if let image = UIImage(named: imageName)?.withRenderingMode(.alwaysTemplate) {
+                button.setImage(image, for: .normal)
+                button.tintColor = .white
+            } else {
+                button.setTitle(title, for: .normal)
+                button.setTitleColor(.white, for: .normal)
+                button.titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .light)
+            }
+            button.backgroundColor = UIColor.black.withAlphaComponent(0.24)
+            button.layer.cornerRadius = 7
+            button.layer.borderWidth = 1
+            button.layer.borderColor = UIColor.white.withAlphaComponent(0.09).cgColor
+            button.clipsToBounds = true
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: action, for: .touchUpInside)
         }
 
-        let minus = makeBtn("−", action: #selector(onMinus))
-        let plus  = makeBtn("+", action: #selector(onPlus))
+        configureStepperButton(minusBtn, title: "−", imageName: "minusIcon", action: #selector(onMinus))
+        configureStepperButton(plusBtn, title: "+", imageName: "pluseIcon", action: #selector(onPlus))
 
         countLabel.font          = Constant.Font.geistMedium(size: 17)
         countLabel.textColor     = .white
@@ -138,9 +168,7 @@ final class PremiumStepperRow: UIView {
         countLabel.text          = "\(count)"
         countLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        [minus, countLabel, plus].forEach { cardView.addSubview($0) }
-
-        self.minusBtn.isEnabled = false
+        [minusBtn, countLabel, plusBtn].forEach { cardView.addSubview($0) }
 
         NSLayoutConstraint.activate([
             cardView.topAnchor.constraint(equalTo: topAnchor),
@@ -156,34 +184,36 @@ final class PremiumStepperRow: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 12),
             titleLabel.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
 
-            plus.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
-            plus.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
-            plus.widthAnchor.constraint(equalToConstant: 36),
-            plus.heightAnchor.constraint(equalToConstant: 44),
+            plusBtn.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
+            plusBtn.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
+            plusBtn.widthAnchor.constraint(equalToConstant: 32),
+            plusBtn.heightAnchor.constraint(equalToConstant: 32),
 
-            countLabel.trailingAnchor.constraint(equalTo: plus.leadingAnchor, constant: -4),
+            countLabel.trailingAnchor.constraint(equalTo: plusBtn.leadingAnchor, constant: -8),
             countLabel.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
             countLabel.widthAnchor.constraint(equalToConstant: 32),
 
-            minus.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -4),
-            minus.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
-            minus.widthAnchor.constraint(equalToConstant: 36),
-            minus.heightAnchor.constraint(equalToConstant: 44)
+            minusBtn.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -8),
+            minusBtn.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
+            minusBtn.widthAnchor.constraint(equalToConstant: 32),
+            minusBtn.heightAnchor.constraint(equalToConstant: 32)
         ])
 
-        // store refs
-        cardView.addSubview(minus)
-        cardView.addSubview(plus)
+        updateButtons()
     }
 
     private func updateButtons() {
-        // We stored minus/plus locally — find them by tag
+        minusBtn.isEnabled = count > minValue
+        plusBtn.isEnabled = count < maxValue
+        minusBtn.alpha = minusBtn.isEnabled ? 1 : 0.45
+        plusBtn.alpha = plusBtn.isEnabled ? 1 : 0.45
     }
 
     @objc private func onMinus() {
         guard count > minValue else { return }
         count -= 1
         countLabel.text = "\(count)"
+        updateButtons()
         onValueChanged?(count)
     }
 
@@ -191,7 +221,263 @@ final class PremiumStepperRow: UIView {
         guard count < maxValue else { return }
         count += 1
         countLabel.text = "\(count)"
+        updateButtons()
         onValueChanged?(count)
+    }
+}
+
+// MARK: - PremiumArrivalTimeOption
+
+struct PremiumArrivalTimeOption {
+    let id: String?
+    let title: String
+}
+
+// MARK: - PremiumArrivalTimeView
+
+final class PremiumArrivalTimeView: UIView {
+
+    var onSelectionChanged: ((Int) -> Void)?
+
+    private let cardView = GradientBorderCardView()
+    private let iconView = UIImageView()
+    private let titleLabel = UILabel()
+    private let selectedTimeView = UIView()
+    private let selectedTimeLabel = UILabel()
+    private let availableLabel = UILabel()
+    private let chipsStack = UIStackView()
+
+    private var options: [PremiumArrivalTimeOption] = []
+    private var selectedIndex = 0
+    private var accentColor = UIColor(hex: "#A64BA0")
+    private var lastLayoutWidth: CGFloat = 0
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        cardView.glassCornerRadius = 14
+
+        let width = bounds.width
+        guard abs(width - lastLayoutWidth) > 0.5 else { return }
+        lastLayoutWidth = width
+        rebuildChips(maxContentWidth: max(0, width - 32))
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let fallbackWidth = UIScreen.main.bounds.width - 40
+        let width = bounds.width > 0 ? bounds.width : fallbackWidth
+        return CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: preferredHeight(for: width)
+        )
+    }
+
+    func configure(
+        options: [PremiumArrivalTimeOption],
+        selectedIndex: Int,
+        accentColor: UIColor?
+    ) {
+        self.options = options
+        self.selectedIndex = min(max(selectedIndex, 0), max(options.count - 1, 0))
+        if let accentColor {
+            self.accentColor = accentColor
+        }
+        selectedTimeLabel.text = options.indices.contains(self.selectedIndex)
+            ? options[self.selectedIndex].title
+            : ""
+        availableLabel.isHidden = options.isEmpty
+        chipsStack.isHidden = options.isEmpty
+        rebuildChips(maxContentWidth: max(0, bounds.width - 32))
+        invalidateIntrinsicContentSize()
+    }
+
+    func preferredHeight(for width: CGFloat) -> CGFloat {
+        guard !options.isEmpty else { return 0 }
+
+        let contentWidth = max(0, width - 32)
+        let rows = makeChipRows(maxContentWidth: contentWidth).count
+        let chipHeight: CGFloat = 32
+        let rowSpacing: CGFloat = 8
+        let chipsHeight = CGFloat(rows) * chipHeight + CGFloat(max(rows - 1, 0)) * rowSpacing
+
+        return 56 + 12 + 18 + 10 + chipsHeight + 16
+    }
+
+    private func setup() {
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.fillColor = UIColor.white.withAlphaComponent(0.06).cgColor
+        cardView.showsBlur = true
+        cardView.blurAlpha = 0.4
+        cardView.thinBorder = true
+        addSubview(cardView)
+
+        iconView.image = UIImage(resource: .icClock1).withRenderingMode(.alwaysTemplate)
+        iconView.tintColor = .white
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(iconView)
+
+        titleLabel.text = "Arrival Time"
+        titleLabel.font = Constant.Font.geistRegular(size: 15)
+        titleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(titleLabel)
+
+        selectedTimeView.backgroundColor = UIColor.black.withAlphaComponent(0.24)
+        selectedTimeView.layer.cornerRadius = 9
+        selectedTimeView.layer.borderWidth = 1
+        selectedTimeView.layer.borderColor = UIColor.white.withAlphaComponent(0.09).cgColor
+        selectedTimeView.clipsToBounds = true
+        selectedTimeView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(selectedTimeView)
+
+        selectedTimeLabel.font = Constant.Font.geistRegular(size: 16)
+        selectedTimeLabel.textColor = .white
+        selectedTimeLabel.textAlignment = .center
+        selectedTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+        selectedTimeView.addSubview(selectedTimeLabel)
+
+        availableLabel.text = "Available times"
+        availableLabel.font = Constant.Font.geistMedium(size: 14)
+        availableLabel.textColor = UIColor.white.withAlphaComponent(0.8)
+        availableLabel.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(availableLabel)
+
+        chipsStack.axis = .vertical
+        chipsStack.spacing = 8
+        chipsStack.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(chipsStack)
+
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            cardView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            iconView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            iconView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
+            iconView.widthAnchor.constraint(equalToConstant: 20),
+            iconView.heightAnchor.constraint(equalToConstant: 20),
+
+            titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 12),
+            titleLabel.centerYAnchor.constraint(equalTo: iconView.centerYAnchor),
+
+            selectedTimeView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
+            selectedTimeView.centerYAnchor.constraint(equalTo: iconView.centerYAnchor),
+            selectedTimeView.widthAnchor.constraint(greaterThanOrEqualToConstant: 104),
+            selectedTimeView.heightAnchor.constraint(equalToConstant: 36),
+            selectedTimeView.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 12),
+
+            selectedTimeLabel.leadingAnchor.constraint(equalTo: selectedTimeView.leadingAnchor, constant: 12),
+            selectedTimeLabel.trailingAnchor.constraint(equalTo: selectedTimeView.trailingAnchor, constant: -12),
+            selectedTimeLabel.centerYAnchor.constraint(equalTo: selectedTimeView.centerYAnchor),
+
+            availableLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 68),
+            availableLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            availableLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
+
+            chipsStack.topAnchor.constraint(equalTo: availableLabel.bottomAnchor, constant: 10),
+            chipsStack.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            chipsStack.trailingAnchor.constraint(lessThanOrEqualTo: cardView.trailingAnchor, constant: -16),
+            chipsStack.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16)
+        ])
+    }
+
+    private func rebuildChips(maxContentWidth: CGFloat) {
+        chipsStack.arrangedSubviews.forEach {
+            chipsStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        guard maxContentWidth > 0, !options.isEmpty else { return }
+
+        let rows = makeChipRows(maxContentWidth: maxContentWidth)
+        rows.forEach { rowItems in
+            let row = UIStackView()
+            row.axis = .horizontal
+            row.spacing = 8
+            row.alignment = .fill
+            row.distribution = .fill
+            row.translatesAutoresizingMaskIntoConstraints = false
+
+            rowItems.forEach { item in
+                let button = makeChipButton(index: item.index, title: item.title)
+                button.widthAnchor.constraint(equalToConstant: item.width).isActive = true
+                button.heightAnchor.constraint(equalToConstant: 32).isActive = true
+                row.addArrangedSubview(button)
+            }
+
+            let spacer = UIView()
+            spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            spacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            row.addArrangedSubview(spacer)
+
+            chipsStack.addArrangedSubview(row)
+        }
+
+        invalidateIntrinsicContentSize()
+    }
+
+    private func makeChipRows(maxContentWidth: CGFloat) -> [[(index: Int, title: String, width: CGFloat)]] {
+        var rows: [[(index: Int, title: String, width: CGFloat)]] = []
+        var currentRow: [(index: Int, title: String, width: CGFloat)] = []
+        var currentWidth: CGFloat = 0
+        let spacing: CGFloat = 8
+
+        for (index, option) in options.enumerated() {
+            let textWidth = option.title.size(
+                withAttributes: [.font: Constant.Font.geistRegular(size: 14)]
+            ).width
+            let columnCount: CGFloat = maxContentWidth >= 300 ? 3 : 2
+            let columnWidth = floor((maxContentWidth - spacing * (columnCount - 1)) / columnCount)
+            let width = min(max(textWidth + 24, columnWidth), maxContentWidth)
+            let nextWidth = currentRow.isEmpty ? width : currentWidth + spacing + width
+
+            if nextWidth > maxContentWidth, !currentRow.isEmpty {
+                rows.append(currentRow)
+                currentRow = [(index: index, title: option.title, width: width)]
+                currentWidth = width
+            } else {
+                currentRow.append((index: index, title: option.title, width: width))
+                currentWidth = nextWidth
+            }
+        }
+
+        if !currentRow.isEmpty {
+            rows.append(currentRow)
+        }
+
+        return rows
+    }
+
+    private func makeChipButton(index: Int, title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        let isSelected = index == selectedIndex
+        button.tag = index
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = Constant.Font.geistMedium(size: 14)
+        button.setTitleColor(isSelected ? .white : UIColor(hex: "#121212"), for: .normal)
+        button.backgroundColor = isSelected ? accentColor : UIColor(hex: "#E3E3E7")
+        button.layer.cornerRadius = 9
+        button.layer.borderWidth = isSelected ? 0 : 1
+        button.layer.borderColor = UIColor.white.withAlphaComponent(0.09).cgColor
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(onChipTap(_:)), for: .touchUpInside)
+        return button
+    }
+
+    @objc private func onChipTap(_ sender: UIButton) {
+        guard options.indices.contains(sender.tag) else { return }
+        selectedIndex = sender.tag
+        selectedTimeLabel.text = options[selectedIndex].title
+        rebuildChips(maxContentWidth: max(0, bounds.width - 32))
+        onSelectionChanged?(selectedIndex)
     }
 }
 
@@ -217,9 +503,9 @@ final class PremiumPriceCard: UIView {
         card.glassCornerRadius = 14
     }
 
-    func configure(minimum: Double, deposit: Double) {
-        minLabel.text = "$\(Int(minimum))"
-        depLabel.text = "$\(String(format: "%.2f", deposit))"
+    func configure(minimum: Double, deposit: Double, currency: String = "$") {
+        minLabel.text = "\(currency)\(Int(minimum))"
+        depLabel.text = "\(currency)\(String(format: "%.2f", deposit))"
     }
 
     private func setup() {
@@ -343,6 +629,418 @@ final class PremiumInfoRow: UIView {
     }
 }
 
+// MARK: - PremiumNoteInputView
+
+final class PremiumNoteInputView: UIView {
+
+    var onHeightChanged: ((CGFloat) -> Void)?
+
+    var preferredHeight: CGFloat {
+        isExpanded ? 124 : 56
+    }
+
+    var noteText: String {
+        let value = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value == placeholder ? "" : value
+    }
+
+    private let card       = GradientBorderCardView()
+    private let iconView   = UIImageView()
+    private let titleLabel = UILabel()
+    private let textView   = UITextView()
+    private let placeholder = "Add a note (optional)"
+    private var isExpanded = false
+    private var textTopConstraint: NSLayoutConstraint?
+    private var textBottomConstraint: NSLayoutConstraint?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        card.glassCornerRadius = 14
+    }
+
+    private func setup() {
+        card.translatesAutoresizingMaskIntoConstraints = false
+        card.fillColor = UIColor.white.withAlphaComponent(0.06).cgColor
+        card.showsBlur = true
+        card.blurAlpha = 0.4
+        addSubview(card)
+
+        iconView.image = UIImage(systemName: "plus")
+        iconView.tintColor = .white
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(iconView)
+
+        titleLabel.text = "Add a note"
+        titleLabel.font = Constant.Font.geistRegular(size: 15)
+        titleLabel.textColor = UIColor.white.withAlphaComponent(0.85)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(titleLabel)
+
+        textView.text = placeholder
+        textView.delegate = self
+        textView.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+        textView.textColor = UIColor.white.withAlphaComponent(0.45)
+        textView.tintColor = .white
+        textView.font = Constant.Font.geistRegular(size: 13)
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        textView.layer.cornerRadius = 9
+        textView.layer.borderWidth = 0.8
+        textView.layer.borderColor = UIColor.white.withAlphaComponent(0.10).cgColor
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(textView)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onNoteTap(_:)))
+        tap.cancelsTouchesInView = false
+        card.addGestureRecognizer(tap)
+
+        let textTop = textView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12)
+        let textBottom = textView.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -14)
+        textTopConstraint = textTop
+        textBottomConstraint = textBottom
+
+        NSLayoutConstraint.activate([
+            card.topAnchor.constraint(equalTo: topAnchor),
+            card.leadingAnchor.constraint(equalTo: leadingAnchor),
+            card.trailingAnchor.constraint(equalTo: trailingAnchor),
+            card.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            iconView.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            iconView.topAnchor.constraint(equalTo: card.topAnchor, constant: 18),
+            iconView.widthAnchor.constraint(equalToConstant: 18),
+            iconView.heightAnchor.constraint(equalToConstant: 18),
+
+            titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 12),
+            titleLabel.centerYAnchor.constraint(equalTo: iconView.centerYAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+
+            textTop,
+            textView.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+            textBottom
+        ])
+
+        setExpanded(false, animated: false)
+    }
+
+    func setExpanded(_ expanded: Bool, animated: Bool) {
+        isExpanded = expanded
+        textView.isHidden = !expanded
+        textTopConstraint?.isActive = expanded
+        textBottomConstraint?.isActive = expanded
+        iconView.transform = expanded ? CGAffineTransform(rotationAngle: .pi / 4) : .identity
+        onHeightChanged?(preferredHeight)
+
+        let updates = {
+            self.superview?.layoutIfNeeded()
+            return
+        }
+        animated ? UIView.animate(withDuration: 0.24, animations: updates) : updates()
+        if expanded {
+            textView.becomeFirstResponder()
+        } else {
+            textView.resignFirstResponder()
+        }
+    }
+
+    @objc private func onNoteTap(_ gesture: UITapGestureRecognizer) {
+        if isExpanded, textView.frame.contains(gesture.location(in: card)) {
+            return
+        }
+        setExpanded(!isExpanded, animated: true)
+    }
+}
+
+// MARK: - PremiumAgreementView
+
+final class PremiumAgreementView: UIView {
+
+    var onHeightChanged: ((CGFloat) -> Void)?
+
+    var preferredHeight: CGFloat {
+        calculatedHeight()
+    }
+
+    var isChecked: Bool = true {
+        didSet { updateCheckbox() }
+    }
+
+    var bodyText: String = "" {
+        didSet {
+            isExpanded = false
+            updateText()
+        }
+    }
+
+    var titleText: String? {
+        didSet {
+            titleLabel.text = titleText
+            titleLabel.isHidden = (titleText ?? "").isEmpty
+            titleTopConstraint?.isActive = !(titleText ?? "").isEmpty
+            bodyTopToTitleConstraint?.isActive = !(titleText ?? "").isEmpty
+            bodyTopToContainerConstraint?.isActive = (titleText ?? "").isEmpty
+            updateText()
+        }
+    }
+
+    var onToggle: ((Bool) -> Void)?
+
+    private let checkButton = UIButton(type: .system)
+    private let titleLabel = UILabel()
+    private let bodyLabel = UILabel()
+    private let collapsedLines = 2
+    private var isExpanded = false
+    private var lastReportedHeight: CGFloat = 0
+    private var titleTopConstraint: NSLayoutConstraint?
+    private var bodyTopToTitleConstraint: NSLayoutConstraint?
+    private var bodyTopToContainerConstraint: NSLayoutConstraint?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateText()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+
+        checkButton.tintColor = .white
+        checkButton.imageView?.tintColor = .white
+        checkButton.translatesAutoresizingMaskIntoConstraints = false
+        checkButton.addTarget(self, action: #selector(onCheckTap), for: .touchUpInside)
+        addSubview(checkButton)
+
+        titleLabel.font = Constant.Font.geistMedium(size: 12)
+        titleLabel.textColor = .white
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(titleLabel)
+
+        bodyLabel.font = Constant.Font.geistRegular(size: 12)
+        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.88)
+        bodyLabel.numberOfLines = collapsedLines
+        bodyLabel.lineBreakMode = .byWordWrapping
+        bodyLabel.isUserInteractionEnabled = true
+        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(bodyLabel)
+
+        let bodyTap = UITapGestureRecognizer(target: self, action: #selector(onBodyTap(_:)))
+        bodyLabel.addGestureRecognizer(bodyTap)
+
+        let titleTop = titleLabel.topAnchor.constraint(equalTo: topAnchor)
+        let bodyToTitle = bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6)
+        let bodyToContainer = bodyLabel.topAnchor.constraint(equalTo: topAnchor)
+        titleTopConstraint = titleTop
+        bodyTopToTitleConstraint = bodyToTitle
+        bodyTopToContainerConstraint = bodyToContainer
+
+        NSLayoutConstraint.activate([
+            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            checkButton.topAnchor.constraint(equalTo: topAnchor),
+            checkButton.widthAnchor.constraint(equalToConstant: 16),
+            checkButton.heightAnchor.constraint(equalToConstant: 16),
+
+            titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleTop,
+
+            bodyLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            bodyLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bodyToTitle,
+            bodyLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+
+        updateCheckbox()
+    }
+
+    private func updateCheckbox() {
+        let image = (isChecked ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon)?
+            .withRenderingMode(.alwaysTemplate)
+        checkButton.setImage(image, for: .normal)
+        checkButton.tintColor = .white
+        checkButton.imageView?.tintColor = .white
+    }
+
+    private func updateText() {
+        guard !bodyText.isEmpty else {
+            bodyLabel.attributedText = nil
+            bodyLabel.text = ""
+            bodyLabel.numberOfLines = 0
+            reportHeightIfNeeded()
+            return
+        }
+
+        let needsToggle = shouldShowToggle()
+        let toggleText = isExpanded ? "View less" : "View more"
+        let body = isExpanded || !needsToggle
+            ? bodyText
+            : collapsedPreview(toggleText: toggleText)
+        let displayText = needsToggle ? "\(body) \(toggleText)" : body
+
+        let attributed = NSMutableAttributedString(
+            string: displayText,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 12),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.88)
+            ]
+        )
+
+        if needsToggle {
+            let range = (displayText as NSString).range(of: toggleText)
+            attributed.addAttributes([
+                .font: Constant.Font.geistMedium(size: 12),
+                .foregroundColor: UIColor.white
+            ], range: range)
+        }
+
+        bodyLabel.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        bodyLabel.attributedText = attributed
+        invalidateIntrinsicContentSize()
+        reportHeightIfNeeded()
+        superview?.setNeedsLayout()
+    }
+
+    private func reportHeightIfNeeded() {
+        let height = preferredHeight
+        guard abs(height - lastReportedHeight) > 0.5 else { return }
+        lastReportedHeight = height
+        onHeightChanged?(height)
+    }
+
+    private func calculatedHeight() -> CGFloat {
+        let title = titleText?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let body = bodyLabel.attributedText?.string.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? bodyText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !title.isEmpty || !body.isEmpty else { return 0 }
+
+        let width = bodyLabel.bounds.width > 0
+            ? bodyLabel.bounds.width
+            : max(UIScreen.main.bounds.width - 68, 240)
+
+        var height: CGFloat = 0
+        if !title.isEmpty {
+            height += ceil(Constant.Font.geistMedium(size: 12).lineHeight)
+        }
+
+        if !body.isEmpty {
+            if !title.isEmpty { height += 6 }
+            let bodyFont = Constant.Font.geistRegular(size: 12)
+            let bodyHeight = (body as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: bodyFont],
+                context: nil
+            ).height
+            let maxCollapsedHeight = collapsedHeight(for: bodyFont)
+            height += isExpanded ? ceil(bodyHeight) : min(ceil(bodyHeight), maxCollapsedHeight)
+        }
+
+        return max(18, height)
+    }
+
+    private func shouldShowToggle() -> Bool {
+        let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
+        let font = Constant.Font.geistMedium(size: 12)
+        let height = (bodyText as NSString).boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).height
+        return height > collapsedHeight(for: font)
+    }
+
+    private func collapsedPreview(toggleText: String) -> String {
+        let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
+        let font = Constant.Font.geistMedium(size: 12)
+        let maxHeight = collapsedHeight(for: font)
+
+        func height(for value: String) -> CGFloat {
+            (value as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: font],
+                context: nil
+            ).height
+        }
+
+        guard height(for: "\(bodyText) \(toggleText)") > maxHeight else {
+            return bodyText
+        }
+
+        var low = 0
+        var high = bodyText.count
+        var best = ""
+
+        while low <= high {
+            let mid = (low + high) / 2
+            let endIndex = bodyText.index(bodyText.startIndex, offsetBy: mid)
+            let candidate = String(bodyText[..<endIndex])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let display = "\(candidate)... \(toggleText)"
+
+            if height(for: display) <= maxHeight {
+                best = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+        }
+
+        return best.isEmpty ? "..." : "\(best)..."
+    }
+
+    private func collapsedHeight(for font: UIFont) -> CGFloat {
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
+    }
+
+    @objc private func onCheckTap() {
+        isChecked.toggle()
+        onToggle?(isChecked)
+    }
+
+    @objc private func onBodyTap(_ gesture: UITapGestureRecognizer) {
+        guard let text = bodyLabel.attributedText?.string else { return }
+        let toggleText = isExpanded ? "View less" : "View more"
+        let range = (text as NSString).range(of: toggleText)
+        guard range.location != NSNotFound else { return }
+        isExpanded.toggle()
+        updateText()
+        UIView.animate(withDuration: 0.25) {
+            self.superview?.layoutIfNeeded()
+        }
+    }
+}
+
+extension PremiumNoteInputView: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == placeholder {
+            textView.text = ""
+            textView.textColor = .white
+        }
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = placeholder
+            textView.textColor = UIColor.white.withAlphaComponent(0.45)
+        }
+    }
+}
+
 // MARK: - SpendLineItem model
 
 struct SpendLineItem {
@@ -356,6 +1054,16 @@ struct SpendLineItem {
 
 final class PremiumSpendAgreementView: UIView {
 
+    var onHeightChanged: ((CGFloat) -> Void)?
+
+    var preferredHeight: CGFloat {
+        guard itemCount > 0 else { return 0 }
+        guard isExpanded else { return 52 }
+        let rowsHeight = CGFloat(itemCount * 20)
+        let spacingHeight = CGFloat(max(itemCount - 1, 0) * 10)
+        return 52 + 0.5 + 14 + rowsHeight + spacingHeight + 14
+    }
+
     private let card        = GradientBorderCardView()
     private let headerView  = UIView()
     private let headerLabel = UILabel()
@@ -365,6 +1073,9 @@ final class PremiumSpendAgreementView: UIView {
 
     private var isExpanded  = false
     private var currency    = "$"
+    private var itemCount   = 0
+    private var stackTopConstraint: NSLayoutConstraint?
+    private var stackBottomConstraint: NSLayoutConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -377,15 +1088,23 @@ final class PremiumSpendAgreementView: UIView {
         card.glassCornerRadius = 14
     }
 
-    func configure(currency: String, items: [SpendLineItem]) {
+    func configure(
+        currency: String,
+        title: String = "Spend Agreement",
+        items: [SpendLineItem],
+        expanded: Bool = false
+    ) {
         self.currency = currency
+        headerLabel.text = title
+        itemCount = items.count
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         items.forEach { item in
             let row = makeRow(title: item.title, amount: item.amount, bold: item.isBold)
             stackView.addArrangedSubview(row)
         }
-        setExpanded(false, animated: false)
+        isHidden = items.isEmpty
+        setExpanded(expanded, animated: false)
     }
 
     private func setup() {
@@ -427,6 +1146,11 @@ final class PremiumSpendAgreementView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(stackView)
 
+        let stackTop = stackView.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 14)
+        let stackBottom = stackView.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -14)
+        stackTopConstraint = stackTop
+        stackBottomConstraint = stackBottom
+
         NSLayoutConstraint.activate([
             card.topAnchor.constraint(equalTo: topAnchor),
             card.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -451,10 +1175,8 @@ final class PremiumSpendAgreementView: UIView {
             divider.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
             divider.heightAnchor.constraint(equalToConstant: 0.5),
 
-            stackView.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 14),
             stackView.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
-            stackView.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -14)
+            stackView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16)
         ])
     }
 
@@ -507,7 +1229,10 @@ final class PremiumSpendAgreementView: UIView {
         let update = {
             self.divider.isHidden   = !expanded
             self.stackView.isHidden = !expanded
+            self.stackTopConstraint?.isActive = expanded
+            self.stackBottomConstraint?.isActive = expanded
             self.chevron.transform  = CGAffineTransform(rotationAngle: rotate)
+            self.onHeightChanged?(self.preferredHeight)
             self.superview?.layoutIfNeeded()
         }
 
@@ -517,19 +1242,32 @@ final class PremiumSpendAgreementView: UIView {
     }
 }
 
-// MARK: - PremiumPromoRow
-/// "I have a promo code" row with + icon, expands to text field when tapped
 
 final class PremiumPromoRow: UIView {
 
     var onSubmit: ((String) -> Void)?
     var onRemove: (() -> Void)?
+    var onHeightChanged: ((CGFloat) -> Void)?
 
-    private let card         = GradientBorderCardView()
-    private let promoLabel   = UILabel()
-    private let actionIcon   = UIImageView()
-    private let textField    = UITextField()
-    private var isApplied    = false
+    var preferredHeight: CGFloat {
+        if isApplied { return 126 }
+        return isExpanded ? 146 : 74
+    }
+
+    private let card            = GradientBorderCardView()
+    private let stackView       = UIStackView()
+    private let titleRow        = UIView()
+    private let promoLabel      = UILabel()
+    private let actionButton    = UIButton(type: .system)
+    private let inputRow        = UIView()
+    private let textField       = UITextField()
+    private let applyButton     = UIButton(type: .system)
+    private let appliedRow      = UIView()
+    private let appliedCode     = UITextField()
+    private let discountLabel   = UILabel()
+
+    private var isApplied = false
+    private var isExpanded = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -542,12 +1280,21 @@ final class PremiumPromoRow: UIView {
         card.glassCornerRadius = 14
     }
 
-    func setApplied(_ applied: Bool) {
+    func setApplied(
+        _ applied: Bool,
+        code: String? = nil,
+        discount: Double = 0,
+        currency: String = "$"
+    ) {
         isApplied = applied
-        promoLabel.text = applied ? "Promo applied ✓" : "I have a promo code"
-        actionIcon.image = UIImage(systemName: applied ? "trash" : "plus.circle")
-        textField.isHidden = true
-        textField.text = ""
+        isExpanded = applied ? false : isExpanded
+        promoLabel.text = applied ? "Discount Applied" : "I have a promo code"
+        if let code {
+            textField.text = code
+            appliedCode.text = code
+        }
+        discountLabel.text = discount > 0 ? "-\(currency)\(discount.decimalFormat(true))" : ""
+        updateState(animated: false)
     }
 
     private func setup() {
@@ -555,30 +1302,64 @@ final class PremiumPromoRow: UIView {
         card.fillColor = UIColor.white.withAlphaComponent(0.06).cgColor
         card.showsBlur = true
         card.blurAlpha = 0.4
+        card.thinBorder = true
         addSubview(card)
 
-        promoLabel.text      = "I have a promo code"
-        promoLabel.font      = Constant.Font.geistRegular(size: 15)
-        promoLabel.textColor = UIColor.white.withAlphaComponent(0.85)
+        stackView.axis = .vertical
+        stackView.spacing = 18
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(stackView)
+
+        titleRow.translatesAutoresizingMaskIntoConstraints = false
+        titleRow.heightAnchor.constraint(equalToConstant: 28).isActive = true
+
+        promoLabel.text = "I have a promo code"
+        promoLabel.font = Constant.Font.geistRegular(size: 20)
+        promoLabel.textColor = .white
         promoLabel.translatesAutoresizingMaskIntoConstraints = false
-        card.addSubview(promoLabel)
+        titleRow.addSubview(promoLabel)
 
-        actionIcon.image       = UIImage(systemName: "plus.circle")
-        actionIcon.tintColor   = .white
-        actionIcon.contentMode = .scaleAspectFit
-        actionIcon.translatesAutoresizingMaskIntoConstraints = false
-        card.addSubview(actionIcon)
+        actionButton.setImage(UIImage(named: "plusIcon"), for: .normal)
+        actionButton.tintColor = .white
+        actionButton.layer.cornerRadius = 14
+        actionButton.layer.borderWidth = 1
+        actionButton.layer.borderColor = UIColor.white.withAlphaComponent(0.75).cgColor
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.addTarget(self, action: #selector(onActionTap), for: .touchUpInside)
+        titleRow.addSubview(actionButton)
 
-        textField.placeholder   = "Enter promo code"
-        textField.font          = Constant.Font.geistRegular(size: 15)
-        textField.textColor     = .white
-        textField.backgroundColor = .clear
-        textField.borderStyle   = .none
-        textField.returnKeyType = .done
-        textField.isHidden      = true
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.delegate      = self
-        card.addSubview(textField)
+        inputRow.translatesAutoresizingMaskIntoConstraints = false
+        inputRow.heightAnchor.constraint(equalToConstant: 46).isActive = true
+        inputRow.isHidden = true
+
+        configurePromoField(textField, placeholder: "Enter promo code", enabled: true)
+        inputRow.addSubview(textField)
+
+        applyButton.setTitle("Apply", for: .normal)
+        applyButton.setTitleColor(.black, for: .normal)
+        applyButton.titleLabel?.font = Constant.Font.geistMedium(size: 15)
+        applyButton.backgroundColor = .white
+        applyButton.layer.cornerRadius = 14
+        applyButton.translatesAutoresizingMaskIntoConstraints = false
+        applyButton.addTarget(self, action: #selector(onApplyTap), for: .touchUpInside)
+        inputRow.addSubview(applyButton)
+
+        appliedRow.translatesAutoresizingMaskIntoConstraints = false
+        appliedRow.heightAnchor.constraint(equalToConstant: 46).isActive = true
+        appliedRow.isHidden = true
+
+        configurePromoField(appliedCode, placeholder: "", enabled: false)
+        appliedRow.addSubview(appliedCode)
+
+        discountLabel.font = Constant.Font.geistMedium(size: 15)
+        discountLabel.textColor = .white
+        discountLabel.textAlignment = .right
+        discountLabel.translatesAutoresizingMaskIntoConstraints = false
+        appliedRow.addSubview(discountLabel)
+
+        stackView.addArrangedSubview(titleRow)
+        stackView.addArrangedSubview(inputRow)
+        stackView.addArrangedSubview(appliedRow)
 
         NSLayoutConstraint.activate([
             card.topAnchor.constraint(equalTo: topAnchor),
@@ -586,39 +1367,110 @@ final class PremiumPromoRow: UIView {
             card.leadingAnchor.constraint(equalTo: leadingAnchor),
             card.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            promoLabel.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
-            promoLabel.centerYAnchor.constraint(equalTo: card.centerYAnchor),
+            stackView.topAnchor.constraint(equalTo: card.topAnchor, constant: 23),
+            stackView.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -20),
 
-            actionIcon.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
-            actionIcon.centerYAnchor.constraint(equalTo: card.centerYAnchor),
-            actionIcon.widthAnchor.constraint(equalToConstant: 22),
-            actionIcon.heightAnchor.constraint(equalToConstant: 22),
+            promoLabel.leadingAnchor.constraint(equalTo: titleRow.leadingAnchor),
+            promoLabel.centerYAnchor.constraint(equalTo: titleRow.centerYAnchor),
+            promoLabel.trailingAnchor.constraint(lessThanOrEqualTo: actionButton.leadingAnchor, constant: -16),
 
-            textField.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: actionIcon.leadingAnchor, constant: -12),
-            textField.centerYAnchor.constraint(equalTo: card.centerYAnchor)
+            actionButton.trailingAnchor.constraint(equalTo: titleRow.trailingAnchor),
+            actionButton.centerYAnchor.constraint(equalTo: titleRow.centerYAnchor),
+            actionButton.widthAnchor.constraint(equalToConstant: 28),
+            actionButton.heightAnchor.constraint(equalToConstant: 28),
+
+            textField.leadingAnchor.constraint(equalTo: inputRow.leadingAnchor),
+            textField.topAnchor.constraint(equalTo: inputRow.topAnchor),
+            textField.bottomAnchor.constraint(equalTo: inputRow.bottomAnchor),
+
+            applyButton.leadingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 14),
+            applyButton.trailingAnchor.constraint(equalTo: inputRow.trailingAnchor),
+            applyButton.topAnchor.constraint(equalTo: inputRow.topAnchor),
+            applyButton.bottomAnchor.constraint(equalTo: inputRow.bottomAnchor),
+            applyButton.widthAnchor.constraint(equalToConstant: 72),
+
+            appliedCode.leadingAnchor.constraint(equalTo: appliedRow.leadingAnchor),
+            appliedCode.topAnchor.constraint(equalTo: appliedRow.topAnchor),
+            appliedCode.bottomAnchor.constraint(equalTo: appliedRow.bottomAnchor),
+
+            discountLabel.leadingAnchor.constraint(equalTo: appliedCode.trailingAnchor, constant: 12),
+            discountLabel.trailingAnchor.constraint(equalTo: appliedRow.trailingAnchor),
+            discountLabel.centerYAnchor.constraint(equalTo: appliedRow.centerYAnchor),
+            discountLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 74)
         ])
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        card.addGestureRecognizer(tap)
     }
 
-    @objc private func handleTap() {
+    private func configurePromoField(_ field: UITextField, placeholder: String, enabled: Bool) {
+        field.attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                .foregroundColor: UIColor.white.withAlphaComponent(0.28),
+                .font: Constant.Font.geistRegular(size: 15)
+            ]
+        )
+        field.font = Constant.Font.geistRegular(size: 15)
+        field.textColor = .white
+        field.backgroundColor = UIColor.black.withAlphaComponent(0.14)
+        field.borderStyle = .none
+        field.returnKeyType = .done
+        field.layer.cornerRadius = 14
+        field.layer.borderWidth = 1
+        field.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 18, height: 1))
+        field.leftViewMode = .always
+        field.isUserInteractionEnabled = enabled
+        field.alpha = enabled ? 1 : 0.5
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.delegate = self
+    }
+
+    @objc private func onActionTap() {
         if isApplied {
             onRemove?()
-        } else {
-            promoLabel.isHidden = true
-            textField.isHidden  = false
+            return
+        }
+
+        isExpanded.toggle()
+        updateState(animated: true)
+    }
+
+    @objc private func onApplyTap() {
+        submitCurrentCode()
+    }
+
+    private func submitCurrentCode() {
+        let code = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !code.isEmpty else { return }
+        onSubmit?(code)
+        textField.resignFirstResponder()
+    }
+
+    private func updateState(animated: Bool) {
+        inputRow.isHidden = !isExpanded || isApplied
+        appliedRow.isHidden = !isApplied
+        actionButton.setImage(
+            UIImage(named: isApplied || isExpanded ? "minusPromoIcon" : "plusIcon"),
+            for: .normal
+        )
+        onHeightChanged?(preferredHeight)
+
+        let updates = {
+            _ = self.superview?.layoutIfNeeded()
+        }
+        animated ? UIView.animate(withDuration: 0.25, animations: updates) : updates()
+
+        if isExpanded && !isApplied {
             textField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
         }
     }
 }
 
 extension PremiumPromoRow: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let code = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if !code.isEmpty { onSubmit?(code) }
-        textField.resignFirstResponder()
+        submitCurrentCode()
         return true
     }
 }

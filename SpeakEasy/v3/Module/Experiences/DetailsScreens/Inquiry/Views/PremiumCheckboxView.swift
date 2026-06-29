@@ -32,17 +32,13 @@ final class PremiumCheckboxView: UIView {
 
     private func setup() {
         // Box
-        box.layer.cornerRadius  = 4
-        box.layer.borderWidth   = 0.8
-        box.layer.borderColor   = UIColor.white.withAlphaComponent(0.2).cgColor
-        box.backgroundColor     = .black
+        box.backgroundColor     = .clear
         box.translatesAutoresizingMaskIntoConstraints = false
 
         // Tick
-        tick.image              = UIImage(systemName: "checkmark")
-        tick.tintColor          = .white
+        tick.image              = Constant.Icon.uncheckedIcon
+        tick.tintColor          = nil
         tick.contentMode        = .scaleAspectFit
-        tick.isHidden           = true
         tick.translatesAutoresizingMaskIntoConstraints = false
 
         // Label
@@ -58,13 +54,13 @@ final class PremiumCheckboxView: UIView {
         NSLayoutConstraint.activate([
             box.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
             box.topAnchor.constraint(equalTo: topAnchor, constant: 1),
-            box.widthAnchor.constraint(equalToConstant: 14),
-            box.heightAnchor.constraint(equalToConstant: 14),
+            box.widthAnchor.constraint(equalToConstant: 18),
+            box.heightAnchor.constraint(equalToConstant: 18),
 
             tick.centerXAnchor.constraint(equalTo: box.centerXAnchor),
             tick.centerYAnchor.constraint(equalTo: box.centerYAnchor),
-            tick.widthAnchor.constraint(equalToConstant: 12),
-            tick.heightAnchor.constraint(equalToConstant: 12),
+            tick.widthAnchor.constraint(equalToConstant: 18),
+            tick.heightAnchor.constraint(equalToConstant: 18),
 
             label.leadingAnchor.constraint(equalTo: box.trailingAnchor, constant: 12),
             label.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -77,16 +73,7 @@ final class PremiumCheckboxView: UIView {
     }
 
     private func updateAppearance() {
-        UIView.animate(withDuration: 0.15) {
-            if self.isChecked {
-                self.box.backgroundColor   = UIColor.white.withAlphaComponent(0.15)
-                self.box.layer.borderColor = UIColor.white.cgColor
-            } else {
-                self.box.backgroundColor   = .black
-                self.box.layer.borderColor = UIColor.white.withAlphaComponent(0.45).cgColor
-            }
-        }
-        tick.isHidden = !isChecked
+        tick.image = isChecked ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
     }
 
     @objc private func handleTap() {

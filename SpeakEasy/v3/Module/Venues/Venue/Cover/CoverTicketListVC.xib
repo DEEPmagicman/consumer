@@ -21,6 +21,8 @@
                 <outlet property="backgroundContainerView" destination="NWY-xS-gGe" id="R58-xK-DlQ"/>
                 <outlet property="bgImage" destination="hCx-Nc-Ij6" id="QDO-cv-hNE"/>
                 <outlet property="continueToCheckoutBtn" destination="xrz-1L-VKB" id="SqF-6R-gPd"/>
+                <outlet property="followBtn" destination="rIO-sR-L91" id="McO-Fa-Bp6"/>
+                <outlet property="followBtnLbl" destination="Lpe-5i-7W6" id="j7T-Ry-WL3"/>
                 <outlet property="headerView" destination="zOW-Vg-ojP" id="uDP-vE-mFL"/>
                 <outlet property="navBarHiddenView" destination="tGe-Rx-9nY" id="mEU-JA-FbJ"/>
                 <outlet property="navTimeLbl" destination="nnY-LE-Cf6" id="lgk-mM-oqK"/>
@@ -75,6 +77,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rIO-sR-L91">
                                                     <rect key="frame" x="0.0" y="0.0" width="80.333333333333329" height="39.333333333333336"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <connections>
+                                                        <action selector="onClickFollowBtn:" destination="-1" eventType="touchUpInside" id="foN-ws-aQW"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Follow" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lpe-5i-7W6">
                                                     <rect key="frame" x="16.000000000000004" y="9.3333333333333144" width="48.333333333333343" height="21"/>

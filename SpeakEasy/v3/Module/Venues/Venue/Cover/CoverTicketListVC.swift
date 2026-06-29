@@ -27,6 +27,8 @@ final class CoverTicketListVC: UIViewController {
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var ticketsSectionView: UIView!
+    @IBOutlet weak var followBtn: UIButton!
+    @IBOutlet weak var followBtnLbl: UILabel!
 
     private let posterHeaderView = VenuePosterHeaderView()
     private let stickyTopBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -38,6 +40,7 @@ final class CoverTicketListVC: UIViewController {
 
     var venueDetails: ClipVenue?
     var doormanId = ""
+    var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
 
     // MARK: - Private
 
@@ -63,6 +66,22 @@ final class CoverTicketListVC: UIViewController {
     private var isCheckoutNavigationInProgress = false
     private var isFreeBookingInProgress = false
     private var isSocketRefreshInProgress = false
+
+    // MARK: - Follow State
+
+    private var isFollowing = false
+    private var isFollowLoading = false
+    private var followedVenueId: String?
+    private var hasLocalFollowState = false
+
+    private let followActivityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.hidesWhenStopped = false
+        indicator.alpha = 0
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
 
     private var isVenueOpen: Bool {
         venueDetails?.venueSettings?.bookingStatus?.uppercased() == "OPEN"
@@ -164,6 +183,9 @@ final class CoverTicketListVC: UIViewController {
         setupCoverTickets()
         getUpsellTickets()
         updateCheckoutState()
+        setupFollowButtonAnimation()
+        syncFollowState()
+        updateFollowUI(animated: false)
     }
 
     override func viewDidLayoutSubviews() {
@@ -187,6 +209,226 @@ final class CoverTicketListVC: UIViewController {
 
     deinit {
         tableViewHeightObserver?.invalidate()
+    }
+
+    @IBAction func onClickFollowBtn(_ sender: Any) {
+        guard !isFollowLoading else { return }
+        guard !UserDefault.shared.isGuest else { return }
+
+        guard let venueUniqueId = venueDetails?.uniqueId,
+              !venueUniqueId.isEmpty
+        else { return }
+
+        let previousState = isFollowing
+        let previousFollowedVenueId = followedVenueId
+
+        isFollowLoading = true
+        isFollowing.toggle()
+        animateFollowTap()
+        updateFollowUI(animated: true)
+
+        if isFollowing {
+            followVenueAPI(
+                venueUniqueId: venueUniqueId,
+                previousState: previousState,
+                previousFollowedVenueId: previousFollowedVenueId
+            )
+        } else {
+            guard let followedVenueId, !followedVenueId.isEmpty else {
+                isFollowLoading = false
+                applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
+                )
+                return
+            }
+
+            unfollowVenueAPI(
+                followedVenueId: followedVenueId,
+                previousState: previousState,
+                previousFollowedVenueId: previousFollowedVenueId
+            )
+        }
+    }
+}
+
+// MARK: - Follow Implementation
+
+private extension CoverTicketListVC {
+
+    func syncFollowState() {
+        followedVenueId = venueDetails?.venueFollowedId
+        isFollowing = venueDetails?.isFollowing == true || followedVenueId != nil
+    }
+
+    func applyFollowState(
+        isFollowing: Bool,
+        followedVenueId: String?,
+        notify: Bool,
+        animated: Bool = true
+    ) {
+        self.isFollowing = isFollowing
+        self.followedVenueId = followedVenueId
+        venueDetails?.isFollowing = isFollowing
+        venueDetails?.venueFollowedId = followedVenueId
+        hasLocalFollowState = true
+        updateFollowUI(animated: animated)
+
+        if notify, let venue = venueDetails {
+            onFollowStateChanged?(venue, isFollowing)
+        }
+    }
+
+    func setupFollowButtonAnimation() {
+        guard let followContainer = followBtn?.superview else { return }
+
+        followBtnLbl?.numberOfLines = 1
+        followBtnLbl?.lineBreakMode = .byClipping
+        followBtnLbl?.setContentCompressionResistancePriority(.required, for: .horizontal)
+        followBtnLbl?.setContentHuggingPriority(.required, for: .horizontal)
+
+        guard followActivityIndicator.superview == nil else { return }
+
+        followContainer.addSubview(followActivityIndicator)
+
+        NSLayoutConstraint.activate([
+            followActivityIndicator.centerXAnchor.constraint(equalTo: followContainer.centerXAnchor),
+            followActivityIndicator.centerYAnchor.constraint(equalTo: followContainer.centerYAnchor)
+        ])
+    }
+
+    func updateFollowUI(animated: Bool = true) {
+        let newTitle = isFollowing ? "Following" : "Follow"
+        let textChanged = followBtnLbl?.text != newTitle
+
+        followBtn?.isUserInteractionEnabled = !isFollowLoading
+
+        let applyTitle = {
+            self.followBtnLbl?.text = newTitle
+            self.followBtnLbl?.alpha = self.isFollowLoading ? 0 : 1
+            self.followActivityIndicator.alpha = self.isFollowLoading ? 1 : 0
+            self.followBtn?.superview?.layoutIfNeeded()
+        }
+
+        if isFollowLoading {
+            followActivityIndicator.startAnimating()
+        } else {
+            followActivityIndicator.stopAnimating()
+        }
+
+        guard animated else {
+            applyTitle()
+            if !isFollowLoading {
+                followActivityIndicator.stopAnimating()
+            }
+            return
+        }
+
+        let completion: (Bool) -> Void = { [weak self] _ in
+            guard let self else { return }
+            if !self.isFollowLoading {
+                self.followActivityIndicator.stopAnimating()
+            }
+        }
+
+        if textChanged {
+            UIView.transition(
+                with: followBtnLbl,
+                duration: 0.18,
+                options: [.transitionCrossDissolve, .beginFromCurrentState],
+                animations: applyTitle,
+                completion: completion
+            )
+        } else {
+            UIView.animate(
+                withDuration: 0.18,
+                delay: 0,
+                options: [.curveEaseOut, .beginFromCurrentState],
+                animations: applyTitle,
+                completion: completion
+            )
+        }
+    }
+
+    func animateFollowTap() {
+        guard let followContainer = followBtn?.superview else { return }
+
+        UIView.animate(
+            withDuration: 0.08,
+            delay: 0,
+            options: [.curveEaseOut, .beginFromCurrentState],
+            animations: {
+                followContainer.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+            },
+            completion: { _ in
+                UIView.animate(
+                    withDuration: 0.22,
+                    delay: 0,
+                    usingSpringWithDamping: 0.74,
+                    initialSpringVelocity: 0.6,
+                    options: [.curveEaseOut, .beginFromCurrentState],
+                    animations: {
+                        followContainer.transform = .identity
+                    }
+                )
+            }
+        )
+    }
+
+    func followVenueAPI(
+        venueUniqueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+        venueService.followVenue(uniqueId: venueUniqueId) { [weak self] isSuccess, _, relation in
+            guard let self else { return }
+            self.isFollowLoading = false
+
+            guard isSuccess,
+                  let id = relation?.id,
+                  !id.isEmpty
+            else {
+                self.applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
+                )
+                return
+            }
+
+            self.applyFollowState(
+                isFollowing: true,
+                followedVenueId: id,
+                notify: true
+            )
+        }
+    }
+
+    func unfollowVenueAPI(
+        followedVenueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+        venueService.unfollowVenue(followedVenueId: followedVenueId) { [weak self] isSuccess, _, _ in
+            guard let self else { return }
+            self.isFollowLoading = false
+
+            guard isSuccess else {
+                self.applyFollowState(
+                    isFollowing: previousState,
+                    followedVenueId: previousFollowedVenueId,
+                    notify: false
+                )
+                return
+            }
+
+            self.applyFollowState(
+                isFollowing: false,
+                followedVenueId: nil,
+                notify: true
+            )
+        }
     }
 }
 
@@ -237,10 +479,9 @@ private extension CoverTicketListVC {
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.isScrollEnabled = false           // outer scrollView handles scrolling
+        tableView.isScrollEnabled = false
         tableView.alwaysBounceVertical = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 220
@@ -265,11 +506,6 @@ private extension CoverTicketListVC {
         timeLbl.text = locationText
         navVenueNameLbl.text = venueDetails?.name ?? ""
         navTimeLbl.text = locationText
-
-//        if let hexColor = venueDetails?.venueSettings?.whiteLabelColor {
-//            timeLbl.textColor = UIColor(hex: hexColor)
-//            navTimeLbl.textColor = UIColor(hex: hexColor)
-//        }
 
         navBarHiddenView.isHidden = true
         navBarHiddenView.alpha = 0
@@ -312,7 +548,6 @@ private extension CoverTicketListVC {
         stickyTopBlurView.isUserInteractionEnabled = false
 
         stickyTicketsTitleContainer.translatesAutoresizingMaskIntoConstraints = false
-//        stickyTicketsTitleContainer.backgroundColor = UIColor.black.withAlphaComponent(0.72)
         stickyTicketsTitleContainer.isHidden = true
         stickyTicketsTitleContainer.alpha = 0
         stickyTicketsTitleContainer.isUserInteractionEnabled = false
@@ -381,8 +616,6 @@ private extension CoverTicketListVC {
         tableView.reloadData()
         updateCheckoutState()
     }
-
-    // MARK: - KVO: auto-resize tableView height as cells load/expand
 
     func observeTableViewHeight() {
         tableViewHeightObserver = tableView.observe(
@@ -530,7 +763,7 @@ private extension CoverTicketListVC {
     }
 }
 
-// MARK: - UIScrollViewDelegate (scroll-driven nav collapse)
+// MARK: - UIScrollViewDelegate
 
 extension CoverTicketListVC: UIScrollViewDelegate {
 
@@ -759,7 +992,6 @@ extension CoverTicketListVC {
             updateCheckoutState()
             return
         }
-        // Restore nav bar appearance before popping
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
         Navigate.to.back(self)
@@ -849,9 +1081,7 @@ extension CoverTicketListVC {
         Array(coverTicketCount.keys).forEach { selectedIndex in
             guard coverTickets.indices.contains(selectedIndex),
                   selectedIndex != index
-            else {
-                return
-            }
+            else { return }
 
             let selectedIsCustom = coverTickets[selectedIndex].isCustom == true
             if selectedIsCustom != isCustomTicket {
@@ -925,31 +1155,20 @@ extension CoverTicketListVC {
 
 extension CoverTicketListVC: UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+    func numberOfSections(in tableView: UITableView) -> Int { 1 }
 
-    func tableView(
-        _ tableView: UITableView,
-        numberOfRowsInSection section: Int
-    ) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch currentStep {
         case .coverTickets: return coverTickets.count
         case .addOns:       return upSellTickets.count
         }
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TicketsTVC.identifier,
             for: indexPath
-        ) as? TicketsTVC else {
-            return UITableViewCell()
-        }
+        ) as? TicketsTVC else { return UITableViewCell() }
 
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
@@ -958,13 +1177,12 @@ extension CoverTicketListVC: UITableViewDataSource {
         let whiteLabelColor = venueDetails?.venueSettings?.whiteLabelColor
 
         switch currentStep {
-
         case .coverTickets:
             let ticket = coverTickets[indexPath.row]
             let count = coverTicketCount[indexPath.row] ?? 0
             let name = ticket.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-            ? (ticket.customName ?? ticket.name)
-            : (ticket.name)
+                ? (ticket.customName ?? ticket.name)
+                : (ticket.name)
 
             cell.configure(
                 coverTicketName: name,
@@ -1021,15 +1239,9 @@ extension CoverTicketListVC: UITableViewDataSource {
             }
         }
 
-        cell.onPlusTap = { [weak self] _ in
-            self?.plusBtnClicked(at: indexPath)
-        }
-
-        cell.onMinusTap = { [weak self] _ in
-            self?.minusBtnClicked(at: indexPath)
-        }
-
-        cell.onRSVPTap = nil
+        cell.onPlusTap  = { [weak self] _ in self?.plusBtnClicked(at: indexPath) }
+        cell.onMinusTap = { [weak self] _ in self?.minusBtnClicked(at: indexPath) }
+        cell.onRSVPTap  = nil
 
         return cell
     }
@@ -1039,10 +1251,7 @@ extension CoverTicketListVC: UITableViewDataSource {
 
 extension CoverTicketListVC: UITableViewDelegate {
 
-    func tableView(
-        _ tableView: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard isVenueOpen else { return }
 
         switch currentStep {
@@ -1061,41 +1270,23 @@ extension CoverTicketListVC: UITableViewDelegate {
         refreshScrollLayoutAfterUpdates()
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        heightForRowAt indexPath: IndexPath
-    ) -> CGFloat {
-        return UITableView.automaticDimension
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        estimatedHeightForRowAt indexPath: IndexPath
-    ) -> CGFloat {
-        return 220
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        220
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        willDisplay cell: UITableViewCell,
-        forRowAt indexPath: IndexPath
-    ) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        viewForHeaderInSection section: Int
-    ) -> UIView? {
-        return nil
-    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { nil }
 
-    func tableView(
-        _ tableView: UITableView,
-        heightForHeaderInSection section: Int
-    ) -> CGFloat {
-        return .leastNormalMagnitude
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        .leastNormalMagnitude
     }
 }
 
@@ -1148,31 +1339,31 @@ extension CoverTicketListVC: WebSocketCallBackDelegate {
 import UIKit
 
 final class VenuePosterHeaderView: UIView {
-
+    
     private let screenBackgroundColor = UIColor(hex: "#121212")
     private let backgroundImageView = UIImageView()
     private let bottomGradientView = UIView()
     private let bottomGradientLayer = CAGradientLayer()
     private let placeholderImage = UIImage(named: "newSpeakeasy")
     private var currentImageURLString: String?
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
-
+    
     private func setup() {
         backgroundColor = screenBackgroundColor
         clipsToBounds = true
         setupBackground()
         setupBottomGradient()
     }
-
+    
     private func setupBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
@@ -1180,7 +1371,7 @@ final class VenuePosterHeaderView: UIView {
         backgroundImageView.image = placeholderImage
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundImageView)
-
+        
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -1188,21 +1379,21 @@ final class VenuePosterHeaderView: UIView {
             backgroundImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5)
         ])
     }
-
+    
     private func setupBottomGradient() {
         bottomGradientView.isUserInteractionEnabled = false
         bottomGradientView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomGradientView)
-
+        
         NSLayoutConstraint.activate([
             bottomGradientView.topAnchor.constraint(equalTo: topAnchor),
             bottomGradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bottomGradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
             bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
+        
         bottomGradientView.layer.addSublayer(bottomGradientLayer)
-
+        
         bottomGradientLayer.colors = [
             UIColor.clear.withAlphaComponent(0.25).cgColor,
             UIColor.black.withAlphaComponent(0.65).cgColor,
@@ -1214,16 +1405,16 @@ final class VenuePosterHeaderView: UIView {
         bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         bottomGradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         bottomGradientLayer.frame = bottomGradientView.bounds
     }
-
+    
     func setBackgroundImage(_ image: UIImage?) {
         backgroundImageView.image = image ?? placeholderImage
     }
-
+    
     func loadImage(from urlString: String) {
         let trimmedURLString = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedURLString.isEmpty, let url = URL(string: trimmedURLString) else {
@@ -1232,24 +1423,24 @@ final class VenuePosterHeaderView: UIView {
             setBackgroundImage(placeholderImage)
             return
         }
-
+        
         guard currentImageURLString != trimmedURLString else { return }
-
+        
         currentImageURLString = trimmedURLString
         let currentImage = backgroundImageView.image ?? placeholderImage
-
+        
         backgroundImageView.sd_setImage(
             with: url,
             placeholderImage: currentImage
         ) { [weak self] image, _, cacheType, completedURL in
             guard let self else { return }
             guard completedURL?.absoluteString == self.currentImageURLString else { return }
-
+            
             guard cacheType == .none else {
                 self.setBackgroundImage(image)
                 return
             }
-
+            
             UIView.transition(
                 with: self.backgroundImageView,
                 duration: 0.25,

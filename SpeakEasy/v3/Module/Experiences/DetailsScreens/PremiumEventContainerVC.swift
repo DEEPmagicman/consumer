@@ -158,10 +158,10 @@ private extension PremiumEventContainerVC {
     
     private func loadSeatingAreas() {
         
-        if let providedSeatingAreas {
-            applySeatingAreas(providedSeatingAreas)
-            return
-        }
+//        if let providedSeatingAreas {
+//            applySeatingAreas(providedSeatingAreas)
+//            return
+//        }
 
         fetchSeatingAreas()
     }

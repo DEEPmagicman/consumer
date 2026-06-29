@@ -92,6 +92,7 @@ struct TableTimeSlot: Codable {
     let minimum: Double?
     let deposit: Double?
     let depositType: String?
+    let extraPersonCharge: Double?
     let depositWithFees: Double?
 
     let issuedPublicInventory: Int?
@@ -126,6 +127,8 @@ struct BookingItem: Codable {
 
 struct QueueInnerContent: Codable {
     let clientSecret: String?
+    let ephemeralKey: String?
+    let paymentHistoryId: String?
     let tableBooking: TableBooking?
 }
 

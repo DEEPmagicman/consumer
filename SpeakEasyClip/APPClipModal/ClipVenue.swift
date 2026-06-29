@@ -349,6 +349,7 @@ struct VenueSettings: Codable {
     var xUrl: String?
     var youtubeUrl: String?
     var tableBookingSettings: TableBookingSettings?
+    var isEnabledSpendAgreement: Bool?
     var spendAgreementSettings: SpendAgreementSettings?
     
     func encode(to encoder: Encoder) throws {
@@ -381,6 +382,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(xUrl, forKey: .xUrl)
         try container.encodeIfPresent(youtubeUrl, forKey: .youtubeUrl)
         try container.encodeIfPresent(tableBookingSettings, forKey: .tableBookingSettings)
+        try container.encodeIfPresent(isEnabledSpendAgreement, forKey: .isEnabledSpendAgreement)
         try container.encodeIfPresent(spendAgreementSettings, forKey: .spendAgreementSettings)
     }
 }

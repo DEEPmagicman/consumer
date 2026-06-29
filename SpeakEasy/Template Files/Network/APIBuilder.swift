@@ -196,9 +196,9 @@ struct APIBuilder {
         orderBy: String = "order|asc"
     ) -> String {
         
-//        let base = SharedURL.tableBaseURL + route  + event + "/\(eventId)" + seatingAreas
+        let base = SharedURL.tableBaseURL + route  + event + "/\(eventId)" + seatingAreas
         
-        let base = SharedURL.tableBaseURL + route  + event + seatingAreas
+//        let base = SharedURL.tableBaseURL + route  + event + seatingAreas
         
         var queryItems: [String] = []
         
