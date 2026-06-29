@@ -179,7 +179,7 @@ final class VerificationCodeViewController: UIViewController {
                     }
                 }
             } else {
-                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
                     guard let self = self else { return }
                     
                     hideResendButtonLoader()
@@ -278,7 +278,7 @@ final class VerificationCodeViewController: UIViewController {
                     print("*-*settingPhone")
                 }
             } else {
-                self.onBoardingDelegate.signUpOtpVerifyApi(otp: otpText, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
+                self.onBoardingDelegate.loginOtpVerifyApi(otp: otpText, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
                     guard let self = self else { return }
                     
                     continueBtn.hideLoader()
