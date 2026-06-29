@@ -72,18 +72,11 @@ final class PremiumEventSegmentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let horizontalPadding: CGFloat = 4
-        let count = CGFloat(max(availableSegments.count, 1))
-        let width = (glassView.bounds.width - (horizontalPadding * 2)) / count
-        let visibleIndex = visibleIndex(for: selectedIndex)
-        
-        selectedWidth.constant = width
-        selectedLeading.constant = horizontalPadding + (CGFloat(visibleIndex) * width)
-        DispatchQueue.main.async {
-            self.selectedGradientLayer.frame = self.selectedView.bounds
-            self.selectedGradientLayer.cornerRadius = self.selectedView.bounds.height / 2
-        }
+
+        updateSelection(animated: false)
+
+        selectedGradientLayer.frame = selectedView.bounds
+        selectedGradientLayer.cornerRadius = selectedView.bounds.height / 2
     }
 }
 
@@ -221,25 +214,34 @@ private extension PremiumEventSegmentView {
 
 private extension PremiumEventSegmentView {
 
-    func updateSelection(animated: Bool) {
+    private func updateSelection(animated: Bool) {
 
         layoutIfNeeded()
 
-        let horizontalPadding: CGFloat = 4
-        let count = CGFloat(max(availableSegments.count, 1))
-        let width = (glassView.bounds.width - (horizontalPadding * 2)) / count
-        let visibleIndex = visibleIndex(for: selectedIndex)
+        let selectedButton: UIButton
 
-        selectedWidth.constant = width
-        selectedLeading.constant = horizontalPadding + (CGFloat(visibleIndex) * width)
+        switch selectedIndex {
+        case 0:
+            selectedButton = mapButton
+        case 1:
+            selectedButton = listButton
+        case 2:
+            selectedButton = inquiryButton
+        default:
+            return
+        }
+
+        // Match the selected view to the button frame
+        selectedLeading.constant = selectedButton.frame.minX + 4
+        selectedWidth.constant = selectedButton.frame.width - 8
 
         let animations = {
 
             self.layoutIfNeeded()
 
-            self.mapButton.alpha = self.selectedIndex == 0 ? 1 : 0.72
-            self.listButton.alpha = self.selectedIndex == 1 ? 1 : 0.72
-            self.inquiryButton.alpha = self.selectedIndex == 2 ? 1 : 0.72
+            self.mapButton.alpha = self.selectedIndex == 0 ? 1.0 : 0.72
+            self.listButton.alpha = self.selectedIndex == 1 ? 1.0 : 0.72
+            self.inquiryButton.alpha = self.selectedIndex == 2 ? 1.0 : 0.72
 
             self.mapButton.titleLabel?.font =
                 self.selectedIndex == 0
@@ -255,25 +257,26 @@ private extension PremiumEventSegmentView {
                 self.selectedIndex == 2
                 ? Constant.Font.geistMedium(size: 14)
                 : Constant.Font.geistRegular(size: 14)
+
+            self.selectedGradientLayer.frame = self.selectedView.bounds
+            self.selectedGradientLayer.cornerRadius = self.selectedView.bounds.height / 2
         }
 
         if animated {
-
             UIView.animate(
-                withDuration: 0.1,
+                withDuration: 0.25,
                 delay: 0,
-                usingSpringWithDamping: 0.6,
+                usingSpringWithDamping: 0.85,
                 initialSpringVelocity: 0.5,
-                options: .curveEaseOut
+                options: .curveEaseInOut
             ) {
                 animations()
             }
-
         } else {
-
             animations()
         }
     }
+    
 }
 
 private extension PremiumEventSegmentView {

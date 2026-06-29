@@ -794,20 +794,25 @@ private extension PremiumTableCheckoutVC {
     func configureSummaryPrice(total: Double?) {
         let item = checkoutItems.first
         let area = seatingAreas.first
-        let minimum = item?.minimum
-            ?? selectedTimeSlot?.minimum
-            ?? area?.minimum
-            ?? 0
-        let deposit = total
-            ?? item?.deposit
-            ?? selectedTimeSlot?.depositWithFees
-            ?? selectedTimeSlot?.deposit
-            ?? area?.depositWithFees
-            ?? area?.deposit
-            ?? 0
 
-        summaryPriceCard.configure(minimum: minimum, deposit: deposit, currency: currency)
+        let itemMinimum = item?.minimum
+        let slotMinimum = selectedTimeSlot?.minimum
+        let areaMinimum = area?.minimum
+        let minimum = itemMinimum ?? slotMinimum ?? areaMinimum ?? 0
+
+        let itemDeposit = item?.deposit
+        let slotDeposit = selectedTimeSlot?.depositWithFees ?? selectedTimeSlot?.deposit
+        let areaDeposit = area?.depositWithFees ?? area?.deposit
+        let deposit = total ?? itemDeposit ?? slotDeposit ?? areaDeposit ?? 0
+
+        summaryPriceCard.configure(
+            minimum: minimum,
+            deposit: deposit,
+            currency: currency
+        )
+
         updateBottomPrice(deposit)
+
         if spendCard.isHidden {
             updatePriceSectionVisibility(hasDepositBreakdown: false)
         }

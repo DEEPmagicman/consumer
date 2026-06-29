@@ -145,7 +145,7 @@ final class Tables3DMapVC: UIViewController {
 
         buyNowBtnView.isHidden = true
         zoneSelector.isHidden = true
-        
+        mapView.backgroundColor = .clear
         setupAdvancedLoader()
         showAdvancedLoader()
         setupResetViewButton()
@@ -202,7 +202,7 @@ private extension Tables3DMapVC {
     func setupSceneView() {
         sceneView.frame                = mapView.bounds
         sceneView.autoresizingMask     = [.flexibleWidth, .flexibleHeight]
-        sceneView.backgroundColor      = .black
+        sceneView.backgroundColor      = .clear
         sceneView.allowsCameraControl  = false
         sceneView.autoenablesDefaultLighting = false
         sceneView.antialiasingMode     = .multisampling4X
@@ -249,7 +249,7 @@ private extension Tables3DMapVC {
 
 // MARK: - Data / API
 
-private extension Tables3DMapVC {
+extension Tables3DMapVC {
 
     func setupSeatingAreas(completion: @escaping () -> Void) {
         let allAreas = seatingAreas
@@ -312,8 +312,11 @@ private extension Tables3DMapVC {
     }
 
     func fetchLayOut() {
+        let timezone = event?.venue?.useTimezone ?? ""
+        let dateText = event?.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss, to: .YYYYMMDD, customTimeZone: timezone) ?? ""
         TablePresenter.getConsumerLayout(
-            date: "2026-05-01",
+            date: dateText,
             venueId: event?.venue?.id ?? ""
         ) { [weak self] ok, msg, layout in
             guard let self else { return }
@@ -450,25 +453,27 @@ private extension Tables3DMapVC {
             print("Inquire tapped for:", item.name ?? "")
             return
         }
-        Navigate.to.tableSeatingVC(self, seatingArea: item, event: event) { [weak self] time, guestCount, _, _ in
-            guard let self = self else { return }
-            let uuid    = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
-            let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
-            TablePresenter.createSeatingAreaBooking(
-                eventId: self.event?.id ?? "",
-                seatingAreaId: item.id ?? "",
-                timeSlotId: item.bookingType == .default ? nil : time,
-                venueId: event?.venue?.id ?? "",
-                guests: guestCount,
-                queueId: queueId
-            ) { isSuccess, errMsg, _ in
-                if isSuccess {
-                    if let event = self.event {
-                        Navigate.to.tablePurchaseVC(self, queueId: queueId, event: event, seatingAreas: self.seatingAreas)
-                    }
-                } else { print(errMsg ?? "Booking failed") }
-            }
-        }
+        
+        Navigate.to.premiumTableSeatingVC(self, event: event, seatingArea: item)
+//        Navigate.to.tableSeatingVC(self, seatingArea: item, event: event) { [weak self] time, guestCount, _, _ in
+//            guard let self = self else { return }
+//            let uuid    = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
+//            let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
+//            TablePresenter.createSeatingAreaBooking(
+//                eventId: self.event?.id ?? "",
+//                seatingAreaId: item.id ?? "",
+//                timeSlotId: item.bookingType == .default ? nil : time,
+//                venueId: event?.venue?.id ?? "",
+//                guests: guestCount,
+//                queueId: queueId
+//            ) { isSuccess, errMsg, _ in
+//                if isSuccess {
+//                    if let event = self.event {
+//                        Navigate.to.tablePurchaseVC(self, queueId: queueId, event: event, seatingAreas: self.seatingAreas)
+//                    }
+//                } else { print(errMsg ?? "Booking failed") }
+//            }
+//        }
     }
 
     func loadSelectedRoomModel() {
@@ -1883,7 +1888,7 @@ private extension ZoneSelectorView {
 private extension Tables3DMapVC {
     func setupAdvancedLoader() {
         let container = UIView()
-        container.backgroundColor = UIColor.black
+        container.backgroundColor = UIColor.clear
         container.translatesAutoresizingMaskIntoConstraints = false
         mapView.addSubview(container)
 

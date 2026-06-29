@@ -52,7 +52,7 @@ final class PremiumEventContainerVC: UIViewController {
 
     // MARK: Child VCs
 
-    private lazy var mapVC = PremiumMapVC()
+    private lazy var mapVC = Tables3DMapVC()
 
     private lazy var listVC = PremiumReservationVC()
 
@@ -216,8 +216,13 @@ private extension PremiumEventContainerVC {
     
     private func passDataToChildren() {
 
+//        mapVC.event = event
+//        mapVC.seatingAreas = bookableSeatingAreas
+        
         mapVC.event = event
         mapVC.seatingAreas = bookableSeatingAreas
+        mapVC.seatingAreasFilteredOut = visibleSeatingAreas
+        mapVC.fetchLayOut()
 
         listVC.event = event
         listVC.seatingAreas = bookableSeatingAreas

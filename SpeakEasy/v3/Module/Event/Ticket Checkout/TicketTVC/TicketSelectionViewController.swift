@@ -1568,21 +1568,26 @@ private extension TicketSelectionViewController {
     }
 
     func selectedTicketCountsById() -> [String: Int] {
-        let selectedTickets =
-        (event?.eventTicket ?? []) +
-        (event?.eventAddOnTicket ?? []) +
-        (event?.protectedEventTicket ?? []) +
-        (event?.protectedeventAddOnTicket ?? []) +
-        normalTickets +
-        addOnTickets +
-        selectedNormalTickets +
-        groupedNormalTickets.flatMap { $0.tickets }
+
+        var selectedTickets: [EventTicket] = []
+
+        selectedTickets += event?.eventTicket ?? []
+        selectedTickets += event?.eventAddOnTicket ?? []
+        selectedTickets += event?.protectedEventTicket ?? []
+        selectedTickets += event?.protectedeventAddOnTicket ?? []
+        selectedTickets += normalTickets
+        selectedTickets += addOnTickets
+        selectedTickets += selectedNormalTickets
+        selectedTickets += groupedNormalTickets.flatMap { $0.tickets }
 
         return selectedTickets.reduce(into: [String: Int]()) { result, ticket in
-            guard let id = ticket.id,
-                  let count = ticket.selectedTicketCount,
-                  count > 0
-            else { return }
+            guard
+                let id = ticket.id,
+                let count = ticket.selectedTicketCount,
+                count > 0
+            else {
+                return
+            }
 
             result[id] = count
         }
