@@ -19,61 +19,81 @@ struct APIBuilder {
             SharedURL.v3baseURL
         }
     }
+    
+    // MARK: - Base
+
     static private let route = "/consumer"
+
+    // MARK: - Auth
+
     static private let auth = "/auth"
     static private let phoneLogin = "/phone-login"
-    static private let signup = "/signup"
     static private let OTPVerify = "/otp-verify"
     static private let OTPResend = "/otp-resend"
-    static private let login = "/login"
+    static private let profile = "/profile"
+    static private let changePhone = "/change-phone"
     static private let logout = "/logout"
     static private let refreshToken = "/refresh-token"
-    static private let profile = "/profile"
+    static private let deleteAccount = "/delete-account"
+
+    // MARK: - SignUp
+
+    static private let signup = "/signup"
+
+    // MARK: - Venue
+
+    static private let venue = "/venue"
+    static private let coverVenue = "/CoverVenue?include=coverTicket&"
+
+    // MARK: - Event
+
+    static private let event = "/event"
+    static private let ticketBooking = "/ticket-booking"
+
+    // MARK: - Cover
+
+    static private let cover = "/cover"
+
+    // MARK: - Payment
+
+    static private let payment = "/payment"
+    static private let method = "/method"
+    static private let status = "/status"
+
+    // MARK: - Booking
+
+    static private let booking = "/booking"
+
+    // MARK: - Add Ons
+
+    static private let addOns = "/add-ons"
+    
+    // MARK: - Upload
     static private let upload = "/upload"
     static private let uploadFile = "/uploadFile"
-    static private let forgotPassword = "/forgot-password"
-    static private let vibe = "/vibe"
-    static private let drink = "/drink"
-    static private let connectSocial = "/connect-social"
-    static private let socialLogin = "/social-login"
+    
+    // MARK: - common-data
     static private let city = "/common-data/city"
-    static private let venue = "/venue"
-    static private let event = "/event"
-    static private let tickets = "/tickets"
-    static private let venueBottleCategory = "/venueBottleCategory"
-    static private let whoAmI = "/who-am-i"
-    static private let changeEmail = "/change-email"
-    static private let changePhone = "/change-phone"
-    static private let changePassword = "/change-password"
-    static private let cover = "/cover"
-    static private let coverVenue = "/CoverVenue?include=coverTicket&"
-    static private let payment = "/payment"
-    static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
-    static private let include = "include=%@"
-    static private let appleWallet = "/apple-wallet"
-    static private let method = "/method"
-    static private let ticketBooking = "/ticket-booking"
-    static private let past = "/past"
-    static private let upcoming = "/upcoming"
-    static private let booking = "/booking"
-    static private let reservation = "/reservation"
+    
+    // MARK: - App clip
     static private let freeTicket = "/free-booking"
-    static private let recommendedEvents = "/recommended-events"
-    static private let deleteAccount = "/delete-account"
-    static private let inviteLink = "/invite-link"
-    static private let redeem = "/redeem"
-    static private let redirect = "/redirect"
-    static private let addOns = "/add-ons"
-    static private let status = "/status"
-    static private let deepLink = "/deep-link"
-    static private let checkin = "/checkin"
-    static private let question = "/question"
-    static private let answer = "/answer"
+    static private let appleWallet = "/apple-wallet"
+    
+    // MARK: - Bar Tab
+
     static private let barTab = "/bar-tab"
     static private let payments = "/payments"
     static private let complete = "/complete"
     static private let paymentDetails = "/payment-details"
+    
+    // MARK: - Common
+    static private let include = "include=%@"
+    static private let past = "/past"
+    static private let upcoming = "/upcoming"
+    static private let redirect = "/redirect"
+    static private let statusSuccess = "/status?status=SUCCESS"
+    static private let reservation = "/reservation"
     static private let attendees = "/attendees"
     static private let seatingAreas = "/seating-areas"
     static private let applyCode = "/apply-code"
@@ -85,20 +105,28 @@ struct APIBuilder {
     static private let getInstagramProfile = "/get-instagram-profile"
     static private let consumer = "/consumer"
     static private let discover = "/discover"
+    static private let inviteLink = "/invite-link"
+    static private let redeem = "/redeem"
+    static private let deepLink = "/deep-link"
     
-    static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
-    static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.clientId + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.redirectURI + "&show_dialog=false"
-    static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
-    static let getInstagramImages = "https://graph.instagram.com/me/media?fields=id,media_url,media_type,username&access_token=%@"
+    static let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"
-    static let getInstagramChilds = "https://graph.instagram.com/%@/children?fields=id,media_url,media_type&access_token=%@"
     
-    static let clientId = Constant.String.spotifyClientId
-//    static let SESSION_KEY = "spotifySessionKey"
-    static let redirectURI = Constant.String.spotifyDirectUri
-    static let SCOPE = "user-read-email"
-    static let spotifyURL = "https://api.spotify.com/v1/me"
-    
+    // MARK: -------*-------- Not used -------*--------
+    static private let login = "/login"
+    static private let socialLogin = "/social-login"
+    static private let whoAmI = "/who-am-i"
+    static private let connectSocial = "/connect-social"
+    static private let changePassword = "/change-password"
+    static private let changeEmail = "/change-email"
+    static private let forgotPassword = "/forgot-password"
+    static private let recommendedEvents = "/recommended-events"
+    static private let contactUs = "/contact-us"
+    static private let tickets = "/tickets"
+    static private let checkin = "/checkin"
+    static private let question = "/question"
+    static private let answer = "/answer"
+    //-------*--------*--------*--------*--------*--------
     static var loginWithPhoneURL: String {
         baseURL + route + auth + phoneLogin
     }
@@ -109,10 +137,6 @@ struct APIBuilder {
     
     static var loginResendOTPURL: String {
         baseURL + route + auth + phoneLogin + OTPResend
-    }
-    
-    static var loginWithEmailURL: String {
-        baseURL + route + auth + login
     }
     
     static var logoutAPI: String {
@@ -145,14 +169,6 @@ struct APIBuilder {
     
     static var uploadPhotoURL: String {
         baseURL + upload + uploadFile
-    }
-    
-    static var vibesListURL: String {
-        baseURL + route + vibe
-    }
-    
-    static var drinksListURL: String {
-        baseURL + route + drink
     }
     
     static var socialMediaConnectURL: String {
@@ -288,10 +304,6 @@ struct APIBuilder {
 
     static func getTicketPasswordAPI(_ eventId: String) -> String {
         baseURL + route + event + "/\(eventId)" + tickets
-    }
-    
-    static func bottleListURL(_ id: String) -> String {
-        baseURL + route + venueBottleCategory + "/\(id)"
     }
     
     static func deepLinkURL(_ id: String) -> String {
@@ -431,7 +443,7 @@ struct APIBuilder {
     }
     
     static func appClipAppleWallet(_ bookingId: String) -> String {
-        baseURL + cover + "/\(bookingId)" + appleWallet
+        baseURL + route + cover + "/\(bookingId)" + appleWallet
     }
     
     static func eventAppleWallet(_ bookingId: String) -> String {

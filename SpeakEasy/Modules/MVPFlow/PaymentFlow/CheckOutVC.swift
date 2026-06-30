@@ -804,14 +804,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                             if self.selectedAddOnsItem.count == 0 {
                                 self.timer.invalidate()
                                 if self.type == .appClip {
-                                    Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                                    Navigate.to.scanQR(self, bookingId: self.bookingId, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
                                 } else {
                                     Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                                 }
                             } else {
                                 self.addOnsPaymentSuccess {
                                     self.timer.invalidate()
-                                    Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
+                                    Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "")
                                 }
                             }
                         }
@@ -1092,14 +1092,14 @@ extension CheckOutVC {
                         if self.selectedAddOnsItem.count == 0 {
                             self.timer.invalidate()
                             if self.type == .appClip {
-                                Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                                Navigate.to.scanQR(self, bookingId: self.bookingId, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
                             } else {
                                 Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                             }
                         } else {
                             self.addOnsPaymentSuccess {
                                 self.timer.invalidate()
-                                Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
+                                Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "")
                             }
                         }
                     }

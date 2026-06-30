@@ -247,8 +247,8 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
             let ticket = addOnsBooking.uniqueTickets[indexPath.row]
             let quantity = ticket.selectedQuantity ?? 0
             cell.configure(
-                title: ticket.addOns.name,
-                description: ticket.addOns.description,
+                title: ticket.addOns?.name ?? "",
+                description: ticket.addOns?.description ?? "",
                 quantity: quantity
             )
         }

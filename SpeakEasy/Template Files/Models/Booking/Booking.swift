@@ -548,7 +548,7 @@ struct AddOnsBooking: Codable {
 struct AddOnsBookingHasItem: Codable {
     
     var id: String
-    var addOns: AddOns
+    var addOns: AddOns?
     var addOnsBookingId: String
     var addOnsId: String
     // MARK: app side parameters

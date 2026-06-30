@@ -267,4 +267,30 @@ extension UpSellClipVC: WebSocketCallBackDelegate {
         self.upSellTicket.sort(by: {$0.price < $1.price})
         self.tableView.reloadData()
     }
+    
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if ticket.first?.venueId == self.venue?.id {
+            if selectedAppClipTicket.count == 0 { return }
+            let hasMatchedTicket = ticket.contains { tick in
+                selectedAppClipTicket.contains { $0.id == tick.id }
+            }
+            if hasMatchedTicket {
+                if navigationController?.viewControllers.last is UpSellClipVC {
+                    alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        if venueStatus == "CLOSE" {
+            if navigationController?.viewControllers.last is UpSellClipVC {
+                alertPopup("Update", "Venue your trying to booking is closed") {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
+        }
+    }
 }

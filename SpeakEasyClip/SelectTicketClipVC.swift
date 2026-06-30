@@ -254,6 +254,7 @@ final class SelectTicketClipVC: UIViewController {
                 }
                 self.venueDetail?.coverTicket?.removeAll(where: { $0.price == 0 && $0.isBarTicket == true})
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
+                self.connectWebSocket(venueId:  self.venueDetail?.id ?? "")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false
                 if let color = self.venueDetail?.venueSettings?.whiteLabelColor {
@@ -277,6 +278,22 @@ final class SelectTicketClipVC: UIViewController {
                     VenueImageManager.shared.customQRImage = imgData
                 }
             } catch {}
+        }
+    }
+    
+    private func connectWebSocket(venueId: String) {
+        let newVenueId = venueId
+        let oldVenueId = UserDefaults.standard.string(forKey: "selectedVenueId") ?? ""
+
+        guard !newVenueId.isEmpty else { return }
+
+        if oldVenueId.isEmpty || oldVenueId != newVenueId {
+
+            WebSocketWrapper.shared.disConnect()
+
+            UserDefaults.standard.set(newVenueId, forKey: "selectedVenueId")
+
+            WebSocketWrapper.shared.connect()
         }
     }
     
@@ -649,6 +666,14 @@ extension SelectTicketClipVC: WebSocketCallBackDelegate {
     
     func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
         getAddOns()
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        if self.venueId == venueId && venueStatus == "CLOSE" {
+            getVenueDetailsWithTickets(withLoader: false)
+            updateContinueBtn(forceRemove: true)
+            ticketTypeTableView.reloadData()
+        }
     }
 }
 

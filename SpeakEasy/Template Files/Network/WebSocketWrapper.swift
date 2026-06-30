@@ -43,15 +43,23 @@ final class WebSocketWrapper: NSObject {
     private var socket: SocketIOClient?
     private var manager: SocketManager = SocketManager(socketURL: URL(string: "www.google.com")!)
     private var webSocketSleepTime: Double = 0.5
-    private var isSocketConnected = false
+    private var isSocketSetupDone = false
+    var isSocketConnected = false
     private var currentVenueId: String?
     var delegate: [WebSocketCallBackDelegate] = []
     
+    let isAppClip = Bundle.main.bundleIdentifier?.contains("Clip") == true
     private var isAbleToConnect: Bool {
         ReachabilityManager.shared.isNetworkAvailable == true
     }
     
     func setUpWebSocket() {
+        guard !isSocketSetupDone else {
+            return
+        }
+        
+        isSocketSetupDone = true
+        
         NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.didBecomeActiveNotification, object: nil)
         connect()
@@ -72,6 +80,30 @@ final class WebSocketWrapper: NSObject {
     }
     
     @objc func setArrData() {
+        socket?.on("DOORMAN_SETTINGS") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["id"] as? String, let uniqueId = content["uniqueId"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
+        }
+        
+        socket?.on("VENUE") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueData = content["venueData"] as? [String: Any], let venueId = venueData["id"] as? String, let venueStatus = content["venueStatus"] as? String, let uniqueId = venueData["uniqueId"] as? String else {
+                return
+            }
+            
+            var newVenueId = venueId
+            if self.isAppClip { newVenueId = uniqueId }
+            self.delegate.forEach { $0.updateVenueStatus(venueId: newVenueId, venueStatus: venueStatus) }
+        }
+        
+        socket?.on("updatedEvent") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventId = content["eventId"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
+        }
+        
         socket?.on("COVER_TICKET") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [[String: Any]] else {
                 return
@@ -204,63 +236,52 @@ final class WebSocketWrapper: NSObject {
                 let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: checkInData, options: .prettyPrinted)
                 let tickets = try decoder.decode([BarTabHasItem].self, from: data)
-                self.delegate.forEach { $0.checkinBarBooking(barItems: tickets) }
+                self.delegate.forEach { $0.uncheckBarBooking(barItems: tickets) }
             } catch {
                 return
             }
         }
-    }
-    
-    private func addEventListener() {
         
-        socket?.on("VENUE") { data, _ in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let venueStatus = content["venueStatus"] as? String else {
-                return
-            }
-            self.delegate.forEach { $0.updateVenueStatus(venueId: venueId, venueStatus: venueStatus) }
-        }
-        
-        socket?.on(clientEvent: .connect) { _, _ in
-            self.isSocketConnected = true
-        }
-        
-        socket?.on(clientEvent: .disconnect) { _, _ in
-            self.isSocketConnected = false
-        }
-        
-        socket?.on("DOORMAN_SETTINGS") { data, _ in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["id"] as? String, let uniqueId = content["uniqueId"] as? String else {
-                return
-            }
-            self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
-        }
-
         socket?.on("EVENT") { data, _ in
             guard let eventId = self.eventIdentifier(from: data) else {
                 return
             }
             self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
         }
+    }
+    
+    private func addEventListener() {
+        socket?.on(clientEvent: .connect) { [weak self] _, _ in
+            self?.isSocketConnected = true
+        }
         
-        socket?.on("updatedEvent") { data, _ in
-            guard let eventId = self.eventIdentifier(from: data) else {
-                return
-            }
-            self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
+        socket?.on(clientEvent: .disconnect) { [weak self] _, _ in
+            self?.isSocketConnected = false
         }
     }
     
     @objc func connect() {
         if !isAbleToConnect { return }
+        
+        if isSocketConnected {
+            print("Socket already connected")
+            return
+        }
+        
+        if socket?.status == .connected ||
+            socket?.status == .connecting {
+            return
+        }
+        
+        guard let venueId = UserDefaults.standard.string(forKey: "selectedVenueId") else {
+            return
+        }
         if let socketUrl = URL(string: SharedURL.baseURL) {
-            var connectParams: [String: Any] = [
-                "module": "consumer",
-                "platform": "ios"
-            ]
-            if let currentVenueId {
-                connectParams["venue"] = currentVenueId
-            }
-            manager = SocketManager(socketURL: socketUrl, config: [.compress, .connectParams(connectParams)])
+            let headerDic = ["venue": venueId,
+                             "module": "consumer",
+                             "platform": "ios",
+                             "app_version": "\(Bundle.main.releaseVersionNumber)"]
+            manager = SocketManager(socketURL: socketUrl, config: [.log(true), .compress, .connectParams(headerDic)])
             socket = manager.defaultSocket
             addEventListener()
             setArrData()
@@ -269,8 +290,15 @@ final class WebSocketWrapper: NSObject {
     }
     
     @objc func disConnect() {
-        socket?.disconnect()
-        self.isSocketConnected = false
+        guard let socket = socket else { return }
+        
+        if socket.status == .disconnected {
+            return
+        }
+        
+        print("-1-1disConnect:")
+        socket.disconnect()
+        isSocketConnected = false
     }
 }
 

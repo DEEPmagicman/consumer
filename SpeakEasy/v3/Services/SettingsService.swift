@@ -142,7 +142,7 @@ final class SettingsService {
                 return
             }
 
-            let imageDic = userDic["image"] as? [String: Any]
+            let imageDic = userDic["consumerUserImage"] as? [String: Any]
 
             let user = User(fromDictionary: userDic)
 

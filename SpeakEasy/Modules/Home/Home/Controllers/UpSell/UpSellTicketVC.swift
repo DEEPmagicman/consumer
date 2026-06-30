@@ -198,7 +198,7 @@ class UpSellTicketVC: UIViewController {
                     self.continueBtn.hideLoader()
                     self.view.isUserInteractionEnabled = true
                     if isSuccess, let id = id {
-                        Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                        Navigate.to.scanQR(self, bookingId: id, venueId: venueDetails?.id ?? "", addOnsBookingId: "")
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
@@ -315,6 +315,49 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
 extension UpSellTicketVC: WebSocketCallBackDelegate {
     func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
         upSellTicket.removeAll()
+        updateContinueBtn()
         getUpsellTicket()
+    }
+    
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if ticket.first?.venueId == self.venueDetails?.id {
+            if selectedCoverTicket.count == 0 { return }
+            let hasMatchedTicket = ticket.contains { tick in
+                selectedCoverTicket.contains { $0.id == tick.id }
+            }
+            if hasMatchedTicket {
+                let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                    UIAlertAction in
+                    if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                        viewC.isKind(of: MVPVenueListVc.self)
+                    }) {
+                        self.navigationController?.popToViewController(vc, animated: true)
+                    } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                        viewC.isKind(of: MVPVenueDetailVc.self)
+                    }) {
+                        self.navigationController?.popToViewController(vc, animated: true)
+                    }
+                }
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+            }
+        }
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        if venueStatus == "CLOSE" {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueDetailVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking",actions: [okAction])
+        }
     }
 }

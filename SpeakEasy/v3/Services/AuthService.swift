@@ -281,7 +281,7 @@ final class AuthService {
             }
 
             let sessionDic = responseDic["session"] as? [String: Any]
-            let imageDic = userDic["image"] as? [String: Any]
+            let imageDic = userDic["consumerUserImage"] as? [String: Any]
 
             if let sessionDic {
 
@@ -363,7 +363,7 @@ final class AuthService {
         sessionDic: [String: Any]
     ) {
 
-        let imageDic = userDic["image"] as? [String: Any]
+        let imageDic = userDic["consumerUserImage"] as? [String: Any]
 
         UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
         UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String

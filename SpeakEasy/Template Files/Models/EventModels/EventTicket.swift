@@ -161,6 +161,7 @@ struct PaymentDetail: Codable {
     var salesTaxName: String?
     var customFees: [CustomFees]?
     var additionalFees: [CustomFees]?
+    var salesTaxes: [SalesTax]?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -174,6 +175,16 @@ struct PaymentDetail: Codable {
         try container.encodeIfPresent(salesTaxName, forKey: .salesTaxName)
         try container.encodeIfPresent(customFees, forKey: .customFees)
         try container.encodeIfPresent(additionalFees, forKey: .additionalFees)
+    }
+}
+
+struct SalesTax: Codable {
+    var id: String
+    var salesTax: Double?
+    var salesTaxName: String?
+    
+    var formattedAmount: String {
+        String(format: "$%.2f", salesTax ?? 0)
     }
 }
 

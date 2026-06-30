@@ -131,6 +131,11 @@ final class MVPVenueDetailVc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        WebSocketWrapper.shared.disConnect()
+        UserDefault.shared.selectedVenueId = venueId
+        WebSocketWrapper.shared.connect()
+        
         addOnsView.isHidden = true
         gradient = venueBgImg.setGradientColor()
         venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
@@ -280,6 +285,15 @@ final class MVPVenueDetailVc: UIViewController {
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
         mapItem.name = venueDetails?.name
         mapItem.openInMaps()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !WebSocketWrapper.shared.isSocketConnected { return }
+        WebSocketWrapper.shared.disConnect()
+        UserDefault.shared.selectedVenueId = venueId
+        WebSocketWrapper.shared.connect()
     }
     
     private func setUpUI() {
@@ -450,7 +464,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.continueBtn.hideLoader()
                 self.view.isUserInteractionEnabled = true
                 if isSuccess, let id = id {
-                    Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                    Navigate.to.scanQR(self, bookingId: id, venueId: venueDetails?.id ?? "", addOnsBookingId: "")
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }

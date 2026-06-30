@@ -56,6 +56,11 @@ final class ScanQRCodeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        WebSocketWrapper.shared.disConnect()
+        UserDefaults.standard.set(venueId, forKey: "selectedVenueId")
+        WebSocketWrapper.shared.connect()
+        
         bgImage.sd_setImage(with: URL(string: (booking?.venueObject?.venueAttachment?.first?.key ?? "").imageURL))
         isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
         venueName.text = venueNameText ?? "" == "" ? "-" : venueNameText
@@ -83,6 +88,15 @@ final class ScanQRCodeVC: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !WebSocketWrapper.shared.isSocketConnected { return }
+        WebSocketWrapper.shared.disConnect()
+        UserDefaults.standard.set(venueId, forKey: "selectedVenueId")
+        WebSocketWrapper.shared.connect()
     }
     
     override func viewDidAppear(_ animated: Bool) {

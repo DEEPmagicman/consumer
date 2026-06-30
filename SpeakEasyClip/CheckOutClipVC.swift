@@ -83,6 +83,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var disclaimerText: UILabel!
     @IBOutlet weak var customFeeTableView: UITableView!
     @IBOutlet weak var customFeeTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var salesTaxTableView: UITableView!
+    @IBOutlet weak var salesTaxTableViewHeight: NSLayoutConstraint!
     
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
@@ -113,9 +115,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var phoneNumber: PhoneNumber?
     private var paymentDetail: PaymentDetail?
 
+    private var salesTaxList = [SalesTax]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        WebSocketWrapper.shared.delegate.append(self)
         
         ticketListView.isHidden = (selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
         addOnsView.isHidden = (selectedCoverTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
@@ -135,6 +138,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.addOnsTableViewHeight.constant = self.addOnsTableView.contentSize.height
             self.addOnsTableView.layoutIfNeeded()
         }
+        
+        salesTaxTableView.delegate = self
+        salesTaxTableView.dataSource = self
         
         phoneNumTextField.delegate = self
         phoneNumTextField.withDefaultPickerUI = true
@@ -221,6 +227,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
     override func viewDidLayoutSubviews() {
         if totalPrice == 0 {
             scrollViewBottomConstraint.constant = 130 - view.safeAreaInsets.bottom
@@ -231,12 +247,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
+//            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
+//            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
@@ -246,6 +262,31 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             return true
         }
         return false
+    }
+    
+    private func setupSalesTaxViews() {
+        if let taxes = paymentDetail?.salesTaxes, !taxes.isEmpty {
+            print(taxes)
+            salesTextView.isHidden = false
+            salesTaxList = taxes
+            salesTaxTableViewHeight.constant = CGFloat(taxes.count * 30)
+            salesTaxTableView.setNeedsLayout()
+            salesTaxTableView.reloadData()
+        } else if let tax = paymentDetail?.salesTax, tax > 0 {
+            salesTextView.isHidden = false
+            salesTaxList = [SalesTax(
+                id: "",
+                salesTax: tax,
+                salesTaxName: paymentDetail?.salesTaxName ?? "Sales Tax"
+            )]
+            salesTaxTableViewHeight.constant = 30
+            salesTaxTableView.setNeedsLayout()
+            salesTaxTableView.reloadData()
+        } else {
+            salesTextView.isHidden = true
+            salesTaxList = []
+            salesTaxTableView.reloadData()
+        }
     }
     
     private var setCustomTaxView: Bool {
@@ -602,16 +643,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     AppClipLoader.hideLoader()
                     self.paymentDetail = paymentDetail
                     self.subTotalView.isHidden = (!self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView) || (paymentDetail.subTotal == paymentDetail.total)
-                    self.salesTextView.isHidden = !self.setSalesTaxView
+//                    self.salesTextView.isHidden = !self.setSalesTaxView
+                    if self.setSalesTaxView {
+                        self.setupSalesTaxViews()
+                    } else {
+                        self.salesTextView.isHidden = true
+                    }
                     self.processingFeeView.isHidden = !self.setProcessingTaxView || paymentDetail.processingFee == 0
                     self.customFeeView.isHidden = !self.setCustomTaxView
                     self.noFeeView.isHidden = !self.subTotalView.isHidden
                     self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.subTotal.decimalFormat(true))"
                     self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.processingFee.decimalFormat(true))"
-                    self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.salesTax?.decimalFormat(true) ?? "")"
+//                    self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.salesTax?.decimalFormat(true) ?? "")"
                     self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.total.decimalFormat(true))"
                     self.totalPrice = paymentDetail.total
-                    self.salesTaxName.text = paymentDetail.salesTaxName ?? "Sales Tax"
+//                    self.salesTaxName.text = paymentDetail.salesTaxName ?? "Sales Tax"
                     self.grandTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((self.totalAddOnPrice + self.totalPrice).decimalFormat(true))"
                     if self.bookingType == .FREE {
                         self.subTotalView.isHidden = true
@@ -1529,7 +1575,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user/free-booking") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/booking/appclip/free-booking") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -1591,6 +1637,7 @@ extension CheckOutClipVC {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRClipVC")) as? QRClipVC {
                 AppClipLoader.hideLoader()
                 vc.venueName = self.venue?.name ?? ""
+                vc.venueId = self.venue?.id
                 vc.bookingId = self.bookingId
                 vc.booking = self.booking
                 vc.addOnsBooking = self.addOnsBooking
@@ -1645,17 +1692,29 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
             return selectedCoverTickets.count
         } else if tableView == customFeeTableView {
             return self.paymentDetail?.customFees?.count ?? 0
+        } else if tableView == salesTaxTableView {
+            return salesTaxList.count
         } else {
             return selectedAddOnsItem.count
         }
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == customFeeTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
             let customFee = self.paymentDetail?.customFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
             cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
+            return cell
+        } else if tableView == salesTaxTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SalesTaxTVC", for: indexPath) as! SalesTaxTVC
+            let tax = salesTaxList[indexPath.row]
+            cell.salesTaxName.text = tax.salesTaxName ?? "Sales Tax"
+            cell.salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((tax.salesTax ?? 0).decimalFormat(true))"
+            cell.salesTaxPr.text = ""
+            cell.backgroundColor = .clear
+            cell.contentView.backgroundColor = .clear
+            cell.selectionStyle = .none
             return cell
         }
         
@@ -1718,11 +1777,10 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
     func updateTicketPrice(ticket: [CoverTicket]) {
         if isPaymentInitiated { return }
         if selectedCoverTickets.count == 0 { return }
-        var coverTickets = [CoverTicket]()
-        ticket.forEach({ tick in
-            coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
-        })
-        if coverTickets.count != 0 {
+        let hasMatchedTicket = ticket.contains { tick in
+            selectedCoverTickets.contains { $0.id == tick.id }
+        }
+        if hasMatchedTicket {
             if navigationController?.viewControllers.last is CheckOutClipVC {
                 alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
                     self.navigationController?.popToRootViewController(animated: true)

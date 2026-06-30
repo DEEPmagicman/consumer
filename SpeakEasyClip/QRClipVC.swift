@@ -10,6 +10,7 @@ import FSPagerView
 
 final class QRClipVC: UIViewController {
     
+    var venueId: String? = nil
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
@@ -40,6 +41,10 @@ final class QRClipVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        WebSocketWrapper.shared.disConnect()
+        UserDefaults.standard.set(venueId, forKey: "selectedVenueId")
+        WebSocketWrapper.shared.connect()
+        
         loadImage()
         venueImg.setGradientColor()
         venueNameLbl.text = venueName
@@ -60,7 +65,6 @@ final class QRClipVC: UIViewController {
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
-        WebSocketWrapper.shared.delegate.append(self)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
@@ -73,6 +77,25 @@ final class QRClipVC: UIViewController {
                 self.getAddOnsBooking {}
             }
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !WebSocketWrapper.shared.isSocketConnected { return }
+        WebSocketWrapper.shared.disConnect()
+        UserDefaults.standard.set(venueId, forKey: "selectedVenueId")
+        WebSocketWrapper.shared.connect()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
     private func getBooking(completion: @escaping (()-> Void)) {

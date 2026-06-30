@@ -8,183 +8,195 @@
 import Foundation
 import Combine
 
-final class UserDefault: NSObject {
+final class UserDefault {
+    
+    // MARK: - Singleton
+    
+    static let shared = UserDefault()
+    private init() {}
+    
+    // MARK: - Keys
     
     enum UserDefaultKey: String {
-        case accessTokenKey = "accessToken"
-        case refreshTokenKey = "refreshToken"
-        case userKey = "user"
-        case isLoggedInKey = "isLoggedIn"
-        case isVersionV3Key = "isVersionV3"
-        case isGuest = "isGuest"
-        case localCity = "localCity"
-        case filterCity = "filterCity"
-        case defaultCitySelected = "defaultCitySelected"
-        case isNotificationOnKey = "isNotificationOn"
-        case hasSeenPremiumIntro = "has_seen_premium_intro"
+        case accessToken
+        case refreshToken
+        case user
+        case isLoggedIn
+        case isGuest
+        case localCity
+        case defaultCitySelected
+        case isNotificationOn
+        case isVersionV3Key
+        case filterCity
+        case hasSeenPremiumIntro
+        case selectedVenueId
     }
     
-    let userDefaults = UserDefaults.standard
-    
-    class var shared: UserDefault {
-        struct Static {
-            static let instance: UserDefault = UserDefault()
-        }
-        return Static.instance
-    }
-    
+    // Publishers
     private let citySubject = CurrentValueSubject<String, Never>("")
     private let filterCitySubject = CurrentValueSubject<String?, Never>(nil)
-
-       var localCityPublisher: AnyPublisher<String, Never> {
-           citySubject.eraseToAnyPublisher()
-       }
-
+    
+    var localCityPublisher: AnyPublisher<String, Never> {
+        citySubject.eraseToAnyPublisher()
+    }
+    
     var filterCityPublisher: AnyPublisher<String?, Never> {
         filterCitySubject.eraseToAnyPublisher()
     }
     
-    var accessToken: String? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.accessTokenKey.rawValue) as? String
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.accessTokenKey.rawValue)
+    // MARK: - Properties
+    
+    private let defaults = UserDefaults.standard
+    
+    // MARK: - Generic Helpers
+    
+    private func getValue<T>(for key: UserDefaultKey) -> T? {
+        defaults.object(forKey: key.rawValue) as? T
+    }
+    
+    private func setValue<T>(_ value: T?, for key: UserDefaultKey) {
+        defaults.set(value, forKey: key.rawValue)
+    }
+    
+    private func getCodable<T: Codable>(for key: UserDefaultKey) -> T? {
+        guard let data = defaults.data(forKey: key.rawValue) else {
+            return nil
+        }
+        
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
+    
+    private func setCodable<T: Codable>(_ value: T?, for key: UserDefaultKey) {
+        guard let value else {
+            defaults.removeObject(forKey: key.rawValue)
+            return
+        }
+        
+        do {
+            let data = try JSONEncoder().encode(value)
+            defaults.set(data, forKey: key.rawValue)
+        } catch {
+            print("Failed to encode \(key.rawValue): \(error)")
         }
     }
+    
+    // MARK: - Access Token
+    
+    var accessToken: String? {
+        get { getValue(for: .accessToken) }
+        set { setValue(newValue, for: .accessToken) }
+    }
+    
+    // MARK: - Refresh Token
     
     var refreshToken: String? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.refreshTokenKey.rawValue) as? String
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.refreshTokenKey.rawValue)
-        }
+        get { getValue(for: .refreshToken) }
+        set { setValue(newValue, for: .refreshToken) }
     }
+    
+    // MARK: - User
     
     var user: User? {
-        get {
-            if let savedUser = UserDefaults.standard.object(forKey: UserDefaultKey.userKey.rawValue) as? Data {
-                do {
-                    let loadedUser = try JSONDecoder().decode(User.self, from: savedUser)
-                    return loadedUser
-                } catch { }
-            }
-            return nil
-        } set {
-            do {
-                let encoded = try JSONEncoder().encode(newValue)
-                UserDefaults.standard.set(encoded, forKey: UserDefaultKey.userKey.rawValue)
-                UserDefaults.standard.synchronize()
-            } catch { }
-        }
+        get { getCodable(for: .user) }
+        set { setCodable(newValue, for: .user) }
     }
     
-    var isLoggedIn: Bool? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isLoggedInKey.rawValue) as? Bool
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isLoggedInKey.rawValue)
-        }
-    }
+    // MARK: - Login
     
-    var isVersionV3: Bool? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isVersionV3Key.rawValue) as? Bool
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isVersionV3Key.rawValue)
-        }
+    var isLoggedIn: Bool {
+        get { getValue(for: .isLoggedIn) ?? false }
+        set { setValue(newValue, for: .isLoggedIn) }
     }
     
     var isGuest: Bool {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool ?? true
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
-        }
+        get { getValue(for: .isGuest) ?? true }
+        set { setValue(newValue, for: .isGuest) }
     }
     
+    // MARK: - City
+    
     var localCity: String {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Chicago"
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
-            citySubject.send(newValue)
-        }
+        get { getValue(for: .localCity) ?? "Chicago" }
+        set { setValue(newValue, for: .localCity) }
     }
-
+    
+    var defaultCitySelected: Bool {
+        get { getValue(for: .defaultCitySelected) ?? false }
+        set { setValue(newValue, for: .defaultCitySelected) }
+    }
+    
+    // MARK: - Notification
+    
+    var isNotificationOn: Bool {
+        get { getValue(for: .isNotificationOn) ?? false }
+        set { setValue(newValue, for: .isNotificationOn) }
+    }
+    
+    var isVersionV3: Bool? {
+        get { getValue(for: .isVersionV3Key) ?? false }
+        set { setValue(newValue, for: .isVersionV3Key) }
+    }
+    
+    var hasSeenPremiumIntro: Bool? {
+        get { getValue(for: .hasSeenPremiumIntro) ?? false }
+        set { setValue(newValue, for: .hasSeenPremiumIntro) }
+    }
+    
     var filterCity: String? {
         get {
-            guard let city = UserDefaults.standard.value(forKey: UserDefaultKey.filterCity.rawValue) as? String else {
+            guard let city: String = getValue(for: .filterCity) else {
                 return nil
             }
 
-            let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
-            return trimmedCity.isEmpty ? nil : trimmedCity
-        } set {
-            let trimmedCity = newValue?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let trimmed = city.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
+        }
+        set {
+            let trimmed = newValue?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            if let trimmedCity,
-               !trimmedCity.isEmpty {
-                UserDefaults.standard.setValue(trimmedCity, forKey: UserDefaultKey.filterCity.rawValue)
-                filterCitySubject.send(trimmedCity)
+            if let trimmed, !trimmed.isEmpty {
+                setValue(trimmed, for: .filterCity)
+                filterCitySubject.send(trimmed)
             } else {
-                UserDefaults.standard.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
+                defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
                 filterCitySubject.send(nil)
             }
         }
     }
-
+    
     var activeCity: String {
-        let temporaryCity = filterCity?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        if let temporaryCity,
-           !temporaryCity.isEmpty {
-            return temporaryCity
+        if let city = filterCity, !city.isEmpty {
+            return city
         }
 
-        let primaryCity = localCity
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return localCity.isEmpty ? "Chicago" : localCity
+    }
+    
+    // MARK: - Selected Venue
 
-        return primaryCity.isEmpty ? "Chicago" : primaryCity
+    var selectedVenueId: String? {
+        get { getValue(for: .selectedVenueId) }
+        set { setValue(newValue, for: .selectedVenueId) }
     }
     
-    var defaultCitySelected: Bool {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.defaultCitySelected.rawValue) as? Bool) ?? false
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.defaultCitySelected.rawValue)
+    // MARK: - Reset
+    
+    func clearAll(except preserved: Set<UserDefaultKey> = []) {
+        let all = defaults.dictionaryRepresentation()
+        
+        all.keys.forEach { key in
+            guard let typedKey = UserDefaultKey(rawValue: key) else {
+                defaults.removeObject(forKey: key)
+                return
+            }
+            
+            if !preserved.contains(typedKey) {
+                defaults.removeObject(forKey: key)
+            }
         }
     }
-    
-    var isNotificationOn: Bool {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
-        }
-    }
-    
-    var hasSeenPremiumIntro: Bool? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.hasSeenPremiumIntro.rawValue) as? Bool
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasSeenPremiumIntro.rawValue)
-        }
-    }
-    
-//    func removeInstaConnection() {
-//        user?.instagramId = ""
-//        user?.instagramToken = nil
-//        user?.instaNextPageURL = nil
-//        user?.instaUserName = nil
-//    }
     
     func emptyData() {
-        accessToken = nil
-        user = nil
-        isLoggedIn = false
-        isGuest = true
-        filterCity = nil
-        isNotificationOn = false
+        clearAll()
     }
 }

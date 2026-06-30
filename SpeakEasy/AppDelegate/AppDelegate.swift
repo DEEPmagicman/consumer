@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        UserDefault.shared.selectedVenueId = nil
         if AppDesign.useModernIOS26Design {
             IQKeyboardManager.shared.enableAutoToolbar = false
             GlobalTextFieldHandler.shared.setup()
