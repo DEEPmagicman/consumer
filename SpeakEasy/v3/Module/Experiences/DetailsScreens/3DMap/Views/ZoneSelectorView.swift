@@ -10,9 +10,11 @@ import UIKit
 final class ZoneSelectorView: UIView {
 
     // MARK: - Types
+
     enum PageDirection { case none, next, prev }
 
     // MARK: - Callbacks
+
     var onSelectItem: ((String, Int) -> Void)?
     var onNextPage: (() -> Void)?
     var onPrevPage: (() -> Void)?
@@ -22,6 +24,7 @@ final class ZoneSelectorView: UIView {
     }
 
     // MARK: - Public API
+
     func setItems(_ items: [String], selectedIndex: Int = 0, borderColor: String? = nil) {
         allItems = items
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -33,26 +36,37 @@ final class ZoneSelectorView: UIView {
     }
 
     // MARK: - Private State
+
     private var allItems: [String] = []
-    private var windowStart: Int = 0
-    private var selectedGlobalIndex: Int = 0
+    private var windowStart = 0
+    private var selectedGlobalIndex = 0
     private let maxVisible = 3
     private var needsSelectionLayoutUpdate = false
 
     // MARK: - UI
-    private let titleLabel      = UILabel()
-    private let pillContainer   = UIView()
-    private let innerStack      = UIStackView()
-    private let segmentsStack   = UIStackView()
-    private let leftButton      = UIButton(type: .system)
-    private let rightButton     = UIButton(type: .system)
-    private let selectionView   = UIView()
+
+    private let titleLabel = UILabel()
+    private let pillContainer = UIView()
+    private let innerStack = UIStackView()
+    private let segmentsStack = UIStackView()
+    private let leftButton = UIButton(type: .system)
+    private let rightButton = UIButton(type: .system)
+    private let selectionView = UIView()
 
     // MARK: - Init
-    override init(frame: CGRect) { super.init(frame: frame); setup() }
-    required init?(coder: NSCoder) { super.init(coder: coder); setup() }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
 
     // MARK: - Layout
+
     override func layoutSubviews() {
         super.layoutSubviews()
         pillContainer.layer.cornerRadius = pillContainer.bounds.height / 2
@@ -65,6 +79,7 @@ final class ZoneSelectorView: UIView {
 }
 
 // MARK: - Setup
+
 private extension ZoneSelectorView {
 
     func setup() {
@@ -151,16 +166,17 @@ private extension ZoneSelectorView {
 
     func configureArrowButton(_ button: UIButton, systemName: String) {
         let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
-            let image = UIImage(systemName: systemName, withConfiguration: config)
-            button.setImage(image, for: .normal)
-            button.tintColor = UIColor.white.withAlphaComponent(0.9)
-            button.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-            button.layer.cornerRadius = 13
-            button.clipsToBounds = true
+        let image = UIImage(systemName: systemName, withConfiguration: config)
+        button.setImage(image, for: .normal)
+        button.tintColor = UIColor.white.withAlphaComponent(0.9)
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        button.layer.cornerRadius = 13
+        button.clipsToBounds = true
     }
 }
 
 // MARK: - Window Logic
+
 private extension ZoneSelectorView {
 
     /// Visible slice of allItems based on current windowStart
@@ -194,6 +210,7 @@ private extension ZoneSelectorView {
 }
 
 // MARK: - Render
+
 private extension ZoneSelectorView {
 
     func renderVisible(slideDir: PageDirection) {
@@ -228,8 +245,8 @@ private extension ZoneSelectorView {
             return
         }
 
-        let totalWidth = pillContainer.bounds.width - 80   // 80 = space for both arrows + spacing
-        let itemWidth  = totalWidth / CGFloat(maxVisible)
+        let totalWidth = pillContainer.bounds.width - 80 // 80 = space for both arrows + spacing
+        let itemWidth = totalWidth / CGFloat(maxVisible)
 
         for (localIndex, title) in visible.enumerated() {
             let button = UIButton(type: .system)
@@ -238,7 +255,7 @@ private extension ZoneSelectorView {
             button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
             button.backgroundColor = .clear
             button.clipsToBounds = true
-            button.tag = localIndex                         // tag = local index (0, 1, 2)
+            button.tag = localIndex // tag = local index (0, 1, 2)
             button.widthAnchor.constraint(equalToConstant: itemWidth).isActive = true
             button.addTarget(self, action: #selector(didTapSegment(_:)), for: .touchUpInside)
             segmentsStack.addArrangedSubview(button)
@@ -246,24 +263,24 @@ private extension ZoneSelectorView {
 
         selectionView.isHidden = false
     }
-    
+
     func updateArrowState() {
         leftButton.isHidden = false
         rightButton.isHidden = false
-        setArrow(leftButton,  enabled: windowStart > 0)
+        setArrow(leftButton, enabled: windowStart > 0)
         setArrow(rightButton, enabled: windowStart + maxVisible < allItems.count)
     }
-    
+
     func setArrow(_ button: UIButton, enabled: Bool) {
         button.isEnabled = enabled
         UIView.animate(withDuration: 0.15) {
             button.alpha = enabled ? 1.0 : 0.35
         }
     }
-    
+
     func updateSelection(animated: Bool) {
         let buttons = segmentsStack.arrangedSubviews.compactMap { $0 as? UIButton }
-        let local   = selectedLocalIndex
+        let local = selectedLocalIndex
 
         guard !buttons.isEmpty, local >= 0, local < buttons.count else {
             selectionView.isHidden = true
@@ -283,8 +300,8 @@ private extension ZoneSelectorView {
         let frameInPill = selectedButton.superview?.convert(selectedButton.frame, to: pillContainer) ?? .zero
         let targetFrame = frameInPill.insetBy(dx: -6, dy: 1)
 
-        for (i, btn) in buttons.enumerated() {
-            btn.alpha = (i == local) ? 1.0 : 0.75
+        for (index, btn) in buttons.enumerated() {
+            btn.alpha = (index == local) ? 1.0 : 0.75
         }
 
         let applyFrame = {
@@ -306,6 +323,7 @@ private extension ZoneSelectorView {
 }
 
 // MARK: - Actions
+
 private extension ZoneSelectorView {
 
     @objc func didTapLeft() {
@@ -340,7 +358,7 @@ private extension ZoneSelectorView {
 
     @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
-        case .left:  didTapRight()
+        case .left: didTapRight()
         case .right: didTapLeft()
         default: break
         }
@@ -353,21 +371,22 @@ private extension ZoneSelectorView {
 }
 
 // MARK: - Page Transition Animation
+
 private extension ZoneSelectorView {
 
     func animatePageChange(direction: PageDirection, update: @escaping () -> Void) {
         let offset: CGFloat = direction == .next ? -60 : 60
-        
+
         selectionView.isHidden = true
         selectionView.alpha = 0
-        
+
         UIView.animate(withDuration: 0.20, delay: 0, options: .curveEaseIn) {
             self.segmentsStack.transform = CGAffineTransform(translationX: offset, y: 0)
             self.segmentsStack.alpha = 0
         } completion: { _ in
             update()
             self.segmentsStack.transform = CGAffineTransform(translationX: -offset, y: 0)
-            
+
             UIView.animate(
                 withDuration: 0.35, delay: 0,
                 usingSpringWithDamping: 0.85, initialSpringVelocity: 0.3,

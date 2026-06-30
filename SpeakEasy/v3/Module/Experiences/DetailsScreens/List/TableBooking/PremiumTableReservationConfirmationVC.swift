@@ -386,45 +386,83 @@ private extension PremiumTableReservationConfirmationVC {
     }
 
     func configureInfo() {
-        let tableName = (reservation?.seatingArea ?? sourceBooking?.seatingArea)?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        tableNameLabel.text = tableName?.isEmpty == false ? tableName : "Table seating"
 
-        let minimum = reservation?.minimum
-            ?? sourceBooking?.minimum
-            ?? reservation?.timeSlot?.minimum
-            ?? priceBreakdown?.base
+        // Table Name
+        let reservationSeatingArea = reservation?.seatingArea
+        let bookingSeatingArea = sourceBooking?.seatingArea
+
+        let tableName = (reservationSeatingArea ?? bookingSeatingArea)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        tableNameLabel.text = (tableName?.isEmpty == false)
+            ? tableName
+            : "Table seating"
+
+        // Minimum Spend
+        let reservationMinimum = reservation?.minimum
+        let bookingMinimum = sourceBooking?.minimum
+        let slotMinimum = reservation?.timeSlot?.minimum
+        let baseMinimum = priceBreakdown?.base
+
+        
+        let minimum = reservationMinimum
+            ?? bookingMinimum
+            ?? slotMinimum
+            ?? baseMinimum
             ?? 0
+
         minimumLabel.text = "\(formatMoney(minimum)) spend minimum"
 
-        let guests = reservation?.guestsTotal
-            ?? sourceBooking?.guestsTotal
-            ?? reservation?.guests?.total
-            ?? sourceBooking?.guests?.total
+        // Guests
+        let reservationGuests = reservation?.guestsTotal
+        let bookingGuests = sourceBooking?.guestsTotal
+        let reservationGuestTotal = reservation?.guests?.total
+        let bookingGuestTotal = sourceBooking?.guests?.total
+
+        let guests = reservationGuests
+            ?? bookingGuests
+            ?? reservationGuestTotal
+            ?? bookingGuestTotal
             ?? 0
-        let guestText = guests <= 1 ? "\(max(guests, 1)) guest" : "\(guests) guests"
+
+        let guestText: String
+        if guests <= 1 {
+            guestText = "\(max(guests, 1)) guest"
+        } else {
+            guestText = "\(guests) guests"
+        }
+
         guestTagView.configure(style: .guests, text: guestText)
 
+        // Time
+        let startTime = reservation?.timeSlot?.startTime
+        let reservationTime = reservation?.time
+        let bookingTime = sourceBooking?.time
+
         let timeText = formattedTime(
-            reservation?.timeSlot?.startTime
-                ?? reservation?.time
-                ?? sourceBooking?.time
+            startTime
+            ?? reservationTime
+            ?? bookingTime
         )
-        if timeText.isEmpty {
-            timeTagView.isHidden = true
-            guestTagTrailingToTimeConstraint?.isActive = false
-            guestTagTrailingToCardConstraint?.isActive = true
-        } else {
-            timeTagView.isHidden = false
-            guestTagTrailingToCardConstraint?.isActive = false
-            guestTagTrailingToTimeConstraint?.isActive = true
+
+        let hasTime = !timeText.isEmpty
+
+        timeTagView.isHidden = !hasTime
+        guestTagTrailingToTimeConstraint?.isActive = hasTime
+        guestTagTrailingToCardConstraint?.isActive = !hasTime
+
+        if hasTime {
             timeTagView.configure(style: .time, text: timeText)
         }
 
-        confirmationNumberLabel.text = reservation?.uniqueId
+        // Confirmation Number
+        let confirmationNumber = reservation?.uniqueId
             ?? reservationUniqueId
             ?? sourceBooking?.uniqueId
             ?? "-"
+
+        confirmationNumberLabel.text = confirmationNumber
+
         copyButton.setTitle("Copy", for: .normal)
     }
 
