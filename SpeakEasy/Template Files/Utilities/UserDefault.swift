@@ -141,11 +141,19 @@ final class UserDefault {
         primaryCity != nil
     }
     
+    var primaryCity: String? {
+        guard defaultCitySelected else { return nil }
+        
+        let city = (getValue(for: .localCity) ?? "")?.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return city?.isEmpty == false ? city : nil
+    }
+    
     func setPrimaryCity(_ city: String) {
         let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedCity.isEmpty else { return }
-
-        set { setValue(UserDefaultKey.localCity.rawValue, for: .trimmedCity) }
+        
+        setValue(trimmedCity, for: .localCity)
         defaultCitySelected = true
         citySubject.send(trimmedCity)
     }
