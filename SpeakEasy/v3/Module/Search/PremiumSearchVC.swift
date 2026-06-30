@@ -8,6 +8,61 @@
 import UIKit
 import SDWebImage
 
+private enum PremiumSearchHeaderMetrics {
+    static let horizontalPadding: CGFloat = 24
+    static let topSpacing: CGFloat = 18
+    static let titleHeight: CGFloat = 24
+    static let titleContentSpacing: CGFloat = 18
+    static let venueTitleContentSpacing: CGFloat = 6
+    static let sectionSpacing: CGFloat = 26
+    static let venueRowHeight: CGFloat = 54
+    static let venueRowSpacing: CGFloat = 8
+    static let maxDisplayedVenues = 3
+    static let artistRowHeight: CGFloat = 101
+    static let artistItemWidth: CGFloat = 105
+    static let artistImageSize: CGFloat = 75
+
+    static func height(
+        isLoading: Bool,
+        venueCount: Int,
+        artistCount: Int,
+        showsEventTitle: Bool
+    ) -> CGFloat {
+
+        var height: CGFloat = 0
+
+        if isLoading || venueCount > 0 {
+            let rowCount = isLoading ? 1 : min(venueCount, maxDisplayedVenues)
+            height += titleHeight
+            height += venueTitleContentSpacing
+            height += CGFloat(rowCount) * venueRowHeight
+            height += CGFloat(max(0, rowCount - 1)) * venueRowSpacing
+            height += sectionSpacing
+        }
+
+        if isLoading || artistCount > 0 {
+            height += titleHeight
+            height += titleContentSpacing
+            height += artistRowHeight
+            height += sectionSpacing
+        }
+
+        if showsEventTitle {
+            height += titleHeight
+            height += titleContentSpacing
+        }
+
+        return max(height, 46)
+    }
+}
+
+private extension NSLayoutConstraint {
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
+}
+
 final class PremiumSearchVC: UIViewController {
 
     private let headerView = PremiumSearchHeaderView()
@@ -16,6 +71,7 @@ final class PremiumSearchVC: UIViewController {
     private let searchService = SearchFlowService.shared
     private var venues: [SearchVenueItem] = []
     private var events: [SearchEventItem] = []
+    private var artists: [SearchArtistItem] = []
     private var searchWorkItem: DispatchWorkItem?
     private var searchRequestId = UUID()
     private var currentQuery = ""
@@ -34,6 +90,7 @@ final class PremiumSearchVC: UIViewController {
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
         layout.showsHeaders = true
+        layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
         layout.delegate = self
@@ -42,10 +99,11 @@ final class PremiumSearchVC: UIViewController {
     required init?(coder: NSCoder) {
         let layout = PinterestLayout()
         layout.numberOfColumns = 2
-        layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: 34, right: 24)
+//        layout.sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 34, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
         layout.showsHeaders = true
+        layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(coder: coder)
         layout.delegate = self
@@ -149,7 +207,7 @@ final class PremiumSearchVC: UIViewController {
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 40),
 
-            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 22),
+            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: PremiumSearchHeaderMetrics.topSpacing),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -169,6 +227,7 @@ final class PremiumSearchVC: UIViewController {
 
         venues.removeAll()
         events.removeAll()
+        artists.removeAll()
         hasMoreVenues = false
         hasMoreEvents = false
         isInitialLoading = true
@@ -213,6 +272,7 @@ final class PremiumSearchVC: UIViewController {
                 guard isSuccess else {
                     self.venues.removeAll()
                     self.events.removeAll()
+                    self.artists.removeAll()
                     self.hasMoreVenues = false
                     self.hasMoreEvents = false
                     self.reloadCollectionWithoutAnimation()
@@ -222,6 +282,7 @@ final class PremiumSearchVC: UIViewController {
 
                 self.venues = result.venues
                 self.events = result.events
+                self.artists = result.artists
                 self.hasMoreVenues = result.hasMoreVenues
                 self.hasMoreEvents = result.hasMoreEvents
                 self.reloadCollectionWithoutAnimation()
@@ -271,7 +332,7 @@ final class PremiumSearchVC: UIViewController {
         UIView.performWithoutAnimation {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.reloadData()
-//            collectionView.layoutIfNeeded()
+            collectionView.layoutIfNeeded()
         }
     }
 
@@ -280,6 +341,8 @@ final class PremiumSearchVC: UIViewController {
         !isInitialLoading &&
         !isLoadingMoreEvents &&
         events.isEmpty
+        && venues.isEmpty
+        && artists.isEmpty
 
         let updates = {
             self.emptyView.alpha = shouldShow ? 1 : 0
@@ -354,38 +417,15 @@ final class PremiumSearchVC: UIViewController {
         }
     }
 
-    // Each venue row is 54pt tall; rows are separated by 8pt spacing.
-    private static let venueRowHeight: CGFloat = 54
-    private static let venueRowSpacing: CGFloat = 8
-    private static let maxDisplayedVenues = 3
+    private static let maxDisplayedVenues = PremiumSearchHeaderMetrics.maxDisplayedVenues
 
     private var headerHeight: CGFloat {
-        var height: CGFloat = 0
-        let displayedVenueCount = min(venues.count, Self.maxDisplayedVenues)
-        let showsViewMoreVenues = hasMoreVenues || venues.count > Self.maxDisplayedVenues
-
-        if isInitialLoading {
-            // One shimmer row
-            height += Self.venueRowHeight   // 54
-            height += 16                    // spacing after shimmer
-        } else if !venues.isEmpty {
-            // Stack of venue rows + inter-row spacing
-            height += CGFloat(displayedVenueCount) * Self.venueRowHeight
-            height += CGFloat(max(0, displayedVenueCount - 1)) * Self.venueRowSpacing
-            if showsViewMoreVenues {
-                height += 8    // spacing after venues stack
-                height += 24   // "View more venues" button
-                height += 12   // spacing after button
-            } else {
-                height += 18   // spacing after venues stack (no button)
-            }
-        }
-
-        // "Upcoming events" title + its bottom spacing
-        height += 24   // title label height
-        height += 14   // spacing after title
-
-        return max(height, 46)
+        PremiumSearchHeaderMetrics.height(
+            isLoading: isInitialLoading,
+            venueCount: venues.count,
+            artistCount: artists.count,
+            showsEventTitle: true
+        )
     }
 }
 
@@ -468,14 +508,14 @@ extension PremiumSearchVC: UICollectionViewDataSource {
             for: indexPath
         ) as! PremiumSearchHeaderSupplementaryView
 
-        // Cap at 5 venues for display; "view more" button handles the rest
+        // Cap visible venues while "View more venues" is hidden for now.
         let displayedVenues = Array(venues.prefix(PremiumSearchVC.maxDisplayedVenues))
-        let showsViewMoreVenues = hasMoreVenues || venues.count > PremiumSearchVC.maxDisplayedVenues
 
         header.configure(
             venues: displayedVenues,
+            artists: artists,
             showsVenue: !venues.isEmpty,
-            showsViewMoreVenues: showsViewMoreVenues,
+            showsViewMoreVenues: false,
             isLoading: isInitialLoading,
             showsEventTitle: true
         )
@@ -493,6 +533,19 @@ extension PremiumSearchVC: UICollectionViewDataSource {
                 self,
                 keyword: self.currentQuery,
                 mode: .global
+            )
+        }
+
+        header.onViewArtist = { [weak self] artist in
+            guard let self else { return }
+            Navigate.to.gotoArtistDetailsVC(
+                self,
+                artist: ArtistDetailsContext(
+                    id: artist.id,
+                    venueId: "",
+                    name: artist.name,
+                    imageKey: artist.artist?.artistImage?.key ?? artist.imageURL
+                )
             )
         }
 
@@ -594,10 +647,18 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     private var venueRows: [PremiumSearchVenueResultView] = []
     private let venueShimmerView = PremiumSearchVenueShimmerView()
     private let viewMoreVenuesButton = UIButton(type: .system)
+    private let venueTitleLabel = UILabel()
+    private let artistTitleLabel = UILabel()
+    private let artistScrollContainer = UIView()
+    private let artistScrollView = UIScrollView()
+    private let artistStackView = UIStackView()
+    private let artistShimmerContainer = UIView()
+    private let artistShimmerStackView = UIStackView()
     private let titleLabel = UILabel()
 
     var onViewVenue: ((SearchVenueItem) -> Void)?
     var onViewMoreVenues: (() -> Void)?
+    var onViewArtist: ((SearchArtistItem) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -613,6 +674,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         super.prepareForReuse()
         onViewVenue = nil
         onViewMoreVenues = nil
+        onViewArtist = nil
     }
 
     private func setup() {
@@ -622,6 +684,11 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         stackView.axis = .vertical
         stackView.spacing = 0
         addSubview(stackView)
+
+        venueTitleLabel.text = "Venue"
+        venueTitleLabel.textColor = .white
+        venueTitleLabel.font = Constant.Font.geistRegular(size: 18)
+        stackView.addArrangedSubview(venueTitleLabel)
 
         // Pre-create 5 venue rows; show/hide as needed
         for _ in 0 ..< 5 {
@@ -646,28 +713,105 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             for: .touchUpInside
         )
         stackView.addArrangedSubview(viewMoreVenuesButton)
-        viewMoreVenuesButton.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        viewMoreVenuesButton.heightAnchor
+            .constraint(equalToConstant: 24)
+            .withPriority(.defaultHigh)
+            .isActive = true
+
+        artistTitleLabel.text = "Artists"
+        artistTitleLabel.textColor = .white
+        artistTitleLabel.font = Constant.Font.geistRegular(size: 18)
+        stackView.addArrangedSubview(artistTitleLabel)
+
+        artistScrollContainer.translatesAutoresizingMaskIntoConstraints = false
+        artistScrollContainer.backgroundColor = .clear
+        artistScrollContainer.clipsToBounds = false
+        stackView.addArrangedSubview(artistScrollContainer)
+
+        artistScrollView.translatesAutoresizingMaskIntoConstraints = false
+        artistScrollView.backgroundColor = .clear
+        artistScrollView.showsHorizontalScrollIndicator = false
+        artistScrollView.showsVerticalScrollIndicator = false
+        artistScrollView.alwaysBounceHorizontal = true
+        artistScrollView.contentInset = UIEdgeInsets(
+            top: 0,
+            left: PremiumSearchHeaderMetrics.horizontalPadding,
+            bottom: 0,
+            right: PremiumSearchHeaderMetrics.horizontalPadding
+        )
+        artistScrollView.scrollIndicatorInsets = artistScrollView.contentInset
+        addSubview(artistScrollView)
+
+        artistStackView.translatesAutoresizingMaskIntoConstraints = false
+        artistStackView.axis = .horizontal
+        artistStackView.alignment = .top
+        artistStackView.spacing = 16
+        artistScrollView.addSubview(artistStackView)
+
+        artistShimmerContainer.translatesAutoresizingMaskIntoConstraints = false
+        artistShimmerContainer.backgroundColor = .clear
+        stackView.addArrangedSubview(artistShimmerContainer)
+
+        artistShimmerStackView.translatesAutoresizingMaskIntoConstraints = false
+        artistShimmerStackView.axis = .horizontal
+        artistShimmerStackView.alignment = .top
+        artistShimmerStackView.spacing = 16
+        artistShimmerContainer.addSubview(artistShimmerStackView)
+
+        for _ in 0 ..< 3 {
+            artistShimmerStackView.addArrangedSubview(PremiumSearchArtistShimmerItemView())
+        }
 
         titleLabel.text = "Upcoming events"
         titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistRegular(size: 16)
+        titleLabel.font = Constant.Font.geistRegular(size: 18)
         stackView.addArrangedSubview(titleLabel)
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PremiumSearchHeaderMetrics.horizontalPadding),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PremiumSearchHeaderMetrics.horizontalPadding),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
+
+            venueTitleLabel.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.titleHeight).withPriority(.defaultHigh),
+            artistTitleLabel.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.titleHeight).withPriority(.defaultHigh),
+            titleLabel.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.titleHeight).withPriority(.defaultHigh),
+
+            artistScrollContainer.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistRowHeight).withPriority(.defaultHigh),
+            artistShimmerContainer.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistRowHeight).withPriority(.defaultHigh),
+            artistScrollView.topAnchor.constraint(equalTo: artistScrollContainer.topAnchor),
+            artistScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            artistScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            artistScrollView.bottomAnchor.constraint(equalTo: artistScrollContainer.bottomAnchor),
+
+            artistShimmerStackView.topAnchor.constraint(equalTo: artistShimmerContainer.topAnchor),
+            artistShimmerStackView.leadingAnchor.constraint(equalTo: artistShimmerContainer.leadingAnchor),
+            artistShimmerStackView.trailingAnchor.constraint(lessThanOrEqualTo: artistShimmerContainer.trailingAnchor),
+            artistShimmerStackView.bottomAnchor.constraint(equalTo: artistShimmerContainer.bottomAnchor),
+
+            artistStackView.topAnchor.constraint(equalTo: artistScrollView.contentLayoutGuide.topAnchor),
+            artistStackView.leadingAnchor.constraint(equalTo: artistScrollView.contentLayoutGuide.leadingAnchor),
+            artistStackView.trailingAnchor.constraint(equalTo: artistScrollView.contentLayoutGuide.trailingAnchor),
+            artistStackView.bottomAnchor.constraint(equalTo: artistScrollView.contentLayoutGuide.bottomAnchor),
+            artistStackView.heightAnchor.constraint(equalTo: artistScrollView.frameLayoutGuide.heightAnchor)
         ])
     }
 
     func configure(
         venues: [SearchVenueItem],
+        artists: [SearchArtistItem],
         showsVenue: Bool,
         showsViewMoreVenues: Bool,
         isLoading: Bool,
         showsEventTitle: Bool
     ) {
+        let showsVenueTitle = isLoading || showsVenue
+        venueTitleLabel.isHidden = !showsVenueTitle
+        stackView.setCustomSpacing(
+            showsVenueTitle ? PremiumSearchHeaderMetrics.venueTitleContentSpacing : 0,
+            after: venueTitleLabel
+        )
+
         // Wire up venue rows
         for (index, row) in venueRows.enumerated() {
             if showsVenue && index < venues.count {
@@ -676,7 +820,10 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
                 // 8pt gap between rows, 0 after the last visible row
                 // (spacing after the whole block is set on venueShimmerView/button below)
                 let isLastVenueRow = index == venues.count - 1
-                stackView.setCustomSpacing(isLastVenueRow ? 0 : 8, after: row)
+                stackView.setCustomSpacing(
+                    isLastVenueRow ? 0 : PremiumSearchHeaderMetrics.venueRowSpacing,
+                    after: row
+                )
             } else {
                 row.isHidden = true
                 stackView.setCustomSpacing(0, after: row)
@@ -688,20 +835,207 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         // Spacing after the venue block (last row or shimmer) before "view more" / title
         let lastVisibleVenueRow = venueRows.last(where: { !$0.isHidden })
         if let last = lastVisibleVenueRow {
-            stackView.setCustomSpacing(showsViewMoreVenues ? 8 : 18, after: last)
+            stackView.setCustomSpacing(PremiumSearchHeaderMetrics.sectionSpacing, after: last)
         }
-        stackView.setCustomSpacing(isLoading ? 16 : 0, after: venueShimmerView)
+        stackView.setCustomSpacing(
+            isLoading ? PremiumSearchHeaderMetrics.sectionSpacing : 0,
+            after: venueShimmerView
+        )
 
         viewMoreVenuesButton.isHidden = !showsViewMoreVenues
-        stackView.setCustomSpacing(showsViewMoreVenues ? 12 : 0, after: viewMoreVenuesButton)
+        stackView.setCustomSpacing(
+            showsViewMoreVenues ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
+            after: viewMoreVenuesButton
+        )
+
+        configureArtists(artists)
+        let showsArtists = !isLoading && !artists.isEmpty
+        let showsArtistShimmer = isLoading
+        artistTitleLabel.isHidden = !(showsArtists || showsArtistShimmer)
+        artistScrollContainer.isHidden = !showsArtists
+        artistScrollView.isHidden = !showsArtists
+        artistShimmerContainer.isHidden = !showsArtistShimmer
+        stackView.setCustomSpacing(
+            (showsArtists || showsArtistShimmer) ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
+            after: artistTitleLabel
+        )
+        stackView.setCustomSpacing(
+            showsArtists ? PremiumSearchHeaderMetrics.sectionSpacing : 0,
+            after: artistScrollContainer
+        )
+        stackView.setCustomSpacing(
+            showsArtistShimmer ? PremiumSearchHeaderMetrics.sectionSpacing : 0,
+            after: artistShimmerContainer
+        )
 
         titleLabel.isHidden = !showsEventTitle
         titleLabel.text = "Upcoming events"
-        stackView.setCustomSpacing(14, after: titleLabel)
+        stackView.setCustomSpacing(
+            PremiumSearchHeaderMetrics.titleContentSpacing,
+            after: titleLabel
+        )
+    }
+
+    private func configureArtists(_ artists: [SearchArtistItem]) {
+        artistStackView.arrangedSubviews.forEach {
+            artistStackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        artists.forEach { item in
+            let view = PremiumSearchArtistResultView()
+            view.configure(item)
+            view.onViewArtist = { [weak self] artist in
+                self?.onViewArtist?(artist)
+            }
+            artistStackView.addArrangedSubview(view)
+        }
     }
 
     @objc private func onViewMoreVenuesPressed() {
         onViewMoreVenues?()
+    }
+}
+
+// MARK: - PremiumSearchArtistResultView
+
+private final class PremiumSearchArtistResultView: UIControl {
+
+    private let imageView = UIImageView()
+    private let nameLabel = UILabel()
+    private var artist: SearchArtistItem?
+
+    var onViewArtist: ((SearchArtistItem) -> Void)?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = PremiumSearchHeaderMetrics.artistImageSize / 2
+        addSubview(imageView)
+
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.textColor = .white
+        nameLabel.textAlignment = .center
+        nameLabel.font = Constant.Font.geistMedium(size: 12)
+        nameLabel.numberOfLines = 1
+        addSubview(nameLabel)
+
+        addTarget(self, action: #selector(onTap), for: .touchUpInside)
+
+        NSLayoutConstraint.activate([
+            widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistItemWidth),
+            heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistRowHeight),
+
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
+            imageView.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
+
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            nameLabel.heightAnchor.constraint(equalToConstant: 18)
+        ])
+    }
+
+    func configure(_ item: SearchArtistItem) {
+        artist = item
+        nameLabel.text = item.name
+
+        if let imageURL = item.imageURL,
+           !imageURL.isEmpty,
+           let url = URL(string: imageURL) {
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "premiumExpBg"))
+        } else {
+            imageView.image = UIImage(named: "premiumExpBg") ?? Constant.Icon.uploadImage
+        }
+    }
+
+    @objc private func onTap() {
+        guard let artist else { return }
+        onViewArtist?(artist)
+    }
+}
+
+// MARK: - PremiumSearchArtistShimmerItemView
+
+private final class PremiumSearchArtistShimmerItemView: UIView {
+
+    private let imageView = ShimmerViewV3(frame: .zero, lighter: true)
+    private let textView = ShimmerViewV3()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = PremiumSearchHeaderMetrics.artistImageSize / 2
+        imageView.layer.cornerCurve = .continuous
+        addSubview(imageView)
+
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.layer.cornerRadius = 6
+        textView.layer.cornerCurve = .continuous
+        addSubview(textView)
+
+        NSLayoutConstraint.activate([
+            widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistItemWidth),
+            heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistRowHeight),
+
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
+            imageView.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
+
+            textView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            textView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            textView.widthAnchor.constraint(equalToConstant: 72),
+            textView.heightAnchor.constraint(equalToConstant: 12)
+        ])
+
+        startShimmer()
+    }
+
+    private func startShimmer() {
+        imageView.startShimmer()
+        textView.startShimmer()
+    }
+
+    private func stopShimmer() {
+        imageView.stopShimmer()
+        textView.stopShimmer()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+            stopShimmer()
+        } else {
+            startShimmer()
+        }
     }
 }
 
@@ -742,7 +1076,7 @@ private final class PremiumSearchVenueShimmerView: UIView {
         buttonView.layer.cornerRadius = 14
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 54),
+            heightAnchor.constraint(equalToConstant: 54).withPriority(.defaultHigh),
 
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -828,7 +1162,7 @@ private final class PremiumSearchVenueResultView: UIView {
         addSubview(subtitleLabel)
 
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("View venue", for: .normal)
+        button.setTitle("Book", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = Constant.Font.geistMedium(size: 10)
         button.backgroundColor = .white
@@ -838,7 +1172,7 @@ private final class PremiumSearchVenueResultView: UIView {
         addSubview(button)
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 54),
+            heightAnchor.constraint(equalToConstant: 54).withPriority(.defaultHigh),
 
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),

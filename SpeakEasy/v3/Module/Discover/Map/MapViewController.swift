@@ -795,8 +795,8 @@ class MapViewController: UIViewController {
     }
 
     private func venuePinImageURL(_ venue: ClipVenue) -> String? {
-        let key = venue.logo?.key ?? venue.venueAttachment?.first?.key ?? ""
-        return key.isEmpty ? nil : key.imageURL
+        let imageKey = venue.venueAttachment?.first?.key ?? venue.logo?.key ?? ""
+        return imageKey.isEmpty ? nil : imageKey.imageURL
     }
 
     private func eventPinImageURL(_ event: Event) -> String? {
@@ -1081,6 +1081,13 @@ extension MapViewController: UITableViewDataSourcePrefetching {
 // MARK: - MKMapViewDelegate
 
 extension MapViewController: MKMapViewDelegate {
+
+    func mapView(
+        _ mapView: MKMapView,
+        rendererFor overlay: MKOverlay
+    ) -> MKOverlayRenderer {
+        mapView.speakEasyDarkOverlayRenderer(for: overlay) ?? MKOverlayRenderer(overlay: overlay)
+    }
 
     func mapView(
         _ mapView: MKMapView,

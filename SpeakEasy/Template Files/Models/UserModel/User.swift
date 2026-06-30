@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct User {
     
@@ -236,10 +237,71 @@ extension ImageDetail: Decodable, Encodable {
 struct MVPCity: Codable {
     var label: String
     var value: String
+    var lat: String?
+    var lng: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(label, forKey: .label)
         try container.encode(value, forKey: .value)
+        try container.encodeIfPresent(lat, forKey: .lat)
+        try container.encodeIfPresent(lng, forKey: .lng)
+    }
+}
+
+extension MVPCity {
+    var latitudeValue: CLLocationDegrees? {
+        guard let lat else { return nil }
+        return CLLocationDegrees(lat)
+    }
+
+    var longitudeValue: CLLocationDegrees? {
+        guard let lng else { return nil }
+        return CLLocationDegrees(lng)
+    }
+
+    var location: CLLocation? {
+        guard let latitudeValue,
+              let longitudeValue else {
+            return nil
+        }
+
+        return CLLocation(latitude: latitudeValue, longitude: longitudeValue)
+    }
+
+    static func matching(locality: String?, in cities: [MVPCity]) -> MVPCity? {
+        let normalizedLocality = locality?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            .lowercased()
+
+        guard let normalizedLocality,
+              !normalizedLocality.isEmpty else {
+            return nil
+        }
+
+        return cities.first { city in
+            let value = city.value
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                .lowercased()
+
+            let label = city.label
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                .lowercased()
+
+            return value == normalizedLocality || label == normalizedLocality
+        }
+    }
+
+    static func nearest(to location: CLLocation, in cities: [MVPCity]) -> MVPCity? {
+        cities
+            .compactMap { city -> (city: MVPCity, distance: CLLocationDistance)? in
+                guard let cityLocation = city.location else { return nil }
+                return (city, cityLocation.distance(from: location))
+            }
+            .min { $0.distance < $1.distance }?
+            .city
     }
 }

@@ -57,6 +57,8 @@ final class PinterestLayout: UICollectionViewLayout {
     var lineSpacing: CGFloat = 22
 
     var showsHeaders = false
+
+    var headerToItemsSpacing: CGFloat = 8
     
     var headerElementKind =
         UICollectionView.elementKindSectionHeader
@@ -177,7 +179,7 @@ final class PinterestLayout: UICollectionViewLayout {
                 yOffsets =
                 Array(
                     repeating:
-                        headerAttributes.frame.maxY + 8,
+                        headerAttributes.frame.maxY + headerToItemsSpacing,
                     count: numberOfColumns
                 )
             }

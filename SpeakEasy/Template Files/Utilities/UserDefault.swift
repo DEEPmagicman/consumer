@@ -137,6 +137,19 @@ final class UserDefault {
         set { setValue(newValue, for: .isVersionV3Key) }
     }
     
+    var hasPrimaryLocation: Bool {
+        primaryCity != nil
+    }
+    
+    func setPrimaryCity(_ city: String) {
+        let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedCity.isEmpty else { return }
+
+        set { setValue(UserDefaultKey.localCity.rawValue, for: .trimmedCity) }
+        defaultCitySelected = true
+        citySubject.send(trimmedCity)
+    }
+    
     var hasSeenPremiumIntro: Bool? {
         get { getValue(for: .hasSeenPremiumIntro) ?? false }
         set { setValue(newValue, for: .hasSeenPremiumIntro) }
@@ -165,11 +178,18 @@ final class UserDefault {
     }
     
     var activeCity: String {
-        if let city = filterCity, !city.isEmpty {
-            return city
+        let temporaryCity = filterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let temporaryCity,
+           !temporaryCity.isEmpty {
+            return temporaryCity
         }
 
-        return localCity.isEmpty ? "Chicago" : localCity
+        let primaryCity = localCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return primaryCity.isEmpty ? "Chicago" : primaryCity
     }
     
     // MARK: - Selected Venue

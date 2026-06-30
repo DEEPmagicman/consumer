@@ -144,7 +144,7 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        bottomContainer.layer.cornerRadius = 14
+        bottomContainer.layer.cornerRadius = 30
         buyBtn.layer.cornerRadius = buyBtn.bounds.height / 2
         updateAgreementHeights(animated: false)
     }
@@ -331,7 +331,7 @@ private extension PremiumTableCheckoutVC {
         bottomBar.addSubview(sep)
 
         bottomContainer.backgroundColor = .white
-        bottomContainer.layer.cornerRadius = 14
+        bottomContainer.layer.cornerRadius = 30
         bottomContainer.layer.cornerCurve = .continuous
         bottomContainer.clipsToBounds = true
         bottomContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -370,7 +370,7 @@ private extension PremiumTableCheckoutVC {
         view.addSubview(bottomBar)
 
         NSLayoutConstraint.activate([
-            sep.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 22),
+            sep.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 0),
             sep.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
             sep.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
             sep.heightAnchor.constraint(equalToConstant: 0.5),
@@ -564,7 +564,7 @@ private extension PremiumTableCheckoutVC {
             bottomBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomBar.heightAnchor.constraint(equalToConstant: 128)
+            bottomBar.heightAnchor.constraint(equalToConstant: 106)
         ])
 
         paymentTopToSpendConstraint   = paymentRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 8)

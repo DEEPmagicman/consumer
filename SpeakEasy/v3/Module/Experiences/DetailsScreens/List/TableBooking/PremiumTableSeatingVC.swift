@@ -78,7 +78,7 @@ final class PremiumTableSeatingVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        bottomCheckoutCard.layer.cornerRadius = 14
+        bottomCheckoutCard.layer.cornerRadius = 30
         bottomCheckoutCard.layer.masksToBounds = true
         checkoutBtn.layer.cornerRadius = 24
         checkoutBtn.layer.masksToBounds = true
@@ -230,7 +230,7 @@ private extension PremiumTableSeatingVC {
         bottomBar.addSubview(sep)
 
         bottomCheckoutCard.backgroundColor = .white
-        bottomCheckoutCard.layer.cornerRadius = 14
+        bottomCheckoutCard.layer.cornerRadius = 30
         bottomCheckoutCard.layer.cornerCurve = .continuous
         bottomCheckoutCard.layer.masksToBounds = true
         bottomCheckoutCard.clipsToBounds = true

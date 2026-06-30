@@ -551,6 +551,15 @@ struct APIBuilder {
 
         return v3baseURL + route + "/artists/\(encodedArtistId)/events"
     }
+
+    static func artistVenueEventsURL(artistId: String) -> String {
+        let encodedArtistId =
+        artistId.addingPercentEncoding(
+            withAllowedCharacters: .urlPathAllowed
+        ) ?? artistId
+
+        return v3baseURL + route + "/artists/\(encodedArtistId)/venue-events"
+    }
     
     static var venueListURL: String {
         baseURL + route + venue + coverVenue

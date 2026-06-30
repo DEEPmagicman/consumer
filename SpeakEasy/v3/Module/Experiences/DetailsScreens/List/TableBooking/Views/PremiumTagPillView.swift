@@ -80,7 +80,7 @@ final class PremiumTagPillView: UIView {
         case .guests:
             iconView.image = UIImage(resource: .guestIcon).withRenderingMode(.alwaysTemplate)
         case .time:
-            iconView.image = UIImage(resource: .icClock1).withRenderingMode(.alwaysTemplate)
+            iconView.image = UIImage(resource: .clockIcon).withRenderingMode(.alwaysTemplate)
         }
     }
 }
@@ -1378,7 +1378,10 @@ final class PremiumPromoRow: UIView {
 
     private func setup() {
         card.translatesAutoresizingMaskIntoConstraints = false
-        card.backgroundColor = .clear
+        card.backgroundColor = UIColor.white.withAlphaComponent(0.06)
+        card.layer.cornerRadius = PremiumTableCornerRadius.card
+        card.layer.borderWidth = 1
+        card.layer.borderColor = UIColor(hex: "#FFFFFF", alpha: 0.12).cgColor
         addSubview(card)
 
         titleRow.translatesAutoresizingMaskIntoConstraints = false
@@ -1628,6 +1631,12 @@ final class PremiumPromoRow: UIView {
     }
 
     private func updatePromoBorderState() {
+        card.layer.borderWidth = isApplied ? 0 : 1
+        card.layer.borderColor = UIColor(hex: "#FFFFFF", alpha: 0.12).cgColor
+        card.backgroundColor = isApplied
+            ? .clear
+            : UIColor.white.withAlphaComponent(0.06)
+
         textFieldWrapper.layer.borderWidth = isApplied ? 0 : 1
         appliedFieldWrap.layer.borderWidth = isApplied ? 0 : 1
     }

@@ -140,6 +140,10 @@ final class DiscoverVC: UIViewController {
         shimmerView.startShimmer()
     }
 
+    func refreshLocationFromDefaults() {
+        applyCityFilter(UserDefault.shared.filterCity)
+    }
+
     private func updateDateSelectionUI() {
 
         let startDate = self.startDate?.convertDateFormat(

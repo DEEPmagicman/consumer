@@ -291,25 +291,31 @@ final class DiscoverService {
         let trimmedArtistId = artistId.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedVenueId = venueId.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !trimmedArtistId.isEmpty,
-              !trimmedVenueId.isEmpty else {
+        guard !trimmedArtistId.isEmpty else {
             completion(
                 false,
-                "Artist or venue not found",
+                "Artist not found",
                 nil
             )
             return
         }
 
-        let params: [String: Any] = [
-            "venueId": trimmedVenueId,
+        var params: [String: Any] = [
             "startDateTime": startDateTime,
             "skip": skip,
             "take": take
         ]
 
+        if !trimmedVenueId.isEmpty {
+            params["venueId"] = trimmedVenueId
+        }
+
+        let url = trimmedVenueId.isEmpty
+            ? APIBuilder.artistEventsURL(artistId: trimmedArtistId)
+            : APIBuilder.artistVenueEventsURL(artistId: trimmedArtistId)
+
         AFWrapper.getRequest(
-            APIBuilder.artistEventsURL(artistId: trimmedArtistId),
+            url,
             params: params,
             headers: Header.header(timeZone: timeZone)
         ) { response in

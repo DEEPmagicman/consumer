@@ -3437,6 +3437,13 @@ extension EventDetailsVC: YTPlayerViewDelegate {
 
 extension EventDetailsVC: MKMapViewDelegate {
 
+    func mapView(
+        _ mapView: MKMapView,
+        rendererFor overlay: MKOverlay
+    ) -> MKOverlayRenderer {
+        mapView.speakEasyDarkOverlayRenderer(for: overlay) ?? MKOverlayRenderer(overlay: overlay)
+    }
+
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? EventDetailsMapAnnotation else {
             return nil

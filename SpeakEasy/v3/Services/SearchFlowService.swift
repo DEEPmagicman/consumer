@@ -10,6 +10,7 @@ import Foundation
 struct SearchFlowResult {
     let venues: [SearchVenueItem]
     let events: [SearchEventItem]
+    let artists: [SearchArtistItem]
     let hasMoreVenues: Bool
     let hasMoreEvents: Bool
 }
@@ -37,7 +38,9 @@ final class SearchFlowService {
         var params: [String: Any] = [
             "search": trimmedKeyword,
             "eventSkip": eventSkip,
-            "eventTake": eventTake
+            "eventTake": eventTake,
+            "artistSkip": 0,
+            "artistTake": 10
         ]
 
         if venueTake != 0 {
@@ -58,6 +61,7 @@ final class SearchFlowService {
                     SearchFlowResult(
                         venues: [],
                         events: [],
+                        artists: [],
                         hasMoreVenues: false,
                         hasMoreEvents: false
                     )
@@ -81,14 +85,23 @@ final class SearchFlowService {
                 "eventData"
             ])
 
+            let artistPage =
+            Self.page(from: responseDic, keys: [
+                "artists",
+                "artist",
+                "artistList",
+                "artistData"
+            ])
+
             let venueList = Self.list(from: venuePage)
             let eventList = Self.list(from: eventPage)
+            let artistList = Self.list(from: artistPage)
 
             let venues = Self.parseVenues(venueList).map {
                 SearchVenueItem(
                     id: $0.uniqueId,
                     name: $0.name,
-                    imageURL: ($0.logo?.key ?? $0.venueAttachment?.first?.key)?.imageURL,
+                    imageURL: Self.mediaURL($0.logo?.key ?? $0.venueAttachment?.first?.key),
                     venue: $0
                 )
             }
@@ -98,11 +111,16 @@ final class SearchFlowService {
                     id: $0.uniqueId ?? $0.id,
                     title: $0.title,
                     dateText: Self.displayDate(for: $0),
-                    imageURL: ($0.flyer?.key ?? "").imageURL,
+                    imageURL: Self.mediaURL($0.flyer?.key),
                     venueName: $0.venue?.name,
                     event: $0
                 )
             }
+
+            let artists = Self.makeArtistItems(
+                from: Self.parseArtists(artistList),
+                events: events.compactMap(\.event)
+            )
 
             completion(
                 true,
@@ -110,6 +128,7 @@ final class SearchFlowService {
                 SearchFlowResult(
                     venues: venues,
                     events: events,
+                    artists: artists,
                     hasMoreVenues: Self.hasMore(from: venuePage, loadedCount: venues.count, requestedTake: venueTake),
                     hasMoreEvents: Self.hasMore(from: eventPage, loadedCount: events.count, requestedTake: eventTake)
                 )
@@ -126,6 +145,7 @@ final class SearchFlowService {
                     SearchFlowResult(
                         venues: [],
                         events: [],
+                        artists: [],
                         hasMoreVenues: false,
                         hasMoreEvents: false
                     )
@@ -139,6 +159,7 @@ final class SearchFlowService {
                 SearchFlowResult(
                     venues: [],
                     events: [],
+                    artists: [],
                     hasMoreVenues: false,
                     hasMoreEvents: false
                 )
@@ -191,7 +212,7 @@ final class SearchFlowService {
                 SearchVenueItem(
                     id: $0.uniqueId,
                     name: $0.name,
-                    imageURL: ($0.logo?.key ?? $0.venueAttachment?.first?.key)?.imageURL,
+                    imageURL: Self.mediaURL($0.logo?.key ?? $0.venueAttachment?.first?.key),
                     venue: $0
                 )
             }
@@ -340,6 +361,52 @@ private extension SearchFlowService {
         ?? []
     }
 
+    static func parseArtists(_ list: [[String: Any]]) -> [Artists] {
+
+        decode([Artists].self, from: list)
+        ?? decode([ArtistData].self, from: list)?.map(\.artist)
+        ?? decode(
+            [Artists].self,
+            from: list.map {
+                normalizedArtist(($0["artist"] as? [String: Any]) ?? $0)
+            }
+        )
+        ?? []
+    }
+
+    static func makeArtistItems(
+        from artists: [Artists],
+        events: [Event]
+    ) -> [SearchArtistItem] {
+
+        var seenIds = Set<String>()
+        var items: [SearchArtistItem] = []
+
+        func append(_ artist: Artists) {
+            guard artist.status == "ENABLED" else { return }
+            let id = artist.id ?? artist.name
+            guard !seenIds.contains(id) else { return }
+
+            seenIds.insert(id)
+            items.append(
+                SearchArtistItem(
+                    id: id,
+                    name: artist.name,
+                    imageURL: mediaURL(artist.artistImage?.key),
+                    artist: artist
+                )
+            )
+        }
+
+        artists.forEach(append)
+        events
+            .flatMap { $0.eventHasArtist ?? [] }
+            .map(\.artist)
+            .forEach(append)
+
+        return items
+    }
+
     static func decode<T: Decodable>(
         _ type: T.Type,
         from object: Any
@@ -434,6 +501,37 @@ private extension SearchFlowService {
         media["description"] = media["description"] ?? ""
 
         return media
+    }
+
+    static func normalizedArtist(
+        _ dictionary: [String: Any]
+    ) -> [String: Any] {
+
+        var artist = dictionary
+        artist["id"] = stringValue(artist["id"])
+        artist["name"] = stringValue(artist["name"])
+        artist["instagramUsername"] = stringValue(artist["instagramUsername"])
+        artist["status"] = stringValue(artist["status"], fallback: "ENABLED")
+
+        if let image = artist["artistImage"] as? [String: Any] {
+            artist["artistImage"] = normalizedMedia(image)
+        } else if artist["artistImage"] is NSNull {
+            artist["artistImage"] = nil
+        }
+
+        return artist
+    }
+
+    static func mediaURL(_ key: String?) -> String? {
+
+        guard let key = key?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !key.isEmpty else { return nil }
+
+        if key.lowercased().hasPrefix("http") {
+            return key
+        }
+
+        return key.imageURL
     }
 
     static func stringValue(
