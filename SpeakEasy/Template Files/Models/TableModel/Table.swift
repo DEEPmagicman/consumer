@@ -145,6 +145,7 @@ struct TableBooking: Codable {
     let updatedAt: String
     let notes: String?
     let eventPromoCodeId: String?
+    let spendAgreement: PriceBreakdown?
     let tableBookingPriceBreakdown: PriceBreakdown?
 }
 
@@ -161,11 +162,13 @@ struct PriceBreakdown: Codable {
     let stripeFees: Double?
     let total: Double?
     let tableBookingPriceBreakdownHasCustomFees: [TableCustomFee]?
+    let customFees: [TableCustomFee]?
+    let balanceDueAtVenue: Double?
 
     enum CodingKeys: String, CodingKey {
         case id, base, discount, gratuity, gratuityName, salesTax, salesTaxName
         case seFees, stripeFees, total
-        case tableBookingPriceBreakdownHasCustomFees
+        case tableBookingPriceBreakdownHasCustomFees, customFees, balanceDueAtVenue
     }
 
     init(from decoder: Decoder) throws {
@@ -181,6 +184,7 @@ struct PriceBreakdown: Codable {
 
         stripeFees = try container.decodeFlexibleDouble(forKey: .stripeFees)
         total = try container.decodeFlexibleDouble(forKey: .total)
+        balanceDueAtVenue = try container.decodeFlexibleDouble(forKey: .balanceDueAtVenue)
 
         gratuityName = try? container.decode(String.self, forKey: .gratuityName)
         salesTaxName = try? container.decode(String.self, forKey: .salesTaxName)
@@ -188,6 +192,7 @@ struct PriceBreakdown: Codable {
         tableBookingPriceBreakdownHasCustomFees =
             try? container.decode([TableCustomFee].self,
                                   forKey: .tableBookingPriceBreakdownHasCustomFees)
+        customFees = try? container.decode([TableCustomFee].self, forKey: .customFees)
     }
 }
 
@@ -195,11 +200,13 @@ struct TableCustomFee: Codable {
     let id: String?
     let name: String?
     let fee: Double?
+    let customFeeName: String?
+    let customFee: Double?
     let createdAt: String?
     let tableBookingPriceBreakdownId: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, name, fee, createdAt, tableBookingPriceBreakdownId
+        case id, name, fee, customFeeName, customFee, createdAt, tableBookingPriceBreakdownId
     }
 
     init(from decoder: Decoder) throws {
@@ -208,6 +215,8 @@ struct TableCustomFee: Codable {
         id = try? container.decode(String.self, forKey: .id)
         name = try? container.decode(String.self, forKey: .name)
         fee = try container.decodeFlexibleDouble(forKey: .fee)
+        customFeeName = try? container.decode(String.self, forKey: .customFeeName)
+        customFee = try container.decodeFlexibleDouble(forKey: .customFee)
         createdAt = try? container.decode(String.self, forKey: .createdAt)
         tableBookingPriceBreakdownId =
             try? container.decode(String.self, forKey: .tableBookingPriceBreakdownId)
@@ -289,7 +298,7 @@ struct Layout3DMap: Codable {
 }
 struct TableBookingConfirmResponse: Codable {
     let reservations: [Reservation]
-    let tableBooking: ConfirmedTableBooking
+    let tableBooking: ConfirmedTableBooking?
 }
 
 struct Reservation: Codable {
@@ -298,6 +307,7 @@ struct Reservation: Codable {
     let venueId: String?
     let date: String?
     let guests: ReservationGuests?
+    let guestsTotal: Int?
     let minimumType: String?
     let comps: Double?
     let compsType: String?
@@ -335,6 +345,11 @@ struct Reservation: Codable {
     let totalSpend: Double?
     let requiredPayment: Bool?
     let sendReservationReminder: Bool?
+    let subTotalSpend: Double?
+    let timeSlot: TableTimeSlot?
+    let tableBooking: ConfirmedTableBooking?
+    let venue: ClipVenue?
+    let event: Event?
     let consumerUserHasBooking: [ConsumerUserBooking]?
     let seatingArrangement: ReservationSeatingArrangement?
 }
@@ -412,6 +427,7 @@ struct ConfirmedTableBooking: Codable {
     let eventPromoCodeId: String?
     let promotionLinkId: String?
     let isMigrated: Bool?
+    let spendAgreement: PriceBreakdown?
     let reservations: [Reservation]?
     let tableBookingDetails: TableBookingDetails?
     let tableBookingHasItems: [TableBookingItem]?

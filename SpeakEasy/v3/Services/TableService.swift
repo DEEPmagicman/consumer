@@ -568,8 +568,137 @@ final class TableService {
                     withJSONObject: dict
                 )
 
-                let decoded = try JSONDecoder().decode(
+                let decoded: TableBookingConfirmResponse
+                if let response = try? JSONDecoder().decode(
                     TableBookingConfirmResponse.self,
+                    from: data
+                ) {
+                    decoded = response
+                } else {
+                    let reservation = try JSONDecoder().decode(
+                        Reservation.self,
+                        from: data
+                    )
+                    decoded = TableBookingConfirmResponse(
+                        reservations: [reservation],
+                        tableBooking: reservation.tableBooking
+                    )
+                }
+
+                completion(
+                    true,
+                    nil,
+                    decoded
+                )
+
+            } catch {
+
+                completion(
+                    false,
+                    error.localizedDescription,
+                    nil
+                )
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(
+                    false,
+                    err.domain,
+                    nil
+                )
+
+                return
+            }
+
+            completion(
+                false,
+                error?.localizedDescription ?? "Something went wrong",
+                nil
+            )
+        }
+    }
+
+    // MARK: - Cancel Table Booking
+
+    func cancelTableBooking(
+        bookingId: String,
+        venueId: String?,
+        completion: @escaping (
+            _ success: Bool,
+            _ message: String?
+        ) -> Void
+    ) {
+
+        AFWrapper.putRequest(
+            APIBuilder.cancelTableBooking(bookingId),
+            headers: Header.header(venueId: venueId ?? "")
+        ) { _ in
+
+            completion(
+                true,
+                nil
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(
+                    false,
+                    err.domain
+                )
+
+                return
+            }
+
+            completion(
+                false,
+                error?.localizedDescription ?? "Something went wrong"
+            )
+        }
+    }
+
+    // MARK: - Consumer Reservation Details
+
+    func fetchConsumerReservation(
+        uniqueId: String,
+        completion: @escaping (
+            _ success: Bool,
+            _ message: String?,
+            _ reservation: Reservation?
+        ) -> Void
+    ) {
+
+        AFWrapper.postRequest(
+            APIBuilder.consumerReservationURL(uniqueId),
+            params: nil,
+            headers: Header.header()
+        ) { response in
+
+            guard let dict = response as? [String: Any] else {
+
+                completion(
+                    false,
+                    "Invalid response",
+                    nil
+                )
+
+                return
+            }
+
+            do {
+
+                let data = try JSONSerialization.data(
+                    withJSONObject: dict
+                )
+
+                let decoded = try JSONDecoder().decode(
+                    Reservation.self,
                     from: data
                 )
 

@@ -36,6 +36,14 @@ struct Booking: Codable {
     var addOnsBookingId: String?
     var bookingHasCheckIn: [BookingHasCheckIn]?
     var bookingDetails: BookingDetails?
+    var uniqueId: String?
+    var date: String?
+    var time: String?
+    var guests: ReservationGuests?
+    var guestsTotal: Int?
+    var minimum: Double?
+    var seatingArea: String?
+    var tableBooking: ConfirmedTableBooking?
     
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
@@ -92,6 +100,14 @@ struct Booking: Codable {
         case addOnsBookingId
         case bookingHasCheckIn
         case bookingDetails
+        case uniqueId
+        case date
+        case time
+        case guests
+        case guestsTotal
+        case minimum
+        case seatingArea
+        case tableBooking
     }
 
     func encode(to encoder: Encoder) throws {
@@ -123,6 +139,14 @@ struct Booking: Codable {
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encodeIfPresent(bookingHasCheckIn, forKey: .bookingHasCheckIn)
         try container.encodeIfPresent(bookingDetails, forKey: .bookingDetails)
+        try container.encodeIfPresent(uniqueId, forKey: .uniqueId)
+        try container.encodeIfPresent(date, forKey: .date)
+        try container.encodeIfPresent(time, forKey: .time)
+        try container.encodeIfPresent(guests, forKey: .guests)
+        try container.encodeIfPresent(guestsTotal, forKey: .guestsTotal)
+        try container.encodeIfPresent(minimum, forKey: .minimum)
+        try container.encodeIfPresent(seatingArea, forKey: .seatingArea)
+        try container.encodeIfPresent(tableBooking, forKey: .tableBooking)
     }
     
     init(from decoder: Decoder) throws {
@@ -264,6 +288,46 @@ struct Booking: Codable {
         bookingDetails = try container.decodeIfPresent(
             BookingDetails.self,
             forKey: .bookingDetails
+        )
+
+        uniqueId = try container.decodeIfPresent(
+            String.self,
+            forKey: .uniqueId
+        )
+
+        date = try container.decodeIfPresent(
+            String.self,
+            forKey: .date
+        )
+
+        time = try container.decodeIfPresent(
+            String.self,
+            forKey: .time
+        )
+
+        guests = try container.decodeIfPresent(
+            ReservationGuests.self,
+            forKey: .guests
+        )
+
+        guestsTotal = try container.decodeIfPresent(
+            Int.self,
+            forKey: .guestsTotal
+        )
+
+        minimum = try container.decodeIfPresent(
+            Double.self,
+            forKey: .minimum
+        )
+
+        seatingArea = try container.decodeIfPresent(
+            String.self,
+            forKey: .seatingArea
+        )
+
+        tableBooking = try container.decodeIfPresent(
+            ConfirmedTableBooking.self,
+            forKey: .tableBooking
         )
     }
 }

@@ -245,7 +245,17 @@ struct APIBuilder {
     static func seatingAreaBookingConfirmURL(eventId: String) -> String {
         return SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + bookingConfirm
     }
-    
+
+    static func consumerReservationURL(_ uniqueId: String) -> String {
+        let encoded = uniqueId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? uniqueId
+        return SharedURL.tableBaseURL + route + reservation + "/\(encoded)"
+    }
+
+    static func cancelTableBooking(_ bookingId: String) -> String {
+        let encoded = bookingId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? bookingId
+        return SharedURL.tableBaseURL + route + event + "/\(encoded)" + redirect + ticketBooking
+    }
+
     static func layoutURL(date: String) -> String {
         let base = SharedURL.tableBaseURL + "/consumer/layout"
         let qry = "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"

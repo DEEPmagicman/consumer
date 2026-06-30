@@ -158,6 +158,17 @@ final class TablesOrdersVC: BaseOrdersGridVC {
     }
 
     override func didSelect(_ booking: Booking) {
-        Navigate.to.scanQR(self, bookingId: booking.id, booking: booking, addOnsBookingId: "")
+        guard let uniqueId = booking.uniqueId,
+              !uniqueId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            Alert.showToast("Reservation details not found")
+            return
+        }
+
+        let vc = PremiumTableReservationConfirmationVC()
+        vc.reservationUniqueId = uniqueId
+        vc.tableBookingId = booking.tableBooking?.id ?? booking.id
+        vc.sourceBooking = booking
+        vc.event = booking.event
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

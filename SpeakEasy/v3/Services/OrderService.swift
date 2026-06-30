@@ -139,12 +139,16 @@ final class OrderService {
             "take": 8,
             "include": [
                 "venue",
+                "venue.venueSettings",
                 "venue.venueAttachment",
                 "event",
                 "event.flyer",
+                "event.venue.venueSettings",
                 "seatingArrangement",
                 "tableBooking",
-                "tableBooking.tableBookingHasItems"
+                "tableBooking.tableBookingHasItems",
+                "tableBooking.tableBookingPriceBreakdown",
+                "tableBooking.spendAgreement"
             ],
             "orderBy": "createdAt|desc"
         ]
@@ -199,12 +203,16 @@ final class OrderService {
             "take": 8,
             "include": [
                 "venue",
+                "venue.venueSettings",
                 "venue.venueAttachment",
                 "event",
                 "event.flyer",
+                "event.venue.venueSettings",
                 "seatingArrangement",
                 "tableBooking",
-                "tableBooking.tableBookingHasItems"
+                "tableBooking.tableBookingHasItems",
+                "tableBooking.tableBookingPriceBreakdown",
+                "tableBooking.spendAgreement"
             ],
             "orderBy": "createdAt|desc"
         ]

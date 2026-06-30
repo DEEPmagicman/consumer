@@ -382,9 +382,9 @@ class EventDetailsVC: UIViewController {
     }
 
     private func setupEventDetailsTypography() {
-        titleLbl.font = Constant.Font.geistMedium(size: 22)
+        titleLbl.font = Constant.Font.geistMedium(size: 20)
         eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 18)
-        venueTitleLbl.font = Constant.Font.geistSemiBold(size: 12)
+        venueTitleLbl.font = Constant.Font.geistMedium(size: 12)
         venueName.font = Constant.Font.geistMedium(size: 14)
         venueNameLbl.font = Constant.Font.geistMedium(size: 18)
         updateVenueLogoCornerRadius()

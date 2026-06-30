@@ -78,7 +78,7 @@ final class PremiumTableSeatingVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        bottomCheckoutCard.layer.cornerRadius = max(32, bottomCheckoutCard.bounds.height / 2)
+        bottomCheckoutCard.layer.cornerRadius = 14
         bottomCheckoutCard.layer.masksToBounds = true
         checkoutBtn.layer.cornerRadius = 24
         checkoutBtn.layer.masksToBounds = true
@@ -131,6 +131,8 @@ private extension PremiumTableSeatingVC {
         titleLabel.text = "Table seating"
         titleLabel.font = Constant.Font.geistMedium(size: 16)
         titleLabel.textColor = .white
+        titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         titleRow.translatesAutoresizingMaskIntoConstraints = false
@@ -213,9 +215,7 @@ private extension PremiumTableSeatingVC {
         spendAgreementView.isHidden = true
         spendAgreementView.onHeightChanged = { [weak self] height in
             self?.spendAgreementHeightConstraint?.constant = height
-            UIView.animate(withDuration: 0.24) {
-                self?.view.layoutIfNeeded()
-            }
+            self?.view.layoutIfNeeded()
         }
         contentView.addSubview(spendAgreementView)
     }
@@ -230,7 +230,7 @@ private extension PremiumTableSeatingVC {
         bottomBar.addSubview(sep)
 
         bottomCheckoutCard.backgroundColor = .white
-        bottomCheckoutCard.layer.cornerRadius = 32
+        bottomCheckoutCard.layer.cornerRadius = 14
         bottomCheckoutCard.layer.cornerCurve = .continuous
         bottomCheckoutCard.layer.masksToBounds = true
         bottomCheckoutCard.clipsToBounds = true
@@ -412,7 +412,7 @@ private extension PremiumTableSeatingVC {
             priceTopToArrival,
             priceCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             priceCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            priceCard.heightAnchor.constraint(equalToConstant: 72),
+            priceCard.heightAnchor.constraint(equalToConstant: 68),
 
             // Spend agreement
             spendTopToPrice,
@@ -474,8 +474,9 @@ private extension PremiumTableSeatingVC {
     func updatePricing() {
         let minVal = activeMinimum()
         let deposit = calculateDeposit()
-        priceCard.configure(minimum: minVal, deposit: deposit)
-        bottomPriceLabel.text = "$\(String(format: "%.2f", deposit))"
+        let currency = event?.venue?.venueSettings?.currencySymbol ?? "$"
+        priceCard.configure(minimum: minVal, deposit: deposit, currency: currency)
+        bottomPriceLabel.text = "\(currency)\(String(format: "%.2f", deposit))"
         configureSpendAgreement(minimum: minVal, deposit: deposit)
     }
 
@@ -525,7 +526,7 @@ private extension PremiumTableSeatingVC {
 
         lastDepositProcessingFees = feeResult.totalProcessingFees
 
-        return max(0, feeResult.amountChargedToConsumer - feeResult.salesTax)
+        return max(0, feeResult.amountChargedToConsumer)
     }
 
     func configureSpendAgreement(minimum: Double, deposit: Double) {
@@ -553,10 +554,7 @@ private extension PremiumTableSeatingVC {
         let gratuity = calculateGratuityFees(for: minimum, settings: settings)
         let processingFees = feeResult.totalProcessingFees
         let total = feeResult.amountChargedToConsumer
-        let depositProcessingAdjustment = event?.venue?.venueSettings?.tableBookingSettings?.isProcessingFeePassToCustomer == true
-            ? lastDepositProcessingFees
-            : 0
-        let balanceDue = max(0, total - (deposit - depositProcessingAdjustment))
+        let balanceDue = max(0, total - deposit)
 
         var items: [SpendLineItem] = [
             .init(title: "Subtotal", amount: minimum, isBold: false)
@@ -586,15 +584,13 @@ private extension PremiumTableSeatingVC {
     }
 
     func configureTimeSlots(for area: SeatingArea) {
-        let slots = area.bookingType == .timeWise
-            ? (area.timeSlots ?? [])
-                .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
-                .sorted { (lhs, rhs) in
-                    (lhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
-                    <
-                    (rhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
-                }
-            : []
+        let slots = (area.timeSlots ?? [])
+            .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
+            .sorted { (lhs, rhs) in
+                (lhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
+                <
+                (rhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
+            }
 
         let slotOptions = slots.compactMap { slot -> (slot: TableTimeSlot, option: PremiumArrivalTimeOption)? in
             let title = formattedTime(slot.startTime)
@@ -628,7 +624,7 @@ private extension PremiumTableSeatingVC {
     }
 
     func timeTagText(for area: SeatingArea) -> String? {
-        if area.bookingType == .timeWise {
+        if !availableTimeSlots.isEmpty {
             return availableTimeRangeText()
         }
 
@@ -643,7 +639,7 @@ private extension PremiumTableSeatingVC {
         guard let first = availableTimeSlots.first else { return nil }
         let startText = formattedTime(first.startTime)
         guard let last = availableTimeSlots.last else { return startText }
-        let endText = formattedTime(last.endTime ?? last.startTime)
+        let endText = formattedTime(last.startTime)
 
         if startText.isEmpty { return nil }
         if endText.isEmpty || startText == endText { return startText }
@@ -700,7 +696,7 @@ private extension PremiumTableSeatingVC {
         TablePresenter.createSeatingAreaBooking(
             eventId:      event.id ?? "",
             seatingAreaId: area.id ?? "",
-            timeSlotId:   area.bookingType == .default ? nil : selectedTimeSlot?.id,
+            timeSlotId:   selectedTimeSlot?.id,
             venueId:      event.venue?.id ?? "",
             guests:       currentGuestCount,
             queueId:      queueId
@@ -716,8 +712,7 @@ private extension PremiumTableSeatingVC {
                     vc.guestCount    = self.currentGuestCount
                     vc.selectedTimeSlot = self.selectedTimeSlot
                     vc.selectedTimeText = self.selectedTimeSlot.map { self.formattedTime($0.startTime) }
-                    vc.spendAgreementItems = self.currentSpendAgreementItems
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    self.navigationController?.pushViewController(vc, animated: false)
                 } else {
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }

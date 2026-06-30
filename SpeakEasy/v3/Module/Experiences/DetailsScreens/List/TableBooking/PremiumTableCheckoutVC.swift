@@ -20,7 +20,6 @@ final class PremiumTableCheckoutVC: UIViewController {
     var guestCount: Int = 0
     var selectedTimeSlot: TableTimeSlot?
     var selectedTimeText: String?
-    var spendAgreementItems: [SpendLineItem] = []
 
     // MARK: - Private
 
@@ -31,12 +30,15 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var paymentId            = ""
     private var paymentSheet: PaymentSheet?
     private var isPaymentInitiated   = false
+    private var isCancellingBooking  = false
+    private var didFinishBooking      = false
     private var isFreeBooking        = false
     private var isPromoApplied       = false
     private var appliedPromo         = ""
     private var feesAndTaxes: [FeeDisplayItem] = []
     private var checkoutItems: [TableBookingCheckoutItem] = []
-    private var timerSeconds         = 600
+    private var backendSpendAgreementItems: [SpendLineItem] = []
+    private var timerSeconds         = 300
     private var timer: Timer?
     private let tableService         = TableService()
 
@@ -51,6 +53,7 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     // Header
     private let eventTitleLabel  = UILabel()
+    private let eventTitleMarqueeLabel = PremiumMarqueeLabel()
     private let venueLabel       = UILabel()
     private let dateLabel        = UILabel()
     private let headerDivider    = UIView()
@@ -64,10 +67,6 @@ final class PremiumTableCheckoutVC: UIViewController {
     private let tagsRow          = UIView()
     private let guestTag         = PremiumTagPillView()
     private let timeTag          = PremiumTagPillView()
-
-    // Shimmer
-    private let shimmerContainer = UIView()
-    private let shimmerStack     = UIStackView()
 
     // Guest row
     private let guestDisplayRow  = PremiumInfoRow()
@@ -85,6 +84,9 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var paymentTopToSpendConstraint: NSLayoutConstraint?
     private var paymentTopToDepositConstraint: NSLayoutConstraint?
     private var paymentTopToSummaryConstraint: NSLayoutConstraint?
+    private var promoTopToSpendConstraint: NSLayoutConstraint?
+    private var promoTopToDepositConstraint: NSLayoutConstraint?
+    private var promoTopToSummaryConstraint: NSLayoutConstraint?
     private var paymentHeightConstraint: NSLayoutConstraint?
     private var promoHeightConstraint: NSLayoutConstraint?
     private var termsHeightConstraint: NSLayoutConstraint?
@@ -102,6 +104,10 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     // Timer
     private let timerBanner      = PremiumTimerBannerView()
+
+    // Loading overlay
+    private let loadingOverlay   = UIView()
+    private let loadingStack     = UIStackView()
 
     // Bottom bar
     private let bottomBar        = UIView()
@@ -124,13 +130,21 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        timer?.invalidate()
-        BookingQueueSocketManager.shared.disconnect()
+        let isClosing = isMovingFromParent
+            || isBeingDismissed
+            || navigationController?.isBeingDismissed == true
+        if isClosing || didFinishBooking {
+            timer?.invalidate()
+            BookingQueueSocketManager.shared.disconnect()
+        }
+        if isClosing, !didFinishBooking, !isPaymentInitiated {
+            cancelCurrentBooking(returnToPrevious: false)
+        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        bottomContainer.layer.cornerRadius = bottomContainer.bounds.height / 2
+        bottomContainer.layer.cornerRadius = 14
         buyBtn.layer.cornerRadius = buyBtn.bounds.height / 2
         updateAgreementHeights(animated: false)
     }
@@ -145,7 +159,6 @@ private extension PremiumTableCheckoutVC {
         setupHeader()
         setupSeatingTitle()
         setupTags()
-        setupShimmer()
         setupGuestDisplay()
         setupNoteRow()
         setupSpendCard()
@@ -156,6 +169,7 @@ private extension PremiumTableCheckoutVC {
         setupCheckboxes()
         setupTimerBanner()
         setupBottomBar()
+        setupLoadingOverlay()
         setupConstraints()
         showInitialContent()
     }
@@ -178,6 +192,7 @@ private extension PremiumTableCheckoutVC {
         eventTitleLabel.numberOfLines = 0
         eventTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(eventTitleLabel)
+        eventTitleMarqueeLabel.install(over: eventTitleLabel, in: contentView, height: 30, horizontalInset: 20)
 
         venueLabel.font      = Constant.Font.geistMedium(size: 12)
         venueLabel.textColor = UIColor.white.withAlphaComponent(0.55)
@@ -221,38 +236,6 @@ private extension PremiumTableCheckoutVC {
         contentView.addSubview(tagsRow)
     }
 
-    func setupShimmer() {
-        shimmerContainer.translatesAutoresizingMaskIntoConstraints = false
-        shimmerContainer.backgroundColor = .clear
-        contentView.addSubview(shimmerContainer)
-
-        shimmerStack.axis    = .vertical
-        shimmerStack.spacing = 10
-        shimmerStack.translatesAutoresizingMaskIntoConstraints = false
-        shimmerContainer.addSubview(shimmerStack)
-
-        func block(h: CGFloat, w: CGFloat? = nil) -> ShimmerViewV3 {
-            let v = ShimmerViewV3()
-            v.cornerRadius = 10
-            v.translatesAutoresizingMaskIntoConstraints = false
-            v.heightAnchor.constraint(equalToConstant: h).isActive = true
-            if let w { v.widthAnchor.constraint(equalToConstant: w).isActive = true }
-            return v
-        }
-
-        [block(h: 56), block(h: 72), block(h: 56), block(h: 56), block(h: 44, w: 200)].forEach {
-            shimmerStack.addArrangedSubview($0)
-            $0.startShimmer()
-        }
-
-        NSLayoutConstraint.activate([
-            shimmerStack.topAnchor.constraint(equalTo: shimmerContainer.topAnchor),
-            shimmerStack.leadingAnchor.constraint(equalTo: shimmerContainer.leadingAnchor),
-            shimmerStack.trailingAnchor.constraint(equalTo: shimmerContainer.trailingAnchor),
-            shimmerStack.bottomAnchor.constraint(equalTo: shimmerContainer.bottomAnchor)
-        ])
-    }
-
     func setupGuestDisplay() {
         guestDisplayRow.translatesAutoresizingMaskIntoConstraints = false
         guestDisplayRow.isHidden = true
@@ -264,9 +247,7 @@ private extension PremiumTableCheckoutVC {
         noteRow.isHidden = true
         noteRow.onHeightChanged = { [weak self] height in
             self?.noteHeightConstraint?.constant = height
-            UIView.animate(withDuration: 0.24) {
-                self?.view.layoutIfNeeded()
-            }
+            self?.view.layoutIfNeeded()
         }
         contentView.addSubview(noteRow)
     }
@@ -276,9 +257,7 @@ private extension PremiumTableCheckoutVC {
         spendCard.isHidden = true
         spendCard.onHeightChanged = { [weak self] height in
             self?.spendHeightConstraint?.constant = height
-            UIView.animate(withDuration: 0.24) {
-                self?.view.layoutIfNeeded()
-            }
+            self?.view.layoutIfNeeded()
         }
         contentView.addSubview(spendCard)
     }
@@ -288,9 +267,7 @@ private extension PremiumTableCheckoutVC {
         depositBreakdownCard.isHidden = true
         depositBreakdownCard.onHeightChanged = { [weak self] height in
             self?.depositBreakdownHeightConstraint?.constant = height
-            UIView.animate(withDuration: 0.24) {
-                self?.view.layoutIfNeeded()
-            }
+            self?.view.layoutIfNeeded()
         }
         contentView.addSubview(depositBreakdownCard)
     }
@@ -314,9 +291,7 @@ private extension PremiumTableCheckoutVC {
         promoRow.onRemove = { [weak self] in self?.removePromo() }
         promoRow.onHeightChanged = { [weak self] height in
             self?.promoHeightConstraint?.constant = height
-            UIView.animate(withDuration: 0.25) {
-                self?.view.layoutIfNeeded()
-            }
+            self?.view.layoutIfNeeded()
         }
         contentView.addSubview(promoRow)
     }
@@ -327,7 +302,7 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.translatesAutoresizingMaskIntoConstraints = false
         termsAgreementView.isHidden = true
         termsAgreementView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: true)
+            self?.updateAgreementHeights(animated: false)
         }
         contentView.addSubview(termsAgreementView)
 
@@ -336,7 +311,7 @@ private extension PremiumTableCheckoutVC {
         venueMessageView.translatesAutoresizingMaskIntoConstraints = false
         venueMessageView.isHidden = true
         venueMessageView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: true)
+            self?.updateAgreementHeights(animated: false)
         }
         contentView.addSubview(venueMessageView)
     }
@@ -356,6 +331,8 @@ private extension PremiumTableCheckoutVC {
         bottomBar.addSubview(sep)
 
         bottomContainer.backgroundColor = .white
+        bottomContainer.layer.cornerRadius = 14
+        bottomContainer.layer.cornerCurve = .continuous
         bottomContainer.clipsToBounds = true
         bottomContainer.translatesAutoresizingMaskIntoConstraints = false
 
@@ -393,15 +370,15 @@ private extension PremiumTableCheckoutVC {
         view.addSubview(bottomBar)
 
         NSLayoutConstraint.activate([
-            sep.topAnchor.constraint(equalTo: bottomBar.topAnchor),
-            sep.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor),
-            sep.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor),
+            sep.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 22),
+            sep.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
+            sep.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
             sep.heightAnchor.constraint(equalToConstant: 0.5),
 
             bottomContainer.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
             bottomContainer.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
-            bottomContainer.bottomAnchor.constraint(equalTo: bottomBar.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            bottomContainer.heightAnchor.constraint(equalToConstant: 64),
+            bottomContainer.topAnchor.constraint(equalTo: sep.bottomAnchor, constant: 22),
+            bottomContainer.bottomAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: -20),
 
             stack.leadingAnchor.constraint(equalTo: bottomContainer.leadingAnchor, constant: 20),
             stack.centerYAnchor.constraint(equalTo: bottomContainer.centerYAnchor),
@@ -413,6 +390,55 @@ private extension PremiumTableCheckoutVC {
 
             buyLoader.centerXAnchor.constraint(equalTo: buyBtn.centerXAnchor),
             buyLoader.centerYAnchor.constraint(equalTo: buyBtn.centerYAnchor)
+        ])
+    }
+
+    func setupLoadingOverlay() {
+        loadingOverlay.backgroundColor = UIColor(hex: "#111111")
+        loadingOverlay.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadingOverlay)
+
+        loadingStack.axis = .vertical
+        loadingStack.spacing = 14
+        loadingStack.translatesAutoresizingMaskIntoConstraints = false
+        loadingOverlay.addSubview(loadingStack)
+
+        func block(_ height: CGFloat, width: CGFloat? = nil, radius: CGFloat = 16) -> ShimmerViewV3 {
+            let shimmer = ShimmerViewV3()
+            shimmer.cornerRadius = radius
+            shimmer.translatesAutoresizingMaskIntoConstraints = false
+            shimmer.heightAnchor.constraint(equalToConstant: height).isActive = true
+            if let width {
+                shimmer.widthAnchor.constraint(equalToConstant: width).isActive = true
+            }
+            shimmer.startShimmer()
+            return shimmer
+        }
+
+        let header = UIStackView(arrangedSubviews: [
+            block(24, width: 220, radius: 12),
+            block(16, width: 140, radius: 8),
+            block(16, width: 190, radius: 8)
+        ])
+        header.axis = .vertical
+        header.alignment = .center
+        header.spacing = 10
+
+        loadingStack.addArrangedSubview(header)
+        loadingStack.addArrangedSubview(block(58, radius: 18))
+        loadingStack.addArrangedSubview(block(178, radius: 18))
+        loadingStack.addArrangedSubview(block(72, radius: 18))
+        loadingStack.addArrangedSubview(block(50, radius: 14))
+
+        NSLayoutConstraint.activate([
+            loadingOverlay.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingOverlay.bottomAnchor.constraint(equalTo: bottomBar.topAnchor),
+
+            loadingStack.topAnchor.constraint(equalTo: loadingOverlay.safeAreaLayoutGuide.topAnchor, constant: 84),
+            loadingStack.leadingAnchor.constraint(equalTo: loadingOverlay.leadingAnchor, constant: 20),
+            loadingStack.trailingAnchor.constraint(equalTo: loadingOverlay.trailingAnchor, constant: -20)
         ])
     }
 }
@@ -482,11 +508,6 @@ private extension PremiumTableCheckoutVC {
             timeTag.centerYAnchor.constraint(equalTo: tagsRow.centerYAnchor),
             timeTag.trailingAnchor.constraint(lessThanOrEqualTo: tagsRow.trailingAnchor),
 
-            // Shimmer
-            shimmerContainer.topAnchor.constraint(equalTo: tagsRow.bottomAnchor, constant: 16),
-            shimmerContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            shimmerContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-
             // Guest display
             guestDisplayRow.topAnchor.constraint(equalTo: tagsRow.bottomAnchor, constant: 16),
             guestDisplayRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -498,15 +519,15 @@ private extension PremiumTableCheckoutVC {
             noteRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             noteRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
-            // Spend card
-            spendCard.topAnchor.constraint(equalTo: noteRow.bottomAnchor, constant: 10),
-            spendCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            spendCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-
             // Deposit breakdown
-            depositBreakdownCard.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 10),
+            depositBreakdownCard.topAnchor.constraint(equalTo: noteRow.bottomAnchor, constant: 10),
             depositBreakdownCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             depositBreakdownCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
+            // Spend card
+            spendCard.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 10),
+            spendCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            spendCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             // Summary price card
             summaryPriceCard.topAnchor.constraint(equalTo: noteRow.bottomAnchor, constant: 10),
@@ -519,7 +540,6 @@ private extension PremiumTableCheckoutVC {
             paymentRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             // Promo
-            promoRow.topAnchor.constraint(equalTo: paymentRow.bottomAnchor, constant: 10),
             promoRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             promoRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
@@ -544,15 +564,18 @@ private extension PremiumTableCheckoutVC {
             bottomBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomBar.heightAnchor.constraint(equalToConstant: 116)
+            bottomBar.heightAnchor.constraint(equalToConstant: 128)
         ])
 
-        shimmerContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24).isActive = true
-
-        paymentTopToSpendConstraint   = paymentRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 10)
-        paymentTopToDepositConstraint = paymentRow.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 10)
-        paymentTopToSummaryConstraint = paymentRow.topAnchor.constraint(equalTo: summaryPriceCard.bottomAnchor, constant: 10)
+        paymentTopToSpendConstraint   = paymentRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 8)
+        paymentTopToDepositConstraint = paymentRow.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 8)
+        paymentTopToSummaryConstraint = paymentRow.topAnchor.constraint(equalTo: summaryPriceCard.bottomAnchor, constant: 8)
         paymentTopToSummaryConstraint?.isActive = true
+
+        promoTopToSpendConstraint = promoRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 10)
+        promoTopToDepositConstraint = promoRow.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 10)
+        promoTopToSummaryConstraint = promoRow.topAnchor.constraint(equalTo: summaryPriceCard.bottomAnchor, constant: 10)
+        promoTopToSummaryConstraint?.isActive = true
 
         noteHeightConstraint = noteRow.heightAnchor.constraint(equalToConstant: noteRow.preferredHeight)
         noteHeightConstraint?.isActive = true
@@ -582,7 +605,7 @@ private extension PremiumTableCheckoutVC {
 private extension PremiumTableCheckoutVC {
 
     func configureHeader() {
-        eventTitleLabel.text = event?.title
+        eventTitleMarqueeLabel.setText(event?.title)
         venueLabel.text      = event?.venue?.name.uppercased()
         let tz   = event?.venue?.useTimezone ?? ""
         let date = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: tz) ?? ""
@@ -595,7 +618,6 @@ private extension PremiumTableCheckoutVC {
             : "Table seating"
         configureAgreementText()
         configureSummaryPrice(total: nil)
-        configureSpendAgreementCard()
     }
 
     func configureGuest() {
@@ -621,8 +643,7 @@ private extension PremiumTableCheckoutVC {
     func configureAfterBooking(_ b: SeatingAreaBookingResponse) {
         configureSelectedTableData(from: b)
         configureSummaryPrice(total: nil)
-        configurePaymentRow()
-
+        configureSpendAgreementCard(b.content?.tableBooking?.spendAgreement)
         if !paymentIntentSecret.isEmpty {
             setupStripe(secret: paymentIntentSecret, ephemeralKey: ephemeralKey)
         }
@@ -672,35 +693,57 @@ private extension PremiumTableCheckoutVC {
         isFreeBooking = total <= 0
     }
 
-    func configureSpendAgreementCard() {
-        guard !spendAgreementItems.isEmpty else {
+    func configureSpendAgreementCard(_ breakdown: PriceBreakdown?) {
+        guard let breakdown else {
+            backendSpendAgreementItems = []
             spendCard.isHidden = true
             spendHeightConstraint?.constant = 0
             return
         }
 
-        spendCard.configure(currency: currency, title: "Spend Agreement", items: spendAgreementItems, expanded: true)
+        let items = spendAgreementItems(from: breakdown)
+        guard !items.isEmpty else {
+            backendSpendAgreementItems = []
+            spendCard.isHidden = true
+            spendHeightConstraint?.constant = 0
+            return
+        }
+
+        backendSpendAgreementItems = items
+        spendCard.configure(currency: currency, title: "Spend Agreement", items: items, expanded: true)
         spendCard.isHidden = false
         spendHeightConstraint?.constant = spendCard.preferredHeight
         updatePriceSectionVisibility(hasDepositBreakdown: !depositBreakdownCard.isHidden)
     }
 
-    func configurePaymentRow() {
-        if PKPaymentAuthorizationController.canMakePayments(
-            usingNetworks: [.visa, .masterCard, .amex]
-        ) {
-            paymentRow.configure(
-                icon:  UIImage(named: "ApplePayIcon") ?? UIImage(systemName: "applelogo")!,
-                title: "Apple Pay",
-                value: "▶"
-            )
-        } else {
-            paymentRow.configure(
-                icon:  UIImage(systemName: "creditcard")!,
-                title: "Card ending \(extractLast4())",
-                value: "▶"
-            )
+    func spendAgreementItems(from bd: PriceBreakdown) -> [SpendLineItem] {
+        var items: [SpendLineItem] = []
+        if let base = bd.base {
+            items.append(.init(title: "Subtotal", amount: base, isBold: false))
         }
+        if let gratuity = bd.gratuity, gratuity > 0 {
+            items.append(.init(title: bd.gratuityName ?? "Gratuity", amount: gratuity, isBold: false))
+        }
+        if let tax = bd.salesTax, tax > 0 {
+            items.append(.init(title: bd.salesTaxName ?? "Sales Tax", amount: tax, isBold: false))
+        }
+        (bd.tableBookingPriceBreakdownHasCustomFees ?? bd.customFees ?? []).forEach {
+            if let fee = $0.fee, fee > 0 {
+                items.append(.init(title: $0.name ?? "Fee", amount: fee, isBold: false))
+            }
+        }
+        if let total = bd.total {
+            items.append(.init(title: "Total", amount: total, isBold: true))
+        }
+        if let balance = bd.balanceDueAtVenue {
+            items.append(.init(title: "Balance Due at Venue", amount: balance, isBold: true))
+        }
+        return items
+    }
+
+    func configurePaymentRow() {
+        paymentRow.isHidden = true
+        paymentHeightConstraint?.constant = 0
     }
 
     func extractLast4() -> String {
@@ -714,11 +757,14 @@ private extension PremiumTableCheckoutVC {
     }
 
     func showInitialContent() {
-        showShimmer(false)
-        guestDisplayRow.isHidden = false
-        noteRow.isHidden         = false
-        summaryPriceCard.isHidden = false
-        updatePriceSectionVisibility(hasDepositBreakdown: false)
+        setLoadingOverlayVisible(true)
+        guestDisplayRow.isHidden = true
+        noteRow.isHidden         = true
+        summaryPriceCard.isHidden = true
+        spendCard.isHidden = true
+        spendHeightConstraint?.constant = 0
+        depositBreakdownCard.isHidden = true
+        depositBreakdownHeightConstraint?.constant = 0
         paymentRow.isHidden      = true
         paymentHeightConstraint?.constant = 0
         promoRow.isHidden        = true
@@ -727,34 +773,42 @@ private extension PremiumTableCheckoutVC {
         venueMessageView.isHidden   = venueMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         updateAgreementHeights(animated: false)
 
-        UIView.animate(withDuration: 0.2) {
-            self.buyBtn.alpha = 1
-            self.buyBtn.isUserInteractionEnabled = true
-            self.view.layoutIfNeeded()
-        }
+        buyBtn.alpha = 0.5
+        buyBtn.isUserInteractionEnabled = false
+        view.layoutIfNeeded()
     }
 
     func showContent() {
-        showShimmer(false)
+        setLoadingOverlayVisible(false)
         guestDisplayRow.isHidden = false
         noteRow.isHidden         = false
-        paymentRow.isHidden      = false
-        paymentHeightConstraint?.constant = 56
+        paymentRow.isHidden      = true
+        paymentHeightConstraint?.constant = 0
         promoRow.isHidden        = false
         promoHeightConstraint?.constant = promoRow.preferredHeight
         termsAgreementView.isHidden = termsAgreementView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         venueMessageView.isHidden   = venueMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         updateAgreementHeights(animated: false)
 
-        UIView.animate(withDuration: 0.2) {
-            self.buyBtn.alpha = 1
-            self.buyBtn.isUserInteractionEnabled = true
-            self.view.layoutIfNeeded()
+        buyBtn.alpha = 1
+        buyBtn.isUserInteractionEnabled = true
+        view.layoutIfNeeded()
+    }
+
+    func setLoadingOverlayVisible(_ visible: Bool) {
+        loadingOverlay.isHidden = !visible
+        if visible {
+            startShimmerViews(in: loadingOverlay)
+        } else {
+            loadingOverlay.layer.removeAllAnimations()
         }
     }
 
-    func showShimmer(_ show: Bool) {
-        shimmerContainer.isHidden = true
+    func startShimmerViews(in view: UIView) {
+        if let shimmer = view as? ShimmerViewV3 {
+            shimmer.startShimmer()
+        }
+        view.subviews.forEach { startShimmerViews(in: $0) }
     }
 
     func configureSelectedTableData(from booking: SeatingAreaBookingResponse) {
@@ -819,7 +873,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func updatePriceSectionVisibility(hasDepositBreakdown: Bool) {
-        let hasSpendAgreement = !spendAgreementItems.isEmpty
+        let hasSpendAgreement = !backendSpendAgreementItems.isEmpty
 
         spendCard.isHidden = !hasSpendAgreement
         spendHeightConstraint?.constant = hasSpendAgreement ? spendCard.preferredHeight : 0
@@ -832,6 +886,10 @@ private extension PremiumTableCheckoutVC {
         paymentTopToDepositConstraint?.isActive = hasDepositBreakdown
         paymentTopToSpendConstraint?.isActive   = !hasDepositBreakdown && hasSpendAgreement
         paymentTopToSummaryConstraint?.isActive = !hasDepositBreakdown && !hasSpendAgreement
+
+        promoTopToSpendConstraint?.isActive = hasSpendAgreement
+        promoTopToDepositConstraint?.isActive = hasDepositBreakdown && !hasSpendAgreement
+        promoTopToSummaryConstraint?.isActive = !hasDepositBreakdown && !hasSpendAgreement
     }
 
     func configureAgreementText() {
@@ -839,8 +897,8 @@ private extension PremiumTableCheckoutVC {
         let settings = event?.venue?.venueSettings
 
         var terms = cleanAgreementText(
-            settings?.emailPolicyText ??
             settings?.tableBookingTermsAndCondition ??
+            settings?.emailPolicyText ??
             ""
         )
         if terms.isEmpty {
@@ -849,16 +907,25 @@ private extension PremiumTableCheckoutVC {
 
         termsAgreementView.titleText = "Terms & Conditions"
         termsAgreementView.bodyText = terms
+        termsAgreementView.bodyAttributedText = formattedAgreementHTML(
+            settings?.tableBookingTermsAndCondition ?? settings?.emailPolicyText ?? ""
+        )
         termsAgreementView.isChecked = false
         termsAgreementView.isHidden = false
 
-        var policy = cleanAgreementText(settings?.policyText ?? "")
+        var policy = cleanAgreementText(settings?.tableBookingImportantInformation ?? "")
         if settings?.optedPolicy == true, policy.isEmpty {
             let venueName = event?.venue?.name ?? "the venue"
-            policy = "I agree to receive marketing related messages from \(venueName) via SMS and email."
+            policy = cleanAgreementText(settings?.policyText ?? "")
+            if policy.isEmpty {
+                policy = "I agree to receive marketing related messages from \(venueName) via SMS and email."
+            }
         }
         venueMessageView.titleText = nil
         venueMessageView.bodyText = settings?.optedPolicy == true ? policy : ""
+        venueMessageView.bodyAttributedText = settings?.optedPolicy == true
+            ? formattedAgreementHTML(settings?.tableBookingImportantInformation ?? settings?.policyText ?? "")
+            : nil
         venueMessageView.isChecked = false
         venueMessageView.isHidden = settings?.optedPolicy != true || policy.isEmpty
         updateAgreementHeights(animated: false)
@@ -879,8 +946,7 @@ private extension PremiumTableCheckoutVC {
         termsHeightConstraint?.constant = termsHeight
         venueMessageHeightConstraint?.constant = venueHeight
 
-        let updates = { self.view.layoutIfNeeded() }
-        animated ? UIView.animate(withDuration: 0.22, animations: updates) : updates()
+        self.view.layoutIfNeeded()
     }
 
     func cleanAgreementText(_ text: String) -> String {
@@ -900,6 +966,33 @@ private extension PremiumTableCheckoutVC {
         return attributed.string
             .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func formattedAgreementHTML(_ html: String) -> NSAttributedString? {
+        guard let attributed = html.htmlToAttributedString else { return nil }
+        let mutable = NSMutableAttributedString(attributedString: attributed)
+        mutable.trimTrailingWhitespaceAndNewlines()
+        guard mutable.length > 0 else { return nil }
+
+        mutable.addAttributes([
+            .font: Constant.Font.geistRegular(size: 12),
+            .foregroundColor: UIColor.white.withAlphaComponent(0.88)
+        ], range: NSRange(location: 0, length: mutable.length))
+
+        mutable.enumerateAttribute(
+            .link,
+            in: NSRange(location: 0, length: mutable.length),
+            options: []
+        ) { value, range, _ in
+            if value != nil {
+                mutable.addAttributes([
+                    .font: Constant.Font.geistMedium(size: 12),
+                    .foregroundColor: UIColor.white,
+                    .underlineStyle: NSUnderlineStyle.single.rawValue
+                ], range: range)
+            }
+        }
+        return mutable
     }
 
     func formattedTime(_ value: String?) -> String {
@@ -939,15 +1032,60 @@ private extension PremiumTableCheckoutVC {
     }
 
     func handleTimeout() {
-        let alert = UIAlertController(
-            title:          "Session Expired",
-            message:        "Your reservation time has expired. Please try again.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        })
-        present(alert, animated: true)
+        cancelCurrentBooking(returnToPrevious: false) { [weak self] in
+            guard let self else { return }
+            let alert = UIAlertController(
+                title:          "Session Expired",
+                message:        "Your reservation time has expired. Please try again.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.navigationController?.popViewController(animated: false)
+            })
+            self.present(alert, animated: true)
+        }
+    }
+
+    var activeBookingId: String {
+        if !currentBookingId.isEmpty { return currentBookingId }
+        if let tableBookingId = booking?.content?.tableBooking?.id,
+           !tableBookingId.isEmpty {
+            return tableBookingId
+        }
+        return booking?.id ?? ""
+    }
+
+    func cancelCurrentBooking(
+        returnToPrevious: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        guard !isCancellingBooking, !didFinishBooking else {
+            completion?()
+            return
+        }
+        let bookingId = activeBookingId
+        guard !bookingId.isEmpty else {
+            completion?()
+            if returnToPrevious {
+                navigationController?.popViewController(animated: false)
+            }
+            return
+        }
+
+        isCancellingBooking = true
+        tableService.cancelTableBooking(
+            bookingId: bookingId,
+            venueId: event?.venue?.id
+        ) { [weak self] _, _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.isCancellingBooking = false
+                completion?()
+                if returnToPrevious {
+                    self.navigationController?.popViewController(animated: false)
+                }
+            }
+        }
     }
 }
 
@@ -978,7 +1116,6 @@ extension PremiumTableCheckoutVC: BookingQueueSocketDelegate {
                 self.booking = b
 
             case "payment":
-                self.showShimmer(false)
                 self.booking             = b
                 self.currentBookingId    = b.content?.tableBooking?.id ?? b.id
                 self.paymentIntentSecret = b.content?.clientSecret ?? ""
@@ -987,7 +1124,7 @@ extension PremiumTableCheckoutVC: BookingQueueSocketDelegate {
                 self.configureAfterBooking(b)
 
             case "failed":
-                self.showShimmer(false)
+                self.setLoadingOverlayVisible(false)
                 self.buyBtn.alpha = 0.5
                 self.buyBtn.isUserInteractionEnabled = false
                 Alert.showToast(b.message ?? "Booking failed")
@@ -1017,7 +1154,6 @@ private extension PremiumTableCheckoutVC {
         }
         config.savePaymentMethodOptInBehavior = .automatic
         config.allowsDelayedPaymentMethods = true
-        config.applePay = .init(merchantId: "merchant.com.speakeasy", merchantCountryCode: "US")
         paymentSheet = PaymentSheet(paymentIntentClientSecret: secret, configuration: config)
     }
 }
@@ -1029,8 +1165,12 @@ private extension PremiumTableCheckoutVC {
     func applyPromo(_ code: String) {
         guard let eventId   = event?.id,
               let venueId   = event?.venue?.id,
-              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else { return }
+              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else {
+            Alert.showToast("Booking details not found")
+            return
+        }
 
+        promoRow.setSubmitting(true)
         tableService.applyPromoCode(
             eventId:        eventId,
             tableBookingId: bookingId,
@@ -1039,6 +1179,7 @@ private extension PremiumTableCheckoutVC {
         ) { [weak self] success, message, data in
             DispatchQueue.main.async {
                 guard let self else { return }
+                self.promoRow.setSubmitting(false)
                 if success, let data {
                     self.isPromoApplied = true
                     self.appliedPromo   = code
@@ -1062,8 +1203,12 @@ private extension PremiumTableCheckoutVC {
     func removePromo() {
         guard let eventId   = event?.id,
               let venueId   = event?.venue?.id,
-              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else { return }
+              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else {
+            Alert.showToast("Booking details not found")
+            return
+        }
 
+        promoRow.setSubmitting(true)
         tableService.removePromoCode(
             eventId:        eventId,
             tableBookingId: bookingId,
@@ -1071,6 +1216,7 @@ private extension PremiumTableCheckoutVC {
         ) { [weak self] success, message, data in
             DispatchQueue.main.async {
                 guard let self else { return }
+                self.promoRow.setSubmitting(false)
                 if success, let data {
                     self.isPromoApplied = false
                     self.appliedPromo   = ""
@@ -1127,6 +1273,7 @@ private extension PremiumTableCheckoutVC {
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
                 Alert.showToast("Payment canceled.")
+                self.cancelCurrentBooking(returnToPrevious: true)
             case .failed:
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
@@ -1156,26 +1303,35 @@ private extension PremiumTableCheckoutVC {
             optedPolicy:    venueMessageView.isHidden ? termsAgreementView.isChecked : venueMessageView.isChecked,
             notes:          notes,
             venueId:        venueId
-        ) { [weak self] success, message, _ in
+        ) { [weak self] success, message, response in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
                 if success {
+                    self.didFinishBooking = true
                     self.timer?.invalidate()
-                    let alert = UIAlertController(
-                        title:          "Booking Confirmed",
-                        message:        "Your table has been reserved.",
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "Done", style: .default) { _ in
-                        self.navigationController?.popToRootViewController(animated: true)
-                    })
-                    self.present(alert, animated: true)
+                    self.showReservationConfirmation(response?.reservations.first)
                 } else {
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }
             }
+        }
+    }
+
+    func showReservationConfirmation(_ reservation: Reservation?) {
+        let vc = PremiumTableReservationConfirmationVC()
+        vc.reservation = reservation
+        vc.reservationUniqueId = reservation?.uniqueId
+        vc.tableBookingId = reservation?.tableBookingId ?? currentBookingId
+        vc.event = event
+
+        if let navigationController {
+            navigationController.setViewControllers([vc], animated: false)
+        } else {
+            let nav = UINavigationController(rootViewController: vc)
+            nav.navigationBar.isHidden = true
+            presentPremium(nav)
         }
     }
 
