@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import CoreLocation
 
 final class NewLandingVC: UIViewController {
 
@@ -43,6 +44,11 @@ final class NewLandingVC: UIViewController {
     private var selectedIndex = 0
     private var currentVC: UIViewController?
     private var systemTabVC: UITabBarController?
+    private let locationManager = CLLocationManager()
+    private let venueService = VenueService()
+    private var didRunLocationBootstrap = false
+    private var pendingLocationPurpose: LocationBootstrapPurpose?
+    private weak var locationPromptVC: LocationPermissionPromptVC?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +62,13 @@ final class NewLandingVC: UIViewController {
         setupUserData()
         observeProfileUpdate()
         observePremiumTabRequests()
+        locationManager.delegate = self
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        runLocationBootstrapIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
@@ -333,6 +346,375 @@ final class NewLandingVC: UIViewController {
 
     @objc private func onClickMap() {
         Navigate.to.gotoMapVC(self)
+    }
+}
+
+private enum LocationBootstrapPurpose {
+    case primary
+    case filter
+}
+
+private extension NewLandingVC {
+    func runLocationBootstrapIfNeeded() {
+        guard !didRunLocationBootstrap else { return }
+
+        didRunLocationBootstrap = true
+        evaluateLocationBootstrap()
+    }
+
+    func evaluateLocationBootstrap() {
+        guard presentedViewController == nil else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                self?.evaluateLocationBootstrap()
+            }
+            return
+        }
+
+        let status = locationManager.authorizationStatus
+
+        if !UserDefault.shared.hasPrimaryLocation {
+            switch status {
+            case .notDetermined:
+                presentLocationPermissionPrompt()
+            case .authorizedAlways, .authorizedWhenInUse:
+                requestCurrentLocation(for: .primary)
+            case .denied, .restricted:
+                presentManualPrimaryCitySelectionIfNeeded()
+            @unknown default:
+                presentManualPrimaryCitySelectionIfNeeded()
+            }
+
+            return
+        }
+
+        guard UserDefault.shared.filterCity == nil else { return }
+
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            requestCurrentLocation(for: .filter)
+        default:
+            break
+        }
+    }
+
+    func presentLocationPermissionPrompt() {
+        guard presentedViewController == nil else { return }
+
+        let prompt = LocationPermissionPromptVC()
+        prompt.modalPresentationStyle = .fullScreen
+        prompt.onEnable = { [weak self] in
+            guard let self else { return }
+            self.pendingLocationPurpose = .primary
+            self.locationManager.requestWhenInUseAuthorization()
+        }
+        prompt.onDismiss = { [weak self] in
+            self?.dismissLocationPromptThenShowManualCity()
+        }
+
+        locationPromptVC = prompt
+        present(prompt, animated: true)
+    }
+
+    func dismissLocationPromptThenShowManualCity() {
+        let completion: () -> Void = { [weak self] in
+            self?.presentManualPrimaryCitySelectionIfNeeded()
+        }
+
+        if let locationPromptVC {
+            locationPromptVC.dismiss(animated: true, completion: completion)
+        } else {
+            completion()
+        }
+    }
+
+    func presentManualPrimaryCitySelectionIfNeeded() {
+        guard !UserDefault.shared.hasPrimaryLocation else { return }
+        guard presentedViewController == nil else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.presentManualPrimaryCitySelectionIfNeeded()
+            }
+            return
+        }
+
+        let vc = SelectLocationVC(
+            nibName: "SelectLocationVC",
+            bundle: nil
+        )
+        vc.mode = .updatePrimaryLocation
+        vc.isInitialPrimarySelection = true
+        vc.persistsFilterSelection = false
+        vc.onSelectPrimaryCity = { [weak self] _ in
+            self?.refreshCityDrivenScreens()
+        }
+
+        present(vc, animated: true)
+    }
+
+    func requestCurrentLocation(for purpose: LocationBootstrapPurpose) {
+        guard CLLocationManager.locationServicesEnabled() else {
+            if purpose == .primary {
+                presentManualPrimaryCitySelectionIfNeeded()
+            }
+            return
+        }
+
+        pendingLocationPurpose = purpose
+        locationManager.requestLocation()
+    }
+
+    func resolveCity(for location: CLLocation, purpose: LocationBootstrapPurpose) {
+        venueService.fetchCityList { [weak self] cityList, isSuccess, _ in
+            guard let self else { return }
+
+            guard isSuccess,
+                  !cityList.isEmpty else {
+                if purpose == .primary {
+                    self.presentManualPrimaryCitySelectionIfNeeded()
+                }
+                return
+            }
+
+            self.resolveCity(
+                from: location,
+                cityList: cityList
+            ) { [weak self] city in
+                self?.applyResolvedCity(city, purpose: purpose)
+            }
+        }
+    }
+
+    func resolveCity(
+        from location: CLLocation,
+        cityList: [MVPCity],
+        completion: @escaping (MVPCity?) -> Void
+    ) {
+        CLGeocoder().reverseGeocodeLocation(location) { placemarks, _ in
+            let placemark = placemarks?.first
+            let matchedCity =
+                MVPCity.matching(locality: placemark?.locality, in: cityList)
+                ?? MVPCity.matching(locality: placemark?.subAdministrativeArea, in: cityList)
+                ?? MVPCity.matching(locality: placemark?.administrativeArea, in: cityList)
+                ?? MVPCity.nearest(to: location, in: cityList)
+
+            DispatchQueue.main.async {
+                completion(matchedCity)
+            }
+        }
+    }
+
+    func applyResolvedCity(_ city: MVPCity?, purpose: LocationBootstrapPurpose) {
+        guard let cityName = city?.value
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !cityName.isEmpty else {
+            if purpose == .primary {
+                presentManualPrimaryCitySelectionIfNeeded()
+            }
+            return
+        }
+
+        switch purpose {
+        case .primary:
+            UserDefault.shared.setPrimaryCity(cityName)
+            clearMatchingFilterCity(cityName)
+
+        case .filter:
+            guard UserDefault.shared.filterCity == nil else { return }
+
+            if UserDefault.shared.primaryCity?
+                .caseInsensitiveCompare(cityName) == .orderedSame {
+                UserDefault.shared.filterCity = nil
+            } else {
+                UserDefault.shared.filterCity = cityName
+            }
+        }
+
+        refreshCityDrivenScreens()
+    }
+
+    func clearMatchingFilterCity(_ cityName: String) {
+        if UserDefault.shared.filterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .caseInsensitiveCompare(cityName) == .orderedSame {
+            UserDefault.shared.filterCity = nil
+        }
+    }
+
+    func refreshCityDrivenScreens() {
+        discoverVC.refreshLocationFromDefaults()
+        experiencesVC.applyCity(UserDefault.shared.activeCity)
+    }
+}
+
+extension NewLandingVC: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        guard pendingLocationPurpose == .primary else { return }
+
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationPromptVC?.dismiss(animated: true) { [weak self] in
+                self?.requestCurrentLocation(for: .primary)
+            }
+        case .denied, .restricted:
+            pendingLocationPurpose = nil
+            dismissLocationPromptThenShowManualCity()
+        default:
+            break
+        }
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let purpose = pendingLocationPurpose,
+              let location = locations.last else {
+            return
+        }
+
+        pendingLocationPurpose = nil
+        resolveCity(for: location, purpose: purpose)
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didFailWithError error: Error
+    ) {
+        let purpose = pendingLocationPurpose
+        pendingLocationPurpose = nil
+
+        if purpose == .primary {
+            presentManualPrimaryCitySelectionIfNeeded()
+        }
+    }
+}
+
+private final class LocationPermissionPromptVC: UIViewController {
+    var onEnable: (() -> Void)?
+    var onDismiss: (() -> Void)?
+
+    private let gradientView = UIView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupUI()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        gradientView.applyScreenBgGradient(direction: .topToBottom)
+    }
+
+    private func setupUI() {
+        view.backgroundColor = AppColor.primaryBlackColor
+
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(gradientView)
+
+        let closeButton = UIButton(type: .system)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
+        view.addSubview(closeButton)
+
+        let iconView = UIImageView(image: UIImage(systemName: "mappin.and.ellipse"))
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.contentMode = .scaleAspectFit
+        iconView.tintColor = .white
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "Find the best\nevents around you"
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = .white
+        titleLabel.numberOfLines = 0
+        titleLabel.font = Constant.Font.geistMedium(size: 32)
+
+        let bodyLabel = UILabel()
+        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
+        bodyLabel.text = "Stay updated on the events, venues, reservations, and live experiences happening around you."
+        bodyLabel.textAlignment = .center
+        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.58)
+        bodyLabel.numberOfLines = 0
+        bodyLabel.font = Constant.Font.geistRegular(size: 17)
+
+        let centerStack = UIStackView(arrangedSubviews: [
+            iconView,
+            titleLabel,
+            bodyLabel
+        ])
+        centerStack.translatesAutoresizingMaskIntoConstraints = false
+        centerStack.axis = .vertical
+        centerStack.alignment = .center
+        centerStack.spacing = 22
+        view.addSubview(centerStack)
+
+        let enableButton = UIButton(type: .system)
+        enableButton.translatesAutoresizingMaskIntoConstraints = false
+        enableButton.setTitle("Enable location", for: .normal)
+        enableButton.setTitleColor(.black, for: .normal)
+        enableButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
+        enableButton.backgroundColor = .white
+        enableButton.layer.cornerRadius = 18
+        enableButton.addTarget(self, action: #selector(onClickEnable), for: .touchUpInside)
+
+        let notNowButton = UIButton(type: .system)
+        notNowButton.translatesAutoresizingMaskIntoConstraints = false
+        notNowButton.setTitle("Not now", for: .normal)
+        notNowButton.setTitleColor(.white, for: .normal)
+        notNowButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
+        notNowButton.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        notNowButton.layer.cornerRadius = 18
+        notNowButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
+
+        let buttonStack = UIStackView(arrangedSubviews: [
+            enableButton,
+            notNowButton
+        ])
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonStack.axis = .vertical
+        buttonStack.spacing = 14
+        view.addSubview(buttonStack)
+
+        NSLayoutConstraint.activate([
+            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 18),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
+            closeButton.widthAnchor.constraint(equalToConstant: 44),
+            closeButton.heightAnchor.constraint(equalToConstant: 44),
+
+            iconView.widthAnchor.constraint(equalToConstant: 88),
+            iconView.heightAnchor.constraint(equalToConstant: 88),
+
+            centerStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            centerStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -46),
+            centerStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 34),
+            centerStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
+
+            bodyLabel.widthAnchor.constraint(lessThanOrEqualTo: centerStack.widthAnchor),
+            titleLabel.widthAnchor.constraint(lessThanOrEqualTo: centerStack.widthAnchor),
+
+            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
+            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),
+            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+
+            enableButton.heightAnchor.constraint(equalToConstant: 74),
+            notNowButton.heightAnchor.constraint(equalToConstant: 74)
+        ])
+    }
+
+    @objc private func onClickEnable() {
+        onEnable?()
+    }
+
+    @objc private func onClickDismiss() {
+        onDismiss?()
     }
 }
 

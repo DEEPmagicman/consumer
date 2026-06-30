@@ -127,8 +127,8 @@ final class ArtistDetailsVC: UIViewController {
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
         collectionView.backgroundColor = .clear
-        collectionView.clipsToBounds = false
-        collectionView.layer.masksToBounds = false
+        collectionView.clipsToBounds = true
+        collectionView.layer.masksToBounds = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
@@ -182,8 +182,7 @@ final class ArtistDetailsVC: UIViewController {
         let artistId = artist?.id ?? ""
         let venueId = artist?.venueId ?? ""
 
-        guard !artistId.isEmpty,
-              !venueId.isEmpty else {
+        guard !artistId.isEmpty else {
             isInitialLoading = false
             events.removeAll()
             reloadUI()

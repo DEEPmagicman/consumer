@@ -50,11 +50,7 @@ final class PremiumEventSegmentView: UIView {
     private var selectedIndex = 1
     
     private var availableSegments:
-    [PremiumEventContainerVC.Segment] = [
-        .map,
-        .list,
-        .inquiry
-    ]
+    [PremiumEventContainerVC.Segment] = []
     
     private let selectedGradientLayer = CAGradientLayer()
     

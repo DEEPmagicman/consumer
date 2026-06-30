@@ -162,7 +162,7 @@ private extension PremiumEventContainerVC {
 //            applySeatingAreas(providedSeatingAreas)
 //            return
 //        }
-
+        segmentView.isHidden = true
         fetchSeatingAreas()
     }
     

@@ -500,6 +500,8 @@ extension UIView {
 extension MKMapView {
     func applySpeakEasyDarkStyle(showPointsOfInterest: Bool) {
         overrideUserInterfaceStyle = .init(.dark)
+        showsTraffic = false
+        showsBuildings = false
         
         if #available(iOS 16.0, *) {
             let config = MKStandardMapConfiguration(elevationStyle: .flat, emphasisStyle: .muted)
@@ -508,6 +510,41 @@ extension MKMapView {
         } else {
             pointOfInterestFilter = showPointsOfInterest ? .includingAll : .excludingAll
         }
+
+        removeSpeakEasyDarkOverlays()
+        addOverlay(SpeakEasyMapDarkOverlay(), level: .aboveRoads)
+    }
+
+    func speakEasyDarkOverlayRenderer(for overlay: MKOverlay) -> MKOverlayRenderer? {
+        guard overlay is SpeakEasyMapDarkOverlay else { return nil }
+        return SpeakEasyMapDarkOverlayRenderer(overlay: overlay)
+    }
+
+    private func removeSpeakEasyDarkOverlays() {
+        overlays
+            .filter { $0 is SpeakEasyMapDarkOverlay }
+            .forEach { removeOverlay($0) }
+    }
+}
+
+private final class SpeakEasyMapDarkOverlay: NSObject, MKOverlay {
+    let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    let boundingMapRect = MKMapRect.world
+}
+
+private final class SpeakEasyMapDarkOverlayRenderer: MKOverlayRenderer {
+    override func draw(
+        _ mapRect: MKMapRect,
+        zoomScale: MKZoomScale,
+        in context: CGContext
+    ) {
+        let rect = self.rect(for: mapRect)
+
+        context.setFillColor(UIColor(hex: "#02070B").withAlphaComponent(0.26).cgColor)
+        context.fill(rect)
+
+        context.setFillColor(UIColor(hex: "#062033").withAlphaComponent(0.24).cgColor)
+        context.fill(rect)
     }
 }
 

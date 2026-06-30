@@ -75,6 +75,8 @@ final class SelectLocationVC: UIViewController {
     }
     
     var onSelectFilterCity: ((String?) -> Void)?
+    var isInitialPrimarySelection = false
+    var onSelectPrimaryCity: ((String) -> Void)?
 
     private var venueService = VenueService()
     private var cancellables = Set<AnyCancellable>()
@@ -84,7 +86,7 @@ final class SelectLocationVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        primaryCity = UserDefault.shared.localCity
+        primaryCity = UserDefault.shared.primaryCity ?? ""
         selectedCity = primaryCity
         initialPrimaryCity = primaryCity
         if persistsFilterSelection {
@@ -188,14 +190,18 @@ private extension SelectLocationVC {
 
         case .updatePrimaryLocation:
 
-            pageTitleLbl.text = "Location"
-            primaryLocationView.isHidden = false
+            pageTitleLbl.text = isInitialPrimarySelection ? "Select City" : "Location"
+            primaryLocationView.isHidden = isInitialPrimarySelection
 
             searchFeildNormelMode.isHidden = true
             searchFeildEditMode.isHidden = false
 
             editBtnView.isHidden = true
             discriptionLbl.isHidden = false
+            updateLocationBtn.setTitle(
+                isInitialPrimarySelection ? "Continue" : "Update location",
+                for: .normal
+            )
 
             updateLocationButtonState()
         }
@@ -279,6 +285,14 @@ extension SelectLocationVC {
     @IBAction func onClickUpdateLocation(_ sender: Any) {
 
         guard !selectedCity.isEmpty else { return }
+
+        if isInitialPrimarySelection {
+            UserDefault.shared.setPrimaryCity(selectedCity)
+            UserDefault.shared.filterCity = nil
+            onSelectPrimaryCity?(selectedCity)
+            dismiss(animated: true)
+            return
+        }
 
         Navigate.to.presentLocationUpdatePopup(
             from: self,

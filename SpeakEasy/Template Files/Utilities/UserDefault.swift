@@ -106,9 +106,30 @@ final class UserDefault: NSObject {
         get {
             (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Chicago"
         } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
-            citySubject.send(newValue)
+            setPrimaryCity(newValue)
         }
+    }
+
+    var primaryCity: String? {
+        guard defaultCitySelected else { return nil }
+
+        let city = (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return city?.isEmpty == false ? city : nil
+    }
+
+    var hasPrimaryLocation: Bool {
+        primaryCity != nil
+    }
+
+    func setPrimaryCity(_ city: String) {
+        let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedCity.isEmpty else { return }
+
+        UserDefaults.standard.setValue(trimmedCity, forKey: UserDefaultKey.localCity.rawValue)
+        defaultCitySelected = true
+        citySubject.send(trimmedCity)
     }
 
     var filterCity: String? {

@@ -26,6 +26,13 @@ struct SearchEventItem {
     var event: Event? = nil
 }
 
+struct SearchArtistItem {
+    let id: String
+    let name: String
+    let imageURL: String?
+    var artist: Artists? = nil
+}
+
 // MARK: - Service
 
 final class DateRowView: UIControl {
