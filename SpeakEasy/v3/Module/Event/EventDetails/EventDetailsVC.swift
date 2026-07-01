@@ -270,7 +270,9 @@ class EventDetailsVC: UIViewController {
         ticketTableObserver?.invalidate()
         groupTableObserver?.invalidate()
         faqsTableObserver?.invalidate()
+        additionalButtonsTableObserver?.invalidate()
         stopAutoScroll()
+        autoScrollTimer?.invalidate()
     }
 
     private func startFAQsTableObserver() {
