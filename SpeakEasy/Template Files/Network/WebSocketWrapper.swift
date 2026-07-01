@@ -69,12 +69,10 @@ final class WebSocketWrapper: NSObject {
         let normalizedVenueId = venueId?.trimmingCharacters(in: .whitespacesAndNewlines)
         let nextVenueId = normalizedVenueId?.isEmpty == false ? normalizedVenueId : nil
 
-        guard currentVenueId != nextVenueId else { return }
+        let venueId = UserDefaults.standard.string(forKey: "selectedVenueId") ?? ""
+        guard venueId != nextVenueId else { return }
 
-        currentVenueId = nextVenueId
-
-        guard socket != nil else { return }
-
+        UserDefaults.standard.set(nextVenueId, forKey: "selectedVenueId")
         disConnect()
         connect()
     }

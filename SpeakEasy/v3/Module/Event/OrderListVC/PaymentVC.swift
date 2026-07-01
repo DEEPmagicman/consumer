@@ -437,7 +437,8 @@ final class PaymentVC: UIViewController {
                 selectedTickets: selectedTickets,
                 bookingId: bookingId,
                 paymentMethod: selectedPaymentMethod,
-                cardDetails: nil
+                cardDetails: nil,
+                venueDetails: venueDetails
             )
             return
         }
@@ -500,7 +501,8 @@ final class PaymentVC: UIViewController {
             selectedTickets: selectedTickets,
             bookingId: bookingId,
             paymentMethod: selectedPaymentMethod,
-            cardDetails: cardDetails
+            cardDetails: cardDetails,
+            venueDetails: venueDetails
         )
     }
     

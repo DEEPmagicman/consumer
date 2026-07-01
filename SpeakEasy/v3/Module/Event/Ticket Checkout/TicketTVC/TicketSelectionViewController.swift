@@ -870,7 +870,8 @@ class TicketSelectionViewController: UIViewController {
                     event: event,
                     selectedTickets: tickets,
                     bookingId: id,
-                    paymentMethod: nil
+                    paymentMethod: nil,
+                    venueDetails: venueDetails
                 )
             } else {
                 self.setCheckoutInProgress(false)
@@ -1084,7 +1085,8 @@ class TicketSelectionViewController: UIViewController {
                 event: event,
                 selectedTickets: selectedNormalTickets,
                 bookingId: nil,
-                paymentMethod: nil
+                paymentMethod: nil,
+                venueDetails: venueDetails
             )
         } else {
             switchToAddOnMode()
@@ -1188,7 +1190,8 @@ class TicketSelectionViewController: UIViewController {
                     event: event,
                     selectedTickets: selectedNormalTickets,
                     bookingId: nil,
-                    paymentMethod: nil
+                    paymentMethod: nil,
+                    venueDetails: venueDetails
                 )
             } else {
                 switchToAddOnMode()

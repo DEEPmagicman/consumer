@@ -630,7 +630,8 @@ final class Navigate {
         selectedTickets: [EventTicket],
         bookingId: String?,
         paymentMethod: PaymentType?,
-        cardDetails: CardDetails? = nil
+        cardDetails: CardDetails? = nil,
+        venueDetails: ClipVenue? = nil
     ) {
         let dest = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
         dest.event             = event
@@ -638,6 +639,7 @@ final class Navigate {
         dest.bookingId         = bookingId
         dest.selectedPaymentMethod = paymentMethod
         dest.cardDetails       = cardDetails
+        dest.venueDetails      = venueDetails
         vc.navigationController?.pushViewController(dest, animated: true)
     }
     

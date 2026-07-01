@@ -257,6 +257,13 @@ class EventDetailsVC: UIViewController {
         updateVenueLogoCornerRadius()
         clearInlineRSVPSelectionIfNeeded()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        view.layoutIfNeeded()
+        stopAutoScroll()
+//        unregisterSocketDelegate()
+    }
 
     deinit {
         unregisterSocketDelegate()
@@ -1467,19 +1474,17 @@ class EventDetailsVC: UIViewController {
            let url = URL(string: imageUrlString) {
             
             venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
-                guard let self = self else { return }
-
+                guard let self else { return }
                 self.venueLogo.alpha = 0
                 self.venueLogo.transform = CGAffineTransform(translationX: -50, y: 0)
-
-                UIView.animate(withDuration: 0.4,
-                               delay: 0,
-                               options: [.curveEaseOut],
-                               animations: {
-                    self.venueLogo.isHidden = false
-                    self.venueLogo.alpha = 1
-                    self.venueLogo.transform = .identity
-                }, completion: nil)
+                UIView.animate(
+                    withDuration: 0.4, delay: 0,
+                    options: [.curveEaseOut]
+                ) { [weak self] in
+                    self?.venueLogo.isHidden = false
+                    self?.venueLogo.alpha = 1
+                    self?.venueLogo.transform = .identity
+                }
             }
         } else {
             venueLogo.isHidden = true
@@ -2071,7 +2076,8 @@ class EventDetailsVC: UIViewController {
             event: event,
             selectedTickets: [selectedTicket],
             bookingId: nil,
-            paymentMethod: nil
+            paymentMethod: nil,
+            venueDetails: venueDetails
         )
     }
 
@@ -2171,7 +2177,8 @@ class EventDetailsVC: UIViewController {
             event: event,
             selectedTickets: [selectedTicket],
             bookingId: nil,
-            paymentMethod: nil
+            paymentMethod: nil,
+            venueDetails: venueDetails
         )
     }
 
@@ -2283,8 +2290,8 @@ class EventDetailsVC: UIViewController {
             userId: user.id,
             tickets: ticketsPayload
         ) { [weak self] isSuccess, errMsg, id, _ in
-            guard let self = self else { return }
-            checkOutBtn.hideLoader()
+            guard let self else { return }
+            self.checkOutBtn.hideLoader()
 
 
             if isSuccess {
@@ -4202,45 +4209,23 @@ extension EventDetailsVC: CheckoutBarDelegate {
             Navigate.to.openPhoneLoginPopup(self)
             return
         }
+        guard let event else { return }
 
-        guard let event = event else {
-            return
-        }
-        
-        checkOutBtnView.showLoader()
-
-        let selectedNormalTickets =
-        normalTickets.filter {
-            ($0.selectedTicketCount ?? 0) > 0
-        }
-
-        let selectedGroupedTickets =
-        groupedNormalTickets
+        let selectedNormalTickets = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+        let selectedGroupedTickets = groupedNormalTickets
             .flatMap { $0.tickets }
-            .filter {
-                ($0.selectedTicketCount ?? 0) > 0
-            }
-
-        let selectedTickets =
-        selectedNormalTickets + selectedGroupedTickets
+            .filter { ($0.selectedTicketCount ?? 0) > 0 }
+        let selectedTickets = selectedNormalTickets + selectedGroupedTickets
 
         guard !selectedTickets.isEmpty else {
-            Alert.showToast(
-                "Please select at least one ticket"
-            )
-            checkOutBtnView.hideLoader()
+            Alert.showToast("Please select at least one ticket")
             return
         }
 
         checkOutBtnView.showLoader()
 
         let payload: [[String: Any]] = selectedTickets.map {
-
-            [
-                "ticketId": $0.id ?? "",
-                "ticketQuantity": $0.selectedTicketCount ?? 0,
-                "ticketPrice": $0.price ?? 0
-            ]
+            ["ticketId": $0.id ?? "", "ticketQuantity": $0.selectedTicketCount ?? 0, "ticketPrice": $0.price ?? 0]
         }
 
         paymentService.createEventBooking(
@@ -4250,31 +4235,14 @@ extension EventDetailsVC: CheckoutBarDelegate {
             gender: user.gender,
             userId: user.id,
             tickets: payload
-        ) { [weak self]
-            isSuccess,
-            errMsg,
-            bookingId,
-            _ in
-
+        ) { [weak self] isSuccess, errMsg, bookingId, _ in
             guard let self else { return }
 
             self.checkOutBtnView.hideLoader()
-
             if isSuccess {
-
-                Navigate.orderListVC(
-                    self,
-                    event: event,
-                    selectedTickets: selectedTickets,
-                    bookingId: bookingId,
-                    paymentMethod: nil
-                )
-
+                Navigate.orderListVC(self, event: event, selectedTickets: selectedTickets, bookingId: bookingId, paymentMethod: nil, venueDetails: venueDetails)
             } else {
-
-                Alert.showToast(
-                    errMsg ?? "Something went wrong"
-                )
+                Alert.showToast(errMsg ?? "Something went wrong")
             }
         }
     }
