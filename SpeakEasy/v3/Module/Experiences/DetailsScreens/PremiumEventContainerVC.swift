@@ -173,7 +173,7 @@ private extension PremiumEventContainerVC {
         }
 
         tableService.fetchSeatingAreas(
-            eventId: event.id ?? "",
+            eventId: event.id,
             skip: 0
         ) { [weak self] success,
              error,

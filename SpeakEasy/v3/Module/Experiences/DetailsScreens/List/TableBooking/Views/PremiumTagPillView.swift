@@ -509,8 +509,8 @@ final class PremiumPriceCard: UIView {
     }
 
     func configure(minimum: Double, deposit: Double, currency: String = "$", currencyPosition: String? = "") {
-        minLabel.text = "\(currency)\(Int(minimum))"
-        depLabel.text = "\(currency)\(String(format: "%.2f", deposit))"
+        minLabel.text = CurrencyFormatter.amount(minimum, symbol: currency, position: currencyPosition, haseValueInt: true)
+        depLabel.text = CurrencyFormatter.amount(deposit, symbol: currency, position: currencyPosition)
     }
 
     private func setup() {
@@ -1269,10 +1269,10 @@ final class PremiumSpendAgreementView: UIView {
 
         let v = UILabel()
         let formatted = amount == 0 && title.lowercased().contains("balance")
-            ? "\(currency)0.00"
+            ? CurrencyFormatter.amount(0, symbol: currency, position: currencyPosition)
             : (amount < 0
-               ? "-\(currency)\(String(format: "%.2f", abs(amount)))"
-               : "\(currency)\(String(format: "%.2f", amount))")
+               ? "-\(CurrencyFormatter.amount(amount, symbol: currency, position: currencyPosition))"
+               : CurrencyFormatter.amount(amount, symbol: currency, position: currencyPosition))
         v.text          = formatted
         v.font          = bold ? Constant.Font.geistMedium(size: 14) : Constant.Font.geistRegular(size: 14)
         v.textColor     = .white

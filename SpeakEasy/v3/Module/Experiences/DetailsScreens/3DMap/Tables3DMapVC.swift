@@ -73,6 +73,8 @@ final class Tables3DMapVC: UIViewController {
     private var loadingTextLayer: CATextLayer?
     private var panVelocity: CGPoint = .zero
 
+    private let tableService = TableService()
+    
     // MARK: - UI Styles
 
     private enum PinStyle {
@@ -259,8 +261,9 @@ extension Tables3DMapVC {
         let dateText = event?.startDateTime.convertDateFormat(
             from: .yyyyMMddHHmmss, to: .YYYYMMDD, customTimeZone: timezone
         ) ?? ""
+        if timezone == "" { return }
         setupBuyNowButton()
-        TablePresenter.getConsumerLayout(
+        tableService.fetchConsumerLayout(
             date: dateText,
             venueId: event?.venue?.id ?? ""
         ) { [weak self] ok, msg, layout in
@@ -762,7 +765,7 @@ private extension Tables3DMapVC {
         uiNode.seatingMeta = SeatingMeta(
             seatingAreaId: seating.parentSeatingAreaId ?? seating.id ?? "",
             name: seating.name ?? "", parentId: seating.parentSeatingAreaId ?? "",
-            maxGuest: seating.maxGuest ?? 0, allowActions: seating.allowActions,
+            maxGuest: seating.maxGuest ?? 0, minimum: seating.minimum, allowActions: seating.allowActions,
             sourceNode: sourceNode, uniqueId: UUID().uuidString
         )
         root.addChildNode(uiNode)

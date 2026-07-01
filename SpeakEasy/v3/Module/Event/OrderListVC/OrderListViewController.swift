@@ -1315,7 +1315,7 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
-            cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+            cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
             return cell
         }
     }

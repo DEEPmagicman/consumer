@@ -11,22 +11,23 @@ import SceneKit
 // MARK: - Models & Metadata
 
 struct SeatingAreaDTO {
-    let id:                  String?
+    let id: String?
     let parentSeatingAreaId: String?
-    let name:                String?
-    let highlight:           String?
-    let maxGuest:            Int?
-    let isDJBoot:            Bool
-    let minimum:             Double?
-    let allowActions:        Bool
+    let name: String?
+    let highlight: String?
+    let maxGuest: Int?
+    let isDJBoot: Bool
+    let minimum: Double?
+    let allowActions: Bool
 }
 
 struct SeatingMeta {
     let seatingAreaId: String
-    let name:          String
-    let parentId:      String
-    let maxGuest:      Int
-    let allowActions:  Bool
+    let name: String
+    let parentId: String
+    let maxGuest: Int
+    let minimum: Double?
+    let allowActions: Bool
     weak var sourceNode: SCNNode?
     let uniqueId: String
 }

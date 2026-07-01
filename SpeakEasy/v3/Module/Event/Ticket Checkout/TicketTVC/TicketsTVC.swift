@@ -205,7 +205,7 @@ class TicketsTVC: UITableViewCell {
         if price == 0 {
             priceLbl.text = "FREE"
         } else {
-            priceLbl.text = "\(currency)\(price.decimalFormat(true))"
+            priceLbl.text = CurrencyFormatter.amount(price, symbol: currency, position: currencyPosition)
         }
 
         rsvpBtnView.isHidden = true

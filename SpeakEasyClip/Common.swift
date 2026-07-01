@@ -394,11 +394,12 @@ struct CurrencyFormatter {
     static func amount(
         _ value: Double,
         symbol: String?,
-        position: String?
+        position: String?,
+        haseValueInt: Bool? = false
     ) -> String {
 
         let currencySymbol = symbol ?? "$"
-        let formattedAmount = value.decimalFormat(true)
+        let formattedAmount = haseValueInt ? Int(value) : value.decimalFormat(true)
 
         switch CurrencyPosition(rawValue: position?.lowercased() ?? "prefix") {
         case .suffix:

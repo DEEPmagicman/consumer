@@ -333,7 +333,7 @@ final class TicketCheckoutVC: UIViewController {
             return result + (Double(quantity) * price)
         }
 
-        totalAmountLbl.text = subtotal == 0 ? "Free" : "\(currency)\(subtotal.decimalFormat(true))"
+        totalAmountLbl.text = subtotal == 0 ? "Free" : CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
         self.isFreeTicket = subtotal == 0
         if isFreeTicket {
             purchaseTicketBtn.setTitle("REDEEM TICKETS", for: .normal)
