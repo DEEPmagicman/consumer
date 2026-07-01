@@ -93,6 +93,10 @@ final class OrderListViewController: UIViewController {
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
     }
+    
+    private var currencyPosition: String? {
+        venueDetails?.venueSettings?.currencyPosition
+    }
 
     private let posterHeaderView = EventPosterHeaderView()
     private let paymentService = PaymentService()
@@ -645,13 +649,13 @@ final class OrderListViewController: UIViewController {
         }
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         updateOrderSummaryAmounts(total: subtotal, fees: 0)
-        checkOutView.updateSummary(currency: currency, count: totalTickets, subtotal: subtotal, fees: 0)
+        checkOutView.updateSummary(currency: currency, currencyPosition: currencyPosition, count: totalTickets, subtotal: subtotal, fees: 0)
         checkOutView.setButtonTitle("Purchase Tickets")
     }
 
     private func updateOrderSummaryAmounts(total: Double, fees: Double) {
-        orderFeesAmountLbl.text = "\(currency)\(fees.decimalFormat(true))"
-        orderTotalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        orderFeesAmountLbl.text = CurrencyFormatter.amount(fees, symbol: currency, position: currencyPosition)
+        orderTotalAmountLbl.text = total <= 0 ? "Free" : "\(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
     }
 
     private func updateFeesAndTaxesVisibility() {
@@ -967,11 +971,11 @@ final class OrderListViewController: UIViewController {
         updateOrderSummaryAmounts(total: detail.total, fees: feesAmount)
         checkOutView.updateSummary(
             currency: currency,
+            currencyPosition: currencyPosition,
             count: totalTickets,
             subtotal: detail.total,
             fees: feesAmount
         )
-
         updatePromoCodeUI()
 
 //        DispatchQueue.main.async {
@@ -1005,7 +1009,7 @@ final class OrderListViewController: UIViewController {
             addCodeTextFeild.isUserInteractionEnabled = false
             let discount = paymentDetail?.discount ?? 0
             promoCodeTitleLbl.text = "Discount Applied"
-            discountAmountLbl.text = "-\(currency)\(discount.decimalFormat(true))"
+            discountAmountLbl.text = "-\(CurrencyFormatter.amount(discount, symbol: currency, position: currencyPosition))"
         } else {
             promoCodeTitleLbl.text = ""
             discountAmountLbl.text = ""
@@ -1284,7 +1288,7 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.selectionStyle = .none
             cell.totalTicketCountLbl.text = "\(quantity)x"
             cell.ticketNameLbl.text = ticket.tierName
-            cell.priceLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+            cell.priceLbl.text = total <= 0 ? "Free" : "\(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
 //            cell.extraFeesLbl.isHidden = (ticket.extraFees ?? 0) <= 0
 //            if (ticket.extraFees ?? 0) > 0 {
 //                cell.extraFeesLbl.text = "Incl. \(currency)\((ticket.extraFees ?? 0).decimalFormat(true)) fees"

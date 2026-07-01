@@ -123,6 +123,10 @@ final class TicketCheckoutVC: UIViewController {
     private var currency: String {
         return venueDetails?.venueSettings?.currencySymbol ?? "$"
     }
+    
+    private var currencyPosition: String? {
+        return venueDetails?.venueSettings?.currencyPosition
+    }
 
     private var paymentSheet: PaymentSheet?
     private var paymentIntentClientSecret: String = ""
@@ -504,8 +508,8 @@ final class TicketCheckoutVC: UIViewController {
             totalAmountLbl.text = "Free"
             feesAndTxtTotalAmountLbl.text = ""
         } else {
-            totalAmountLbl.text = "\(currency)\(total.decimalFormat(true))"
-            feesAndTxtTotalAmountLbl.text = "\(currency)\(feesAmount.decimalFormat(true))"
+            totalAmountLbl.text = CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
+            feesAndTxtTotalAmountLbl.text = CurrencyFormatter.amount(feesAmount, symbol: currency, position: currencyPosition)
         }
 
         let discount = detail.discount ?? 0
@@ -513,7 +517,7 @@ final class TicketCheckoutVC: UIViewController {
         if discount > 0 {
             discountView.isHidden = false
             discountToalLbl.isHidden = false
-            discountToalLbl.text = "-\(currency)\(discount.decimalFormat(true))"
+            discountToalLbl.text = "-\(CurrencyFormatter.amount(discount, symbol: currency, position: currencyPosition))"
         } else {
             discountView.isHidden = true
             discountToalLbl.isHidden = true
@@ -1015,7 +1019,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
             let total = Double(quantity) * price
 
             cell.titleLbl.text = "\(quantity)x \(ticket.tierName)"
-            cell.amountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+            cell.amountLbl.text = total <= 0 ? "Free" : CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
 
             return cell
         }
@@ -1028,7 +1032,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
 
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
-            cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+            cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
             cell.selectionStyle = .none
 
             return cell

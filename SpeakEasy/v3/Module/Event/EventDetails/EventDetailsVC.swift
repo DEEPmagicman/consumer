@@ -882,9 +882,11 @@ class EventDetailsVC: UIViewController {
 
         let currency =
         venueDetails?.venueSettings?.currencySymbol ?? "$"
-
+        let currencyPosition =
+        venueDetails?.venueSettings?.currencyPosition
         checkOutBtnView.updateSummary(
             currency: currency,
+            currencyPosition: currencyPosition,
             count: totalCount,
             subtotal: subtotal + fees,
             fees: fees
@@ -1630,6 +1632,7 @@ class EventDetailsVC: UIViewController {
 
         let settings = event.eventTicketSettings
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
 
         // Reset state
         soldOutView.isHidden = true
@@ -1685,7 +1688,7 @@ class EventDetailsVC: UIViewController {
         let lowestPrice = event.lowestPriceTicket?.price ?? 0
         let title = lowestPrice == 0
             ? "Tickets from Free"
-            : "Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))"
+            : "Tickets from \(CurrencyFormatter.amount(Double(lowestPrice), symbol: currency, position: currencyPosition))"
         checkOutBtn.setTitle(title, for: .normal)
         checkOutBtn.isEnabled = true
         checkOutBtn.isUserInteractionEnabled = true
@@ -3032,11 +3035,13 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
             let ticket = tickets[indexPath.row]
             let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+            let currencyPosition = venueDetails?.venueSettings?.currencyPosition
             let isExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
 
             cell.configure(
                 ticket: ticket,
                 currency: currency,
+                currencyPosition: currencyPosition,
                 whiteLabelColor: event?.whiteLabelColor,
                 eventTicketSetting: event?.eventTicketSettings,
                 isDescriptionExpanded: isExpanded,
@@ -3082,11 +3087,13 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
             let item = groupedNormalTickets[indexPath.row]
             let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
-
+            let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+            
             cell.configure(
                 groupName: item.groupName,
                 tickets: item.tickets,
                 currency: currency,
+                currencyPosition: currencyPosition,
                 whiteLabelColor: event?.whiteLabelColor,
                 eventTicketSetting: event?.eventTicketSettings,
                 expandedTicketDescriptions: expandedTicketDescriptions,

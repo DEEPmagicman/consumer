@@ -38,7 +38,14 @@ class VenueTableCell: UITableViewCell {
             } else if ticket.isCustom == true && ticket.price == 0 {
                 coverLbl.text = "FREE"
             } else {
-                coverLbl.text = "\(data.venueSettings?.currencySymbol ?? "$")\(Double(ticket.price).decimalFormat(true))"
+                let currencySymbol = data.venueSettings?.currencySymbol
+                let currencyPosition = data.venueSettings?.currencyPosition
+                
+                coverLbl.text = CurrencyFormatter.amount(
+                    Double(ticket.price),
+                    symbol: currencySymbol,
+                    position: currencyPosition
+                )
             }
         } else {
             coverLbl.text = ""

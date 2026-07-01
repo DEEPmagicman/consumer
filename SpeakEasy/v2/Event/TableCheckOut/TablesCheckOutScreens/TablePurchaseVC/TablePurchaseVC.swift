@@ -81,6 +81,10 @@ final class TablePurchaseVC: UIViewController {
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
     }
+    
+    private var currencyPosition: String {
+        venueDetails?.venueSettings?.currencyPosition ?? "$"
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -547,23 +551,23 @@ final class TablePurchaseVC: UIViewController {
 
         totalAmountLbl.text = total <= 0
             ? "Free"
-            : "\(currency)\(total.decimalFormat(true))"
+            : CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
 
         let totalFeesAmount = total - base + discount
         feesAndTxtTotalAmountLbl.text = totalFeesAmount > 0
-            ? "\(currency)\(totalFeesAmount.decimalFormat(true))"
+            ? CurrencyFormatter.amount(totalFeesAmount, symbol: currency, position: currencyPosition)
             : ""
 
         if discount > 0 {
             discountView.isHidden = false
             discountToalLbl.isHidden = false
-            discountToalLbl.text = "-\(currency)\(discount.decimalFormat(true))"
+            discountToalLbl.text = "-\(CurrencyFormatter.amount(discount, symbol: currency, position: currencyPosition))"
         } else {
             discountView.isHidden = true
             discountToalLbl.isHidden = true
         }
 
-        tableMinimumDepositLbl.text = "\(currency)\(base.decimalFormat(true))"
+        tableMinimumDepositLbl.text = "\(CurrencyFormatter.amount(base, symbol: currency, position: currencyPosition))"
 
         feesAndTaxesTableView.layoutIfNeeded()
         feesAndTaxesTableViewHeight.constant = feesAndTaxesTableView.contentSize.height
@@ -754,7 +758,7 @@ final class TablePurchaseVC: UIViewController {
         if discount > 0 {
             discountView.isHidden = false
             discountToalLbl.isHidden = false
-            discountToalLbl.text = "-\(currency)\(discount.decimalFormat(true))"
+            discountToalLbl.text = "-\(CurrencyFormatter.amount(discount, symbol: currency, position: currencyPosition))"
         } else {
             discountView.isHidden = true
             discountToalLbl.isHidden = true
@@ -764,9 +768,9 @@ final class TablePurchaseVC: UIViewController {
         let total = max(base + gratuity + salesTax + items.reduce(0) { $0 + $1.amount } - discount, 0)
         let feesOnly = max(total - base, 0)
 
-        tableMinimumDepositLbl.text = "\(currency)\(base.decimalFormat(true))"
-        totalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-        feesAndTxtTotalAmountLbl.text = feesOnly > 0 ? "\(currency)\(feesOnly.decimalFormat(true))" : ""
+        tableMinimumDepositLbl.text = "\(CurrencyFormatter.amount(base, symbol: currency, position: currencyPosition))"
+        totalAmountLbl.text = total <= 0 ? "Free" : CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
+        feesAndTxtTotalAmountLbl.text = feesOnly > 0 ? CurrencyFormatter.amount(feesOnly, symbol: currency, position: currencyPosition) : ""
 
         view.layoutIfNeeded()
     }
@@ -1003,7 +1007,7 @@ extension TablePurchaseVC: UITableViewDelegate, UITableViewDataSource {
             
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
-            cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+            cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
             
             return cell
         }

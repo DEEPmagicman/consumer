@@ -35,6 +35,13 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
             ?? sourceBooking?.venueObject?.venueSettings?.currencySymbol
             ?? "$"
     }
+    
+    private var currencyPosition: String? {
+        displayEvent?.venue?.venueSettings?.currencyPosition
+            ?? reservation?.venue?.venueSettings?.currencyPosition
+            ?? sourceBooking?.venueObject?.venueSettings?.currencyPosition
+            ?? "$"
+    }
 
     private var priceBreakdown: PriceBreakdown? {
         reservation?.tableBooking?.tableBookingPriceBreakdown
@@ -728,7 +735,7 @@ private extension PremiumTableReservationConfirmationVC {
     func formatMoney(_ value: Double) -> String {
         let absoluteValue = abs(value)
         let prefix = value < 0 ? "-" : ""
-        return "\(prefix)\(currency)\(String(format: "%.2f", absoluteValue))"
+        return "\(prefix)\(CurrencyFormatter.amount(absoluteValue, symbol: currency, position: currencyPosition))"
     }
 
     func formattedTime(_ value: String?) -> String {

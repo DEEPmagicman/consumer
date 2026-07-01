@@ -17,6 +17,7 @@ class GroupTicketTVC: UITableViewCell {
     
     var tickets: [EventTicket] = []
     var currency: String = "$"
+    var currencyPosition: String? = ""
     var whiteLabelColor: String?
     var eventTicketSetting: EventTicketSettings?
     var expandedTicketDescriptions: Set<String> = []
@@ -71,6 +72,7 @@ class GroupTicketTVC: UITableViewCell {
         groupName: String,
         tickets: [EventTicket],
         currency: String,
+        currencyPosition: String?,
         whiteLabelColor: String?,
         eventTicketSetting: EventTicketSettings?,
         expandedTicketDescriptions: Set<String>,
@@ -79,6 +81,7 @@ class GroupTicketTVC: UITableViewCell {
         self.groupTitle.text = groupName
         self.tickets = tickets
         self.currency = currency
+        self.currencyPosition = currencyPosition
         self.whiteLabelColor = whiteLabelColor
         self.eventTicketSetting = eventTicketSetting
         self.expandedTicketDescriptions = expandedTicketDescriptions
@@ -126,6 +129,7 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
         cell.configure(
             ticket: ticket,
             currency: currency,
+            currencyPosition: currencyPosition,
             whiteLabelColor: whiteLabelColor,
             eventTicketSetting: eventTicketSetting,
             isDescriptionExpanded: isDescriptionExpanded,

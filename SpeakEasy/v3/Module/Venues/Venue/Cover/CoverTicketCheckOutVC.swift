@@ -122,6 +122,10 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var currency: String {
         venue?.venueSettings?.currencySymbol ?? "$"
     }
+    
+    private var currencyPosition: String? {
+        venue?.venueSettings?.currencyPosition
+    }
 
     private var isApplePayNotSupported: Bool {
         !PKPaymentAuthorizationViewController.canMakePayments()
@@ -845,14 +849,15 @@ extension CoverTicketCheckOutVC {
 
         checkOutBtnView.updateSummary(
             currency: currency,
+            currencyPosition: currencyPosition,
             count: totalCount,
             subtotal: grandTotal,
             fees: totalFees
         )
-
+        
         let isFree = grandTotal <= 0 || bookingType == .FREE
         checkOutBtnView.setButtonTitle(
-            isFree ? "Confirm Free Booking" : "Pay \(currency)\(grandTotal.decimalFormat(true))"
+            isFree ? "Confirm Free Booking" : "Pay \(CurrencyFormatter.amount(grandTotal, symbol: currency, position: currencyPosition))"
         )
     }
 
@@ -1634,7 +1639,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.totalTicketCountLbl.text = "\(quantity)"
         cell.ticketNameLbl.text       = ticket.customName?.isEmpty == false ? ticket.customName : ticket.name
         applyDescription(ticket.description, to: cell)
-        cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        cell.priceLbl.text            = total <= 0 ? "Free" : "\(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
         cell.priceLbl.isHidden        = false
         return cell
     }
@@ -1652,7 +1657,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.totalTicketCountLbl.text = "\(quantity)"
         cell.ticketNameLbl.text       = item.addOns?.name ?? ""
         applyDescription(item.addOns?.description, to: cell)
-        cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        cell.priceLbl.text            = total <= 0 ? "Free" : "\(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
         cell.priceLbl.isHidden        = false
         return cell
     }
@@ -1684,7 +1689,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
 
         cell.selectionStyle = .none
         cell.titleLbl.text  = item.title
-        cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+        cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
 
         // Bold the Total row so it reads as a summary
         let isTotal = item.title.lowercased() == "total"

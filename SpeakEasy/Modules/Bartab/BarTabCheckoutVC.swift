@@ -128,12 +128,13 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         customFeesView.isHidden = feeData?.additionalFees?.count == 0
         processingFeesView.isHidden = true // !setProcessingFeeView
         
-        processingFeeAmount.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
-        totalAmountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.total ?? 0).decimalFormat(true))"
-        subTotalAmount.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.subTotal ?? 0).decimalFormat(true))"
-        salesTaxAmount.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.salesTax ?? 0).decimalFormat(true))"
+        let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+        processingFeeAmount.text = CurrencyFormatter.amount(feeData?.processingFee ?? 0, symbol: currencySymbole, position: currencyPosition)
+        totalAmountLbl.text = CurrencyFormatter.amount(feeData?.total ?? 0, symbol: currencySymbole, position: currencyPosition)
+        subTotalAmount.text = CurrencyFormatter.amount(feeData?.subTotal ?? 0, symbol: currencySymbole, position: currencyPosition)
+        salesTaxAmount.text = CurrencyFormatter.amount(feeData?.salesTax ?? 0, symbol: currencySymbole, position: currencyPosition)
         salesTaxName.text = feeData?.salesTaxName ?? "Sales Tax"
-        totalAmountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.total ?? 0).decimalFormat(true))"
         
         self.customFeesTableViewHeight.constant = CGFloat((feeData?.additionalFees?.count ?? 0) * 30)
         self.customFeesTableView.setNeedsLayout()
@@ -301,7 +302,9 @@ extension BarTabCheckoutVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
             let customFee = self.barTabData?.barTab.barTabPayments?.first?.bookingFees?.additionalFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
-            cell.lblFeeValue.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((customFee?.amount ?? 0).decimalFormat(true))"
+            let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+            let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+            cell.lblFeeValue.text = CurrencyFormatter.amount(customFee?.amount ?? 0, symbol: currencySymbole, position: currencyPosition)
             return cell
         }
     }

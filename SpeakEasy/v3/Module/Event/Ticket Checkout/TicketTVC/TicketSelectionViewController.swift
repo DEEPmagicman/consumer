@@ -1200,16 +1200,17 @@ class TicketSelectionViewController: UIViewController {
 
     private func updateCheckoutSummary() {
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
         let count = checkoutTotalTicketCount
         let subtotal = checkoutSubtotal
         let fees = checkoutExtraFees
 
         totalTicketLbl.text = "\(count) Ticket\(count == 1 ? "" : "s")"
-        totalAmountLbl.text = "\(currency)\(subtotal.decimalFormat(true))"
+        totalAmountLbl.text = CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
 
         if fees > 0 {
             extraFeesLbl.isHidden = false
-            extraFeesLbl.text = "Incl. \(currency)\(fees.decimalFormat(true)) in fees"
+            extraFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fees, symbol: currency, position: currencyPosition)) in fees"
         } else {
             extraFeesLbl.isHidden = true
         }
@@ -1293,12 +1294,14 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         let ticket = tickets[indexPath.row]
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
         let isExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
 
         cell.hideShimmer()
         cell.configure(
             ticket: ticket,
             currency: currency,
+            currencyPosition: currencyPosition,
             whiteLabelColor: event?.whiteLabelColor,
             eventTicketSetting: event?.eventTicketSettings,
             isDescriptionExpanded: isExpanded,
@@ -1333,12 +1336,14 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         let item = groupedNormalTickets[indexPath.row]
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
 
         cell.selectionStyle = .none
         cell.configure(
             groupName: item.groupName,
             tickets: item.tickets,
             currency: currency,
+            currencyPosition: currencyPosition,
             whiteLabelColor: event?.whiteLabelColor,
             eventTicketSetting: event?.eventTicketSettings,
             expandedTicketDescriptions: expandedTicketDescriptions,

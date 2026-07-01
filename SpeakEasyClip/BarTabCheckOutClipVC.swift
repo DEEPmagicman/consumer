@@ -100,7 +100,9 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         options.detailTextLabelFont = UIFont(name: "Poppins-Regular", size: 15)!
         phoneNumTextField.withDefaultPickerUIOptions = options
         
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")0.00"
+        let currencySymbol = venue?.venueSettings?.currencySymbol
+        let currencyPosition = venue?.venueSettings?.currencyPosition
+        totalPriceLbl.text = CurrencyFormatter.amount(0, symbol: currencySymbol, position: currencyPosition)
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again.".localize()
@@ -362,11 +364,14 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.customFeeView.isHidden = feeData?.additionalFees?.count == 0
             self.processingFeeView.isHidden = true // !self.setProcessingFeeView
             
+            let currencySymbol = self.venue?.venueSettings?.currencySymbol
+            let currencyPosition = self.venue?.venueSettings?.currencyPosition
+            
 //            self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
-            self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.subTotal ?? 0).decimalFormat(true))"
-            self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.salesTax ?? 0).decimalFormat(true))"
+            self.subTotalAmount.text = CurrencyFormatter.amount(feeData?.subTotal ?? 0, symbol: currencySymbol, position: currencyPosition)
+            self.salesTextAmount.text = CurrencyFormatter.amount(feeData?.salesTax ?? 0, symbol: currencySymbol, position: currencyPosition)
             self.salesTaxName.text = feeData?.salesTaxName ?? "Sales Tax"
-            self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.total ?? 0).decimalFormat(true))"
+            self.totalPriceLbl.text = CurrencyFormatter.amount(feeData?.total ?? 0, symbol: currencySymbol, position: currencyPosition)
             
             self.customFeeTableViewHeight.constant = CGFloat((feeData?.additionalFees?.count ?? 0) * 30)
             self.customFeeTableView.reloadData()
@@ -650,7 +655,10 @@ extension BarTabCheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
             let customFee = self.paymentDetail?.additionalFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
-            cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.amount ?? 0).decimalFormat(true))"
+            let currencySymbol = self.venue?.venueSettings?.currencySymbol
+            let currencyPosition = self.venue?.venueSettings?.currencyPosition
+
+            cell.lblFeeValue.text = CurrencyFormatter.amount(customFee?.amount ?? 0, symbol: currencySymbol, position: currencyPosition)
             return cell
         }
         

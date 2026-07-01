@@ -508,7 +508,7 @@ final class PremiumPriceCard: UIView {
         card.glassCornerRadius = PremiumTableCornerRadius.card
     }
 
-    func configure(minimum: Double, deposit: Double, currency: String = "$") {
+    func configure(minimum: Double, deposit: Double, currency: String = "$", currencyPosition: String? = "") {
         minLabel.text = "\(currency)\(Int(minimum))"
         depLabel.text = "\(currency)\(String(format: "%.2f", deposit))"
     }
@@ -1146,6 +1146,7 @@ final class PremiumSpendAgreementView: UIView {
 
     private var isExpanded  = false
     private var currency    = "$"
+    private var currencyPosition: String? = ""
     private var itemCount   = 0
     private var stackTopConstraint: NSLayoutConstraint?
     private var stackBottomConstraint: NSLayoutConstraint?
@@ -1163,11 +1164,13 @@ final class PremiumSpendAgreementView: UIView {
 
     func configure(
         currency: String,
+        currencyPosition: String?,
         title: String = "Spend Agreement",
         items: [SpendLineItem],
         expanded: Bool = false
     ) {
         self.currency = currency
+        self.currencyPosition = currencyPosition
         headerLabel.text = title
         itemCount = items.count
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -1361,7 +1364,8 @@ final class PremiumPromoRow: UIView {
         _ applied: Bool,
         code: String? = nil,
         discount: Double = 0,
-        currency: String = "$"
+        currency: String = "$",
+        currencyPosition: String? = ""
     ) {
         isApplied = applied
         isExpanded = applied ? false : isExpanded

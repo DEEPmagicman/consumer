@@ -54,12 +54,12 @@ class CheckoutBarView: UIView {
 
     // MARK: - Public API
 
-    func updateSummary(currency: String, count: Int, subtotal: Double, fees: Double) {
+    func updateSummary(currency: String, currencyPosition: String?, count: Int, subtotal: Double, fees: Double) {
         totalTicketLbl.text = "\(count) Ticket\(count == 1 ? "" : "s")"
-        totalAmountLbl.text = "\(currency)\(subtotal.decimalFormat(true))"
+        totalAmountLbl.text = CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
         if fees > 0 {
             extraFeesLbl.isHidden = false
-            extraFeesLbl.text = "Incl. \(currency)\(fees.decimalFormat(true)) in fees"
+            extraFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fees, symbol: currency, position: currencyPosition)) in fees"
         } else {
             extraFeesLbl.isHidden = true
         }

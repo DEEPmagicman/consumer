@@ -475,8 +475,9 @@ private extension PremiumTableSeatingVC {
         let minVal = activeMinimum()
         let deposit = calculateDeposit()
         let currency = event?.venue?.venueSettings?.currencySymbol ?? "$"
-        priceCard.configure(minimum: minVal, deposit: deposit, currency: currency)
-        bottomPriceLabel.text = "\(currency)\(String(format: "%.2f", deposit))"
+        let currencyPosition = event?.venue?.venueSettings?.currencyPosition ?? "$"
+        priceCard.configure(minimum: minVal, deposit: deposit, currency: currency, currencyPosition: currencyPosition)
+        bottomPriceLabel.text = CurrencyFormatter.amount(deposit, symbol: currency, position: currencyPosition)
         configureSpendAgreement(minimum: minVal, deposit: deposit)
     }
 
@@ -576,7 +577,7 @@ private extension PremiumTableSeatingVC {
         items.append(.init(title: "Balance Due at Venue", amount: balanceDue, isBold: true))
 
         currentSpendAgreementItems = items
-        spendAgreementView.configure(currency: event?.venue?.venueSettings?.currencySymbol ?? "$", items: items, expanded: true)
+        spendAgreementView.configure(currency: event?.venue?.venueSettings?.currencySymbol ?? "$", currencyPosition: event?.venue?.venueSettings?.currencyPosition, items: items, expanded: true)
         spendAgreementView.isHidden = false
         spendAgreementHeightConstraint?.constant = spendAgreementView.preferredHeight
         contentBottomToPriceConstraint?.isActive = false

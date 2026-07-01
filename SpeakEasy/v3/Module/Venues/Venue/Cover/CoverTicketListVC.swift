@@ -894,8 +894,12 @@ private extension CoverTicketListVC {
                 $0 + ($1.price * Double($1.selectedQuantity ?? 0))
             }
 
+        let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+        
         continueToCheckoutBtn.updateSummary(
-            currency: venueDetails?.venueSettings?.currencySymbol ?? "$",
+            currency: currencySymbole,
+            currencyPosition: currencyPosition,
             count: totalSelectedCount,
             subtotal: subtotal,
             fees: 0
@@ -1174,6 +1178,7 @@ extension CoverTicketListVC: UITableViewDataSource {
         cell.backgroundColor = .clear
 
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
         let whiteLabelColor = venueDetails?.venueSettings?.whiteLabelColor
 
         switch currentStep {
@@ -1191,6 +1196,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 extraFees: ticket.extraFees,
                 selectedCount: count,
                 currency: currency,
+                currencyPosition: currencyPosition,
                 whiteLabelColor: whiteLabelColor,
                 isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },
@@ -1220,6 +1226,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 extraFees: ticket.extraFees,
                 selectedCount: count,
                 currency: currency,
+                currencyPosition: currencyPosition,
                 whiteLabelColor: whiteLabelColor,
                 isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },

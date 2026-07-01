@@ -176,6 +176,7 @@ class TicketsTVC: UITableViewCell {
         extraFees: Double?,
         selectedCount: Int,
         currency: String,
+        currencyPosition: String?,
         whiteLabelColor: String?,
         isDescriptionExpanded: Bool,
         onPlus: (() -> Void)?,
@@ -221,7 +222,7 @@ class TicketsTVC: UITableViewCell {
         let fee = extraFees ?? 0
         if fee > 0 {
             inclFeesLbl.isHidden = false
-            inclFeesLbl.text = "Incl. \(currency)\(fee.decimalFormat(true)) in fees"
+            inclFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fee, symbol: currency, position: currencyPosition)) in fees"
         } else {
             inclFeesLbl.isHidden = true
         }
@@ -240,6 +241,7 @@ class TicketsTVC: UITableViewCell {
     func configure(
         ticket: EventTicket,
         currency: String,
+        currencyPosition: String?,
         whiteLabelColor: String?,
         eventTicketSetting: EventTicketSettings?,
         isDescriptionExpanded: Bool = false,
@@ -267,6 +269,7 @@ class TicketsTVC: UITableViewCell {
         applyNormalUI(
             ticket: ticket,
             currency: currency,
+            currencyPosition: currencyPosition,
             whiteLabelColor: whiteLabelColor,
             shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
         )
@@ -321,6 +324,7 @@ class TicketsTVC: UITableViewCell {
     private func applyNormalUI(
         ticket: EventTicket,
         currency: String,
+        currencyPosition: String?,
         whiteLabelColor: String?,
         shouldShowLeftLabel: Bool
     ) {
@@ -335,7 +339,7 @@ class TicketsTVC: UITableViewCell {
             rsvpBtnView.isHidden = false
             plusView.isHidden = true
         } else {
-            priceLbl.text = "\(currency)\(Double(price).decimalFormat(true))"
+            priceLbl.text = CurrencyFormatter.amount(Double(price), symbol: currency, position: currencyPosition)
             rsvpBtnView.isHidden = true
             plusBtn.isHidden = false
             plusView.isHidden = false
@@ -350,7 +354,7 @@ class TicketsTVC: UITableViewCell {
         let fee = ticket.extraFees ?? 0
         if fee > 0 {
             inclFeesLbl.isHidden = false
-            inclFeesLbl.text = "Incl. \(currency)\(fee.decimalFormat(true)) in fees"
+            inclFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fee, symbol: currency, position: currencyPosition)) in fees"
         } else {
             inclFeesLbl.isHidden = true
         }

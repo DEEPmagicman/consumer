@@ -351,6 +351,7 @@ struct VenueSettings: Codable {
     var tableBookingSettings: TableBookingSettings?
     var isEnabledSpendAgreement: Bool?
     var spendAgreementSettings: SpendAgreementSettings?
+    var currencyPosition: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -384,6 +385,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(tableBookingSettings, forKey: .tableBookingSettings)
         try container.encodeIfPresent(isEnabledSpendAgreement, forKey: .isEnabledSpendAgreement)
         try container.encodeIfPresent(spendAgreementSettings, forKey: .spendAgreementSettings)
+        try container.encodeIfPresent(currencyPosition, forKey: .currencyPosition)
     }
 }
 

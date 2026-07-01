@@ -45,6 +45,10 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var currency: String {
         event?.venue?.venueSettings?.currencySymbol ?? "$"
     }
+    
+    private var currencyPosition: String? {
+        event?.venue?.venueSettings?.currencyPosition
+    }
 
     // MARK: - UI
 
@@ -687,7 +691,7 @@ private extension PremiumTableCheckoutVC {
         }
         items.append(.init(title: "Deposit Total", amount: total, isBold: true))
 
-        depositBreakdownCard.configure(currency: currency, title: "Deposit Breakdown", items: items, expanded: true)
+        depositBreakdownCard.configure(currency: currency, currencyPosition: currencyPosition, title: "Deposit Breakdown", items: items, expanded: true)
         configureSummaryPrice(total: total)
         updatePriceSectionVisibility(hasDepositBreakdown: true)
         isFreeBooking = total <= 0
@@ -710,7 +714,7 @@ private extension PremiumTableCheckoutVC {
         }
 
         backendSpendAgreementItems = items
-        spendCard.configure(currency: currency, title: "Spend Agreement", items: items, expanded: true)
+        spendCard.configure(currency: currency, currencyPosition: currencyPosition, title: "Spend Agreement", items: items, expanded: true)
         spendCard.isHidden = false
         spendHeightConstraint?.constant = spendCard.preferredHeight
         updatePriceSectionVisibility(hasDepositBreakdown: !depositBreakdownCard.isHidden)
@@ -753,7 +757,7 @@ private extension PremiumTableCheckoutVC {
     func updateBottomPrice(_ total: Double) {
         bottomPrice.text = total <= 0
             ? "Free"
-            : "\(currency)\(String(format: "%.2f", total))"
+            :  CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
     }
 
     func showInitialContent() {
@@ -862,7 +866,8 @@ private extension PremiumTableCheckoutVC {
         summaryPriceCard.configure(
             minimum: minimum,
             deposit: deposit,
-            currency: currency
+            currency: currency,
+            currencyPosition: currencyPosition
         )
 
         updateBottomPrice(deposit)
@@ -1187,7 +1192,8 @@ private extension PremiumTableCheckoutVC {
                         true,
                         code: code,
                         discount: data.discount ?? 0,
-                        currency: self.currency
+                        currency: self.currency,
+                        currencyPosition: self.currencyPosition
                     )
                     self.configureDepositBreakdown(data)
                     self.updateBottomPrice(data.total ?? 0)
