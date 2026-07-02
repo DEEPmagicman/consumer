@@ -168,13 +168,13 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         imageParentView.playEntryAnimation()
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
-        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+        WebSocketWrapper.shared.removeDelegate(self)
     }
 
     deinit {

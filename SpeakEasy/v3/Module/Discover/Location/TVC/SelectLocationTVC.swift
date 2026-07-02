@@ -21,6 +21,7 @@ final class SelectLocationTVC: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         cityName.text = nil
+        selectedCityImage.image = nil
     }
     
 }

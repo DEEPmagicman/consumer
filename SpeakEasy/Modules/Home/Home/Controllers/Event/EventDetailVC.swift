@@ -117,7 +117,7 @@ final class EventDetailVC: UIViewController {
         mapView.addGestureRecognizer(tap)
         mapView.isScrollEnabled = false
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         unLockTF.addTarget(self, action: #selector(unLockPassword), for: .allEvents)
         unLockBtn.alpha = 0.5
         unLockBtn.isUserInteractionEnabled = false
@@ -128,7 +128,7 @@ final class EventDetailVC: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+        WebSocketWrapper.shared.removeDelegate(self)
     }
     
     @objc func unLockPassword() {

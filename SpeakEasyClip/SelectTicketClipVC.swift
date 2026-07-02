@@ -94,7 +94,7 @@ final class SelectTicketClipVC: UIViewController {
         venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
             self?.gradient = self?.venueBgImg.setGradientColor()
         }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
 

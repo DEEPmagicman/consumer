@@ -22,9 +22,13 @@ final class ShimmerViewV3: UIView {
         setupUI(lighter: lighter)
     }
     
+    deinit {
+        stopShimmer()
+    }
     
     required init?(coder: NSCoder) {
-        fatalError()
+        super.init(coder: coder)
+        setupUI()
     }
     
     private func setupUI(lighter: Bool = false) {
@@ -52,6 +56,14 @@ final class ShimmerViewV3: UIView {
         isAnimating = false
         gradientLayer.removeAnimation(forKey: "shimmer")
         layer.removeAnimation(forKey: "pulse")
+    }
+    
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+            stopShimmer()
+        }
     }
 
     // MARK: - Private

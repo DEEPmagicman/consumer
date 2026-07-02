@@ -44,7 +44,7 @@ final class BarTabQRCodeClipVC: UIViewController {
     """
         qrImage = generateQRCode(from: string)
         pagerView.reloadData()
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
         pagerView.delegate = self

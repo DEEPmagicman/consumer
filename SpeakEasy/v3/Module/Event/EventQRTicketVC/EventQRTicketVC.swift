@@ -119,8 +119,8 @@ class EventQRTicketVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         WebSocketWrapper.shared.updateSocketContext(venueId: currentVenueIdForSocket())
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.removeDelegate(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -136,7 +136,7 @@ class EventQRTicketVC: UIViewController {
         super.viewDidDisappear(animated)
         introHideWorkItem?.cancel()
         qrFlipWorkItem?.cancel()
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.removeDelegate(self)
 
         if presentationMode == .pushedFromPurchase,
            let previousInteractivePopEnabled {

@@ -232,12 +232,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+        WebSocketWrapper.shared.removeDelegate(self)
     }
     
     override func viewDidLayoutSubviews() {

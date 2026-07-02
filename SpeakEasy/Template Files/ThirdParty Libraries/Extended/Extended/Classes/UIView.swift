@@ -11,13 +11,24 @@ import UIKit
 extension UIView {
 
     // Find parent vc
-    public var parentViewController: UIViewController? {
-        var parentResponder: UIResponder? = self
-        while parentResponder != nil {
-            parentResponder = parentResponder!.next
-            if parentResponder is UIViewController {
-                return parentResponder as! UIViewController?
+//    public var parentViewController: UIViewController? {
+//        var parentResponder: UIResponder? = self
+//        while parentResponder != nil {
+//            parentResponder = parentResponder!.next
+//            if parentResponder is UIViewController {
+//                return parentResponder as! UIViewController?
+//            }
+//        }
+//        return nil
+//    }
+    
+    var parentViewController: UIViewController? {
+        var responder: UIResponder? = next
+        while let current = responder {
+            if let viewController = current as? UIViewController {
+                return viewController
             }
+            responder = current.next
         }
         return nil
     }

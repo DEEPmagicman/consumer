@@ -76,7 +76,7 @@ final class CustomQRScreen: UIViewController {
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         self.view.addGestureRecognizer(tapGestureRecognizer)
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer) {

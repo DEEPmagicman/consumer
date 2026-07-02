@@ -44,7 +44,7 @@ final class MVPVenueListVc: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(checkForceUpdate), name: UIApplication.didBecomeActiveNotification, object: nil)
         refresh.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         venueListTableView.addSubview(refresh)
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         venueListTableView.setupPadding()
         cityNameLbl.text = UserDefault.shared.localCity.uppercased()
         cityLbl.text = UserDefault.shared.localCity.uppercased()

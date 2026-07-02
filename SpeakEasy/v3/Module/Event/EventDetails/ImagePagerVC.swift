@@ -15,8 +15,15 @@ class ImagePagerVC: UIPageViewController {
     private(set) var currentIndex = 0
     private var isTransitioning = false
 
+    deinit {
+        print("-1-1-1deinit imagepagervc")
+        pages.removeAll()
+        imageURLs.removeAll()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("-1-1-1add imagepagervc")
         dataSource = self
         delegate = self
     }

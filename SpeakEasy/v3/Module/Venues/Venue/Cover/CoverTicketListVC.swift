@@ -437,12 +437,12 @@ private extension CoverTicketListVC {
 private extension CoverTicketListVC {
 
     func registerSocketDelegate() {
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.removeDelegate(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
 
     func unregisterSocketDelegate() {
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.removeDelegate(self)
     }
 
     func setupScrollBehavior() {

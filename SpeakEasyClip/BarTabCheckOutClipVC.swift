@@ -75,7 +75,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         
         ticketListView.isHidden = false
         

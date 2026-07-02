@@ -36,6 +36,14 @@ protocol WebSocketCallBackDelegate: AnyObject {
     func uncheckBarBooking(barItems: [BarTabHasItem])
 }
 
+private final class WeakDelegateBox {
+    weak var value: AnyObject?
+
+    init(_ value: AnyObject) {
+        self.value = value
+    }
+}
+
 final class WebSocketWrapper: NSObject {
     
     static let shared = WebSocketWrapper()
@@ -46,11 +54,29 @@ final class WebSocketWrapper: NSObject {
     private var isSocketSetupDone = false
     var isSocketConnected = false
     private var currentVenueId: String?
-    var delegate: [WebSocketCallBackDelegate] = []
+    
+    private var _delegates: [WeakDelegateBox] = []
+    
+    var delegate: [WebSocketCallBackDelegate] {
+        get {
+            // Auto-purge dead entries on every access
+            _delegates = _delegates.filter { $0.value != nil }
+            return _delegates.compactMap { $0.value as? WebSocketCallBackDelegate }
+        }
+    }
     
     let isAppClip = Bundle.main.bundleIdentifier?.contains("Clip") == true
     private var isAbleToConnect: Bool {
         ReachabilityManager.shared.isNetworkAvailable == true
+    }
+    
+    func addDelegate(_ delegate: WebSocketCallBackDelegate) {
+        guard !_delegates.contains(where: { $0.value === (delegate as AnyObject) }) else { return }
+        _delegates.append(WeakDelegateBox(delegate as AnyObject))
+    }
+    
+    func removeDelegate(_ delegate: WebSocketCallBackDelegate) {
+        _delegates.removeAll { $0.value === (delegate as AnyObject) }
     }
     
     func setUpWebSocket() {
@@ -283,6 +309,7 @@ final class WebSocketWrapper: NSObject {
             socket = manager.defaultSocket
             addEventListener()
             setArrData()
+            print("-1-1 Connect: -\(venueId) ")
             socket?.connect()
         }
     }
@@ -294,9 +321,9 @@ final class WebSocketWrapper: NSObject {
             return
         }
         
-        print("-1-1disConnect:")
         socket.disconnect()
         isSocketConnected = false
+        print("-1-1 disConnect:")
     }
 }
 

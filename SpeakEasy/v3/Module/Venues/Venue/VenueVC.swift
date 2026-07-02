@@ -435,12 +435,12 @@ private extension VenueVC {
 
     func registerSocketDelegate() {
         WebSocketWrapper.shared.updateSocketContext(venueId: venueDetails?.id)
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.removeDelegate(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
 
     func unregisterSocketDelegate() {
-        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.removeDelegate(self)
     }
 
     func refreshVenueFromSocket(resetTickets: Bool) {

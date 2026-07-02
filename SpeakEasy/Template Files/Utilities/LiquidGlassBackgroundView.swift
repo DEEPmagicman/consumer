@@ -40,28 +40,51 @@ private struct LiquidGlassSurface: View {
 }
 
 final class LiquidGlassBackgroundView: UIView {
+    
+    private var _glassCornerRadius: CGFloat = 12
+    private var _glassFillColor: UIColor = UIColor(white: 1, alpha: 0.04)
+    private var _glassTintColor: UIColor = .clear
+    private var _glassBorderColor: UIColor?
+    private var _glassBorderWidth: CGFloat = 0.75
 
     // MARK: - Public Properties
 
-    var fillColor: UIColor = UIColor(
-        white: 1,
-        alpha: 0.04
-    ) {
-        didSet { apply() }
+    var glassCornerRadius: CGFloat {
+        get { _glassCornerRadius }
+        set { _glassCornerRadius = newValue; apply() }
     }
 
-    /// Pass custom background color when needed
-    /// Example:
-    /// glassView.overrideBackgroundColor = .white
-    ///
-    /// Default = nil (normal glass effect)
+    var fillColor: UIColor {
+        get { _glassFillColor }
+        set { _glassFillColor = newValue; apply() }
+    }
+
+    var glassTintColor: UIColor {
+        get { _glassTintColor }
+        set { _glassTintColor = newValue; apply() }
+    }
+
+    var glassBorderColor: UIColor? {
+        get { _glassBorderColor }
+        set { _glassBorderColor = newValue; apply() }
+    }
+
+    var glassBorderWidth: CGFloat {
+        get { _glassBorderWidth }
+        set { _glassBorderWidth = newValue; apply() }
+    }
+
     var overrideBackgroundColor: UIColor? {
         didSet { apply() }
     }
 
     // MARK: - Private
 
-    private var hostingController: UIHostingController<AnyView>?
+    private lazy var hostingController = UIHostingController(
+        rootView: AnyView(EmptyView())
+    )
+
+    private var hostingInstalled = false
 
     // MARK: - Init
 
@@ -74,26 +97,28 @@ final class LiquidGlassBackgroundView: UIView {
         super.init(coder: coder)
         apply()
     }
+    
+    deinit {
+        if #available(iOS 26.0, *) {
+            hostingController.view.removeFromSuperview()
+        }
 
+        print("🔥 LiquidGlassBackgroundView deinit")
+    }
+    
     convenience init(
         cornerRadius: CGFloat = 12,
-        fillColor: UIColor = UIColor(
-            white: 1,
-            alpha: 0.04
-        ),
+        fillColor: UIColor = UIColor(white: 1, alpha: 0.04),
         borderColor: UIColor? = nil,
         borderWidth: CGFloat = 0.75,
         tintColor: UIColor = .clear
     ) {
-
         self.init(frame: .zero)
-
-        self.cornerRadius = cornerRadius
-        self.fillColor    = fillColor
-        self.borderColor  = borderColor
-        self.borderWidth  = borderWidth
-        self.tintColor    = tintColor
-
+        _glassCornerRadius = cornerRadius
+        _glassFillColor = fillColor
+        _glassBorderColor = borderColor
+        _glassBorderWidth = borderWidth
+        _glassTintColor = tintColor
         apply()
     }
 
@@ -107,58 +132,59 @@ final class LiquidGlassBackgroundView: UIView {
             applyFallback()
         }
     }
-
+    
     @available(iOS 26.0, *)
     private func applyGlass() {
 
-        hostingController?.view.removeFromSuperview()
+        installHostingIfNeeded()
 
-        backgroundColor   = .clear
+        backgroundColor = .clear
         layer.borderWidth = 0
 
         let surface = LiquidGlassSurface(
-            cornerRadius: cornerRadius,
-            tintColor: Color(tintColor),
+            cornerRadius: glassCornerRadius,
+            tintColor: Color(glassTintColor),
             fillColor: Color(fillColor),
-            overrideBackgroundColor: overrideBackgroundColor != nil
-            ? Color(overrideBackgroundColor!)
-            : nil
+            overrideBackgroundColor: overrideBackgroundColor.map(Color.init)
         )
 
-        let hc = UIHostingController(
-            rootView: AnyView(surface)
-        )
+        hostingController.rootView = AnyView(surface)
+    }
+    
+    @available(iOS 26.0, *)
+    private func installHostingIfNeeded() {
 
-        hc.view.backgroundColor = .clear
-        hc.view.translatesAutoresizingMaskIntoConstraints = false
-        hc.view.isUserInteractionEnabled = false
+        guard !hostingInstalled else { return }
 
-        insertSubview(hc.view, at: 0)
+        hostingInstalled = true
+
+        hostingController.view.backgroundColor = .clear
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.isUserInteractionEnabled = false
+
+        insertSubview(hostingController.view, at: 0)
 
         NSLayoutConstraint.activate([
-            hc.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            hc.view.trailingAnchor.constraint(equalTo: trailingAnchor),
-            hc.view.topAnchor.constraint(equalTo: topAnchor),
-            hc.view.bottomAnchor.constraint(equalTo: bottomAnchor)
+            hostingController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            hostingController.view.topAnchor.constraint(equalTo: topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
-        hostingController = hc
     }
 
     private func applyFallback() {
-
-        hostingController?.view.removeFromSuperview()
-        hostingController = nil
+        if #available(iOS 26.0, *) {
+            hostingController.view.removeFromSuperview()
+            hostingInstalled = false
+        }
 
         backgroundColor = overrideBackgroundColor ?? fillColor
 
-        layer.cornerRadius = cornerRadius
-        layer.cornerCurve  = .continuous
-        clipsToBounds      = true
+        layer.cornerRadius = glassCornerRadius
+        layer.cornerCurve = .continuous
+        clipsToBounds = true
 
-        layer.borderColor = borderColor?.cgColor
-        layer.borderWidth = borderColor != nil
-        ? borderWidth
-        : 0
+        layer.borderColor = glassBorderColor?.cgColor
+        layer.borderWidth = glassBorderColor != nil ? glassBorderWidth : 0  
     }
 }

@@ -95,7 +95,7 @@ final class CoverQRCodeVC: UIViewController {
             wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled
             interactivePopNavigationController?.interactivePopGestureRecognizer?.isEnabled = false
         }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -105,7 +105,7 @@ final class CoverQRCodeVC: UIViewController {
             self.wasInteractivePopGestureEnabled = nil
             interactivePopNavigationController = nil
         }
-        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+        WebSocketWrapper.shared.removeDelegate(self)
     }
 
     deinit {

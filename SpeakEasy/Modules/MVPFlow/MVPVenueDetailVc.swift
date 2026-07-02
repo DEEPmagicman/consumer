@@ -151,7 +151,7 @@ final class MVPVenueDetailVc: UIViewController {
             self.tableViewHeight.constant = self.ticketTypeTableView.contentSize.height
             self.ticketTypeTableView.layoutIfNeeded()
         }
-        WebSocketWrapper.shared.delegate.append(self)
+        WebSocketWrapper.shared.addDelegate(self) 
         getVenueDetail()
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
