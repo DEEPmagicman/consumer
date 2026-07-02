@@ -315,7 +315,7 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func onClickFilterbtn(_ sender: Any) {
-        presentCityFilter()
+        return
     }
 
     @IBAction func onClickCityBtn(_ sender: Any) {
@@ -1204,7 +1204,6 @@ private final class DiscoverImageAnnotationView: MKAnnotationView {
 
 private final class MapTableShimmerCell: UITableViewCell {
 
-
     private let shimmerContent = MapRowShimmerContentView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -1337,7 +1336,7 @@ private final class MapRowShimmerContentView: UIView {
 
             titleShimmer.leadingAnchor.constraint(equalTo: imageShimmer.trailingAnchor, constant: 15),
             titleShimmer.topAnchor.constraint(equalTo: imageShimmer.topAnchor, constant: 4),
-            titleShimmer.trailingAnchor.constraint(lessThanOrEqualTo: actionShimmer.leadingAnchor, constant: -18),
+            titleShimmer.trailingAnchor.constraint(equalTo: actionShimmer.leadingAnchor, constant: -18),
             titleShimmer.heightAnchor.constraint(equalToConstant: 18),
 
             subtitleShimmer.leadingAnchor.constraint(equalTo: titleShimmer.leadingAnchor),
@@ -1345,10 +1344,10 @@ private final class MapRowShimmerContentView: UIView {
             subtitleShimmer.widthAnchor.constraint(equalToConstant: 150),
             subtitleShimmer.heightAnchor.constraint(equalToConstant: 12),
 
-            badgeShimmer.leadingAnchor.constraint(equalTo: titleShimmer.leadingAnchor),
-            badgeShimmer.topAnchor.constraint(equalTo: subtitleShimmer.bottomAnchor, constant: 10),
-            badgeShimmer.widthAnchor.constraint(equalToConstant: 86),
-            badgeShimmer.heightAnchor.constraint(equalToConstant: 15),
+//            badgeShimmer.leadingAnchor.constraint(equalTo: titleShimmer.leadingAnchor),
+//            badgeShimmer.topAnchor.constraint(equalTo: subtitleShimmer.bottomAnchor, constant: 10),
+//            badgeShimmer.widthAnchor.constraint(equalToConstant: 86),
+//            badgeShimmer.heightAnchor.constraint(equalToConstant: 15),
 
             actionShimmer.trailingAnchor.constraint(equalTo: trailingAnchor),
             actionShimmer.centerYAnchor.constraint(equalTo: centerYAnchor),

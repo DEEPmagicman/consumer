@@ -82,12 +82,16 @@ final class PremiumTableCheckoutVC: UIViewController {
     private let spendCard        = PremiumSpendAgreementView()
     private let depositBreakdownCard = PremiumSpendAgreementView()
     private let summaryPriceCard = PremiumPriceCard()
+    private let priceLoadingView = PremiumTableCheckoutPriceLoadingView()
     private var noteHeightConstraint: NSLayoutConstraint?
     private var spendHeightConstraint: NSLayoutConstraint?
     private var depositBreakdownHeightConstraint: NSLayoutConstraint?
+    private var priceLoadingHeightConstraint: NSLayoutConstraint?
+    private var paymentTopToLoadingConstraint: NSLayoutConstraint?
     private var paymentTopToSpendConstraint: NSLayoutConstraint?
     private var paymentTopToDepositConstraint: NSLayoutConstraint?
     private var paymentTopToSummaryConstraint: NSLayoutConstraint?
+    private var promoTopToLoadingConstraint: NSLayoutConstraint?
     private var promoTopToSpendConstraint: NSLayoutConstraint?
     private var promoTopToDepositConstraint: NSLayoutConstraint?
     private var promoTopToSummaryConstraint: NSLayoutConstraint?
@@ -108,10 +112,6 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     // Timer
     private let timerBanner      = PremiumTimerBannerView()
-
-    // Loading overlay
-    private let loadingOverlay   = UIView()
-    private let loadingStack     = UIStackView()
 
     // Bottom bar
     private let bottomBar        = UIView()
@@ -168,12 +168,12 @@ private extension PremiumTableCheckoutVC {
         setupSpendCard()
         setupDepositBreakdownCard()
         setupSummaryPriceCard()
+        setupPriceLoadingView()
         setupPaymentRow()
         setupPromoRow()
         setupCheckboxes()
         setupTimerBanner()
         setupBottomBar()
-        setupLoadingOverlay()
         setupConstraints()
         showInitialContent()
     }
@@ -194,8 +194,10 @@ private extension PremiumTableCheckoutVC {
         eventTitleLabel.font      = Constant.Font.geistMedium(size: 22)
         eventTitleLabel.textColor = .white
         eventTitleLabel.numberOfLines = 0
+        eventTitleLabel.textAlignment = .left
         eventTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(eventTitleLabel)
+        eventTitleMarqueeLabel.textAlignment = .left
         eventTitleMarqueeLabel.install(over: eventTitleLabel, in: contentView, height: 30, horizontalInset: 20)
 
         venueLabel.font      = Constant.Font.geistMedium(size: 12)
@@ -282,6 +284,12 @@ private extension PremiumTableCheckoutVC {
         contentView.addSubview(summaryPriceCard)
     }
 
+    func setupPriceLoadingView() {
+        priceLoadingView.translatesAutoresizingMaskIntoConstraints = false
+        priceLoadingView.isHidden = true
+        contentView.addSubview(priceLoadingView)
+    }
+
     func setupPaymentRow() {
         paymentRow.translatesAutoresizingMaskIntoConstraints = false
         paymentRow.isHidden = true
@@ -301,7 +309,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func setupCheckboxes() {
-        termsAgreementView.titleText = "Terms & Conditions"
+        termsAgreementView.titleText = nil
         termsAgreementView.isChecked = true
         termsAgreementView.translatesAutoresizingMaskIntoConstraints = false
         termsAgreementView.isHidden = true
@@ -397,54 +405,6 @@ private extension PremiumTableCheckoutVC {
         ])
     }
 
-    func setupLoadingOverlay() {
-        loadingOverlay.backgroundColor = UIColor(hex: "#111111")
-        loadingOverlay.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loadingOverlay)
-
-        loadingStack.axis = .vertical
-        loadingStack.spacing = 14
-        loadingStack.translatesAutoresizingMaskIntoConstraints = false
-        loadingOverlay.addSubview(loadingStack)
-
-        func block(_ height: CGFloat, width: CGFloat? = nil, radius: CGFloat = 16) -> ShimmerViewV3 {
-            let shimmer = ShimmerViewV3()
-            shimmer.cornerRadius = radius
-            shimmer.translatesAutoresizingMaskIntoConstraints = false
-            shimmer.heightAnchor.constraint(equalToConstant: height).isActive = true
-            if let width {
-                shimmer.widthAnchor.constraint(equalToConstant: width).isActive = true
-            }
-            shimmer.startShimmer()
-            return shimmer
-        }
-
-        let header = UIStackView(arrangedSubviews: [
-            block(24, width: 220, radius: 12),
-            block(16, width: 140, radius: 8),
-            block(16, width: 190, radius: 8)
-        ])
-        header.axis = .vertical
-        header.alignment = .center
-        header.spacing = 10
-
-        loadingStack.addArrangedSubview(header)
-        loadingStack.addArrangedSubview(block(58, radius: 18))
-        loadingStack.addArrangedSubview(block(178, radius: 18))
-        loadingStack.addArrangedSubview(block(72, radius: 18))
-        loadingStack.addArrangedSubview(block(50, radius: 14))
-
-        NSLayoutConstraint.activate([
-            loadingOverlay.topAnchor.constraint(equalTo: view.topAnchor),
-            loadingOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            loadingOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingOverlay.bottomAnchor.constraint(equalTo: bottomBar.topAnchor),
-
-            loadingStack.topAnchor.constraint(equalTo: loadingOverlay.safeAreaLayoutGuide.topAnchor, constant: 84),
-            loadingStack.leadingAnchor.constraint(equalTo: loadingOverlay.leadingAnchor, constant: 20),
-            loadingStack.trailingAnchor.constraint(equalTo: loadingOverlay.trailingAnchor, constant: -20)
-        ])
-    }
 }
 
 // MARK: - Constraints
@@ -539,6 +499,11 @@ private extension PremiumTableCheckoutVC {
             summaryPriceCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             summaryPriceCard.heightAnchor.constraint(equalToConstant: 72),
 
+            // Price loading
+            priceLoadingView.topAnchor.constraint(equalTo: noteRow.bottomAnchor, constant: 10),
+            priceLoadingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            priceLoadingView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
             // Payment
             paymentRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             paymentRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -574,12 +539,14 @@ private extension PremiumTableCheckoutVC {
         paymentTopToSpendConstraint   = paymentRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 8)
         paymentTopToDepositConstraint = paymentRow.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 8)
         paymentTopToSummaryConstraint = paymentRow.topAnchor.constraint(equalTo: summaryPriceCard.bottomAnchor, constant: 8)
-        paymentTopToSummaryConstraint?.isActive = true
+        paymentTopToLoadingConstraint = paymentRow.topAnchor.constraint(equalTo: priceLoadingView.bottomAnchor, constant: 8)
+        paymentTopToLoadingConstraint?.isActive = true
 
         promoTopToSpendConstraint = promoRow.topAnchor.constraint(equalTo: spendCard.bottomAnchor, constant: 10)
         promoTopToDepositConstraint = promoRow.topAnchor.constraint(equalTo: depositBreakdownCard.bottomAnchor, constant: 10)
         promoTopToSummaryConstraint = promoRow.topAnchor.constraint(equalTo: summaryPriceCard.bottomAnchor, constant: 10)
-        promoTopToSummaryConstraint?.isActive = true
+        promoTopToLoadingConstraint = promoRow.topAnchor.constraint(equalTo: priceLoadingView.bottomAnchor, constant: 10)
+        promoTopToLoadingConstraint?.isActive = true
 
         noteHeightConstraint = noteRow.heightAnchor.constraint(equalToConstant: noteRow.preferredHeight)
         noteHeightConstraint?.isActive = true
@@ -589,6 +556,9 @@ private extension PremiumTableCheckoutVC {
 
         depositBreakdownHeightConstraint = depositBreakdownCard.heightAnchor.constraint(equalToConstant: 0)
         depositBreakdownHeightConstraint?.isActive = true
+
+        priceLoadingHeightConstraint = priceLoadingView.heightAnchor.constraint(equalToConstant: priceLoadingView.preferredHeight)
+        priceLoadingHeightConstraint?.isActive = true
 
         paymentHeightConstraint = paymentRow.heightAnchor.constraint(equalToConstant: 0)
         paymentHeightConstraint?.isActive = true
@@ -647,17 +617,19 @@ private extension PremiumTableCheckoutVC {
     func configureAfterBooking(_ b: SeatingAreaBookingResponse) {
         configureSelectedTableData(from: b)
         configureSummaryPrice(total: nil)
-        configureSpendAgreementCard(b.content?.tableBooking?.spendAgreement)
         if !paymentIntentSecret.isEmpty {
             setupStripe(secret: paymentIntentSecret, ephemeralKey: ephemeralKey)
         }
 
+        let spendAgreement = b.content?.tableBooking?.spendAgreement
         guard let breakdown = b.content?.tableBooking?.tableBookingPriceBreakdown else {
+            configureSpendAgreementCard(spendAgreement, depositBreakdown: nil)
             updatePriceSectionVisibility(hasDepositBreakdown: false)
             showContent()
             return
         }
         configureDepositBreakdown(breakdown)
+        configureSpendAgreementCard(spendAgreement, depositBreakdown: breakdown)
         updateBottomPrice(breakdown.total ?? 0)
         showContent()
     }
@@ -697,24 +669,32 @@ private extension PremiumTableCheckoutVC {
         isFreeBooking = total <= 0
     }
 
-    func configureSpendAgreementCard(_ breakdown: PriceBreakdown?) {
-        guard let breakdown else {
+    func configureSpendAgreementCard(
+        _ breakdown: PriceBreakdown?,
+        depositBreakdown: PriceBreakdown? = nil
+    ) {
+        if let breakdown {
+            let items = spendAgreementItems(from: breakdown)
+            if !items.isEmpty {
+                backendSpendAgreementItems = items
+                spendCard.configure(currency: currency, currencyPosition: currencyPosition, title: "Spend Agreement", items: items, expanded: true)
+                spendCard.isHidden = false
+                spendHeightConstraint?.constant = spendCard.preferredHeight
+                updatePriceSectionVisibility(hasDepositBreakdown: !depositBreakdownCard.isHidden)
+                return
+            }
+        }
+
+        let fallbackItems = localSpendAgreementItems(depositBreakdown: depositBreakdown)
+        guard !fallbackItems.isEmpty else {
             backendSpendAgreementItems = []
             spendCard.isHidden = true
             spendHeightConstraint?.constant = 0
             return
         }
 
-        let items = spendAgreementItems(from: breakdown)
-        guard !items.isEmpty else {
-            backendSpendAgreementItems = []
-            spendCard.isHidden = true
-            spendHeightConstraint?.constant = 0
-            return
-        }
-
-        backendSpendAgreementItems = items
-        spendCard.configure(currency: currency, currencyPosition: currencyPosition, title: "Spend Agreement", items: items, expanded: true)
+        backendSpendAgreementItems = fallbackItems
+        spendCard.configure(currency: currency, currencyPosition: currencyPosition, title: "Spend Agreement", items: fallbackItems, expanded: true)
         spendCard.isHidden = false
         spendHeightConstraint?.constant = spendCard.preferredHeight
         updatePriceSectionVisibility(hasDepositBreakdown: !depositBreakdownCard.isHidden)
@@ -761,9 +741,12 @@ private extension PremiumTableCheckoutVC {
     }
 
     func showInitialContent() {
-        setLoadingOverlayVisible(true)
-        guestDisplayRow.isHidden = true
-        noteRow.isHidden         = true
+        configureHeader()
+        configureGuest()
+
+        setPriceLoadingVisible(true)
+        guestDisplayRow.isHidden = false
+        noteRow.isHidden         = false
         summaryPriceCard.isHidden = true
         spendCard.isHidden = true
         spendHeightConstraint?.constant = 0
@@ -783,7 +766,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func showContent() {
-        setLoadingOverlayVisible(false)
+        setPriceLoadingVisible(false)
         guestDisplayRow.isHidden = false
         noteRow.isHidden         = false
         paymentRow.isHidden      = true
@@ -799,20 +782,24 @@ private extension PremiumTableCheckoutVC {
         view.layoutIfNeeded()
     }
 
-    func setLoadingOverlayVisible(_ visible: Bool) {
-        loadingOverlay.isHidden = !visible
-        if visible {
-            startShimmerViews(in: loadingOverlay)
-        } else {
-            loadingOverlay.layer.removeAllAnimations()
-        }
-    }
+    func setPriceLoadingVisible(_ visible: Bool) {
+        priceLoadingView.isHidden = !visible
+        priceLoadingHeightConstraint?.constant = visible ? priceLoadingView.preferredHeight : 0
 
-    func startShimmerViews(in view: UIView) {
-        if let shimmer = view as? ShimmerViewV3 {
-            shimmer.startShimmer()
+        paymentTopToLoadingConstraint?.isActive = visible
+        promoTopToLoadingConstraint?.isActive = visible
+
+        if visible {
+            paymentTopToSpendConstraint?.isActive = false
+            paymentTopToDepositConstraint?.isActive = false
+            paymentTopToSummaryConstraint?.isActive = false
+            promoTopToSpendConstraint?.isActive = false
+            promoTopToDepositConstraint?.isActive = false
+            promoTopToSummaryConstraint?.isActive = false
+            priceLoadingView.startShimmer()
+        } else {
+            priceLoadingView.stopShimmer()
         }
-        view.subviews.forEach { startShimmerViews(in: $0) }
     }
 
     func configureSelectedTableData(from booking: SeatingAreaBookingResponse) {
@@ -878,6 +865,8 @@ private extension PremiumTableCheckoutVC {
     }
 
     func updatePriceSectionVisibility(hasDepositBreakdown: Bool) {
+        setPriceLoadingVisible(false)
+
         let hasSpendAgreement = !backendSpendAgreementItems.isEmpty
 
         spendCard.isHidden = !hasSpendAgreement
@@ -902,36 +891,35 @@ private extension PremiumTableCheckoutVC {
         let settings = event?.venue?.venueSettings
 
         var terms = cleanAgreementText(
-            settings?.tableBookingTermsAndCondition ??
             settings?.emailPolicyText ??
+            settings?.tableBookingTermsAndCondition ??
             ""
         )
         if terms.isEmpty {
             terms = "I agree to the Terms & Conditions."
         }
 
-        termsAgreementView.titleText = "Terms & Conditions"
+        termsAgreementView.titleText = nil
         termsAgreementView.bodyText = terms
         termsAgreementView.bodyAttributedText = formattedAgreementHTML(
-            settings?.tableBookingTermsAndCondition ?? settings?.emailPolicyText ?? ""
+            settings?.emailPolicyText ?? settings?.tableBookingTermsAndCondition ?? ""
         )
-        termsAgreementView.isChecked = false
+        termsAgreementView.isChecked = true
         termsAgreementView.isHidden = false
 
-        var policy = cleanAgreementText(settings?.tableBookingImportantInformation ?? "")
+        let venueName = event?.venue?.name ?? "the venue"
+        let fallbackPolicy =
+            "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        var policy = cleanAgreementText(settings?.policyText ?? fallbackPolicy)
         if settings?.optedPolicy == true, policy.isEmpty {
-            let venueName = event?.venue?.name ?? "the venue"
-            policy = cleanAgreementText(settings?.policyText ?? "")
-            if policy.isEmpty {
-                policy = "I agree to receive marketing related messages from \(venueName) via SMS and email."
-            }
+            policy = cleanAgreementText(fallbackPolicy)
         }
         venueMessageView.titleText = nil
         venueMessageView.bodyText = settings?.optedPolicy == true ? policy : ""
         venueMessageView.bodyAttributedText = settings?.optedPolicy == true
-            ? formattedAgreementHTML(settings?.tableBookingImportantInformation ?? settings?.policyText ?? "")
+            ? formattedAgreementHTML(settings?.policyText ?? fallbackPolicy)
             : nil
-        venueMessageView.isChecked = false
+        venueMessageView.isChecked = true
         venueMessageView.isHidden = settings?.optedPolicy != true || policy.isEmpty
         updateAgreementHeights(animated: false)
     }
@@ -1094,13 +1082,277 @@ private extension PremiumTableCheckoutVC {
     }
 }
 
+private struct PremiumCheckoutSpendFee {
+    let name: String
+    let amount: Double
+    let isTaxable: Bool
+}
+
+private struct PremiumCheckoutSpendFeeResult {
+    let amountChargedToConsumer: Double
+    let totalProcessingFees: Double
+    let salesTax: Double
+}
+
+private struct PremiumCheckoutSpendSettings {
+    let isProcessingFeePassToCustomer: Bool
+    let isProcessingFeeTaxable: Bool
+    let isEnableSalesTax: Bool
+    let salesTaxName: String?
+    let salesTax: Double
+    let customFees: [TableSettingCustomFee]
+    let isEnableGratuity: Bool
+    let gratuityFeeType: String?
+    let gratuityFeeName: String?
+    let gratuityFee: Double
+    let isGratuityTaxable: Bool
+    let stripePerc: Double
+    let stripeFlat: Double
+    let speakeasyFeeFlat: Double?
+    let speakeasyFeePerc: Double?
+
+    init(_ settings: SpendAgreementSettings) {
+        isProcessingFeePassToCustomer = settings.isProcessingFeePassToCustomer == true
+        isProcessingFeeTaxable = settings.isProcessingFeeTaxable == true
+        isEnableSalesTax = settings.isEnableSalesTax == true
+        salesTaxName = settings.salesTaxName
+        salesTax = settings.salesTax ?? 0
+        customFees = settings.customFees ?? []
+        isEnableGratuity = settings.isEnableGratuity == true
+        gratuityFeeType = settings.gratuityFeeType
+        gratuityFeeName = settings.gratuityFeeName
+        gratuityFee = settings.gratuityFee ?? 0
+        isGratuityTaxable = settings.isGratuityTaxable == true
+        stripePerc = settings.stripePerc ?? 0.029
+        stripeFlat = settings.stripeFlat ?? 30
+        speakeasyFeeFlat = settings.speakeasyFeeFlat
+        speakeasyFeePerc = settings.speakeasyFeePerc
+    }
+}
+
+private extension PremiumTableCheckoutVC {
+
+    func localSpendAgreementItems(depositBreakdown: PriceBreakdown?) -> [SpendLineItem] {
+        guard event?.venue?.venueSettings?.isEnabledSpendAgreement == true,
+              let spendSettings = event?.venue?.venueSettings?.spendAgreementSettings else {
+            return []
+        }
+
+        let subtotal = checkoutItems.first?.minimum ?? seatingAreas.first.map { activeMinimum(for: $0) } ?? 0
+        guard subtotal > 0 else { return [] }
+
+        let settings = PremiumCheckoutSpendSettings(spendSettings)
+        let customFeesWithGratuity = calculateSpendCustomFees(
+            for: subtotal,
+            settings: settings,
+            includeGratuity: true
+        )
+        let customFeesWithoutGratuity = calculateSpendCustomFees(
+            for: subtotal,
+            settings: settings,
+            includeGratuity: false
+        )
+        let seFees = calculateSpendSEFees(for: subtotal, settings: settings)
+        let feeResult = calculateSpendBookingFees(
+            amountTransferToSE: seFees,
+            amountTransferToVenue: subtotal,
+            customFees: customFeesWithGratuity,
+            settings: settings
+        )
+        let gratuity = calculateSpendGratuity(for: subtotal, settings: settings)
+        let balanceDue = max(0, feeResult.amountChargedToConsumer - depositCredit(from: depositBreakdown))
+
+        var items: [SpendLineItem] = [
+            .init(title: "Subtotal", amount: subtotal, isBold: false)
+        ]
+
+        if settings.isEnableGratuity, gratuity > 0 {
+            items.append(.init(title: settings.gratuityFeeName ?? "Gratuity Fee", amount: gratuity, isBold: false))
+        }
+        if settings.isEnableSalesTax, feeResult.salesTax > 0 {
+            items.append(.init(title: settings.salesTaxName ?? "Sales Tax", amount: feeResult.salesTax, isBold: false))
+        }
+        if settings.isProcessingFeePassToCustomer, feeResult.totalProcessingFees > 0 {
+            items.append(.init(title: "Processing Fee", amount: feeResult.totalProcessingFees, isBold: false))
+        }
+        customFeesWithoutGratuity
+            .filter { $0.amount > 0 }
+            .forEach { items.append(.init(title: $0.name, amount: $0.amount, isBold: false)) }
+
+        items.append(.init(title: "Total", amount: feeResult.amountChargedToConsumer, isBold: true))
+        items.append(.init(title: "Balance Due at Venue", amount: balanceDue, isBold: true))
+        return items
+    }
+
+    func activeMinimum(for area: SeatingArea) -> Double {
+        let guests = checkoutItems.first?.guests ?? guestCount
+        let defaultGuests = area.defaultGuest ?? 0
+        let extraGuests = max(0, guests - defaultGuests)
+
+        if area.bookingType == .timeWise {
+            let base = selectedTimeSlot?.minimum ?? area.minimum ?? 0
+            let extraCharge = selectedTimeSlot?.extraPersonCharge ?? area.extraPersonCharge ?? 0
+            return base + Double(extraGuests) * extraCharge
+        }
+
+        return (area.minimum ?? 0) + Double(extraGuests) * (area.extraPersonCharge ?? 0)
+    }
+
+    func depositCredit(from breakdown: PriceBreakdown?) -> Double {
+        let backendTotal = breakdown?.total
+            ?? checkoutItems.first?.deposit
+            ?? selectedTimeSlot?.depositWithFees
+            ?? seatingAreas.first?.depositWithFees
+            ?? 0
+        let backendSalesTax = breakdown?.salesTax ?? 0
+        let backendProcessingFees = (breakdown?.seFees ?? 0) + (breakdown?.stripeFees ?? 0)
+        let shouldRemoveProcessingFees = event?
+            .venue?
+            .venueSettings?
+            .tableBookingSettings?
+            .isProcessingFeePassToCustomer == true
+
+        return max(
+            0,
+            backendTotal
+            - backendSalesTax
+            - (shouldRemoveProcessingFees ? backendProcessingFees : 0)
+        )
+    }
+
+    func calculateSpendSEFees(for amount: Double, settings: PremiumCheckoutSpendSettings) -> Double {
+        var seFees = 0.0
+        if let percentage = settings.speakeasyFeePerc {
+            seFees = amount * percentage * 100
+        }
+        if let flat = settings.speakeasyFeeFlat {
+            seFees += amount <= 10 ? amount * 0.1 * flat : flat
+        }
+        return seFees
+    }
+
+    func calculateSpendCustomFees(
+        for amount: Double,
+        settings: PremiumCheckoutSpendSettings,
+        includeGratuity: Bool
+    ) -> [PremiumCheckoutSpendFee] {
+        var fees: [PremiumCheckoutSpendFee] = []
+        settings.customFees.forEach { customFee in
+            guard customFee.isEnableCustomFee == true else { return }
+            let feeAmount = customFee.customFeeType?.uppercased() == "FLAT"
+                ? (customFee.customFee ?? 0)
+                : amount * (customFee.customFee ?? 0) / 100
+            fees.append(
+                .init(
+                    name: customFee.customFeeName ?? "Fee",
+                    amount: feeAmount,
+                    isTaxable: customFee.isCustomFeeTaxable == true
+                )
+            )
+        }
+        if includeGratuity, settings.isEnableGratuity {
+            fees.append(
+                .init(
+                    name: settings.gratuityFeeName ?? "Gratuity Fee",
+                    amount: calculateSpendGratuity(for: amount, settings: settings),
+                    isTaxable: settings.isGratuityTaxable
+                )
+            )
+        }
+        return fees
+    }
+
+    func calculateSpendGratuity(for amount: Double, settings: PremiumCheckoutSpendSettings) -> Double {
+        guard settings.isEnableGratuity else { return 0 }
+        if settings.gratuityFeeType?.uppercased() == "FLAT" {
+            return settings.gratuityFee
+        }
+        return amount * settings.gratuityFee / 100
+    }
+
+    func calculateSpendBookingFees(
+        amountTransferToSE: Double,
+        amountTransferToVenue: Double,
+        customFees: [PremiumCheckoutSpendFee],
+        settings: PremiumCheckoutSpendSettings
+    ) -> PremiumCheckoutSpendFeeResult {
+        let stripePerc = settings.stripePerc
+        let stripeFlat = settings.stripeFlat / 100
+        let speakeasyFee = amountTransferToSE / 100
+        let taxRate = settings.isEnableSalesTax ? settings.salesTax / 100 : 0
+        let taxableFees = customFees.filter(\.isTaxable).reduce(0) { $0 + $1.amount }
+        let nonTaxableFees = customFees.filter { !$0.isTaxable }.reduce(0) { $0 + $1.amount }
+
+        func rounded2(_ value: Double) -> Double {
+            (value * 100).rounded() / 100
+        }
+
+        let stripeFee: Double
+        let salesTax: Double
+        let totalProcessingFees: Double
+
+        if settings.isProcessingFeePassToCustomer {
+            if settings.isProcessingFeeTaxable {
+                stripeFee = rounded2(
+                    (
+                        stripePerc * (
+                            (1 + taxRate) * (amountTransferToVenue + speakeasyFee + taxableFees)
+                            + nonTaxableFees
+                        )
+                        + stripeFlat
+                    )
+                    / (1 - (1 + taxRate) * stripePerc)
+                )
+                totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+                salesTax = rounded2((amountTransferToVenue + taxableFees + totalProcessingFees) * taxRate)
+            } else {
+                stripeFee = rounded2(
+                    (
+                        stripePerc * (
+                            (amountTransferToVenue + taxableFees) * (1 + taxRate)
+                            + nonTaxableFees
+                            + speakeasyFee
+                        )
+                        + stripeFlat
+                    )
+                    / (1 - stripePerc)
+                )
+                totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+                salesTax = rounded2((amountTransferToVenue + taxableFees) * taxRate)
+            }
+        } else {
+            stripeFee = rounded2(
+                stripePerc * ((amountTransferToVenue + taxableFees) * (1 + taxRate) + nonTaxableFees)
+                + stripeFlat
+            )
+            totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+            salesTax = rounded2((amountTransferToVenue + taxableFees) * taxRate)
+        }
+
+        let roundedProcessingCents = (totalProcessingFees * 100).rounded()
+        let roundedSalesTaxCents = (salesTax * 100).rounded()
+        let amountCharged = rounded2(
+            amountTransferToVenue
+            + (settings.isProcessingFeePassToCustomer ? roundedProcessingCents / 100 : 0)
+            + taxableFees
+            + nonTaxableFees
+            + salesTax
+        )
+        let amountChargedCents = (amountCharged * 100).rounded()
+
+        return .init(
+            amountChargedToConsumer: amountChargedCents / 100,
+            totalProcessingFees: roundedProcessingCents / 100,
+            salesTax: roundedSalesTaxCents / 100
+        )
+    }
+}
+
 // MARK: - Socket
 
 private extension PremiumTableCheckoutVC {
 
     func setupSocket() {
-        configureHeader()
-        configureGuest()
         BookingQueueSocketManager.shared.delegate = self
         if let q = queueId {
             BookingQueueSocketManager.shared.connect(
@@ -1129,7 +1381,7 @@ extension PremiumTableCheckoutVC: BookingQueueSocketDelegate {
                 self.configureAfterBooking(b)
 
             case "failed":
-                self.setLoadingOverlayVisible(false)
+                self.updatePriceSectionVisibility(hasDepositBreakdown: false)
                 self.buyBtn.alpha = 0.5
                 self.buyBtn.isUserInteractionEnabled = false
                 Alert.showToast(b.message ?? "Booking failed")
@@ -1138,6 +1390,132 @@ extension PremiumTableCheckoutVC: BookingQueueSocketDelegate {
                 break
             }
         }
+    }
+}
+
+private final class PremiumTableCheckoutPriceLoadingView: UIView {
+
+    let preferredHeight: CGFloat = 164
+
+    private let card = GradientBorderCardView()
+    private let titleLabel = UILabel()
+    private let rowsStack = UIStackView()
+    private let shimmerRows = [
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.40, amountWidthMultiplier: 0.20),
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.52, amountWidthMultiplier: 0.24),
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.34, amountWidthMultiplier: 0.28)
+    ]
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        card.glassCornerRadius = 18
+    }
+
+    func startShimmer() {
+        shimmerRows.forEach { $0.startShimmer() }
+    }
+
+    func stopShimmer() {
+        shimmerRows.forEach { $0.stopShimmer() }
+    }
+
+    private func setup() {
+        card.translatesAutoresizingMaskIntoConstraints = false
+        card.fillColor = UIColor.white.withAlphaComponent(0.06).cgColor
+        card.showsBlur = true
+        card.blurAlpha = 0.4
+        card.thinBorder = true
+        addSubview(card)
+
+        titleLabel.text = "Payment summary"
+        titleLabel.font = Constant.Font.geistMedium(size: 15)
+        titleLabel.textColor = .white
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(titleLabel)
+
+        rowsStack.axis = .vertical
+        rowsStack.spacing = 10
+        rowsStack.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(rowsStack)
+
+        shimmerRows.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            rowsStack.addArrangedSubview($0)
+            $0.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        }
+
+        NSLayoutConstraint.activate([
+            card.topAnchor.constraint(equalTo: topAnchor),
+            card.leadingAnchor.constraint(equalTo: leadingAnchor),
+            card.trailingAnchor.constraint(equalTo: trailingAnchor),
+            card.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            titleLabel.topAnchor.constraint(equalTo: card.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: card.trailingAnchor, constant: -16),
+
+            rowsStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 18),
+            rowsStack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            rowsStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16)
+        ])
+    }
+}
+
+private final class PremiumTableCheckoutPriceShimmerRow: UIView {
+
+    private let titleLine = ShimmerViewV3()
+    private let amountLine = ShimmerViewV3()
+    private let titleWidthMultiplier: CGFloat
+    private let amountWidthMultiplier: CGFloat
+
+    init(titleWidthMultiplier: CGFloat, amountWidthMultiplier: CGFloat) {
+        self.titleWidthMultiplier = titleWidthMultiplier
+        self.amountWidthMultiplier = amountWidthMultiplier
+        super.init(frame: .zero)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    func startShimmer() {
+        titleLine.startShimmer()
+        amountLine.startShimmer()
+    }
+
+    func stopShimmer() {
+        titleLine.stopShimmer()
+        amountLine.stopShimmer()
+    }
+
+    private func setup() {
+        [titleLine, amountLine].forEach {
+            $0.cornerRadius = 6
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            titleLine.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: titleWidthMultiplier),
+            titleLine.heightAnchor.constraint(equalToConstant: 12),
+
+            amountLine.trailingAnchor.constraint(equalTo: trailingAnchor),
+            amountLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            amountLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: amountWidthMultiplier),
+            amountLine.heightAnchor.constraint(equalToConstant: 12)
+        ])
     }
 }
 
@@ -1196,6 +1574,10 @@ private extension PremiumTableCheckoutVC {
                         currencyPosition: self.currencyPosition
                     )
                     self.configureDepositBreakdown(data)
+                    self.configureSpendAgreementCard(
+                        self.booking?.content?.tableBooking?.spendAgreement,
+                        depositBreakdown: data
+                    )
                     self.updateBottomPrice(data.total ?? 0)
                     Alert.showToast("Promo code applied")
                 } else {
@@ -1228,6 +1610,10 @@ private extension PremiumTableCheckoutVC {
                     self.appliedPromo   = ""
                     self.promoRow.setApplied(false)
                     self.configureDepositBreakdown(data)
+                    self.configureSpendAgreementCard(
+                        self.booking?.content?.tableBooking?.spendAgreement,
+                        depositBreakdown: data
+                    )
                     self.updateBottomPrice(data.total ?? 0)
                     Alert.showToast("Promo removed")
                 } else {

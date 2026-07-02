@@ -836,8 +836,8 @@ final class PremiumAgreementView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
 
-        bodyLabel.font = Constant.Font.geistRegular(size: 12)
-        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.88)
+        bodyLabel.font = Constant.Font.geistRegular(size: 10)
+        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.78)
         bodyLabel.numberOfLines = collapsedLines
         bodyLabel.lineBreakMode = .byWordWrapping
         bodyLabel.isUserInteractionEnabled = true
@@ -857,8 +857,8 @@ final class PremiumAgreementView: UIView {
         NSLayoutConstraint.activate([
             checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             checkButton.topAnchor.constraint(equalTo: topAnchor),
-            checkButton.widthAnchor.constraint(equalToConstant: 16),
-            checkButton.heightAnchor.constraint(equalToConstant: 16),
+            checkButton.widthAnchor.constraint(equalToConstant: 24),
+            checkButton.heightAnchor.constraint(equalToConstant: 24),
 
             titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -891,7 +891,7 @@ final class PremiumAgreementView: UIView {
         }
 
         let needsToggle = shouldShowToggle()
-        let toggleText = isExpanded ? "View less" : "View more"
+        let toggleText = isExpanded ? "View\u{00A0}Less" : "View\u{00A0}More"
         let body = isExpanded || !needsToggle
             ? bodyText
             : collapsedPreview(toggleText: toggleText)
@@ -902,8 +902,8 @@ final class PremiumAgreementView: UIView {
            let bodyAttributedText {
             attributed = NSMutableAttributedString(attributedString: bodyAttributedText)
             attributed.addAttributes([
-                .font: Constant.Font.geistRegular(size: 12),
-                .foregroundColor: UIColor.white.withAlphaComponent(0.88)
+                .font: Constant.Font.geistRegular(size: 10),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.78)
             ], range: NSRange(location: 0, length: attributed.length))
             attributed.enumerateAttribute(
                 .link,
@@ -912,7 +912,7 @@ final class PremiumAgreementView: UIView {
             ) { value, range, _ in
                 if value != nil {
                     attributed.addAttributes([
-                        .font: Constant.Font.geistMedium(size: 12),
+                        .font: Constant.Font.geistMedium(size: 10),
                         .foregroundColor: UIColor.white,
                         .underlineStyle: NSUnderlineStyle.single.rawValue
                     ], range: range)
@@ -922,7 +922,7 @@ final class PremiumAgreementView: UIView {
                 attributed.append(NSAttributedString(
                     string: " \(toggleText)",
                     attributes: [
-                        .font: Constant.Font.geistMedium(size: 12),
+                        .font: Constant.Font.geistSemiBold(size: 10),
                         .foregroundColor: UIColor.white
                     ]
                 ))
@@ -931,8 +931,8 @@ final class PremiumAgreementView: UIView {
             attributed = NSMutableAttributedString(
                 string: displayText,
                 attributes: [
-                    .font: Constant.Font.geistRegular(size: 12),
-                    .foregroundColor: UIColor.white.withAlphaComponent(0.88)
+                    .font: Constant.Font.geistRegular(size: 10),
+                    .foregroundColor: UIColor.white.withAlphaComponent(0.78)
                 ]
             )
         }
@@ -942,7 +942,7 @@ final class PremiumAgreementView: UIView {
             if range.location != NSNotFound,
                range.location + range.length <= attributed.length {
                 attributed.addAttributes([
-                    .font: Constant.Font.geistMedium(size: 12),
+                    .font: Constant.Font.geistSemiBold(size: 10),
                     .foregroundColor: UIColor.white
                 ], range: range)
             }
@@ -980,7 +980,7 @@ final class PremiumAgreementView: UIView {
 
         if !body.isEmpty {
             if !title.isEmpty { height += 6 }
-            let bodyFont = Constant.Font.geistRegular(size: 12)
+            let bodyFont = Constant.Font.geistRegular(size: 10)
             let bodyHeight = (body as NSString).boundingRect(
                 with: CGSize(width: width, height: .greatestFiniteMagnitude),
                 options: [.usesLineFragmentOrigin, .usesFontLeading],
@@ -991,12 +991,12 @@ final class PremiumAgreementView: UIView {
             height += isExpanded ? ceil(bodyHeight) : min(ceil(bodyHeight), maxCollapsedHeight)
         }
 
-        return max(18, height)
+        return max(24, height)
     }
 
     private func shouldShowToggle() -> Bool {
         let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
-        let font = Constant.Font.geistMedium(size: 12)
+        let font = Constant.Font.geistRegular(size: 10)
         let height = (bodyText as NSString).boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading],
@@ -1008,7 +1008,7 @@ final class PremiumAgreementView: UIView {
 
     private func collapsedPreview(toggleText: String) -> String {
         let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
-        let font = Constant.Font.geistMedium(size: 12)
+        let font = Constant.Font.geistRegular(size: 10)
         let maxHeight = collapsedHeight(for: font)
 
         func height(for value: String) -> CGFloat {
@@ -1197,8 +1197,8 @@ final class PremiumSpendAgreementView: UIView {
         headerLabel.textColor = .white
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        chevron.image          = UIImage(systemName: "chevron.down")
-        chevron.tintColor      = .white
+        chevron.image          = UIImage(named: "arrowTopIcon")?.withRenderingMode(.alwaysTemplate)
+        chevron.tintColor      = UIColor.white.withAlphaComponent(0.65)
         chevron.contentMode    = .scaleAspectFit
         chevron.translatesAutoresizingMaskIntoConstraints = false
 
@@ -1244,8 +1244,8 @@ final class PremiumSpendAgreementView: UIView {
 
             chevron.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             chevron.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            chevron.widthAnchor.constraint(equalToConstant: 18),
-            chevron.heightAnchor.constraint(equalToConstant: 18),
+            chevron.widthAnchor.constraint(equalToConstant: 9),
+            chevron.heightAnchor.constraint(equalToConstant: 6),
 
             divider.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             divider.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
@@ -1301,7 +1301,7 @@ final class PremiumSpendAgreementView: UIView {
 
     private func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
-        let rotate: CGFloat = expanded ? .pi : 0
+        let rotate: CGFloat = expanded ? 0 : .pi
 
         let update = {
             self.divider.isHidden   = !expanded

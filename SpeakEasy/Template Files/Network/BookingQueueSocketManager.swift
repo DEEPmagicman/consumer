@@ -162,7 +162,8 @@ final class BookingQueueSocketManager {
 
     private func decodeBooking(from item: Any) -> SeatingAreaBookingResponse? {
         if let dict = item as? [String: Any] {
-            if let content = dict["content"],
+            if isQueueWrapper(dict),
+               let content = dict["content"],
                let booking = decodeBooking(from: content) {
                 return booking
             }
@@ -179,6 +180,13 @@ final class BookingQueueSocketManager {
         }
 
         return nil
+    }
+
+    private func isQueueWrapper(_ dict: [String: Any]) -> Bool {
+        dict["content"] != nil
+            && dict["id"] == nil
+            && dict["status"] == nil
+            && dict["items"] == nil
     }
 
     private func decode<T: Decodable>(_ object: Any, as type: T.Type) -> T? {

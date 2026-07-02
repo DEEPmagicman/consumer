@@ -56,7 +56,9 @@ class CheckoutBarView: UIView {
 
     func updateSummary(currency: String, currencyPosition: String?, count: Int, subtotal: Double, fees: Double) {
         totalTicketLbl.text = "\(count) Ticket\(count == 1 ? "" : "s")"
-        totalAmountLbl.text = CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
+        totalAmountLbl.text = subtotal <= 0
+            ? "Free"
+            : CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
         if fees > 0 {
             extraFeesLbl.isHidden = false
             extraFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fees, symbol: currency, position: currencyPosition)) in fees"

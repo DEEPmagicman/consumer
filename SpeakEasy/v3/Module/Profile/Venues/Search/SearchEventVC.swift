@@ -18,6 +18,10 @@ final class SearchEventVC: BaseSearchSheetVC {
 
     private var events: [SearchEventItem] = []
     private var searchWorkItem: DispatchWorkItem?
+    private var searchRequestID = 0
+    private var hasMoreEvents = false
+    private var isLoadingMore = false
+    private let pageSize = 10
 
     private let leftDateLabel = UILabel()
     private let rightDateLabel = UILabel()
@@ -28,39 +32,7 @@ final class SearchEventVC: BaseSearchSheetVC {
     private var toDate: Date?
 
     private var isLoading = false
-    
-    private let dummyEvents: [SearchEventItem] = [
-        SearchEventItem(
-            id: "1",
-            title: "The Grand Hall",
-            dateText: "Apr 18 at 8PM",
-            imageURL: nil
-        ),
-        SearchEventItem(
-            id: "2",
-            title: "Skyline Rooftop",
-            dateText: "Apr 18 at 8PM",
-            imageURL: nil
-        ),
-        SearchEventItem(
-            id: "3",
-            title: "Ocean View Lounge",
-            dateText: "Apr 18 at 8PM",
-            imageURL: nil
-        ),
-        SearchEventItem(
-            id: "4",
-            title: "Downtown Club",
-            dateText: "Apr 18 at 8PM",
-            imageURL: nil
-        ),
-        SearchEventItem(
-            id: "5",
-            title: "Sunset Terrace",
-            dateText: "Apr 18 at 8PM",
-            imageURL: nil
-        )
-    ]
+
     init(venue: SearchVenueItem? = nil) {
         self.venue = venue
         super.init(nibName: nil, bundle: nil)
@@ -75,11 +47,7 @@ final class SearchEventVC: BaseSearchSheetVC {
         super.viewDidLoad()
         titleLabel.text = "Search"
         setupUI()
-//        loadSuggested() // enable after api implement
-        
-        //MARK: Dummy Data
-        emptyView.isHidden = false
-//        searchEvents("A")
+        loadSuggested()
     }
 
     private func setupUI() {
@@ -191,7 +159,7 @@ final class SearchEventVC: BaseSearchSheetVC {
     }
 
     private func loadSuggested() {
-        searchEvents(nil)
+        searchEvents(nil, reset: true)
     }
 
     @objc private func onSearchChanged() {
@@ -200,18 +168,12 @@ final class SearchEventVC: BaseSearchSheetVC {
         searchWorkItem?.cancel()
 
         guard !keyword.isEmpty else {
-            events.removeAll()
-            tableView.reloadData()
-            UIView.animate(withDuration: 0.25) {
-                self.emptyView.alpha = 1 // need to change 0 after api
-            } completion: { _ in
-                self.emptyView.isHidden = false // need to change true after api
-            }
+            searchEvents(nil, reset: true)
             return
         }
         
         let work = DispatchWorkItem { [weak self] in
-            self?.searchEvents(keyword)
+            self?.searchEvents(keyword, reset: true)
         }
 
         searchWorkItem = work
@@ -228,7 +190,7 @@ final class SearchEventVC: BaseSearchSheetVC {
             self.fromDate = from
             self.toDate = to
             self.updateDateButton()
-            self.searchEvents(self.searchField.text)
+            self.searchEvents(self.searchField.text, reset: true)
         }
         present(vc, animated: true)
     }
@@ -252,44 +214,78 @@ final class SearchEventVC: BaseSearchSheetVC {
         rightDateLabel.textColor = .white.withAlphaComponent(0.7)
     }
 
-    private func searchEvents(_ keyword: String?) {
-        isLoading = true
+    private func searchEvents(_ keyword: String?, reset: Bool) {
+        let trimmedKeyword =
+        keyword?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let searchKeyword = trimmedKeyword?.isEmpty == false
+            ? trimmedKeyword
+            : nil
+
+        if reset {
+            searchRequestID += 1
+            isLoading = true
+            isLoadingMore = false
+            hasMoreEvents = false
+            events.removeAll()
+        } else {
+            isLoadingMore = true
+        }
+
+        let requestID = searchRequestID
+
         tableView.isHidden = false
         tableView.reloadData()
         
         SearchFlowService.shared.searchEvents(
-            venueId: venue?.id,
-            keyword: keyword,
+            venueId: venue?.venueUniqueId ?? venueID,
+            keyword: searchKeyword,
             fromDate: fromDate,
-            toDate: toDate
-        ) { [weak self] events in
+            toDate: toDate,
+            skip: reset ? 0 : events.count,
+            take: pageSize
+        ) { [weak self] isSuccess, _, events, hasMore in
             guard let self else { return }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.isLoading = false
-                self.events = events
-                self.events = self.dummyEvents // remove this line after correct api  implement
-                let hasResults = !self.events.isEmpty
-                
-                if hasResults {
-                    UIView.animate(withDuration: 0.25) {
-                        self.emptyView.alpha = 0
-                    } completion: { _ in
-                        self.emptyView.isHidden = true
-                    }
-                } else {
-                    self.emptyView.isHidden = false
-                    self.emptyView.alpha = 0
-                    
-                    UIView.animate(withDuration: 0.25) {
-                        self.emptyView.alpha = 1
-                    }
-                }
-                
-                self.tableView.isHidden = !hasResults
-                self.tableView.reloadData()
+            guard self.searchRequestID == requestID else { return }
+
+            self.isLoading = false
+            self.isLoadingMore = false
+            self.hasMoreEvents = isSuccess ? hasMore : false
+
+            if reset {
+                self.events = isSuccess ? events : []
+            } else if isSuccess {
+                self.events.append(contentsOf: events)
             }
+
+            let hasResults = !self.events.isEmpty
+
+            if hasResults {
+                UIView.animate(withDuration: 0.25) {
+                    self.emptyView.alpha = 0
+                } completion: { _ in
+                    self.emptyView.isHidden = true
+                }
+            } else {
+                self.emptyView.isHidden = false
+                self.emptyView.alpha = 0
+
+                UIView.animate(withDuration: 0.25) {
+                    self.emptyView.alpha = 1
+                }
+            }
+
+            self.tableView.isHidden = !hasResults
+            self.tableView.reloadData()
         }
+    }
+
+    private func loadMoreEventsIfNeeded() {
+        guard !isLoading,
+              !isLoadingMore,
+              hasMoreEvents,
+              !events.isEmpty else { return }
+
+        searchEvents(searchField.text, reset: false)
     }
 
     private func makeSearchIcon() -> UIView {
@@ -306,12 +302,16 @@ final class SearchEventVC: BaseSearchSheetVC {
 extension SearchEventVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isLoading ? 3 : events.count
+        if isLoading {
+            return 3
+        }
+
+        return events.count + (isLoadingMore ? 1 : 0)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if isLoading {
+        if isLoading || indexPath.row >= events.count {
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: SearchShimmerCell.identifier,
                 for: indexPath
@@ -331,7 +331,32 @@ extension SearchEventVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if events.count <= indexPath.row { return }
-//        let event = events[indexPath.row]
+        guard events.indices.contains(indexPath.row),
+              let event = events[indexPath.row].event else { return }
+
+        let presenter =
+        navigationController?.presentingViewController ??
+        presentingViewController
+
+        dismiss(animated: true) {
+            Navigate.eventDetailsVC(
+                presenter ?? self,
+                event: event
+            )
+        }
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold: CGFloat = 120
+        let offsetY = scrollView.contentOffset.y
+        let visibleHeight = scrollView.bounds.height
+        let contentHeight = scrollView.contentSize.height
+
+        guard contentHeight > 0,
+              offsetY + visibleHeight + threshold >= contentHeight else {
+            return
+        }
+
+        loadMoreEventsIfNeeded()
     }
 }

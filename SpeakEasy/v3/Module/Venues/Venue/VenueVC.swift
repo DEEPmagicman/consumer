@@ -19,6 +19,8 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var buyticketView: UIView!
     @IBOutlet weak var coverTicketView: UIView!
+    @IBOutlet weak var coverTicketTitleLbl: UILabel!
+    @IBOutlet weak var coverTicketDescriptionLbl: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var followBtn: UIButton!
@@ -69,6 +71,8 @@ final class VenueVC: UIViewController {
     private var isFollowLoading = false
     private var didAppearOnce = false
     private var isSocketRefreshInProgress = false
+    private var hasAvailableUpsellTickets = false
+    private var upsellAvailabilityVenueId: String?
     private var followedVenueId: String?
     private var hasLocalFollowState = false
     private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
@@ -139,6 +143,7 @@ final class VenueVC: UIViewController {
                 WebSocketWrapper.shared.updateSocketContext(venueId: venue.id)
                 self.setUpData()
                 self.setupTabsIfNeeded()
+                self.refreshUpsellAvailabilityIfNeeded(force: true)
             } else {
                 Alert.showAlertSheet(
                     style: .alert,
@@ -156,6 +161,7 @@ final class VenueVC: UIViewController {
         updateFollowUI(animated: false)
         updateCoverTicketViewVisibility()
         updatePosterBackgroundImage()
+        refreshUpsellAvailabilityIfNeeded()
 
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueLogo.sd_setImage(with: URL(string: logoUrl), completed: nil)
@@ -346,8 +352,12 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickBuyTicket(_ sender: Any) {
-        guard hasAvailableTickets else { return }
-        Navigate.to.coverTicketListVC(self, venueDetails: venueDetails)
+        guard hasAvailableTickets || hasAvailableUpsellTickets else { return }
+        Navigate.to.coverTicketListVC(
+            self,
+            venueDetails: venueDetails,
+            shouldShowDirectUpsell: !hasAvailableTickets && hasAvailableUpsellTickets
+        )
     }
 
     @IBAction func onClickFollowBtn(_ sender: Any) {
@@ -466,6 +476,7 @@ private extension VenueVC {
             self.venueDetails = refreshedVenue
             WebSocketWrapper.shared.updateSocketContext(venueId: refreshedVenue.id)
             self.setUpData()
+            self.refreshUpsellAvailabilityIfNeeded(force: true)
 
             if resetTickets {
                 self.refreshVenueEventTabs()
@@ -729,8 +740,41 @@ private extension VenueVC {
     }
 
     func updateCoverTicketViewVisibility() {
-        coverTicketView.isHidden = !hasAvailableTickets
+        coverTicketView.isHidden = !(hasAvailableTickets || hasAvailableUpsellTickets)
+        updateCoverTicketCTA()
         view.setNeedsLayout()
+    }
+
+    func updateCoverTicketCTA() {
+        guard !hasAvailableTickets && hasAvailableUpsellTickets else {
+            coverTicketTitleLbl?.text = "Buy live cover"
+            coverTicketDescriptionLbl?.text = "General admission ticket, Skip the line etc."
+            return
+        }
+
+        let settings = venueDetails?.venueSettings?.addOnsBookingSettings
+        let title = settings?.pageTitle?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let description = settings?.description?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        coverTicketTitleLbl?.text = title?.isEmpty == false ? title : "Upsell Items"
+        coverTicketDescriptionLbl?.text = description?.isEmpty == false ? description : nil
+    }
+
+    func refreshUpsellAvailabilityIfNeeded(force: Bool = false) {
+        guard let venueId = venueDetails?.id, !venueId.isEmpty else { return }
+        guard force || upsellAvailabilityVenueId != venueId else { return }
+
+        upsellAvailabilityVenueId = venueId
+
+        MVPPresenter.getUpSellItem(skip: 0, venueId: venueId) { [weak self] isSuccess, _, upSellItems, _, _ in
+            guard let self else { return }
+            guard self.venueDetails?.id == venueId else { return }
+
+            self.hasAvailableUpsellTickets = isSuccess && upSellItems.contains {
+                !$0.isDeleted && $0.status == "ENABLED" && $0.addOns?.isDeleted == false && $0.addOns?.status == "ENABLED"
+            }
+            self.updateCoverTicketViewVisibility()
+        }
     }
 
     func setupNavTitleView() {

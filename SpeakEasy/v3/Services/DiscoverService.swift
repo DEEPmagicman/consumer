@@ -133,6 +133,7 @@ final class DiscoverService {
 
     func fetchDiscoverEvents(
         city: String,
+        venueId: String? = nil,
         skip: Int,
         take: Int = 10,
         timeWindow: DiscoverEventTimeWindow? = nil,
@@ -152,6 +153,11 @@ final class DiscoverService {
             "skip": skip,
             "take": take
         ]
+
+        if let venueId,
+           !venueId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            params["venueId"] = venueId
+        }
 
         if let eventListType {
             params["eventListType"] = eventListType.rawValue

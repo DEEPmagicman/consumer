@@ -18,6 +18,25 @@ struct PremiumExperienceItem {
     let imageUrl: String
     let event: Event?
     let seatingAreas: [SeatingArea]
+    let minimumDeposit: Double?
+    let isEnquiryOnly: Bool
+
+    var isInquiryAction: Bool {
+        isEnquiryOnly ||
+        priceText.caseInsensitiveCompare("Request") == .orderedSame
+    }
+
+    var primaryActionTitle: String {
+        guard !isInquiryAction else {
+            return "Inquire"
+        }
+
+        let priceText = minimumDeposit
+            .map(Self.formattedPrice) ??
+            self.priceText
+
+        return "From \(priceText)"
+    }
 
     // MARK: - Designated Initializer
 
@@ -30,7 +49,9 @@ struct PremiumExperienceItem {
         priceText: String,
         imageUrl: String,
         event: Event?,
-        seatingAreas: [SeatingArea] = []
+        seatingAreas: [SeatingArea] = [],
+        minimumDeposit: Double? = nil,
+        isEnquiryOnly: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -41,12 +62,19 @@ struct PremiumExperienceItem {
         self.imageUrl = imageUrl
         self.event = event
         self.seatingAreas = seatingAreas
+        self.minimumDeposit = minimumDeposit
+        self.isEnquiryOnly = isEnquiryOnly
     }
 }
 
 extension PremiumExperienceItem {
 
-    init(event: Event, seatingAreas: [SeatingArea] = []) {
+    init(
+        event: Event,
+        seatingAreas: [SeatingArea] = [],
+        minimumDeposit: Double? = nil,
+        isEnquiryOnly: Bool = false
+    ) {
         self.init(
             id: event.id,
             title: event.title,
@@ -62,7 +90,9 @@ extension PremiumExperienceItem {
             ),
             imageUrl: Self.resolvedImageUrl(key: event.flyer?.key),
             event: event,
-            seatingAreas: seatingAreas
+            seatingAreas: seatingAreas,
+            minimumDeposit: minimumDeposit,
+            isEnquiryOnly: isEnquiryOnly
         )
     }
 
@@ -74,11 +104,15 @@ extension PremiumExperienceItem {
         let seatingAreas = eventSeatingAreas.isEmpty
             ? Self.resolvedSeatingAreas(dictionary: dictionary)
             : eventSeatingAreas
+        let minimumDeposit = Self.resolvedMinimumDeposit(from: dictionary)
+        let isEnquiryOnly = Self.resolvedIsEnquiryOnly(from: dictionary)
 
         if let event = Self.decodeEvent(from: eventDictionary) {
             self.init(
                 event: event,
-                seatingAreas: seatingAreas
+                seatingAreas: seatingAreas,
+                minimumDeposit: minimumDeposit,
+                isEnquiryOnly: isEnquiryOnly
             )
             return
         }
@@ -102,13 +136,15 @@ extension PremiumExperienceItem {
                 dictionary: dictionary,
                 seatingAreas: seatingAreas
             ),
-            priceText: Self.resolvedPriceText(
+            priceText: minimumDeposit.map(Self.formattedPrice) ?? Self.resolvedPriceText(
                 dictionary: dictionary,
                 seatingAreas: seatingAreas
             ),
             imageUrl: Self.resolvedImageUrl(dictionary: dictionary),
             event: nil,
-            seatingAreas: seatingAreas
+            seatingAreas: seatingAreas,
+            minimumDeposit: minimumDeposit,
+            isEnquiryOnly: isEnquiryOnly
         )
     }
 }
@@ -154,6 +190,29 @@ private extension PremiumExperienceItem {
         return [SeatingArea].parse(
             rawList.map(sanitizedSeatingAreaPayload)
         ) ?? []
+    }
+
+    static func resolvedMinimumDeposit(
+        from dictionary: [String: Any]
+    ) -> Double? {
+
+        let eventDictionary = resolvedEventDictionary(from: dictionary)
+
+        return doubleValue(dictionary["minimumDeposit"]) ??
+        doubleValue(eventDictionary["minimumDeposit"])
+    }
+
+    static func resolvedIsEnquiryOnly(
+        from dictionary: [String: Any]
+    ) -> Bool {
+
+        let eventDictionary = resolvedEventDictionary(from: dictionary)
+
+        return boolValue(dictionary["isEnqiryOnly"]) ??
+        boolValue(dictionary["isEnquiryOnly"]) ??
+        boolValue(eventDictionary["isEnqiryOnly"]) ??
+        boolValue(eventDictionary["isEnquiryOnly"]) ??
+        false
     }
 
     static func eventPayloadForDecoding(

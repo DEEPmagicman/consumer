@@ -53,7 +53,7 @@ class MapEventsTableViewCell: UITableViewCell {
         )
         actionLabel.text = "View event"
         badgeLabel.text = "PREMIUM AVAILABLE"
-        badgeView.isHidden = !(event.isEnableOnlineTables || event.isEnableReservationRequest)
+        badgeView.isHidden = event.isPremium != true
     }
 
     private func setupUI() {

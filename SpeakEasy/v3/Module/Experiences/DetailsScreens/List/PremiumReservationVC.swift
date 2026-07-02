@@ -564,7 +564,20 @@ private extension PremiumReservationVC {
 
             let minimum = Double(area.minimum ?? 0)
 
-            let deposit = Double(area.deposit ?? 0)
+            let deposit: Double
+
+            if (area.depositType ?? "")
+                .uppercased() == "PERCENTAGE" {
+
+                deposit =
+                    minimum *
+                    Double(area.deposit ?? 0) /
+                    100
+
+            } else {
+
+                deposit = Double(area.deposit ?? 0)
+            }
 
             return (
                 minimum,
@@ -583,17 +596,19 @@ private extension PremiumReservationVC {
 
         let deposit: Double
 
-        if (slot.depositType ?? "")
+        let depositType = slot.depositType ?? area.depositType ?? "FLAT"
+
+        if depositType
             .uppercased() == "PERCENTAGE" {
 
             deposit =
                 minimum *
-                Double(slot.deposit ?? 0) /
+                Double(slot.deposit ?? area.deposit ?? 0) /
                 100
 
         } else {
 
-            deposit = Double(slot.deposit ?? 0)
+            deposit = Double(slot.deposit ?? area.deposit ?? 0)
         }
 
         return (
@@ -608,6 +623,31 @@ private extension PremiumReservationVC {
 
 private extension PremiumReservationVC {
 
+    func guestCharge(
+        for area: SeatingArea
+    ) -> Double {
+
+        if area.bookingType == .timeWise {
+
+            let charges = (area.timeSlots ?? [])
+                .filter {
+
+                    ($0.issuedPublicInventory ?? 0) >
+                    ($0.soldPublicInventory ?? 0)
+                }
+                .compactMap {
+
+                    $0.extraPersonCharge
+                }
+
+            if !charges.isEmpty {
+                return charges.reduce(0, +)
+            }
+        }
+
+        return area.extraPersonCharge ?? 0
+    }
+
     func calculateFinalDeposit(
         deposit: Double,
         fees: TableBookingSettings?
@@ -617,52 +657,144 @@ private extension PremiumReservationVC {
             return deposit
         }
 
-        var taxable = 0.0
-        var nonTaxable = 0.0
+        let customFees = calculatedCustomFees(
+            deposit: deposit,
+            fees: fees
+        )
+        let taxable = customFees
+            .filter(\.isTaxable)
+            .reduce(0) { $0 + $1.amount }
+        let nonTaxable = customFees
+            .filter { !$0.isTaxable }
+            .reduce(0) { $0 + $1.amount }
+        let speakeasyFee = calculateSEFees(
+            deposit: deposit,
+            fees: fees
+        ) / 100
+        let stripePerc = fees.stripePerc ?? 0.029
+        let stripeFlat = (fees.stripeFlat ?? 30) / 100
+        let taxRate = fees.isEnableSalesTax == true
+            ? (fees.salesTax ?? 0) / 100
+            : 0
 
-        fees.customFees?.forEach {
-
-            guard $0.isEnableCustomFee == true else {
-                return
-            }
-
-            let value: Double
-
-            if $0.customFeeType?.uppercased() == "FLAT" {
-
-                value = $0.customFee ?? 0
-
-            } else {
-
-                value =
-                    deposit *
-                    ($0.customFee ?? 0) /
-                    100
-            }
-
-            if $0.isCustomFeeTaxable == true {
-
-                taxable += value
-
-            } else {
-
-                nonTaxable += value
-            }
+        func rounded2(_ value: Double) -> Double {
+            (value * 100).rounded() / 100
         }
 
-        var tax = 0.0
+        let stripeFee: Double
+        let totalProcessingFees: Double
+        let salesTax: Double
 
-        if fees.isEnableSalesTax == true {
+        if fees.isProcessingFeePassToCustomer == true {
 
-            let rate = (fees.salesTax ?? 0) / 100
-
-            tax = (deposit + taxable) * rate
+            if fees.isProcessingFeeTaxable == true {
+                stripeFee = rounded2(
+                    (
+                        stripePerc * (
+                            (1 + taxRate) *
+                            (deposit + speakeasyFee + taxable) +
+                            nonTaxable
+                        ) +
+                        stripeFlat
+                    ) /
+                    (1 - (1 + taxRate) * stripePerc)
+                )
+                totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+                salesTax = rounded2(
+                    (deposit + taxable + totalProcessingFees) *
+                    taxRate
+                )
+            } else {
+                stripeFee = rounded2(
+                    (
+                        stripePerc * (
+                            (deposit + taxable) *
+                            (1 + taxRate) +
+                            nonTaxable +
+                            speakeasyFee
+                        ) +
+                        stripeFlat
+                    ) /
+                    (1 - stripePerc)
+                )
+                totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+                salesTax = rounded2(
+                    (deposit + taxable) *
+                    taxRate
+                )
+            }
+        } else {
+            stripeFee = rounded2(
+                stripePerc *
+                (
+                    (deposit + taxable) *
+                    (1 + taxRate) +
+                    nonTaxable
+                ) +
+                stripeFlat
+            )
+            totalProcessingFees = rounded2(speakeasyFee + stripeFee)
+            salesTax = rounded2(
+                (deposit + taxable) *
+                taxRate
+            )
         }
 
-        return
+        let roundedProcessingFees =
+            (totalProcessingFees * 100).rounded() / 100
+        let amountCharged = rounded2(
             deposit +
+            (fees.isProcessingFeePassToCustomer == true
+             ? roundedProcessingFees
+             : 0) +
             taxable +
-            nonTaxable
+            nonTaxable +
+            salesTax
+        )
+
+        return max(0, amountCharged - salesTax)
+    }
+
+    func calculatedCustomFees(
+        deposit: Double,
+        fees: TableBookingSettings
+    ) -> [(amount: Double, isTaxable: Bool)] {
+
+        (fees.customFees ?? []).compactMap { customFee in
+
+            guard customFee.isEnableCustomFee == true else {
+                return nil
+            }
+
+            let amount = customFee.customFeeType?.uppercased() == "FLAT"
+                ? (customFee.customFee ?? 0)
+                : deposit * (customFee.customFee ?? 0) / 100
+
+            return (
+                amount,
+                customFee.isCustomFeeTaxable == true
+            )
+        }
+    }
+
+    func calculateSEFees(
+        deposit: Double,
+        fees: TableBookingSettings
+    ) -> Double {
+
+        var amount = 0.0
+
+        if let percentage = fees.speakeasyFeePerc {
+            amount = deposit * percentage * 100
+        }
+
+        if let flat = fees.speakeasyFeeFlat {
+            amount += deposit <= 10
+                ? deposit * 0.1 * flat
+                : flat
+        }
+
+        return amount
     }
 }
 

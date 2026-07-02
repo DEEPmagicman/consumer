@@ -99,7 +99,7 @@ final class SearchFlowService {
 
             let venues = Self.parseVenues(venueList).map {
                 SearchVenueItem(
-                    id: $0.uniqueId,
+                    id: $0.id,
                     name: $0.name,
                     imageURL: Self.mediaURL($0.logo?.key ?? $0.venueAttachment?.first?.key),
                     venue: $0
@@ -245,17 +245,89 @@ final class SearchFlowService {
         keyword: String?,
         fromDate: Date?,
         toDate: Date?,
-        completion: @escaping ([SearchEventItem]) -> Void
+        skip: Int = 0,
+        take: Int = 10,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errorMessage: String?,
+            _ events: [SearchEventItem],
+            _ hasMore: Bool
+        ) -> Void
     ) {
-        search(
-            keyword: keyword ?? "",
-            venueSkip: 0,
-            venueTake: 0,
-            eventSkip: 0,
-            eventTake: 10
-        ) { _, _, result in
-            completion(result.events)
+        let timeWindow = Self.eventTimeWindow(
+            fromDate: fromDate,
+            toDate: toDate
+        )
+
+        DiscoverService().fetchDiscoverEvents(
+            city: UserDefault.shared.activeCity,
+            venueId: venueId,
+            skip: skip,
+            take: take,
+            timeWindow: timeWindow,
+            eventListType: .eventsInCity,
+            search: keyword,
+            timeZone: TimeZone.current.identifier
+        ) { isSuccess, errorMessage, page in
+            guard isSuccess,
+                  let page else {
+                completion(false, errorMessage, [], false)
+                return
+            }
+
+            completion(
+                true,
+                nil,
+                page.list.map {
+                    SearchEventItem(
+                        id: $0.uniqueId ?? $0.id,
+                        title: $0.title,
+                        dateText: Self.displayDate(for: $0),
+                        imageURL: ($0.flyer?.key ?? "").imageURL,
+                        venueName: $0.venue?.name,
+                        event: $0
+                    )
+                },
+                page.hasMore
+            )
         }
+    }
+}
+
+private extension SearchFlowService {
+
+    static func eventTimeWindow(
+        fromDate: Date?,
+        toDate: Date?
+    ) -> DiscoverEventTimeWindow? {
+
+        guard fromDate != nil || toDate != nil else { return nil }
+
+        let calendar = Calendar.current
+        let startDate = fromDate ?? toDate ?? Date()
+        let endDate = toDate ?? fromDate ?? startDate
+
+        let start = calendar.startOfDay(for: startDate)
+        let endOfDay =
+        calendar.date(
+            bySettingHour: 23,
+            minute: 59,
+            second: 59,
+            of: endDate
+        ) ?? endDate
+
+        return DiscoverEventTimeWindow(
+            startDateTime: apiDateString(from: start),
+            endDateTime: apiDateString(from: endOfDay)
+        )
+    }
+
+    static func apiDateString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        return formatter.string(from: date)
     }
 }
 

@@ -21,6 +21,8 @@ private enum PremiumSearchHeaderMetrics {
     static let artistRowHeight: CGFloat = 101
     static let artistItemWidth: CGFloat = 105
     static let artistImageSize: CGFloat = 75
+    static let artistItemImageInset: CGFloat = (artistItemWidth - artistImageSize) / 2
+    static let artistScrollLeadingInset: CGFloat = horizontalPadding - artistItemImageInset
 
     static func height(
         isLoading: Bool,
@@ -32,7 +34,7 @@ private enum PremiumSearchHeaderMetrics {
         var height: CGFloat = 0
 
         if isLoading || venueCount > 0 {
-            let rowCount = isLoading ? 1 : min(venueCount, maxDisplayedVenues)
+            let rowCount = isLoading ? maxDisplayedVenues : min(venueCount, maxDisplayedVenues)
             height += titleHeight
             height += venueTitleContentSpacing
             height += CGFloat(rowCount) * venueRowHeight
@@ -424,7 +426,7 @@ final class PremiumSearchVC: UIViewController {
             isLoading: isInitialLoading,
             venueCount: venues.count,
             artistCount: artists.count,
-            showsEventTitle: true
+            showsEventTitle: isInitialLoading || !events.isEmpty
         )
     }
 }
@@ -517,7 +519,7 @@ extension PremiumSearchVC: UICollectionViewDataSource {
             showsVenue: !venues.isEmpty,
             showsViewMoreVenues: false,
             isLoading: isInitialLoading,
-            showsEventTitle: true
+            showsEventTitle: isInitialLoading || !events.isEmpty
         )
 
         header.onViewVenue = { [weak self] venue in
@@ -645,7 +647,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     private let stackView = UIStackView()
     // Up to maxDisplayedVenues venue rows, lazily created
     private var venueRows: [PremiumSearchVenueResultView] = []
-    private let venueShimmerView = PremiumSearchVenueShimmerView()
+    private var venueShimmerRows: [PremiumSearchVenueShimmerView] = []
     private let viewMoreVenuesButton = UIButton(type: .system)
     private let venueTitleLabel = UILabel()
     private let artistTitleLabel = UILabel()
@@ -701,7 +703,12 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             row.isHidden = true
         }
 
-        stackView.addArrangedSubview(venueShimmerView)
+        for _ in 0 ..< PremiumSearchHeaderMetrics.maxDisplayedVenues {
+            let row = PremiumSearchVenueShimmerView()
+            venueShimmerRows.append(row)
+            stackView.addArrangedSubview(row)
+            row.isHidden = true
+        }
 
         viewMoreVenuesButton.setTitle("View more venues", for: .normal)
         viewMoreVenuesButton.setTitleColor(.white.withAlphaComponent(0.85), for: .normal)
@@ -735,7 +742,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         artistScrollView.alwaysBounceHorizontal = true
         artistScrollView.contentInset = UIEdgeInsets(
             top: 0,
-            left: PremiumSearchHeaderMetrics.horizontalPadding,
+            left: PremiumSearchHeaderMetrics.artistScrollLeadingInset,
             bottom: 0,
             right: PremiumSearchHeaderMetrics.horizontalPadding
         )
@@ -785,7 +792,10 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             artistScrollView.bottomAnchor.constraint(equalTo: artistScrollContainer.bottomAnchor),
 
             artistShimmerStackView.topAnchor.constraint(equalTo: artistShimmerContainer.topAnchor),
-            artistShimmerStackView.leadingAnchor.constraint(equalTo: artistShimmerContainer.leadingAnchor),
+            artistShimmerStackView.leadingAnchor.constraint(
+                equalTo: artistShimmerContainer.leadingAnchor,
+                constant: -PremiumSearchHeaderMetrics.artistItemImageInset
+            ),
             artistShimmerStackView.trailingAnchor.constraint(lessThanOrEqualTo: artistShimmerContainer.trailingAnchor),
             artistShimmerStackView.bottomAnchor.constraint(equalTo: artistShimmerContainer.bottomAnchor),
 
@@ -817,8 +827,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             if showsVenue && index < venues.count {
                 row.configure(venues[index])
                 row.isHidden = false
-                // 8pt gap between rows, 0 after the last visible row
-                // (spacing after the whole block is set on venueShimmerView/button below)
                 let isLastVenueRow = index == venues.count - 1
                 stackView.setCustomSpacing(
                     isLastVenueRow ? 0 : PremiumSearchHeaderMetrics.venueRowSpacing,
@@ -830,17 +838,27 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             }
         }
 
-        venueShimmerView.isHidden = !isLoading
+        for (index, row) in venueShimmerRows.enumerated() {
+            row.isHidden = !isLoading
+            stackView.setCustomSpacing(
+                isLoading && index < venueShimmerRows.count - 1
+                    ? PremiumSearchHeaderMetrics.venueRowSpacing
+                    : 0,
+                after: row
+            )
+        }
 
         // Spacing after the venue block (last row or shimmer) before "view more" / title
         let lastVisibleVenueRow = venueRows.last(where: { !$0.isHidden })
         if let last = lastVisibleVenueRow {
             stackView.setCustomSpacing(PremiumSearchHeaderMetrics.sectionSpacing, after: last)
         }
-        stackView.setCustomSpacing(
-            isLoading ? PremiumSearchHeaderMetrics.sectionSpacing : 0,
-            after: venueShimmerView
-        )
+        if let lastShimmerRow = venueShimmerRows.last {
+            stackView.setCustomSpacing(
+                isLoading ? PremiumSearchHeaderMetrics.sectionSpacing : 0,
+                after: lastShimmerRow
+            )
+        }
 
         viewMoreVenuesButton.isHidden = !showsViewMoreVenues
         stackView.setCustomSpacing(
@@ -871,7 +889,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         titleLabel.isHidden = !showsEventTitle
         titleLabel.text = "Upcoming events"
         stackView.setCustomSpacing(
-            PremiumSearchHeaderMetrics.titleContentSpacing,
+            showsEventTitle ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
             after: titleLabel
         )
     }

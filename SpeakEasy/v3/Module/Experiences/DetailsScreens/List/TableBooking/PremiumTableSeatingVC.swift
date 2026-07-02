@@ -485,16 +485,14 @@ private extension PremiumTableSeatingVC {
         guard let area = seatingArea else { return 0 }
         let defaultGuests = area.defaultGuest ?? 0
         let extraGuests = max(0, currentGuestCount - defaultGuests)
-        let extraCharge = area.bookingType == .timeWise
-            ? (selectedTimeSlot?.extraPersonCharge ?? area.extraPersonCharge ?? 0)
-            : (area.extraPersonCharge ?? 0)
-        let base: Double
-        if area.bookingType == .timeWise, let selectedTimeSlot {
-            base = Double(selectedTimeSlot.minimum ?? area.minimum ?? 0)
-        } else {
-            base = Double(area.minimum ?? 0)
+
+        if area.bookingType == .timeWise {
+            let base = selectedTimeSlot?.minimum ?? area.minimum ?? 0
+            let extraCharge = selectedTimeSlot?.extraPersonCharge ?? area.extraPersonCharge ?? 0
+            return base + Double(extraGuests) * extraCharge
         }
-        return base + Double(extraGuests) * extraCharge
+
+        return (area.minimum ?? 0) + Double(extraGuests) * (area.extraPersonCharge ?? 0)
     }
 
     func calculateDeposit() -> Double {
@@ -502,10 +500,18 @@ private extension PremiumTableSeatingVC {
         lastDepositProcessingFees = 0
 
         let minValue = activeMinimum()
-        let baseValue = area.bookingType == .timeWise ? selectedTimeSlot?.deposit : nil
-        let baseType = area.bookingType == .timeWise ? selectedTimeSlot?.depositType : nil
-        var baseDeposit = Double(baseValue ?? area.deposit ?? 0)
-        let depositType = baseType ?? area.depositType ?? "FLAT"
+        let baseDepositValue: Double
+        let depositType: String
+
+        if area.bookingType == .timeWise {
+            baseDepositValue = selectedTimeSlot?.deposit ?? area.deposit ?? 0
+            depositType = selectedTimeSlot?.depositType ?? area.depositType ?? "FLAT"
+        } else {
+            baseDepositValue = area.deposit ?? 0
+            depositType = area.depositType ?? "FLAT"
+        }
+
+        var baseDeposit = baseDepositValue
 
         if depositType.uppercased() == "PERCENTAGE" {
             baseDeposit = (minValue * baseDeposit) / 100
@@ -527,7 +533,7 @@ private extension PremiumTableSeatingVC {
 
         lastDepositProcessingFees = feeResult.totalProcessingFees
 
-        return max(0, feeResult.amountChargedToConsumer)
+        return max(0, feeResult.amountChargedToConsumer - feeResult.salesTax)
     }
 
     func configureSpendAgreement(minimum: Double, deposit: Double) {
@@ -555,7 +561,15 @@ private extension PremiumTableSeatingVC {
         let gratuity = calculateGratuityFees(for: minimum, settings: settings)
         let processingFees = feeResult.totalProcessingFees
         let total = feeResult.amountChargedToConsumer
-        let balanceDue = max(0, total - deposit)
+        let depositCredit = max(
+            0,
+            deposit - (
+                event?.venue?.venueSettings?.tableBookingSettings?.isProcessingFeePassToCustomer == true
+                ? lastDepositProcessingFees
+                : 0
+            )
+        )
+        let balanceDue = max(0, total - depositCredit)
 
         var items: [SpendLineItem] = [
             .init(title: "Subtotal", amount: minimum, isBold: false)
@@ -823,20 +837,18 @@ private extension PremiumTableSeatingVC {
         includeGratuity: Bool
     ) -> [PremiumCalculatedCustomFee] {
         var fees: [PremiumCalculatedCustomFee] = []
-        if settings.isEnableCustomFee {
-            settings.customFees.forEach { customFee in
-                guard customFee.isEnableCustomFee == true else { return }
-                let feeAmount = customFee.customFeeType?.uppercased() == "FLAT"
-                    ? (customFee.customFee ?? 0)
-                    : amount * (customFee.customFee ?? 0) / 100
-                fees.append(
-                    .init(
-                        name: customFee.customFeeName ?? "Fee",
-                        amount: feeAmount,
-                        isTaxable: customFee.isCustomFeeTaxable == true
-                    )
+        settings.customFees.forEach { customFee in
+            guard customFee.isEnableCustomFee == true else { return }
+            let feeAmount = customFee.customFeeType?.uppercased() == "FLAT"
+                ? (customFee.customFee ?? 0)
+                : amount * (customFee.customFee ?? 0) / 100
+            fees.append(
+                .init(
+                    name: customFee.customFeeName ?? "Fee",
+                    amount: feeAmount,
+                    isTaxable: customFee.isCustomFeeTaxable == true
                 )
-            }
+            )
         }
         if includeGratuity, settings.isEnableGratuity {
             fees.append(
@@ -856,10 +868,6 @@ private extension PremiumTableSeatingVC {
         customFees: [PremiumCalculatedCustomFee],
         settings: PremiumTableFeeSettings
     ) -> PremiumTableFeeResult {
-        guard amountTransferToVenue > 0 else {
-            return .init(amountChargedToConsumer: 0, totalProcessingFees: 0, salesTax: 0)
-        }
-
         let stripePerc = settings.stripePerc
         let stripeFlat = settings.stripeFlat / 100
         let speakeasyFee = amountTransferToSE / 100
@@ -878,23 +886,29 @@ private extension PremiumTableSeatingVC {
         if settings.isProcessingFeePassToCustomer {
             if settings.isProcessingFeeTaxable {
                 stripeFee = rounded2(
-                    stripePerc * (
-                        (1 + taxRate) * (amountTransferToVenue + speakeasyFee + taxableFees)
-                        + nonTaxableFees
+                    (
+                        stripePerc * (
+                            (1 + taxRate) * (amountTransferToVenue + speakeasyFee + taxableFees)
+                            + nonTaxableFees
+                        )
+                        + stripeFlat
                     )
-                    + stripeFlat
-                ) / (1 - (1 + taxRate) * stripePerc)
+                    / (1 - (1 + taxRate) * stripePerc)
+                )
                 totalProcessingFees = rounded2(speakeasyFee + stripeFee)
                 salesTax = rounded2((amountTransferToVenue + taxableFees + totalProcessingFees) * taxRate)
             } else {
                 stripeFee = rounded2(
-                    stripePerc * (
-                        (amountTransferToVenue + taxableFees) * (1 + taxRate)
-                        + nonTaxableFees
-                        + speakeasyFee
+                    (
+                        stripePerc * (
+                            (amountTransferToVenue + taxableFees) * (1 + taxRate)
+                            + nonTaxableFees
+                            + speakeasyFee
+                        )
+                        + stripeFlat
                     )
-                    + stripeFlat
-                ) / (1 - stripePerc)
+                    / (1 - stripePerc)
+                )
                 totalProcessingFees = rounded2(speakeasyFee + stripeFee)
                 salesTax = rounded2((amountTransferToVenue + taxableFees) * taxRate)
             }

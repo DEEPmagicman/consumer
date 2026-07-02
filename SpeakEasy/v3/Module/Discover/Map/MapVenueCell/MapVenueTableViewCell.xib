@@ -46,36 +46,41 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="EAw-uf-4wb">
                         <rect key="frame" x="80" y="50" width="122.66666666666669" height="13"/>
-                        <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
-                        <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mpF-rh-IJB">
-                        <rect key="frame" x="80" y="72" width="85.666666666666686" height="15"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPM-QH-cbi">
-                                <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>
-                                <fontDescription key="fontDescription" name="GeistMono-Medium" family="Geist Mono" pointSize="7"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
+                                <rect key="frame" x="0.0" y="0.0" width="122.66666666666667" height="13"/>
+                                <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
+                                <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mpF-rh-IJB">
+                                <rect key="frame" x="0.0" y="13" width="85.666666666666671" height="15"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPM-QH-cbi">
+                                        <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>
+                                        <fontDescription key="fontDescription" name="GeistMono-Medium" family="Geist Mono" pointSize="7"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.85098039219999999" green="0.59999999999999998" blue="0.20784313730000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="aPM-QH-cbi" secondAttribute="trailing" constant="7" id="5wM-Yc-KIo"/>
+                                    <constraint firstAttribute="height" constant="15" id="PZf-SM-K3f"/>
+                                    <constraint firstItem="aPM-QH-cbi" firstAttribute="top" secondItem="mpF-rh-IJB" secondAttribute="top" constant="2" id="glB-OV-xbg"/>
+                                    <constraint firstAttribute="bottom" secondItem="aPM-QH-cbi" secondAttribute="bottom" constant="2" id="q3X-oA-0Lo"/>
+                                    <constraint firstItem="aPM-QH-cbi" firstAttribute="leading" secondItem="mpF-rh-IJB" secondAttribute="leading" constant="7" id="rYE-VT-QlH"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="7"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.85098039219999999" green="0.59999999999999998" blue="0.20784313730000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="aPM-QH-cbi" secondAttribute="trailing" constant="7" id="5wM-Yc-KIo"/>
-                            <constraint firstAttribute="height" constant="15" id="PZf-SM-K3f"/>
-                            <constraint firstItem="aPM-QH-cbi" firstAttribute="top" secondItem="mpF-rh-IJB" secondAttribute="top" constant="2" id="glB-OV-xbg"/>
-                            <constraint firstAttribute="bottom" secondItem="aPM-QH-cbi" secondAttribute="bottom" constant="2" id="q3X-oA-0Lo"/>
-                            <constraint firstItem="aPM-QH-cbi" firstAttribute="leading" secondItem="mpF-rh-IJB" secondAttribute="leading" constant="7" id="rYE-VT-QlH"/>
-                        </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="7"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
-                    </view>
+                    </stackView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQk-rz-kGl" userLabel="View event">
                         <rect key="frame" x="374" y="28" width="100" height="29"/>
                         <subviews>
@@ -111,20 +116,18 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstItem="mpF-rh-IJB" firstAttribute="top" secondItem="vK0-ux-5dd" secondAttribute="bottom" constant="9" id="4vE-Iu-gXS"/>
                     <constraint firstItem="bT6-2m-W2Z" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="7eG-Br-yNz"/>
                     <constraint firstItem="sQk-rz-kGl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dgz-Kh-ZOl" secondAttribute="trailing" constant="20" id="BrH-I7-igr"/>
-                    <constraint firstItem="sQk-rz-kGl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vK0-ux-5dd" secondAttribute="trailing" constant="15" id="FWt-H6-nWS"/>
                     <constraint firstAttribute="bottom" secondItem="bT6-2m-W2Z" secondAttribute="bottom" id="Gs9-3V-gZ5"/>
-                    <constraint firstItem="mpF-rh-IJB" firstAttribute="leading" secondItem="vK0-ux-5dd" secondAttribute="leading" id="LuM-Ho-cpk"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="NeR-PF-dHI"/>
-                    <constraint firstItem="vK0-ux-5dd" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="bottom" constant="4" id="aFm-Ey-Kcc"/>
-                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mpF-rh-IJB" secondAttribute="bottom" constant="18" id="agL-lr-j47"/>
+                    <constraint firstItem="bT6-2m-W2Z" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EAw-uf-4wb" secondAttribute="bottom" constant="18" id="a5r-ML-t7a"/>
+                    <constraint firstItem="sQk-rz-kGl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EAw-uf-4wb" secondAttribute="trailing" constant="10" id="coA-Kf-tMu"/>
                     <constraint firstItem="sQk-rz-kGl" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="top" constant="3" id="gf1-ng-mip"/>
                     <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" id="iAX-4p-q5Q"/>
+                    <constraint firstItem="EAw-uf-4wb" firstAttribute="leading" secondItem="mOd-Im-OJG" secondAttribute="trailing" constant="15" id="mCH-Pt-xyL"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="leading" secondItem="mOd-Im-OJG" secondAttribute="trailing" constant="15" id="mMA-89-iBh"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="top" secondItem="kdO-1S-7yb" secondAttribute="top" constant="18" id="pN3-JP-nSF"/>
-                    <constraint firstItem="vK0-ux-5dd" firstAttribute="leading" secondItem="Dgz-Kh-ZOl" secondAttribute="leading" id="pVl-7E-KjB"/>
+                    <constraint firstItem="EAw-uf-4wb" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="bottom" constant="4" id="pSd-q5-d6z"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mOd-Im-OJG" secondAttribute="bottom" constant="18" id="u1Y-iV-hWV"/>
                     <constraint firstAttribute="trailing" secondItem="bT6-2m-W2Z" secondAttribute="trailing" id="v6H-rR-EYn"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="top" secondItem="mOd-Im-OJG" secondAttribute="top" constant="7" id="wiO-p9-7TR"/>

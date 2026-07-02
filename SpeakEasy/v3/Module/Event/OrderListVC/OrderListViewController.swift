@@ -428,7 +428,27 @@ final class OrderListViewController: UIViewController {
     }
 
     private func setupTitleMarqueeLabel() {
-        titleMarqueeLabel.install(over: eventNameLbl, horizontalInset: 72)
+        guard let headerView = eventNameLbl.superview else { return }
+
+        let titleHeight = ceil(eventNameLbl.font?.lineHeight ?? 22)
+        titleMarqueeLabel.font = eventNameLbl.font ?? titleMarqueeLabel.font
+        titleMarqueeLabel.textColor = eventNameLbl.textColor
+        titleMarqueeLabel.animationDelay = 1.2
+        titleMarqueeLabel.animationSpeed = 25
+        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        eventNameLbl.removeFromSuperview()
+        headerView.addSubview(titleMarqueeLabel)
+
+        NSLayoutConstraint.activate([
+            titleMarqueeLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 13),
+            titleMarqueeLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 76),
+            titleMarqueeLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -76),
+            titleMarqueeLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            titleMarqueeLabel.heightAnchor.constraint(equalToConstant: titleHeight),
+
+            venueName.topAnchor.constraint(equalTo: titleMarqueeLabel.bottomAnchor, constant: 8)
+        ])
     }
 
     private func setHeaderTitle(_ title: String?) {
@@ -648,9 +668,11 @@ final class OrderListViewController: UIViewController {
             $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
         }
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        isFreeTicket = subtotal <= 0
         updateOrderSummaryAmounts(total: subtotal, fees: 0)
         checkOutView.updateSummary(currency: currency, currencyPosition: currencyPosition, count: totalTickets, subtotal: subtotal, fees: 0)
         checkOutView.setButtonTitle("Purchase Tickets")
+        updateFreeTicketUI()
     }
 
     private func updateOrderSummaryAmounts(total: Double, fees: Double) {
@@ -669,6 +691,29 @@ final class OrderListViewController: UIViewController {
             feesDropDowenIc.transform = .identity
             feesAndTaxesTableViewHeight.constant = 0
         }
+    }
+
+    private func updateFreeTicketUI() {
+        paymentTypeView.isHidden = isFreeTicket
+        paymentTypeView.isUserInteractionEnabled = !isFreeTicket && paymentSheet != nil
+
+        guard isFreeTicket else {
+            updatePromoCodeUI()
+            return
+        }
+
+        promoCodeTitleView.isHidden = true
+        promoCodeStackView.isHidden = true
+        addPromoCodeView.isHidden = true
+        promoCodeAppliedView.isHidden = true
+        removePromoCodeView.isHidden = true
+        addCodeTextFeild.text = ""
+        addedPromoCodeFeild.text = ""
+        promoCodeTitleLbl.text = ""
+        discountAmountLbl.text = ""
+        addCodeTextFeild.isUserInteractionEnabled = false
+        addCodeTextFeild.alpha = 1
+        pluseBtn.setImage(UIImage(named: "plusIcon"), for: .normal)
     }
 
     // MARK: - Checkbox UI
@@ -704,6 +749,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickApplyBtn(_ sender: Any) {
+        guard !isFreeTicket else { return }
         let promo = (addCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !promo.isEmpty else { return }
         applyPromoBtn.showLoader(userInteraction: false)
@@ -711,6 +757,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickPluseBtn(_ sender: Any) {
+        guard !isFreeTicket else { return }
         let shouldShow = addPromoCodeView.isHidden
         UIView.animate(withDuration: 0.2) {
             self.pluseBtn.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -793,6 +840,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickCardBtn(_ sender: Any) {
+        guard !isFreeTicket else { return }
         startPaymentFlow()
     }
 
@@ -818,7 +866,6 @@ final class OrderListViewController: UIViewController {
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
         Alert.showToast("Payment canceled.")
-        cancelBookingAndReturnToEventDetails()
     }
 
     private func cancelBookingAndReturnToEventDetails() {
@@ -884,11 +931,16 @@ final class OrderListViewController: UIViewController {
                     return
                 }
 
-                self.isFreeTicket              = isFreeTicket
+                self.isFreeTicket              = isFreeTicket || (paymentDetail?.total ?? 0) <= 0
                 self.stripePaymentHistoryId    = paymentHistoryId
                 self.paymentIntentClientSecret = clientSecret ?? ""
                 self.stripeEphemeralKey        = ephemeralKey
                 self.paymentDetail             = paymentDetail
+                if self.isFreeTicket {
+                    self.paymentSheet = nil
+                    self.selectedPaymentMethod = nil
+                    self.cardDetails = nil
+                }
 
                 let discount = paymentDetail?.discount ?? 0
                 if promoCode.isEmpty {
@@ -910,7 +962,7 @@ final class OrderListViewController: UIViewController {
                 self.updateUIWithPaymentDetail(paymentDetail)
 
                 // Setup Stripe for both card and Apple Pay
-                if !isFreeTicket, let secret = clientSecret, !secret.isEmpty {
+                if !self.isFreeTicket, let secret = clientSecret, !secret.isEmpty {
                     STPAPIClient.shared.publishableKey = Stripe.publishableKey
                     self.setupPaymentSheet(
                         clientSecret: secret,
@@ -951,14 +1003,12 @@ final class OrderListViewController: UIViewController {
     // MARK: - UI Updates
 
     private func updateUIWithPaymentDetail(_ detail: PaymentDetail?) {
-        paymentTypeView.isHidden = isFreeTicket
-
         guard let detail else {
             feesAndTaxes = []
             feesAndTaxesHiddenView.isHidden = true
             feesAndTaxesTableView.reloadData()
             updateFeesAndTaxesVisibility()
-            paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
+            updateFreeTicketUI()
             return
         }
 
@@ -976,13 +1026,12 @@ final class OrderListViewController: UIViewController {
             subtotal: detail.total,
             fees: feesAmount
         )
-        updatePromoCodeUI()
+        updateFreeTicketUI()
 
 //        DispatchQueue.main.async {
 //            self.tableViewHeight.constant = self.ticketTableView.contentSize.height
 //            self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
 //        }
-        paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
     }
 
     private func buildFeesArray(from fees: PaymentDetail?) -> [FeeDisplayItem] {
@@ -1001,6 +1050,12 @@ final class OrderListViewController: UIViewController {
     }
 
     private func updatePromoCodeUI() {
+        guard !isFreeTicket else {
+            updateFreeTicketUI()
+            return
+        }
+
+        promoCodeTitleView.isHidden = false
         promoCodeAppliedView.isHidden = !isPromoCodeApplied
         promoCodeStackView.isHidden = isPromoCodeApplied
         removePromoCodeView.isHidden = !isPromoCodeApplied

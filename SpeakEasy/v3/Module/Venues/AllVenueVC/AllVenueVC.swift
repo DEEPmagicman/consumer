@@ -47,7 +47,7 @@ final class AllVenueVC: UIViewController {
     }
 
     @IBAction func onClickFilterBtn(_ sender: Any) {
-        presentCityFilter()
+        return
     }
 
     @IBAction func onClickCityBtn(_ sender: Any) {

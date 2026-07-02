@@ -161,9 +161,9 @@ final class PremiumExperienceCell: UICollectionViewCell {
         dateLabel.text = item.dateText
         guestLabel.text = item.guestText
 
-        if item.priceText.caseInsensitiveCompare("Request") == .orderedSame {
+        if item.isInquiryAction {
 
-            priceLabel.text = "Inquire"
+            priceLabel.text = item.primaryActionTitle
 
             // iOS 26 Glass
             pricePillView.overrideBackgroundColor = nil
@@ -179,7 +179,7 @@ final class PremiumExperienceCell: UICollectionViewCell {
 
         } else {
 
-            priceLabel.text = "From \(item.priceText)"
+            priceLabel.text = item.primaryActionTitle
 
             // Gold glass
             pricePillView.overrideBackgroundColor = nil

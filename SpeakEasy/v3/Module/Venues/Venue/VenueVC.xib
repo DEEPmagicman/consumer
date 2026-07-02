@@ -22,6 +22,8 @@
                 <outlet property="bgView" destination="AMn-Ou-B1g" id="6GY-xi-Xin"/>
                 <outlet property="buyticketView" destination="xNu-88-pSm" id="aRq-AA-XGA"/>
                 <outlet property="containerView" destination="57Y-Ii-nMO" id="rtB-Ht-n5m"/>
+                <outlet property="coverTicketDescriptionLbl" destination="ea3-wv-Ivn" id="m37-yG-G2P"/>
+                <outlet property="coverTicketTitleLbl" destination="BLI-Tt-qpq" id="H8Y-Ud-fkM"/>
                 <outlet property="coverTicketView" destination="wnq-bd-Mgd" id="AAa-ct-row"/>
                 <outlet property="followBtn" destination="jUU-L9-aIQ" id="av8-Ij-fjW"/>
                 <outlet property="followBtnLbl" destination="TV7-Jm-5tJ" id="iqy-FU-HmI"/>

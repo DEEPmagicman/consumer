@@ -53,6 +53,7 @@ struct Event: Codable {
     var isEnableOnlineTables: Bool
     var isEnable3DMap: Bool
     var isEnableReservationRequest: Bool
+    var isPremium: Bool?
     var eventGallery: [EventGallery]?
     var eventAddOnTicket: [EventTicket]?
     var hasSavedEvent: Bool?
@@ -282,6 +283,7 @@ struct Event: Codable {
         try container.encode(showAddress, forKey: .showAddress)
         try container.encode(totalTickets, forKey: .totalTickets)
         try container.encode(allowGuestCheckin, forKey: .allowGuestCheckin)
+        try container.encode(isPremium, forKey: .isPremium)
     }
 }
 

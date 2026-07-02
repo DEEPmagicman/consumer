@@ -222,7 +222,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
                     errorMessage,
                     venues.map {
                         SearchVenueItem(
-                            id: $0.uniqueId,
+                            id: $0.id,
                             name: $0.name,
                             imageURL: ($0.logo?.key ?? $0.venueAttachment?.first?.key)?.imageURL,
                             venue: $0

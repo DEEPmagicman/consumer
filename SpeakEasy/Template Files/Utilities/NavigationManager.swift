@@ -715,9 +715,14 @@ final class Navigate {
         sender.presentPremium(nav)
     }
     
-    func coverTicketListVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
+    func coverTicketListVC(
+        _ sender: UIViewController,
+        venueDetails: ClipVenue?,
+        shouldShowDirectUpsell: Bool = false
+    ) {
         let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)
         vc.venueDetails = venueDetails
+        vc.shouldShowDirectUpsell = shouldShowDirectUpsell
         vc.hidesBottomBarWhenPushed = true
         sender.pushVC(vc)
     }
@@ -739,7 +744,7 @@ final class Navigate {
     ) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
         vc.venue = venue
-        vc.listMode = mode
+        vc.listMode = venue == nil ? mode : .venueSearch
         sender.pushVC(vc, animated: false)
     }
 
@@ -897,7 +902,7 @@ final class Navigate {
         vc.providedSeatingAreas = seatingAreas
         sender.pushVC(vc)
     }
-    
+   
     func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil) {
         let vc = PremiumTableSeatingVC()
         vc.seatingArea = seatingArea

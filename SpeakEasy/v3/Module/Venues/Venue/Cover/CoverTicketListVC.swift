@@ -41,6 +41,7 @@ final class CoverTicketListVC: UIViewController {
     var venueDetails: ClipVenue?
     var doormanId = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
+    var shouldShowDirectUpsell = false
 
     // MARK: - Private
 
@@ -128,6 +129,17 @@ final class CoverTicketListVC: UIViewController {
         !upSellTickets.isEmpty
     }
 
+    private var selectedStepTitle: String {
+        switch currentStep {
+        case .coverTickets:
+            return "Buy live cover"
+        case .addOns:
+            let title = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            return title?.isEmpty == false ? title! : "Upsell Items"
+        }
+    }
+
     private var modifiedUpSellTickets: [UpSellTicket] {
         var result = [UpSellTicket]()
 
@@ -181,6 +193,7 @@ final class CoverTicketListVC: UIViewController {
         setupScrollBehavior()
         observeTableViewHeight()
         setupCoverTickets()
+        configureInitialFlowStep()
         getUpsellTickets()
         updateCheckoutState()
         setupFollowButtonAnimation()
@@ -512,6 +525,7 @@ private extension CoverTicketListVC {
         continueToCheckoutBtn.isHidden = true
         continueToCheckoutBtn.alpha = 0
         continueToCheckoutBtn.delegate = self
+        updateTicketsTitle()
     }
 
     func styleVenueHeader() {
@@ -615,6 +629,18 @@ private extension CoverTicketListVC {
 
         tableView.reloadData()
         updateCheckoutState()
+    }
+
+    func configureInitialFlowStep() {
+        if shouldShowDirectUpsell {
+            currentStep = .addOns
+        }
+        updateTicketsTitle()
+    }
+
+    func updateTicketsTitle() {
+        ticketsTitleLbl.text = selectedStepTitle
+        syncStickyTicketsTitle()
     }
 
     func observeTableViewHeight() {
@@ -819,7 +845,7 @@ private extension CoverTicketListVC {
             if clearSelection {
                 self.coverTicketCount.removeAll()
                 self.upSellTicketCount.removeAll()
-                self.currentStep = .coverTickets
+                self.currentStep = self.shouldShowDirectUpsell ? .addOns : .coverTickets
             }
 
             self.setupCoverTickets()
@@ -844,7 +870,12 @@ private extension CoverTicketListVC {
             guard let self else { return }
 
             if isSuccess {
-                self.upSellTickets = upSellItem
+                self.upSellTickets = upSellItem.filter {
+                    !$0.isDeleted &&
+                    $0.status == "ENABLED" &&
+                    $0.addOns?.isDeleted == false &&
+                    $0.addOns?.status == "ENABLED"
+                }
             } else {
                 self.upSellTickets = []
                 if let errMsg, !errMsg.isEmpty {
@@ -852,7 +883,12 @@ private extension CoverTicketListVC {
                 }
             }
 
+            if self.shouldShowDirectUpsell && self.upSellTickets.isEmpty && !self.coverTickets.isEmpty {
+                self.currentStep = .coverTickets
+            }
+
             self.tableView.reloadData()
+            self.updateTicketsTitle()
             self.updateCheckoutState()
         }
     }
@@ -883,7 +919,7 @@ private extension CoverTicketListVC {
 private extension CoverTicketListVC {
 
     func updateCheckoutState() {
-        let shouldShow = hasAnyCoverSelection
+        let shouldShow = totalSelectedCount > 0
 
         let subtotal =
             selectedCoverTickets.reduce(0.0) {
@@ -952,13 +988,14 @@ private extension CoverTicketListVC {
     func moveToAddOnStep() {
         currentStep = .addOns
         expandedIndexSet.removeAll()
+        updateTicketsTitle()
         tableView.reloadData()
         updateCheckoutState()
     }
 
     func proceedToFinalCheckout() {
         guard !isCheckoutNavigationInProgress else { return }
-        guard !selectedCoverTickets.isEmpty else { return }
+        guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else { return }
 
         isCheckoutNavigationInProgress = true
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
@@ -989,9 +1026,10 @@ private extension CoverTicketListVC {
 extension CoverTicketListVC {
 
     @IBAction func onClickBackBtn(_ sender: Any) {
-        if currentStep == .addOns {
+        if currentStep == .addOns && !shouldShowDirectUpsell {
             currentStep = .coverTickets
             expandedIndexSet.removeAll()
+            updateTicketsTitle()
             tableView.reloadData()
             updateCheckoutState()
             return
@@ -1029,7 +1067,7 @@ extension CoverTicketListVC {
     }
 
     private func continueFlow() {
-        guard !selectedCoverTickets.isEmpty else { return }
+        guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else { return }
 
         switch currentStep {
         case .coverTickets:

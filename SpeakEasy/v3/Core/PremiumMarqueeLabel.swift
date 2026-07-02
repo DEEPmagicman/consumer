@@ -26,6 +26,14 @@ final class PremiumMarqueeLabel: UIView {
         }
     }
 
+    var textAlignment: NSTextAlignment = .center {
+        didSet {
+            label.textAlignment = textAlignment
+            duplicateLabel.textAlignment = textAlignment
+            setNeedsLayout()
+        }
+    }
+
     var animationDelay: TimeInterval = 1.0
 
     /// points / second
@@ -109,8 +117,10 @@ extension PremiumMarqueeLabel {
 
         if labelWidth > bounds.width {
             let gap = trailingSpacing
+            label.textAlignment = .left
             label.frame = CGRect(x: 0, y: 0, width: labelWidth, height: bounds.height)
             duplicateLabel.text = label.text
+            duplicateLabel.textAlignment = .left
             duplicateLabel.isHidden = false
             duplicateLabel.frame = CGRect(
                 x: labelWidth + gap,
@@ -124,7 +134,7 @@ extension PremiumMarqueeLabel {
             )
         } else {
             duplicateLabel.isHidden = true
-            label.textAlignment = .center
+            label.textAlignment = textAlignment
             label.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
             scrollView.contentSize = bounds.size
         }

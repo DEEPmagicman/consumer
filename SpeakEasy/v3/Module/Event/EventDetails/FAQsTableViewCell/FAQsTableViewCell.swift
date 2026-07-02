@@ -25,6 +25,9 @@ class FAQsTableViewCell: UITableViewCell {
 
         ansLbl.numberOfLines = 0
         ansView.isHidden = true
+        dropDowenBtn.image = UIImage(named: "arrowTopIcon")?.withRenderingMode(.alwaysTemplate)
+        dropDowenBtn.tintColor = .white
+        dropDowenBtn.contentMode = .scaleAspectFit
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         selectionStyle = .none
@@ -34,6 +37,7 @@ class FAQsTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         onToggle = nil
+        dropDowenBtn.transform = CGAffineTransform(rotationAngle: .pi)
     }
 
     func configure(
@@ -53,8 +57,8 @@ class FAQsTableViewCell: UITableViewCell {
         )
 
         dropDowenBtn.transform = isExpanded
-            ? CGAffineTransform(rotationAngle: .pi)
-            : .identity
+            ? .identity
+            : CGAffineTransform(rotationAngle: .pi)
     }
 
     func setAnswerPadding(top: CGFloat, bottom: CGFloat) {

@@ -10,6 +10,7 @@ import UIKit
 enum EventsListMode {
     case cityEvents
     case tonight
+    case venueSearch
 }
 
 enum EventsListScreenType {
@@ -74,25 +75,32 @@ final class EventsListVC: UIViewController {
 
     @IBAction func onClickTopRightSideBtn(_ sender: Any) {
         if let venue = venue {
-            Navigate.to.searchEventVC(self, venueID: venue.id)
+            Navigate.to.searchEventVC(self, venueID: venue.venueUniqueId)
         } else {
-            presentCityFilter()
+            return
         }
     }
 
     @IBAction func onClickCityBtn(_ sender: Any) {
+        guard venue == nil else { return }
         presentCityFilter()
     }
 
     private func setupUI() {
         if let venue = venue {
+            topRightSideBtn.isHidden = false
             topRightSideBtn.iconTypeValue = AppIconType.search.rawValue
             topRightSideBtn.iconSize = 14
             topRightSideBtn.buttonSize = 40
 
             titleLbl.text = venue.name
             cityTitleLbl.text = ""
+            cityTitleLbl.isHidden = true
+            topTitleView.cornerRadius = 20
+            topViewLeftSideConstraint.constant = 20
+            topViewRightSideConstraint.constant = 20
         } else {
+            topRightSideBtn.isHidden = true
             updateCityTitle()
         }
     }
@@ -169,6 +177,7 @@ final class EventsListVC: UIViewController {
 
         discoverService.fetchDiscoverEvents(
             city: resolvedCity(),
+            venueId: venue?.venueUniqueId,
             skip: skip,
             eventListType: eventListType(),
             timeZone: TimeZone.current.identifier
@@ -229,6 +238,8 @@ final class EventsListVC: UIViewController {
             return .eventsInCity
         case .tonight:
             return .eventsTonight
+        case .venueSearch:
+            return .eventsInCity
         }
     }
 
@@ -279,6 +290,11 @@ final class EventsListVC: UIViewController {
         case .tonight:
             titleLbl.text = "Events Tonight"
             cityTitleLbl.text = resolvedCity()
+
+        case .venueSearch:
+            titleLbl.text = venue?.name ?? "Events"
+            cityTitleLbl.text = ""
+            cityTitleLbl.isHidden = true
         }
     }
 
@@ -324,7 +340,7 @@ final class EventsListVC: UIViewController {
 
         let subtitleLabel = UILabel()
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "Try another city."
+        subtitleLabel.text = venue == nil ? "Try another city." : "Try another search or date."
         subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
         subtitleLabel.font = Constant.Font.geistRegular(size: 14)
         subtitleLabel.textAlignment = .center

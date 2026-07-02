@@ -157,13 +157,11 @@ private extension PremiumEventContainerVC {
     }
     
     private func loadSeatingAreas() {
-        
-//        if let providedSeatingAreas {
-//            applySeatingAreas(providedSeatingAreas)
-//            return
-//        }
-        segmentView.isHidden = true
-        fetchSeatingAreas()
+
+        applySeatingAreas(providedSeatingAreas ?? [])
+        // Temporarily disabled: premium flow now uses seating areas passed from
+        // the first premium API response.
+        // fetchSeatingAreas()
     }
     
     private func fetchSeatingAreas() {
@@ -222,7 +220,9 @@ private extension PremiumEventContainerVC {
         mapVC.event = event
         mapVC.seatingAreas = bookableSeatingAreas
         mapVC.seatingAreasFilteredOut = visibleSeatingAreas
-        mapVC.fetchLayOut()
+        if event?.isEnable3DMap == true {
+            mapVC.fetchLayOut()
+        }
 
         listVC.event = event
         listVC.seatingAreas = bookableSeatingAreas
@@ -461,6 +461,9 @@ private extension PremiumEventContainerVC {
         
         let isOnlineTablesEnabled =
         event?.isEnableOnlineTables == true
+
+        let is3DMapEnabled =
+        event?.isEnable3DMap == true
         
         let hasSeatingAreas =
         !bookableSeatingAreas.isEmpty
@@ -471,6 +474,7 @@ private extension PremiumEventContainerVC {
         var segments: [Segment] = []
         
         if isOnlineTablesEnabled,
+           is3DMapEnabled,
            hasSeatingAreas {
             segments.append(.map)
         }

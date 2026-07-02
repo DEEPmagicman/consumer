@@ -215,9 +215,16 @@ final class ArtistDetailsVC: UIViewController {
 
                 guard isSuccess,
                       let page else {
+                    let wasInitialLoading = self.isInitialLoading
                     self.isInitialLoading = false
                     self.isPaginating = false
-                    self.updateEmptyState()
+                    self.hasMore = false
+                    if wasInitialLoading || self.events.isEmpty {
+                        self.reloadUI()
+                    } else {
+                        self.invalidateFooter()
+                        self.updateEmptyState()
+                    }
                     if let errMsg {
                         Alert.showToast(errMsg)
                     }
