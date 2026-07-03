@@ -1281,7 +1281,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's ticket",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated the ticket options.",actions: [okAction])
         }
     }
     

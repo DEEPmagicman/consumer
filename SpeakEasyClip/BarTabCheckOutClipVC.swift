@@ -742,7 +742,7 @@ extension BarTabCheckOutClipVC: WebSocketCallBackDelegate {
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if isPaymentInitiated { return }
         if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
-            alertPopup("Update", "Venue your trying to booking, updated it's ticket") {
+            alertPopup("Update", "The venue updated the ticket options.") {
                 self.navigationController?.popToRootViewController(animated: true)
             }
         }

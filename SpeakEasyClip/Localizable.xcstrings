@@ -474,6 +474,23 @@
     "The number provided is too short." : {
 
     },
+    "The venue updated the ticket options." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The venue updated the ticket options."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El establecimiento actualizó las opciones de entradas."
+          }
+        }
+      }
+    },
     "The venue updated their prices" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -542,17 +559,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El lugar en el que intentas reservar está cerrado."
-          }
-        }
-      }
-    },
-    "Venue your trying to booking, updated it's ticket" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lugar en el que estás intentando reservar, actualiza tu billete."
           }
         }
       }
