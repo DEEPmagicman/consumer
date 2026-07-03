@@ -322,20 +322,35 @@ final class PremiumSearchVC: UIViewController {
                     return
                 }
 
-                self.events.append(contentsOf: result.events)
+                let newEvents = result.events
                 self.hasMoreEvents = result.hasMoreEvents
-                self.reloadCollectionWithoutAnimation()
+
+                guard !newEvents.isEmpty else {
+                    self.updateEmptyState(animated: true)
+                    return
+                }
+
+                let oldCount = self.events.count
+                self.events += newEvents
+
+                let indexPaths = (oldCount..<self.events.count).map {
+                    IndexPath(item: $0, section: 0)
+                }
+
+                self.insertEventsWithoutAnimation(indexPaths)
                 self.updateEmptyState(animated: true)
             }
         }
     }
 
     private func reloadCollectionWithoutAnimation() {
-        UIView.performWithoutAnimation {
-            collectionView.collectionViewLayout.invalidateLayout()
             collectionView.reloadData()
-            collectionView.layoutIfNeeded()
-        }
+    }
+
+    private func insertEventsWithoutAnimation(_ indexPaths: [IndexPath]) {
+        guard !indexPaths.isEmpty else { return }
+        collectionView.insertItems(at: indexPaths)
+       
     }
 
     private func updateEmptyState(animated: Bool) {

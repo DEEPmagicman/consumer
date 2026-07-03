@@ -624,6 +624,53 @@ final class TableService {
 
     // MARK: - Cancel Table Booking
 
+    func cancelTableBookingQueue(
+        eventId: String,
+        queueId: String,
+        tableBookingId: String,
+        venueId: String?,
+        completion: @escaping (
+            _ success: Bool,
+            _ message: String?
+        ) -> Void
+    ) {
+
+        let params: [String: Any] = [
+            "queueId": queueId,
+            "tableBookingId": tableBookingId
+        ]
+
+        AFWrapper.postRequest(
+            APIBuilder.seatingAreaBookingCancelURL(eventId: eventId),
+            params: params,
+            headers: Header.header(venueId: venueId ?? "")
+        ) { _ in
+
+            completion(
+                true,
+                nil
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(
+                    false,
+                    err.domain
+                )
+
+                return
+            }
+
+            completion(
+                false,
+                error?.localizedDescription ?? "Failed to cancel booking"
+            )
+        }
+    }
+
     func cancelTableBooking(
         bookingId: String,
         venueId: String?,

@@ -318,6 +318,7 @@ private extension PremiumInquiryCardView {
 extension PremiumInquiryCardView {
 
     func configure() {
+        configureTextsFromSettings()
         configureDefaultDateTime()
         configurePartySize()
         updateButtonState()
@@ -325,6 +326,26 @@ extension PremiumInquiryCardView {
 }
 
 private extension PremiumInquiryCardView {
+
+    func configureTextsFromSettings() {
+        let settings = event?.venue?.venueSettings
+        let venueName = event?.venue?.name ?? "the venue"
+        let fallbackInformation =
+            "Please complete the form to submit your request and a VIP Services Host will contact you. This request form is not a table reservation confirmation and does not guarantee entry."
+        let fallbackPolicy =
+            "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+
+        let information = cleanHTMLText(settings?.tableBookingImportantInformation ?? "")
+        descriptionLabel.text = information.isEmpty ? fallbackInformation : information
+
+        titleLabel.text = "Reservation request"
+
+        let requestPolicy = cleanHTMLText(settings?.reservationRequestPolicy ?? "")
+        let marketingPolicy = cleanHTMLText(settings?.policyText ?? "")
+        checkboxView.labelText = requestPolicy.isEmpty
+            ? (marketingPolicy.isEmpty ? fallbackPolicy : marketingPolicy)
+            : requestPolicy
+    }
 
     func configureDefaultDateTime() {
         guard
@@ -347,6 +368,26 @@ private extension PremiumInquiryCardView {
     func configurePartySize() {
         let maxGuest = seatingAreas.compactMap { $0.maxGuest }.max() ?? 100
         partySizeRow.configure(max: maxGuest)
+    }
+
+    func cleanHTMLText(_ text: String) -> String {
+        guard let data = text.data(using: .utf8),
+              let attributed = try? NSAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ],
+                documentAttributes: nil
+              ) else {
+            return text
+                .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        return attributed.string
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

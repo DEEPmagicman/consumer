@@ -20,6 +20,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     var guestCount: Int = 0
     var selectedTimeSlot: TableTimeSlot?
     var selectedTimeText: String?
+    var initialBooking: SeatingAreaBookingResponse?
 
     // MARK: - Private
 
@@ -31,6 +32,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var paymentSheet: PaymentSheet?
     private var isPaymentInitiated   = false
     private var isCancellingBooking  = false
+    private var didCancelBooking      = false
     private var didFinishBooking      = false
     private var isFreeBooking        = false
     private var isPromoApplied       = false
@@ -97,8 +99,12 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var promoTopToSummaryConstraint: NSLayoutConstraint?
     private var paymentHeightConstraint: NSLayoutConstraint?
     private var promoHeightConstraint: NSLayoutConstraint?
+    private var checkoutPolicyHeightConstraint: NSLayoutConstraint?
     private var termsHeightConstraint: NSLayoutConstraint?
     private var venueMessageHeightConstraint: NSLayoutConstraint?
+    private var emailMessageHeightConstraint: NSLayoutConstraint?
+    private var termsTopToPolicyConstraint: NSLayoutConstraint?
+    private var termsTopToPromoConstraint: NSLayoutConstraint?
 
     // Payment method
     private let paymentRow       = PremiumInfoRow()
@@ -107,8 +113,10 @@ final class PremiumTableCheckoutVC: UIViewController {
     private let promoRow         = PremiumPromoRow()
 
     // Agreement rows
+    private let checkoutPolicyView  = PremiumAgreementView()
     private let termsAgreementView  = PremiumAgreementView()
     private let venueMessageView    = PremiumAgreementView()
+    private let emailMessageView    = PremiumAgreementView()
 
     // Timer
     private let timerBanner      = PremiumTimerBannerView()
@@ -127,6 +135,7 @@ final class PremiumTableCheckoutVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: "#111111")
         navigationItem.title = ""
+        primeBooking(initialBooking)
         setupUI()
         setupSocket()
         startTimer()
@@ -309,7 +318,18 @@ private extension PremiumTableCheckoutVC {
     }
 
     func setupCheckboxes() {
+        checkoutPolicyView.titleText = nil
+        checkoutPolicyView.showsCheckbox = false
+        checkoutPolicyView.isChecked = true
+        checkoutPolicyView.translatesAutoresizingMaskIntoConstraints = false
+        checkoutPolicyView.isHidden = true
+        checkoutPolicyView.onHeightChanged = { [weak self] _ in
+            self?.updateAgreementHeights(animated: false)
+        }
+        contentView.addSubview(checkoutPolicyView)
+
         termsAgreementView.titleText = nil
+        termsAgreementView.showsCheckbox = true
         termsAgreementView.isChecked = true
         termsAgreementView.translatesAutoresizingMaskIntoConstraints = false
         termsAgreementView.isHidden = true
@@ -319,6 +339,7 @@ private extension PremiumTableCheckoutVC {
         contentView.addSubview(termsAgreementView)
 
         venueMessageView.titleText = nil
+        venueMessageView.showsCheckbox = true
         venueMessageView.isChecked = true
         venueMessageView.translatesAutoresizingMaskIntoConstraints = false
         venueMessageView.isHidden = true
@@ -326,6 +347,16 @@ private extension PremiumTableCheckoutVC {
             self?.updateAgreementHeights(animated: false)
         }
         contentView.addSubview(venueMessageView)
+
+        emailMessageView.titleText = nil
+        emailMessageView.showsCheckbox = true
+        emailMessageView.isChecked = true
+        emailMessageView.translatesAutoresizingMaskIntoConstraints = false
+        emailMessageView.isHidden = true
+        emailMessageView.onHeightChanged = { [weak self] _ in
+            self?.updateAgreementHeights(animated: false)
+        }
+        contentView.addSubview(emailMessageView)
     }
 
     func setupTimerBanner() {
@@ -512,8 +543,12 @@ private extension PremiumTableCheckoutVC {
             promoRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             promoRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
+            // Checkout policy
+            checkoutPolicyView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 12),
+            checkoutPolicyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            checkoutPolicyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
             // Terms
-            termsAgreementView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 12),
             termsAgreementView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             termsAgreementView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
@@ -521,7 +556,12 @@ private extension PremiumTableCheckoutVC {
             venueMessageView.topAnchor.constraint(equalTo: termsAgreementView.bottomAnchor, constant: 14),
             venueMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             venueMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            venueMessageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
+
+            // Email message
+            emailMessageView.topAnchor.constraint(equalTo: venueMessageView.bottomAnchor, constant: 14),
+            emailMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            emailMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            emailMessageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
 
             // Timer banner
             timerBanner.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -566,11 +606,21 @@ private extension PremiumTableCheckoutVC {
         promoHeightConstraint = promoRow.heightAnchor.constraint(equalToConstant: promoRow.preferredHeight)
         promoHeightConstraint?.isActive = true
 
+        termsTopToPolicyConstraint = termsAgreementView.topAnchor.constraint(equalTo: checkoutPolicyView.bottomAnchor, constant: 14)
+        termsTopToPromoConstraint = termsAgreementView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 12)
+        termsTopToPromoConstraint?.isActive = true
+
+        checkoutPolicyHeightConstraint = checkoutPolicyView.heightAnchor.constraint(equalToConstant: 0)
+        checkoutPolicyHeightConstraint?.isActive = true
+
         termsHeightConstraint = termsAgreementView.heightAnchor.constraint(equalToConstant: 0)
         termsHeightConstraint?.isActive = true
 
         venueMessageHeightConstraint = venueMessageView.heightAnchor.constraint(equalToConstant: 0)
         venueMessageHeightConstraint?.isActive = true
+
+        emailMessageHeightConstraint = emailMessageView.heightAnchor.constraint(equalToConstant: 0)
+        emailMessageHeightConstraint?.isActive = true
     }
 }
 
@@ -744,6 +794,14 @@ private extension PremiumTableCheckoutVC {
         configureHeader()
         configureGuest()
 
+        if let booking,
+           booking.status.lowercased() == "payment" ||
+           booking.content?.tableBooking?.tableBookingPriceBreakdown != nil ||
+           booking.content?.tableBooking?.spendAgreement != nil {
+            configureAfterBooking(booking)
+            return
+        }
+
         setPriceLoadingVisible(true)
         guestDisplayRow.isHidden = false
         noteRow.isHidden         = false
@@ -756,8 +814,10 @@ private extension PremiumTableCheckoutVC {
         paymentHeightConstraint?.constant = 0
         promoRow.isHidden        = true
         promoHeightConstraint?.constant = 0
+        checkoutPolicyView.isHidden = checkoutPolicyView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         termsAgreementView.isHidden = termsAgreementView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         venueMessageView.isHidden   = venueMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        emailMessageView.isHidden   = emailMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         updateAgreementHeights(animated: false)
 
         buyBtn.alpha = 0.5
@@ -773,8 +833,10 @@ private extension PremiumTableCheckoutVC {
         paymentHeightConstraint?.constant = 0
         promoRow.isHidden        = false
         promoHeightConstraint?.constant = promoRow.preferredHeight
+        checkoutPolicyView.isHidden = checkoutPolicyView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         termsAgreementView.isHidden = termsAgreementView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         venueMessageView.isHidden   = venueMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        emailMessageView.isHidden   = emailMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         updateAgreementHeights(animated: false)
 
         buyBtn.alpha = 1
@@ -890,22 +952,24 @@ private extension PremiumTableCheckoutVC {
 
         let settings = event?.venue?.venueSettings
 
-        var terms = cleanAgreementText(
-            settings?.emailPolicyText ??
-            settings?.tableBookingTermsAndCondition ??
-            ""
-        )
-        if terms.isEmpty {
-            terms = "I agree to the Terms & Conditions."
-        }
+        let importantInformation = cleanAgreementText(settings?.tableBookingImportantInformation ?? "")
+        checkoutPolicyView.titleText = importantInformation.isEmpty ? nil : "Important Information"
+        checkoutPolicyView.showsCheckbox = false
+        checkoutPolicyView.bodyText = importantInformation
+        checkoutPolicyView.bodyAttributedText = formattedAgreementHTML(settings?.tableBookingImportantInformation ?? "")
+        checkoutPolicyView.isChecked = true
+        checkoutPolicyView.isHidden = importantInformation.isEmpty
 
-        termsAgreementView.titleText = nil
+        let terms = cleanAgreementText(settings?.tableBookingTermsAndCondition ?? "")
+
+        termsAgreementView.titleText = terms.isEmpty ? nil : "Terms & Conditions"
+        termsAgreementView.showsCheckbox = true
         termsAgreementView.bodyText = terms
         termsAgreementView.bodyAttributedText = formattedAgreementHTML(
-            settings?.emailPolicyText ?? settings?.tableBookingTermsAndCondition ?? ""
+            settings?.tableBookingTermsAndCondition ?? ""
         )
         termsAgreementView.isChecked = true
-        termsAgreementView.isHidden = false
+        termsAgreementView.isHidden = terms.isEmpty
 
         let venueName = event?.venue?.name ?? "the venue"
         let fallbackPolicy =
@@ -915,29 +979,59 @@ private extension PremiumTableCheckoutVC {
             policy = cleanAgreementText(fallbackPolicy)
         }
         venueMessageView.titleText = nil
+        venueMessageView.showsCheckbox = true
         venueMessageView.bodyText = settings?.optedPolicy == true ? policy : ""
         venueMessageView.bodyAttributedText = settings?.optedPolicy == true
             ? formattedAgreementHTML(settings?.policyText ?? fallbackPolicy)
             : nil
         venueMessageView.isChecked = true
         venueMessageView.isHidden = settings?.optedPolicy != true || policy.isEmpty
+
+        let fallbackEmailPolicy =
+            "I agree to receive marketing related email messages from \(venueName)."
+        var emailPolicy = cleanAgreementText(settings?.emailPolicyText ?? fallbackEmailPolicy)
+        if settings?.optedEmailPolicy == true, emailPolicy.isEmpty {
+            emailPolicy = cleanAgreementText(fallbackEmailPolicy)
+        }
+        emailMessageView.titleText = nil
+        emailMessageView.showsCheckbox = true
+        emailMessageView.bodyText = settings?.optedEmailPolicy == true ? emailPolicy : ""
+        emailMessageView.bodyAttributedText = settings?.optedEmailPolicy == true
+            ? formattedAgreementHTML(settings?.emailPolicyText ?? fallbackEmailPolicy)
+            : nil
+        emailMessageView.isChecked = true
+        emailMessageView.isHidden = settings?.optedEmailPolicy != true || emailPolicy.isEmpty
         updateAgreementHeights(animated: false)
     }
 
     func updateAgreementHeights(animated: Bool) {
+        let checkoutPolicyVisible = !checkoutPolicyView.isHidden
+            && !checkoutPolicyView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         let termsVisible = !termsAgreementView.isHidden
             && !termsAgreementView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         let venueVisible = !venueMessageView.isHidden
             && !venueMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let emailVisible = !emailMessageView.isHidden
+            && !emailMessageView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 
+        let checkoutPolicyHeight = checkoutPolicyVisible ? checkoutPolicyView.preferredHeight : 0
         let termsHeight = termsVisible ? termsAgreementView.preferredHeight : 0
         let venueHeight = venueVisible ? venueMessageView.preferredHeight : 0
-        let hasChanged = abs((termsHeightConstraint?.constant ?? 0) - termsHeight) > 0.5
+        let emailHeight = emailVisible ? emailMessageView.preferredHeight : 0
+
+        termsTopToPolicyConstraint?.isActive = checkoutPolicyVisible
+        termsTopToPromoConstraint?.isActive = !checkoutPolicyVisible
+
+        let hasChanged = abs((checkoutPolicyHeightConstraint?.constant ?? 0) - checkoutPolicyHeight) > 0.5
+            || abs((termsHeightConstraint?.constant ?? 0) - termsHeight) > 0.5
             || abs((venueMessageHeightConstraint?.constant ?? 0) - venueHeight) > 0.5
+            || abs((emailMessageHeightConstraint?.constant ?? 0) - emailHeight) > 0.5
         guard hasChanged else { return }
 
+        checkoutPolicyHeightConstraint?.constant = checkoutPolicyHeight
         termsHeightConstraint?.constant = termsHeight
         venueMessageHeightConstraint?.constant = venueHeight
+        emailMessageHeightConstraint?.constant = emailHeight
 
         self.view.layoutIfNeeded()
     }
@@ -1039,25 +1133,40 @@ private extension PremiumTableCheckoutVC {
         }
     }
 
-    var activeBookingId: String {
+    func primeBooking(_ booking: SeatingAreaBookingResponse?) {
+        guard let booking else { return }
+        self.booking = booking
+        if let tableBookingId = booking.content?.tableBooking?.id,
+           !tableBookingId.isEmpty {
+
+            currentBookingId = tableBookingId
+        }
+    }
+
+    var activeTableBookingId: String {
         if !currentBookingId.isEmpty { return currentBookingId }
         if let tableBookingId = booking?.content?.tableBooking?.id,
            !tableBookingId.isEmpty {
             return tableBookingId
         }
-        return booking?.id ?? ""
+        return ""
     }
 
     func cancelCurrentBooking(
         returnToPrevious: Bool,
         completion: (() -> Void)? = nil
     ) {
-        guard !isCancellingBooking, !didFinishBooking else {
+        guard !isCancellingBooking, !didFinishBooking, !didCancelBooking else {
             completion?()
             return
         }
-        let bookingId = activeBookingId
-        guard !bookingId.isEmpty else {
+
+        guard let eventId = event?.id,
+              !eventId.isEmpty,
+              let queueId,
+              !queueId.isEmpty,
+              !activeTableBookingId.isEmpty else {
+
             completion?()
             if returnToPrevious {
                 navigationController?.popViewController(animated: false)
@@ -1066,8 +1175,12 @@ private extension PremiumTableCheckoutVC {
         }
 
         isCancellingBooking = true
-        tableService.cancelTableBooking(
-            bookingId: bookingId,
+        didCancelBooking = true
+
+        tableService.cancelTableBookingQueue(
+            eventId: eventId,
+            queueId: queueId,
+            tableBookingId: activeTableBookingId,
             venueId: event?.venue?.id
         ) { [weak self] _, _ in
             DispatchQueue.main.async {
@@ -1638,6 +1751,11 @@ private extension PremiumTableCheckoutVC {
 
         if !venueMessageView.isHidden && !venueMessageView.isChecked {
             Alert.showToast("Please accept the venue message")
+            return
+        }
+
+        if !emailMessageView.isHidden && !emailMessageView.isChecked {
+            Alert.showToast("Please accept the email policy")
             return
         }
 

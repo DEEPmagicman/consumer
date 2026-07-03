@@ -510,6 +510,75 @@ final class VenueService {
             )
         }
     }
+
+    func fetchVenueTableSettings(
+        venueId: String,
+        venueTimeZone: String? = nil,
+        completion: @escaping (
+            Bool,
+            String?,
+            ClipVenue?
+        ) -> Void
+    ) {
+
+        AFWrapper.getRequest(
+            APIBuilder.venueTableSettingsURL(venueId: venueId),
+            params: nil,
+            headers: Header.header(timeZone: venueTimeZone)
+        ) { response in
+
+            guard let responseDic =
+                    response as? [String: Any]
+            else {
+
+                completion(
+                    false,
+                    nil,
+                    nil
+                )
+
+                return
+            }
+
+            guard let venue =
+                    ClipVenue.parse(responseDic) else {
+
+                completion(
+                    false,
+                    "Internal Error",
+                    nil
+                )
+
+                return
+            }
+
+            completion(
+                true,
+                nil,
+                venue
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(
+                    false,
+                    err.domain,
+                    nil
+                )
+
+                return
+            }
+
+            completion(
+                false,
+                error?.localizedDescription,
+                nil
+            )
+        }
+    }
     
     // MARK: - Deep Link
     

@@ -61,6 +61,7 @@ final class PremiumEventContainerVC: UIViewController {
     private var currentVC: UIViewController?
 
     private let tableService = TableService()
+    private let venueService = VenueService()
 
     private(set) var seatingAreas: [SeatingArea] = []
 
@@ -88,6 +89,7 @@ final class PremiumEventContainerVC: UIViewController {
         setupChildren()
         
         loadSeatingAreas()
+        hydrateVenueSettingsIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
@@ -162,6 +164,47 @@ private extension PremiumEventContainerVC {
         // Temporarily disabled: premium flow now uses seating areas passed from
         // the first premium API response.
         // fetchSeatingAreas()
+    }
+
+    private func hydrateVenueSettingsIfNeeded() {
+
+        guard needsVenueSettingsHydration(),
+              let venueId = event?.venue?.id,
+              !venueId.isEmpty else {
+
+            return
+        }
+
+        venueService.fetchVenueTableSettings(
+            venueId: venueId,
+            venueTimeZone: event?.venue?.useTimezone
+        ) { [weak self] success, _, venue in
+
+            DispatchQueue.main.async {
+
+                guard let self else { return }
+
+                if success, let venue {
+                    self.event?.venue = venue
+                    self.configureHeader()
+                    self.mapVC.event = self.event
+                    self.listVC.event = self.event
+                    self.inquiryVC.event = self.event
+                }
+
+            }
+        }
+    }
+
+    private func needsVenueSettingsHydration() -> Bool {
+        let settings = event?.venue?.venueSettings
+        return settings?.tableBookingSettings == nil
+            || settings?.spendAgreementSettings == nil
+            || settings?.tableBookingPolicy == nil
+            || settings?.tableBookingImportantInformation == nil
+            || settings?.reservationRequestPolicy == nil
+            || settings?.reservationConfirmationMessage == nil
+            || settings?.prepaidReservationConfirmationMessage == nil
     }
     
     private func fetchSeatingAreas() {

@@ -133,6 +133,9 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
     }
 
     private func updateEmptyState() {
+        let hasScrollableContent = isInitialLoading || !artists.isEmpty
+        tableView.isScrollEnabled = hasScrollableContent
+        tableView.alwaysBounceVertical = hasScrollableContent
         tableView.backgroundView =
         !isInitialLoading && artists.isEmpty
         ? makeEmptyStateView()

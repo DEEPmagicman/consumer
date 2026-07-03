@@ -319,6 +319,7 @@ struct VenueSettings: Codable {
     var optedPolicy: Bool
     var policyText: String?
     var emailPolicyText: String?
+    var optedEmailPolicy: Bool?
     var enabledCustomBookingSMS: Bool
     var bookingSMSText: String?
     var collectNameDuringBooking: Bool?
@@ -341,6 +342,8 @@ struct VenueSettings: Codable {
     var tableBookingTermsAndCondition: String?
     var tableBookingImportantInformation: String?
     var tableBookingPolicy: String?
+    var reservationConfirmationMessage: String?
+    var prepaidReservationConfirmationMessage: String?
     var reservationRequestPolicy: String?
     var websiteUrl: String?
     var instagramUrl: String?
@@ -358,6 +361,7 @@ struct VenueSettings: Codable {
         try container.encode(optedPolicy, forKey: .optedPolicy)
         try container.encode(policyText, forKey: .policyText)
         try container.encodeIfPresent(emailPolicyText, forKey: .emailPolicyText)
+        try container.encodeIfPresent(optedEmailPolicy, forKey: .optedEmailPolicy)
         try container.encode(enabledCustomBookingSMS, forKey: .enabledCustomBookingSMS)
         try container.encode(bookingSMSText, forKey: .bookingSMSText)
         try container.encodeIfPresent(collectNameDuringBooking, forKey: .collectNameDuringBooking)
@@ -376,6 +380,12 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(showCoverDisclaimer, forKey: .showCoverDisclaimer)
         try container.encodeIfPresent(coverDisclaimerText, forKey: .coverDisclaimerText)
         try container.encodeIfPresent(barTabBookingPolicy, forKey: .barTabBookingPolicy)
+        try container.encodeIfPresent(tableBookingTermsAndCondition, forKey: .tableBookingTermsAndCondition)
+        try container.encodeIfPresent(tableBookingImportantInformation, forKey: .tableBookingImportantInformation)
+        try container.encodeIfPresent(tableBookingPolicy, forKey: .tableBookingPolicy)
+        try container.encodeIfPresent(reservationConfirmationMessage, forKey: .reservationConfirmationMessage)
+        try container.encodeIfPresent(prepaidReservationConfirmationMessage, forKey: .prepaidReservationConfirmationMessage)
+        try container.encodeIfPresent(reservationRequestPolicy, forKey: .reservationRequestPolicy)
         try container.encodeIfPresent(websiteUrl, forKey: .websiteUrl)
         try container.encodeIfPresent(instagramUrl, forKey: .instagramUrl)
         try container.encodeIfPresent(tiktokUrl, forKey: .tiktokUrl)

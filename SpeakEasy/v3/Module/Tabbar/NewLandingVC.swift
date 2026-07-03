@@ -619,10 +619,9 @@ private final class LocationPermissionPromptVC: UIViewController {
         closeButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
         view.addSubview(closeButton)
 
-        let iconView = UIImageView(image: UIImage(systemName: "mappin.and.ellipse"))
+        let iconView = UIImageView(image: UIImage(named: "locationPermisionIcon"))
         iconView.translatesAutoresizingMaskIntoConstraints = false
         iconView.contentMode = .scaleAspectFit
-        iconView.tintColor = .white
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -638,7 +637,7 @@ private final class LocationPermissionPromptVC: UIViewController {
         bodyLabel.textAlignment = .center
         bodyLabel.textColor = UIColor.white.withAlphaComponent(0.58)
         bodyLabel.numberOfLines = 0
-        bodyLabel.font = Constant.Font.geistRegular(size: 17)
+        bodyLabel.font = Constant.Font.geistRegular(size: 13)
 
         let centerStack = UIStackView(arrangedSubviews: [
             iconView,
@@ -657,7 +656,8 @@ private final class LocationPermissionPromptVC: UIViewController {
         enableButton.setTitleColor(.black, for: .normal)
         enableButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
         enableButton.backgroundColor = .white
-        enableButton.layer.cornerRadius = 18
+        enableButton.layer.cornerRadius = 28
+        enableButton.layer.cornerCurve = .continuous
         enableButton.addTarget(self, action: #selector(onClickEnable), for: .touchUpInside)
 
         let notNowButton = UIButton(type: .system)
@@ -665,8 +665,9 @@ private final class LocationPermissionPromptVC: UIViewController {
         notNowButton.setTitle("Not now", for: .normal)
         notNowButton.setTitleColor(.white, for: .normal)
         notNowButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
-        notNowButton.backgroundColor = UIColor.white.withAlphaComponent(0.12)
-        notNowButton.layer.cornerRadius = 18
+        notNowButton.backgroundColor = UIColor.white.withAlphaComponent(0.10)
+        notNowButton.layer.cornerRadius = 28
+        notNowButton.layer.cornerCurve = .continuous
         notNowButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
 
         let buttonStack = UIStackView(arrangedSubviews: [
@@ -689,8 +690,8 @@ private final class LocationPermissionPromptVC: UIViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 44),
             closeButton.heightAnchor.constraint(equalToConstant: 44),
 
-            iconView.widthAnchor.constraint(equalToConstant: 88),
-            iconView.heightAnchor.constraint(equalToConstant: 88),
+            iconView.widthAnchor.constraint(equalToConstant: 65),
+            iconView.heightAnchor.constraint(equalToConstant: 65),
 
             centerStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             centerStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -46),
@@ -704,8 +705,8 @@ private final class LocationPermissionPromptVC: UIViewController {
             buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
 
-            enableButton.heightAnchor.constraint(equalToConstant: 74),
-            notNowButton.heightAnchor.constraint(equalToConstant: 74)
+            enableButton.heightAnchor.constraint(equalToConstant: 56),
+            notNowButton.heightAnchor.constraint(equalToConstant: 56)
         ])
     }
 

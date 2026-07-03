@@ -241,7 +241,7 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
         presenter.mvpCityListAPi { cityList, isSuccess, errMsg in
             if isSuccess {
                 if let city = cityList.first(where: { $0.value == userCity }) {
-                    UserDefault.shared.localCity = city.value
+                    UserDefault.shared.setPrimaryCity(city.value)
                     self.refreshData()
                     self.cityNameLbl.text = UserDefault.shared.localCity.uppercased()
                     self.cityLbl.text = UserDefault.shared.localCity.uppercased()

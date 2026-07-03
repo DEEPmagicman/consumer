@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-final class PremiumTableReservationConfirmationVC: UIViewController {
+final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewDelegate {
 
     // MARK: - Input
 
@@ -21,9 +21,12 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
     // MARK: - Private
 
     private let tableService = TableService()
+    private let venueService = VenueService()
     private var isLoading = false
+    private var isVenueSettingsLoading = false
     private var isFeesExpanded = true
     private var feeDetailRows: [ReservationOrderRow] = []
+    private var hydratedVenue: ClipVenue?
 
     private var displayEvent: Event? {
         reservation?.event ?? sourceBooking?.event ?? event
@@ -70,6 +73,8 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
     private let closeButton = AppIconButton()
     private let eventImageView = UIImageView()
     private let infoCard = ReservationGlassCardView(cornerRadius: 19)
+    private let confirmationMessageCard = ReservationGlassCardView(cornerRadius: 16)
+    private let confirmationMessageTextView = UITextView()
     private let orderCard = ReservationGlassCardView(cornerRadius: 22)
     private let eventsDetailsRow = ReservationActionRow(title: "Events details")
     private let supportRow = ReservationActionRow(title: "Support")
@@ -90,6 +95,9 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
 
     private var guestTagTrailingToTimeConstraint: NSLayoutConstraint?
     private var guestTagTrailingToCardConstraint: NSLayoutConstraint?
+    private var confirmationMessageHeightConstraint: NSLayoutConstraint?
+    private var orderTopToInfoConstraint: NSLayoutConstraint?
+    private var orderTopToMessageConstraint: NSLayoutConstraint?
 
     // MARK: - Life Cycle
 
@@ -99,6 +107,7 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
         setupUI()
         configure()
         fetchReservationIfNeeded()
+        hydrateVenueSettingsIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
@@ -117,6 +126,7 @@ private extension PremiumTableReservationConfirmationVC {
         setupCloseButton()
         setupEventImage()
         setupInfoCard()
+        setupConfirmationMessageCard()
         setupOrderCard()
         setupActionRows()
         setupLoader()
@@ -199,6 +209,25 @@ private extension PremiumTableReservationConfirmationVC {
         infoCard.addSubview(confirmationTitleLabel)
         infoCard.addSubview(confirmationNumberLabel)
         infoCard.addSubview(copyButton)
+    }
+
+    func setupConfirmationMessageCard() {
+        confirmationMessageCard.translatesAutoresizingMaskIntoConstraints = false
+        confirmationMessageCard.isHidden = true
+        contentView.addSubview(confirmationMessageCard)
+
+        confirmationMessageTextView.backgroundColor = .clear
+        confirmationMessageTextView.isEditable = false
+        confirmationMessageTextView.isScrollEnabled = false
+        confirmationMessageTextView.textContainerInset = .zero
+        confirmationMessageTextView.textContainer.lineFragmentPadding = 0
+        confirmationMessageTextView.delegate = self
+        confirmationMessageTextView.linkTextAttributes = [
+            .foregroundColor: UIColor.white,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        confirmationMessageTextView.translatesAutoresizingMaskIntoConstraints = false
+        confirmationMessageCard.addSubview(confirmationMessageTextView)
     }
 
     func configureCopyButton() {
@@ -333,7 +362,15 @@ private extension PremiumTableReservationConfirmationVC {
             copyButton.leadingAnchor.constraint(equalTo: confirmationNumberLabel.trailingAnchor, constant: 11),
             copyButton.trailingAnchor.constraint(lessThanOrEqualTo: infoCard.trailingAnchor, constant: -22),
 
-            orderCard.topAnchor.constraint(equalTo: infoCard.bottomAnchor, constant: 8),
+            confirmationMessageCard.topAnchor.constraint(equalTo: infoCard.bottomAnchor, constant: 8),
+            confirmationMessageCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
+            confirmationMessageCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
+
+            confirmationMessageTextView.topAnchor.constraint(equalTo: confirmationMessageCard.topAnchor, constant: 18),
+            confirmationMessageTextView.leadingAnchor.constraint(equalTo: confirmationMessageCard.leadingAnchor, constant: 22),
+            confirmationMessageTextView.trailingAnchor.constraint(equalTo: confirmationMessageCard.trailingAnchor, constant: -22),
+            confirmationMessageTextView.bottomAnchor.constraint(equalTo: confirmationMessageCard.bottomAnchor, constant: -18),
+
             orderCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
             orderCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
 
@@ -373,6 +410,12 @@ private extension PremiumTableReservationConfirmationVC {
         guestTagTrailingToTimeConstraint = guestTagView.trailingAnchor.constraint(equalTo: timeTagView.leadingAnchor, constant: -3)
         guestTagTrailingToCardConstraint = guestTagView.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor, constant: -16)
         guestTagTrailingToTimeConstraint?.isActive = true
+
+        confirmationMessageHeightConstraint = confirmationMessageCard.heightAnchor.constraint(equalToConstant: 0)
+        confirmationMessageHeightConstraint?.isActive = true
+        orderTopToInfoConstraint = orderCard.topAnchor.constraint(equalTo: infoCard.bottomAnchor, constant: 8)
+        orderTopToMessageConstraint = orderCard.topAnchor.constraint(equalTo: confirmationMessageCard.bottomAnchor, constant: 8)
+        orderTopToInfoConstraint?.isActive = true
     }
 }
 
@@ -383,6 +426,7 @@ private extension PremiumTableReservationConfirmationVC {
     func configure() {
         configureImages()
         configureInfo()
+        configureConfirmationMessage()
         configureOrder()
     }
 
@@ -471,6 +515,43 @@ private extension PremiumTableReservationConfirmationVC {
         confirmationNumberLabel.text = confirmationNumber
 
         copyButton.setTitle("Copy", for: .normal)
+    }
+
+    func configureConfirmationMessage() {
+        let html = confirmationMessageHTML()
+        let text = cleanHTMLText(html)
+        let hasMessage = !text.isEmpty
+
+        confirmationMessageCard.isHidden = !hasMessage
+        confirmationMessageHeightConstraint?.isActive = !hasMessage
+        orderTopToInfoConstraint?.isActive = !hasMessage
+        orderTopToMessageConstraint?.isActive = hasMessage
+
+        guard hasMessage else {
+            confirmationMessageTextView.attributedText = nil
+            confirmationMessageTextView.text = ""
+            return
+        }
+
+        confirmationMessageTextView.attributedText = formattedMessageHTML(html) ?? NSAttributedString(
+            string: text,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 14),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.82)
+            ]
+        )
+    }
+
+    func confirmationMessageHTML() -> String {
+        let settings =
+            hydratedVenue?.venueSettings
+            ?? displayEvent?.venue?.venueSettings
+            ?? sourceBooking?.event?.venue?.venueSettings
+            ?? sourceBooking?.venueObject?.venueSettings
+
+        return firstNonEmptyHTML([
+            settings?.tableBookingImportantInformation
+        ])
     }
 
     func configureOrder() {
@@ -678,9 +759,39 @@ private extension PremiumTableReservationConfirmationVC {
                     self.reservationUniqueId = reservation.uniqueId
                     self.sourceBooking = nil
                     self.configure()
+                    self.hydrateVenueSettingsIfNeeded()
                 } else if self.reservation == nil {
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }
+            }
+        }
+    }
+
+    func hydrateVenueSettingsIfNeeded() {
+        guard !isVenueSettingsLoading,
+              cleanHTMLText(confirmationMessageHTML()).isEmpty,
+              let venueId = displayEvent?.venue?.id
+                ?? reservation?.venueId
+                ?? reservation?.venue?.id
+                ?? sourceBooking?.venueId
+                ?? sourceBooking?.venueObject?.id,
+              !venueId.isEmpty else {
+            return
+        }
+
+        isVenueSettingsLoading = true
+        venueService.fetchVenueTableSettings(
+            venueId: venueId,
+            venueTimeZone: displayEvent?.venue?.useTimezone
+                ?? reservation?.venue?.useTimezone
+                ?? sourceBooking?.venueObject?.useTimezone
+        ) { [weak self] success, _, venue in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.isVenueSettingsLoading = false
+                guard success, let venue else { return }
+                self.hydratedVenue = venue
+                self.configureConfirmationMessage()
             }
         }
     }
@@ -728,9 +839,76 @@ private extension PremiumTableReservationConfirmationVC {
     }
 }
 
+extension PremiumTableReservationConfirmationVC {
+
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        Navigate.externalURL(URL.absoluteString)
+        return false
+    }
+}
+
 // MARK: - Formatting
 
 private extension PremiumTableReservationConfirmationVC {
+
+    func firstNonEmptyHTML(_ values: [String?]) -> String {
+        values.compactMap { $0 }.first {
+            cleanHTMLText($0).isEmpty == false
+        } ?? ""
+    }
+
+    func cleanHTMLText(_ html: String) -> String {
+        guard let data = html.data(using: .utf8),
+              let attributed = try? NSAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ],
+                documentAttributes: nil
+              ) else {
+            return html
+                .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        return attributed.string
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func formattedMessageHTML(_ html: String) -> NSAttributedString? {
+        guard let attributed = html.htmlToAttributedString else { return nil }
+        let mutable = NSMutableAttributedString(attributedString: attributed)
+        mutable.trimTrailingWhitespaceAndNewlines()
+        guard mutable.length > 0 else { return nil }
+
+        mutable.addAttributes([
+            .font: Constant.Font.geistRegular(size: 14),
+            .foregroundColor: UIColor.white.withAlphaComponent(0.82)
+        ], range: NSRange(location: 0, length: mutable.length))
+
+        mutable.enumerateAttribute(
+            .link,
+            in: NSRange(location: 0, length: mutable.length),
+            options: []
+        ) { value, range, _ in
+            if value != nil {
+                mutable.addAttributes([
+                    .font: Constant.Font.geistMedium(size: 14),
+                    .foregroundColor: UIColor.white,
+                    .underlineStyle: NSUnderlineStyle.single.rawValue
+                ], range: range)
+            }
+        }
+
+        return mutable
+    }
 
     func formatMoney(_ value: Double) -> String {
         let absoluteValue = abs(value)

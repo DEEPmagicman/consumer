@@ -255,8 +255,11 @@ final class DiscoverVC: UIViewController {
     private func applyCityFilter(_ city: String?) {
         let trimmedCity = city?
             .trimmingCharacters(in: .whitespacesAndNewlines)
+        let primaryCity = UserDefault.shared.localCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        filterCity = trimmedCity?.isEmpty == false
+        filterCity = trimmedCity?.isEmpty == false &&
+            trimmedCity?.caseInsensitiveCompare(primaryCity) != .orderedSame
             ? trimmedCity
             : nil
 

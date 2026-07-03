@@ -22,19 +22,22 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
 
     private var booking: Booking?
     private var addOnsBooking: AddOnsBooking?
-    var onHeightChange: ((CGFloat) -> Void)?
+    private let qrLogoContainerView = UIView()
+    private let qrLogoImageView = UIImageView()
+    var onContentHeightChange: ((CGFloat) -> Void)?
     private var tableViewObserver: NSKeyValueObservation?
     private var lastTableHeight: CGFloat = 0
     private let cardCornerRadius: CGFloat = 20
     private let defaultQRCodeSize: CGFloat = 254
-    private let minimumQRCodeSize: CGFloat = 190
-    private let defaultTicketTableHeight: CGFloat = 40
-    private let maximumTicketTableHeight: CGFloat = 104
+    private let minimumTicketTableHeight: CGFloat = 64
+    private let fixedVerticalPadding: CGFloat = 58
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
         applyCardMasking()
+        setupQRCodeLogo()
+        contentView.layer.shadowColor = UIColor.clear.cgColor
 
         ticketsTableView.delegate = self
         ticketsTableView.dataSource = self
@@ -49,7 +52,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         ticketsTableView.estimatedRowHeight = 64
         ticketsTableView.contentInset = .zero
         ticketsTableView.scrollIndicatorInsets = .zero
-        ticketsTableView.showsVerticalScrollIndicator = true
+        ticketsTableView.showsVerticalScrollIndicator = false
 
         tableViewObserver = ticketsTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
@@ -73,8 +76,12 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        onHeightChange = nil
+        onContentHeightChange = nil
         lastTableHeight = 0
+        ticketCodeView.isHidden = true
+        qrImageView.isHidden = false
+        qrLogoContainerView.isHidden = false
+        ticketsTableView.contentOffset = .zero
     }
 
     private func applyCardMasking() {
@@ -86,6 +93,42 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
             view?.layer.cornerRadius = cardCornerRadius
             view?.layer.masksToBounds = true
         }
+
+        containerView.clipsToBounds = true
+        containerView.layer.cornerRadius = 10
+        containerView.layer.masksToBounds = true
+    }
+
+    private func setupQRCodeLogo() {
+        guard qrLogoContainerView.superview == nil else { return }
+
+        qrImageView.layer.magnificationFilter = .nearest
+        qrImageView.layer.minificationFilter = .nearest
+
+        qrLogoContainerView.translatesAutoresizingMaskIntoConstraints = false
+        qrLogoContainerView.backgroundColor = .white
+        qrLogoContainerView.layer.cornerRadius = 22
+        qrLogoContainerView.layer.borderWidth = 1
+        qrLogoContainerView.layer.borderColor = UIColor.black.withAlphaComponent(0.12).cgColor
+        qrLogoContainerView.clipsToBounds = true
+        containerView.addSubview(qrLogoContainerView)
+
+        qrLogoImageView.translatesAutoresizingMaskIntoConstraints = false
+        qrLogoImageView.contentMode = .scaleAspectFit
+        qrLogoImageView.image = UIImage(named: "qrLogo") ?? UIImage(named: "newSpeakeasy") ?? UIImage(named: "appLogo")
+        qrLogoContainerView.addSubview(qrLogoImageView)
+
+        NSLayoutConstraint.activate([
+            qrLogoContainerView.centerXAnchor.constraint(equalTo: qrImageView.centerXAnchor),
+            qrLogoContainerView.centerYAnchor.constraint(equalTo: qrImageView.centerYAnchor),
+            qrLogoContainerView.widthAnchor.constraint(equalToConstant: 44),
+            qrLogoContainerView.heightAnchor.constraint(equalTo: qrLogoContainerView.widthAnchor),
+
+            qrLogoImageView.topAnchor.constraint(equalTo: qrLogoContainerView.topAnchor, constant: 8),
+            qrLogoImageView.leadingAnchor.constraint(equalTo: qrLogoContainerView.leadingAnchor, constant: 8),
+            qrLogoImageView.trailingAnchor.constraint(equalTo: qrLogoContainerView.trailingAnchor, constant: -8),
+            qrLogoImageView.bottomAnchor.constraint(equalTo: qrLogoContainerView.bottomAnchor, constant: -8)
+        ])
     }
 
     // MARK: - Configure
@@ -93,7 +136,10 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         self.booking = booking
         self.addOnsBooking = addOnsBooking
 
+        lastTableHeight = 0
+        clearQRCodeBorders()
         qrImageView.image = qrImage
+        qrLogoContainerView.isHidden = qrImage == nil
         ticketsTableView.contentOffset = .zero
 
         let timeZone: String
@@ -123,38 +169,35 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         )
     }
 
+    private func clearQRCodeBorders() {
+        [cardView, blurContainerView, containerView].forEach {
+            $0?.layer.borderWidth = 0
+            $0?.layer.borderColor = UIColor.clear.cgColor
+        }
+        containerView.backgroundColor = .clear
+    }
+
     private func applyTicketTableHeight(for contentHeight: CGFloat) {
         let rowCount = currentTicketCount()
-        let cappedHeight = rowCount == 0
-            ? 0
-            : min(
-                max(contentHeight, defaultTicketTableHeight),
-                maximumTicketTableHeight
-            )
+        let hasTickets = rowCount > 0
+        let cappedHeight = hasTickets ? max(minimumTicketTableHeight, contentHeight) : 0
+        let preferredHeight = fixedVerticalPadding + defaultQRCodeSize + cappedHeight
 
         guard abs(cappedHeight - lastTableHeight) > 1 else {
-            ticketsTableView.isScrollEnabled = contentHeight > cappedHeight + 1
+            ticketsTableView.isScrollEnabled = false
+            applyQRCodeSize(defaultQRCodeSize)
+            onContentHeightChange?(preferredHeight)
             return
         }
 
         lastTableHeight = cappedHeight
         ticketTableViewHeight.constant = cappedHeight
-        ticketsTableView.isScrollEnabled = contentHeight > cappedHeight + 1
-        resizeQRCode(forTicketTableHeight: cappedHeight)
-        onHeightChange?(cappedHeight)
+        ticketsTableView.isScrollEnabled = false
+        applyQRCodeSize(defaultQRCodeSize)
+        onContentHeightChange?(preferredHeight)
     }
 
-    private func resizeQRCode(forTicketTableHeight tableHeight: CGFloat) {
-        let extraTicketHeight = max(
-            0,
-            tableHeight - defaultTicketTableHeight
-        )
-
-        let size = max(
-            minimumQRCodeSize,
-            defaultQRCodeSize - extraTicketHeight
-        )
-
+    private func applyQRCodeSize(_ size: CGFloat) {
         qrImageView.constraints
             .filter {
                 $0.firstAttribute == .height ||
@@ -192,6 +235,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
             guard let self = self else { return }
             self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
             self.qrImageView.isHidden = !self.qrImageView.isHidden
+            self.qrLogoContainerView.isHidden = self.qrImageView.isHidden
         }
     }
 }
@@ -235,7 +279,7 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
 
             cell.configure(
                 title: title,
-                description: "" ,
+                description: descriptionForCoverTicket(ticket),
                 quantity: quantity
             )
 
@@ -254,5 +298,15 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
         }
 
         return cell
+    }
+
+    private func descriptionForCoverTicket(_ ticket: BookingHasItem) -> String {
+        booking?.ticketDetails?
+            .first {
+                $0.ticketId == ticket.ticketId ||
+                $0.ticketName == ticket.ticketName ||
+                $0.ticketName == ticket.ticketCustomName
+            }?
+            .ticketDescription ?? ""
     }
 }

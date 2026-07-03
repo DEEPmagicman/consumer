@@ -43,9 +43,13 @@ final class CoverQRCodeVC: UIViewController {
     private let paymentService = PaymentService()
     private let posterHeaderView = VenuePosterHeaderView()
     private var dotViews: [UIView] = []
-    private var pagerItemHeights: [Int: CGFloat] = [:]
+    private let scrollView = UIScrollView()
+    private weak var scrollContentView: UIView?
+    private var scrollContentHeightConstraint: NSLayoutConstraint?
+    private var pagerHeightCandidates: [Int: CGFloat] = [:]
     private var currentPage: Int = 0
-    private let fallbackPagerHeight: CGFloat = 415
+    private let preferredPagerHeight: CGFloat = 465
+    private var currentPagerHeight: CGFloat = 465
     private var pass: PKPass?
     private let venueNameMarqueeLabel = PremiumMarqueeLabel()
     private var wasInteractivePopGestureEnabled: Bool?
@@ -62,6 +66,8 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupScrollableLayout()
+        configurePresentationDismissBehavior()
         setupUI()
         setupPosterBackground()
         setupPagerView()
@@ -85,16 +91,18 @@ final class CoverQRCodeVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         clipPagerOverflow()
-        updatePagerItemSize(height: pagerView.itemSize.height > 0 ? pagerView.itemSize.height : fallbackPagerHeight)
+        updateScrollableContentHeight()
+        updatePagerItemSize(height: currentPagerHeight)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configurePresentationDismissBehavior()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if shouldReturnToVenueAfterClose {
-            interactivePopNavigationController = navigationController
-            wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled
-            interactivePopNavigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        }
+        disableInteractiveBackNavigation()
         WebSocketWrapper.shared.addDelegate(self) 
     }
 
@@ -113,6 +121,59 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     // MARK: - Setup
+    private func configurePresentationDismissBehavior() {
+        modalPresentationStyle = .fullScreen
+        isModalInPresentation = true
+        presentationController?.delegate = self
+    }
+
+    private func disableInteractiveBackNavigation() {
+        guard interactivePopNavigationController == nil else { return }
+
+        interactivePopNavigationController = navigationController
+        wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled
+        interactivePopNavigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    private func setupScrollableLayout() {
+        guard scrollContentView == nil else { return }
+
+        let contentView = view!
+        let rootView = UIView(frame: contentView.frame)
+        rootView.backgroundColor = contentView.backgroundColor ?? .black
+
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = .clear
+        scrollView.alwaysBounceVertical = false
+        scrollView.showsVerticalScrollIndicator = false
+
+        view = rootView
+        rootView.addSubview(scrollView)
+
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        scrollContentView = contentView
+
+        let heightConstraint = contentView.heightAnchor.constraint(
+            equalToConstant: max(rootView.bounds.height, UIScreen.main.bounds.height)
+        )
+        scrollContentHeightConstraint = heightConstraint
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: rootView.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
+
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            heightConstraint
+        ])
+    }
+
     private func setupUI() {
         setupHeaderLabels()
         setVenueTitle(venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-"))
@@ -199,7 +260,7 @@ final class CoverQRCodeVC: UIViewController {
         pagerView.transformer?.minimumAlpha = 1
         pagerView.backgroundColor = .clear
         clipPagerOverflow()
-        updatePagerItemSize(height: fallbackPagerHeight)
+        applyPagerHeight(currentPagerHeight, reloadPager: false)
     }
 
     private func setupProgressDots(count: Int) {
@@ -252,7 +313,9 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     private func invalidatePagerHeights() {
-        pagerItemHeights.removeAll()
+        pagerHeightCandidates.removeAll()
+        applyPagerHeight(preferredPagerHeight, reloadPager: false)
+        updateScrollableContentHeight()
     }
 
     // MARK: - Data Loading
@@ -383,42 +446,58 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     private func generateQRCodeImage(from string: String) -> UIImage? {
-        let data = string.data(using: .ascii)
-        if let filter = CIFilter(name: "CIQRCodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            let transform = CGAffineTransform(scaleX: 10, y: 10)
-            if let output = filter.outputImage?.transformed(by: transform) {
-                return UIImage(ciImage: output)
-            }
+        guard let data = string.data(using: .utf8),
+              let filter = CIFilter(name: "CIQRCodeGenerator") else {
+            return nil
         }
-        return nil
+
+        filter.setValue(data, forKey: "inputMessage")
+        filter.setValue("H", forKey: "inputCorrectionLevel")
+
+        guard let ciImage = filter.outputImage else { return nil }
+
+        let targetSide: CGFloat = 254
+        let scaleX = targetSide / ciImage.extent.width
+        let scaleY = targetSide / ciImage.extent.height
+        let scaledImage = ciImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
+
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(scaledImage, from: scaledImage.extent) else {
+            return nil
+        }
+
+        return UIImage(cgImage: cgImage)
     }
 
     // MARK: - Pager Height
-    private func handlePagerCellHeightChange(at index: Int, height: CGFloat) {
-
-        let totalHeight = fallbackPagerHeight
-
-        guard pagerItemHeights[index] != totalHeight else { return }
-
-        pagerItemHeights[index] = totalHeight
-
-        guard currentPage == index else { return }
-
-        pagerViewheight.constant = totalHeight
-        updatePagerItemSize(height: totalHeight)
-
-        UIView.performWithoutAnimation {
-            self.view.layoutIfNeeded()
-        }
+    private func applyPagerHeight(for index: Int, animated: Bool) {
+        applyPagerHeight(currentPagerHeight, reloadPager: false)
     }
 
-    private func applyPagerHeight(for index: Int, animated: Bool) {
+    private func handlePagerContentHeightChange(at index: Int, height: CGFloat) {
+        pagerHeightCandidates[index] = max(preferredPagerHeight, ceil(height))
+        let resolvedHeight = max(
+            preferredPagerHeight,
+            pagerHeightCandidates.values.max() ?? preferredPagerHeight
+        )
 
-        let height = pagerItemHeights[index] ?? fallbackPagerHeight
+        guard abs(resolvedHeight - currentPagerHeight) > 1 else {
+            updateScrollableContentHeight()
+            return
+        }
 
+        applyPagerHeight(resolvedHeight, reloadPager: true)
+    }
+
+    private func applyPagerHeight(_ height: CGFloat, reloadPager: Bool) {
+        currentPagerHeight = height
         pagerViewheight.constant = height
         updatePagerItemSize(height: height)
+        updateScrollableContentHeight()
+
+        if reloadPager {
+            pagerView.reloadData()
+        }
     }
 
     private func updatePagerItemSize(height: CGFloat) {
@@ -426,6 +505,36 @@ final class CoverQRCodeVC: UIViewController {
         let itemSize = CGSize(width: width, height: height)
         guard pagerView.itemSize != itemSize else { return }
         pagerView.itemSize = itemSize
+    }
+
+    private func updateScrollableContentHeight() {
+        guard let contentView = scrollContentView else { return }
+
+        contentView.layoutIfNeeded()
+        let pagerTop = pagerView.convert(pagerView.bounds, to: contentView).minY
+        let progressTopSpacing: CGFloat = 14
+        let progressHeight: CGFloat = 10
+        let walletTopSpacing: CGFloat = 12
+        let walletHeight: CGFloat = 50
+        let buyButtonTopSpacing: CGFloat = 14
+        let buyButtonHeight: CGFloat = 48
+        let bottomPadding: CGFloat = 20
+        let requiredHeight = max(
+            view.bounds.height,
+            pagerTop
+                + currentPagerHeight
+                + progressTopSpacing
+                + progressHeight
+                + walletTopSpacing
+                + walletHeight
+                + buyButtonTopSpacing
+                + buyButtonHeight
+                + bottomPadding
+        )
+
+        guard abs((scrollContentHeightConstraint?.constant ?? 0) - requiredHeight) > 1 else { return }
+        scrollContentHeightConstraint?.constant = requiredHeight
+        view.layoutIfNeeded()
     }
 
     private func clipPagerOverflow() {
@@ -597,8 +706,8 @@ extension CoverQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
             return FSPagerViewCell()
         }
 
-        cell.onHeightChange = { [weak self] height in
-            self?.handlePagerCellHeightChange(at: index, height: height)
+        cell.onContentHeightChange = { [weak self] height in
+            self?.handlePagerContentHeightChange(at: index, height: height)
         }
 
         if isOnlyAddOnAvailable || (showsAddOnsPage && index == 1) {
@@ -642,6 +751,12 @@ extension CoverQRCodeVC: PKAddPassesViewControllerDelegate {
         if let pass = pass, pkl.containsPass(pass) {
             Alert.showToast("Ticket added to Wallet", vc: self)
         }
+    }
+}
+
+extension CoverQRCodeVC: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        false
     }
 }
 

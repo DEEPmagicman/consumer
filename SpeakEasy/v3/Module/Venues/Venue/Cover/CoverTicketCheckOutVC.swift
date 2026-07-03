@@ -127,6 +127,12 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         venue?.venueSettings?.currencyPosition
     }
 
+    private var hasPaidCoverSelection: Bool {
+        selectedCoverTickets.contains {
+            $0.price > 0 || ($0.extraFees ?? 0) > 0
+        }
+    }
+
     private var isApplePayNotSupported: Bool {
         !PKPaymentAuthorizationViewController.canMakePayments()
     }
@@ -146,7 +152,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         hideScrollIndicators(in: view)
         setPricingLoading(true, animated: false)
 
-        if !selectedCoverTickets.isEmpty && bookingType != .FREE {
+        if !selectedCoverTickets.isEmpty && hasPaidCoverSelection {
             createBooking()
         } else {
             isBookingLoaded = true
@@ -275,7 +281,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         checkOutBtnView.alpha = 0
         checkOutBtnView.transform = CGAffineTransform(translationX: 0, y: 80)
         checkOutBtnView.setButtonTitle(
-            bookingType == .FREE || totalPrice <= 0 ? "Confirm Free Booking" : "Pay Now"
+            totalPrice <= 0 ? "Confirm Free Booking" : "Pay Now"
         )
     }
 
@@ -283,6 +289,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         selectedPaymentMethod = initialPaymentMethod
             ?? (StripeAPI.deviceSupportsApplePay() ? .applePay : .card)
         cardDetails = initialCardDetails
+        paymentTypeView.isHidden = true
         updatePaymentMethodUI()
     }
 
@@ -304,6 +311,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             $0?.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
         }
 
+        paymentTypeView.isHidden = true
 //        paymentTypeView.backgroundColor = UIColor.black.withAlphaComponent(0.24)
         paymentTypeView.layer.cornerRadius = 14
         paymentTypeView.layer.cornerCurve = .continuous
@@ -751,7 +759,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         setScreenInteractionBlocked(true)
         updateCheckoutButtonState()
 
-        if isFreeTicket || bookingType == .FREE || totalPrice <= 0 {
+        if isFreeTicket || totalPrice <= 0 {
             checkOutBtnView.showLoader()
             createFreeBookingIfNeeded()
             return
@@ -855,7 +863,7 @@ extension CoverTicketCheckOutVC {
             fees: totalFees
         )
         
-        let isFree = grandTotal <= 0 || bookingType == .FREE
+        let isFree = grandTotal <= 0
         checkOutBtnView.setButtonTitle(
             isFree ? "Confirm Free Booking" : "Pay \(CurrencyFormatter.amount(grandTotal, symbol: currency, position: currencyPosition))"
         )
@@ -870,9 +878,15 @@ extension CoverTicketCheckOutVC {
         } else {
             fees += detail.customFee
         }
-        fees += detail.salesTax ?? 0
+        fees += totalSalesTax(from: detail)
         fees += detail.processingFee
         return fees
+    }
+
+    private func totalSalesTax(from detail: PaymentDetail) -> Double {
+        let salesTaxesTotal = detail.salesTaxes?
+            .reduce(0) { $0 + ($1.salesTax ?? 0) } ?? 0
+        return salesTaxesTotal > 0 ? salesTaxesTotal : (detail.salesTax ?? 0)
     }
 }
 
@@ -1289,7 +1303,12 @@ extension CoverTicketCheckOutVC {
             )
         }
 
-        if let salesTax = detail.salesTax, salesTax > 0 {
+        let salesTaxItems = feeItemsForSalesTaxes(from: detail)
+        if !salesTaxItems.isEmpty {
+            salesTaxItems.forEach {
+                appendFeeItem(title: $0.title, amount: $0.amount, to: &items)
+            }
+        } else if let salesTax = detail.salesTax, salesTax > 0 {
             appendFeeItem(
                 title: detail.salesTaxName ?? "Sales Tax",
                 amount: salesTax,
@@ -1303,6 +1322,18 @@ extension CoverTicketCheckOutVC {
 
         items.append(FeeDisplayItem(title: "Total", amount: total))
         return items
+    }
+
+    private func feeItemsForSalesTaxes(from detail: PaymentDetail) -> [FeeDisplayItem] {
+        guard let salesTaxes = detail.salesTaxes, !salesTaxes.isEmpty else { return [] }
+        return salesTaxes.compactMap { tax in
+            let amount = tax.salesTax ?? 0
+            guard amount > 0 else { return nil }
+            return FeeDisplayItem(
+                title: tax.salesTaxName ?? "Sales Tax",
+                amount: amount
+            )
+        }
     }
 
     private func appendFeeItem(title: String, amount: Double, to items: inout [FeeDisplayItem]) {
@@ -1326,18 +1357,18 @@ extension CoverTicketCheckOutVC {
 extension CoverTicketCheckOutVC {
 
     private func handleSuccessfulCardPayment() {
+        if selectedCoverTickets.isEmpty && !selectedAddOnsItems.isEmpty {
+            addOnsPaymentSuccess {
+                self.finishAndNavigate(isAddOnsAvailable: true, isOnlyAddOn: true)
+            }
+            return
+        }
+
         if bookingType == .FREE {
             createFreeBooking {
                 self.addOnsPaymentSuccess {
                     self.finishAndNavigate(isAddOnsAvailable: true, isOnlyAddOn: false)
                 }
-            }
-            return
-        }
-
-        if selectedCoverTickets.isEmpty && !selectedAddOnsItems.isEmpty {
-            addOnsPaymentSuccess {
-                self.finishAndNavigate(isAddOnsAvailable: true, isOnlyAddOn: true)
             }
             return
         }
@@ -1404,7 +1435,7 @@ extension CoverTicketCheckOutVC {
     }
 
     private func addOnsPaymentSuccess(completion: @escaping () -> Void) {
-        let mainBookingId = bookingType == .FREE ? bookingId : ""
+        let mainBookingId = bookingType == .FREE && !selectedCoverTickets.isEmpty ? bookingId : ""
         PaymentPresenter.successAddOnsPayment(
             bookingId: addOnsBookingId ?? "",
             mainBookingId: mainBookingId

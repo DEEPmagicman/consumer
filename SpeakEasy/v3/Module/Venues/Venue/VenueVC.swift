@@ -741,23 +741,7 @@ private extension VenueVC {
 
     func updateCoverTicketViewVisibility() {
         coverTicketView.isHidden = !(hasAvailableTickets || hasAvailableUpsellTickets)
-        updateCoverTicketCTA()
         view.setNeedsLayout()
-    }
-
-    func updateCoverTicketCTA() {
-        guard !hasAvailableTickets && hasAvailableUpsellTickets else {
-            coverTicketTitleLbl?.text = "Buy live cover"
-            coverTicketDescriptionLbl?.text = "General admission ticket, Skip the line etc."
-            return
-        }
-
-        let settings = venueDetails?.venueSettings?.addOnsBookingSettings
-        let title = settings?.pageTitle?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let description = settings?.description?.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        coverTicketTitleLbl?.text = title?.isEmpty == false ? title : "Upsell Items"
-        coverTicketDescriptionLbl?.text = description?.isEmpty == false ? description : nil
     }
 
     func refreshUpsellAvailabilityIfNeeded(force: Bool = false) {
@@ -1090,13 +1074,12 @@ extension VenueVC: ChildScrollDelegate {
         guard !isUpdatingChildScrollOffset else { return }
 
         let currentTranslationY = gesture.translation(in: view).y
+        let topOffsetY = topContentOffsetY(for: scrollView)
 
         guard headerCollapseOffset > 0 else {
             childPanTranslations[scrollID] = currentTranslationY
             return
         }
-
-        let topOffsetY = topContentOffsetY(for: scrollView)
 
         switch gesture.state {
         case .began:

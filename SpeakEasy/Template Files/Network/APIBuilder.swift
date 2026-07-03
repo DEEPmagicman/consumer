@@ -262,6 +262,12 @@ struct APIBuilder {
         return SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + bookingConfirm
     }
 
+    static func seatingAreaBookingCancelURL(eventId: String) -> String {
+        let encodedEventId = eventId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? eventId
+        let encodedQueryEventId = eventId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? eventId
+        return SharedURL.tableBaseURL + route + event + "/\(encodedEventId)" + seatingAreas + "/booking-cancel?eventId=\(encodedQueryEventId)"
+    }
+
     static func consumerReservationURL(_ uniqueId: String) -> String {
         let encoded = uniqueId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? uniqueId
         return SharedURL.tableBaseURL + route + reservation + "/\(encoded)"
@@ -364,6 +370,15 @@ struct APIBuilder {
         ) ?? userId
 
         return v3baseURL + route + cover + "/\(uniqueId)?userId=\(encodedUserId)"
+    }
+
+    static func venueTableSettingsURL(venueId: String) -> String {
+        let encodedVenueId =
+        venueId.addingPercentEncoding(
+            withAllowedCharacters: .urlPathAllowed
+        ) ?? venueId
+
+        return baseURL + route + venue + "/\(encodedVenueId)?include=venueSettings.tableBookingSettings&include=venueSettings.spendAgreementSettings"
     }
 
     static var v3FollowedVenuesURL: String {

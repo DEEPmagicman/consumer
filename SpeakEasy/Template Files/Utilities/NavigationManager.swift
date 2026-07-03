@@ -390,6 +390,8 @@ final class Navigate {
         vc.addOnsBookingId = addOnsBookingId
         vc.venueNameText = venueName
         vc.shouldReturnToVenueAfterClose = shouldPushFromVenueFlow
+        vc.modalPresentationStyle = .fullScreen
+        vc.isModalInPresentation = true
 
         if shouldPushFromVenueFlow,
            let navigationController = sender.navigationController {

@@ -715,7 +715,7 @@ private extension PremiumTableSeatingVC {
             venueId:      event.venue?.id ?? "",
             guests:       currentGuestCount,
             queueId:      queueId
-        ) { [weak self] success, message, _ in
+        ) { [weak self] success, message, response in
             guard let self else { return }
             DispatchQueue.main.async {
                 self.setCheckoutLoading(false)
@@ -727,6 +727,7 @@ private extension PremiumTableSeatingVC {
                     vc.guestCount    = self.currentGuestCount
                     vc.selectedTimeSlot = self.selectedTimeSlot
                     vc.selectedTimeText = self.selectedTimeSlot.map { self.formattedTime($0.startTime) }
+                    vc.initialBooking = response
                     self.navigationController?.pushViewController(vc, animated: false)
                 } else {
                     Alert.showToast(message ?? Constant.String.somethingWrong)

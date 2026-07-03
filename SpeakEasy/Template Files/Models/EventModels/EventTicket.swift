@@ -175,6 +175,7 @@ struct PaymentDetail: Codable {
         try container.encodeIfPresent(salesTaxName, forKey: .salesTaxName)
         try container.encodeIfPresent(customFees, forKey: .customFees)
         try container.encodeIfPresent(additionalFees, forKey: .additionalFees)
+        try container.encodeIfPresent(salesTaxes, forKey: .salesTaxes)
     }
 }
 

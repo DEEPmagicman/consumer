@@ -67,9 +67,8 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefault.shared.localCity = cityList[indexPath.row].value
+        UserDefault.shared.setPrimaryCity(cityList[indexPath.row].value)
         navigationController?.popViewController(animated: true)
-        UserDefault.shared.defaultCitySelected = true
         self.citySelectionDelegate?.citySelected(city: cityList[indexPath.row].value)
     }
 }

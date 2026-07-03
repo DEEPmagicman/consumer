@@ -29,11 +29,15 @@ final class CoverTicketListVC: UIViewController {
     @IBOutlet weak var ticketsSectionView: UIView!
     @IBOutlet weak var followBtn: UIButton!
     @IBOutlet weak var followBtnLbl: UILabel!
+    @IBOutlet weak var coverDisclaimerContainerView: UIView!
+    @IBOutlet weak var coverDisclaimerLabel: UILabel!
 
     private let posterHeaderView = VenuePosterHeaderView()
     private let stickyTopBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let stickyTicketsTitleContainer = UIView()
     private let stickyTicketsTitleLabel = UILabel()
+    private let directUpsellFooterView = UIView()
+    private let directUpsellButton = UIButton(type: .system)
     private let venueService = VenueService()
 
     // MARK: - Public
@@ -132,7 +136,7 @@ final class CoverTicketListVC: UIViewController {
     private var selectedStepTitle: String {
         switch currentStep {
         case .coverTickets:
-            return "Buy live cover"
+            return Constant.String.liveCoverTicket
         case .addOns:
             let title = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -188,7 +192,7 @@ final class CoverTicketListVC: UIViewController {
 
         setupTableView()
         setupScreen()
-        setupStickyTicketsTitle()
+        setupTopBlurView()
         setupPosterBackground()
         setupScrollBehavior()
         observeTableViewHeight()
@@ -203,6 +207,7 @@ final class CoverTicketListVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        updateTableHeaderView()
         updateTableViewHeight(animated: false)
         normalizeScrollInsets()
         updateStickyNavigation(for: scrollView.contentOffset.y)
@@ -503,6 +508,8 @@ private extension CoverTicketListVC {
             TicketsTVC.nib,
             forCellReuseIdentifier: TicketsTVC.identifier
         )
+        setupCoverDisclaimerHeader()
+        setupDirectUpsellFooter()
     }
 
     func setupScreen() {
@@ -555,51 +562,6 @@ private extension CoverTicketListVC {
         ) / 2
     }
 
-    func setupStickyTicketsTitle() {
-        stickyTopBlurView.translatesAutoresizingMaskIntoConstraints = false
-        stickyTopBlurView.isHidden = true
-        stickyTopBlurView.alpha = 0
-        stickyTopBlurView.isUserInteractionEnabled = false
-
-        stickyTicketsTitleContainer.translatesAutoresizingMaskIntoConstraints = false
-        stickyTicketsTitleContainer.isHidden = true
-        stickyTicketsTitleContainer.alpha = 0
-        stickyTicketsTitleContainer.isUserInteractionEnabled = false
-
-        stickyTicketsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        stickyTicketsTitleLabel.textAlignment = ticketsTitleLbl.textAlignment
-        stickyTicketsTitleLabel.lineBreakMode = ticketsTitleLbl.lineBreakMode
-        stickyTicketsTitleLabel.numberOfLines = ticketsTitleLbl.numberOfLines
-        stickyTicketsTitleContainer.addSubview(stickyTicketsTitleLabel)
-
-        view.insertSubview(stickyTopBlurView, aboveSubview: scrollView)
-        view.insertSubview(stickyTicketsTitleContainer, aboveSubview: stickyTopBlurView)
-
-        let stickyTopConstraint = stickyTicketsTitleContainer.topAnchor.constraint(
-            equalTo: navBarHiddenView.bottomAnchor,
-            constant: 20
-        )
-
-        NSLayoutConstraint.activate([
-            stickyTopBlurView.topAnchor.constraint(equalTo: view.topAnchor),
-            stickyTopBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stickyTopBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stickyTopBlurView.bottomAnchor.constraint(equalTo: stickyTicketsTitleContainer.bottomAnchor, constant: 16),
-
-            stickyTopConstraint,
-            stickyTicketsTitleContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stickyTicketsTitleContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stickyTicketsTitleContainer.heightAnchor.constraint(equalTo: ticketsTitleLbl.heightAnchor),
-
-            stickyTicketsTitleLabel.topAnchor.constraint(equalTo: stickyTicketsTitleContainer.topAnchor),
-            stickyTicketsTitleLabel.leadingAnchor.constraint(equalTo: stickyTicketsTitleContainer.leadingAnchor, constant: 20),
-            stickyTicketsTitleLabel.trailingAnchor.constraint(equalTo: stickyTicketsTitleContainer.trailingAnchor, constant: -20),
-            stickyTicketsTitleLabel.bottomAnchor.constraint(equalTo: stickyTicketsTitleContainer.bottomAnchor)
-        ])
-
-        syncStickyTicketsTitle()
-    }
-
     func setupCoverTickets() {
         let selectedTicketIds = Set(selectedCoverTickets.map { $0.id })
 
@@ -632,15 +594,131 @@ private extension CoverTicketListVC {
     }
 
     func configureInitialFlowStep() {
-        if shouldShowDirectUpsell {
-            currentStep = .addOns
-        }
+        currentStep = .coverTickets
         updateTicketsTitle()
     }
 
     func updateTicketsTitle() {
         ticketsTitleLbl.text = selectedStepTitle
-        syncStickyTicketsTitle()
+        updateTableHeaderView()
+        updateDirectUpsellFooterVisibility()
+    }
+
+    func setupCoverDisclaimerHeader() {
+        tableView.tableHeaderView = nil
+        coverDisclaimerContainerView.backgroundColor = .clear
+        coverDisclaimerContainerView.layer.cornerRadius = 8
+        coverDisclaimerContainerView.layer.borderWidth = 1
+        let tintColor = UIColor(
+            hex: venueDetails?.venueSettings?.whiteLabelColor ?? "#FFFFFF"
+        )
+        coverDisclaimerContainerView.borderColor = tintColor
+        coverDisclaimerContainerView.clipsToBounds = true
+
+        coverDisclaimerLabel.font = Constant.Font.geistRegular(size: 13)
+        coverDisclaimerLabel.textColor = UIColor.white.withAlphaComponent(0.86)
+        coverDisclaimerLabel.numberOfLines = 0
+        coverDisclaimerLabel.lineBreakMode = .byWordWrapping
+        coverDisclaimerContainerView.isHidden = true
+    }
+
+    func updateTableHeaderView() {
+        tableView.tableHeaderView = nil
+
+        switch currentStep {
+        case .coverTickets:
+            updateCoverDisclaimerView()
+        case .addOns:
+            coverDisclaimerContainerView.isHidden = true
+        }
+    }
+
+    func updateCoverDisclaimerView() {
+        let text = venueDetails?.venueSettings?.coverDisclaimerText?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard venueDetails?.venueSettings?.showCoverDisclaimer == true,
+              !text.isEmpty else {
+            coverDisclaimerContainerView.isHidden = true
+            return
+        }
+
+        coverDisclaimerLabel.text = text
+        coverDisclaimerContainerView.isHidden = false
+    }
+
+    func setupDirectUpsellFooter() {
+        directUpsellFooterView.backgroundColor = .clear
+        directUpsellFooterView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: tableView.bounds.width,
+            height: 56
+        )
+
+        directUpsellButton.titleLabel?.font = Constant.Font.geistRegular(size: 15)
+        directUpsellButton.setTitleColor(.white, for: .normal)
+        directUpsellButton.contentHorizontalAlignment = .center
+        directUpsellButton.addTarget(self, action: #selector(onClickDirectUpsellButton), for: .touchUpInside)
+
+        if directUpsellButton.superview == nil {
+            directUpsellButton.translatesAutoresizingMaskIntoConstraints = false
+            directUpsellFooterView.addSubview(directUpsellButton)
+
+            NSLayoutConstraint.activate([
+                directUpsellButton.topAnchor.constraint(equalTo: directUpsellFooterView.topAnchor, constant: 8),
+                directUpsellButton.leadingAnchor.constraint(equalTo: directUpsellFooterView.leadingAnchor, constant: 20),
+                directUpsellButton.trailingAnchor.constraint(equalTo: directUpsellFooterView.trailingAnchor, constant: -20),
+                directUpsellButton.heightAnchor.constraint(equalToConstant: 36)
+            ])
+        }
+
+        updateDirectUpsellFooterVisibility()
+    }
+
+    func updateDirectUpsellFooterVisibility() {
+        let shouldShow = currentStep == .coverTickets && hasAnyUpsell
+        guard shouldShow else {
+            tableView.tableFooterView = nil
+            return
+        }
+
+        let title = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let buttonTitle = title?.isEmpty == false
+            ? "Buy \(title!)"
+            : "Buy upsell tickets"
+
+        let attributedTitle = NSAttributedString(
+            string: buttonTitle,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 15),
+                .foregroundColor: UIColor.white,
+                .underlineStyle: NSUnderlineStyle.single.rawValue
+            ]
+        )
+        directUpsellButton.setAttributedTitle(attributedTitle, for: .normal)
+
+        directUpsellFooterView.frame.size = CGSize(
+            width: tableView.bounds.width,
+            height: 56
+        )
+        tableView.tableFooterView = directUpsellFooterView
+    }
+
+    func setupTopBlurView() {
+        stickyTopBlurView.translatesAutoresizingMaskIntoConstraints = false
+        stickyTopBlurView.isHidden = true
+        stickyTopBlurView.alpha = 0
+        stickyTopBlurView.isUserInteractionEnabled = false
+
+        view.insertSubview(stickyTopBlurView, aboveSubview: scrollView)
+
+        NSLayoutConstraint.activate([
+            stickyTopBlurView.topAnchor.constraint(equalTo: view.topAnchor),
+            stickyTopBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stickyTopBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stickyTopBlurView.bottomAnchor.constraint(equalTo: navBarHiddenView.bottomAnchor, constant: 10)
+        ])
     }
 
     func observeTableViewHeight() {
@@ -711,6 +789,7 @@ private extension CoverTicketListVC {
         view.setNeedsLayout()
 
         let updates = {
+            self.updateTableHeaderView()
             self.view.layoutIfNeeded()
             self.normalizeScrollInsets()
             self.updateStickyNavigation(for: self.scrollView.contentOffset.y)
@@ -773,19 +852,11 @@ private extension CoverTicketListVC {
     }
 
     func updateStickyTicketsTitle() {
-        syncStickyTicketsTitle()
-
-        let titleFrame = ticketsTitleLbl.convert(ticketsTitleLbl.bounds, to: view)
-        let stickyY = stickyTicketsTitleContainer.frame.minY > 0
-            ? stickyTicketsTitleContainer.frame.minY
-            : navBarHiddenView.frame.maxY + 20
-        let shouldStick = titleFrame.minY <= stickyY
-
-        stickyTicketsTitleContainer.isHidden = !shouldStick
-        stickyTicketsTitleContainer.alpha = shouldStick ? 1 : 0
-        stickyTopBlurView.isHidden = !shouldStick
-        stickyTopBlurView.alpha = shouldStick ? 1 : 0
-        ticketsTitleLbl.alpha = shouldStick ? 0 : 1
+        stickyTicketsTitleContainer.isHidden = true
+        stickyTicketsTitleContainer.alpha = 0
+        stickyTopBlurView.isHidden = navBarHiddenView.isHidden
+        stickyTopBlurView.alpha = navBarHiddenView.alpha
+        ticketsTitleLbl.alpha = 1
     }
 }
 
@@ -845,7 +916,7 @@ private extension CoverTicketListVC {
             if clearSelection {
                 self.coverTicketCount.removeAll()
                 self.upSellTicketCount.removeAll()
-                self.currentStep = self.shouldShowDirectUpsell ? .addOns : .coverTickets
+                self.currentStep = .coverTickets
             }
 
             self.setupCoverTickets()
@@ -1064,6 +1135,11 @@ extension CoverTicketListVC {
             return
         }
         continueFlow()
+    }
+
+    @objc private func onClickDirectUpsellButton() {
+        guard hasAnyUpsell else { return }
+        moveToAddOnStep()
     }
 
     private func continueFlow() {

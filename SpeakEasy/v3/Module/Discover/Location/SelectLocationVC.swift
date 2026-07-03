@@ -93,6 +93,7 @@ final class SelectLocationVC: UIViewController {
             selectedFilterCity = selectedFilterCity ?? UserDefault.shared.filterCity
         }
         normalizeFilterSelectionIfNeeded()
+        normalizeInitialFilterSelectionIfNeeded()
         initialFilterCity = initialFilterCity ?? selectedFilterCity
         setupTableView()
         setupSearch()
@@ -231,6 +232,14 @@ private extension SelectLocationVC {
         }
     }
 
+    func normalizeInitialFilterSelectionIfNeeded() {
+        guard normalizedCity(initialFilterCity) == normalizedCity(primaryCity) else {
+            return
+        }
+
+        initialFilterCity = nil
+    }
+
     func normalizedCity(_ city: String?) -> String {
         city?
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -302,8 +311,7 @@ extension SelectLocationVC {
 
             guard let self else { return }
 
-            UserDefault.shared.localCity =
-            self.selectedCity
+            UserDefault.shared.setPrimaryCity(self.selectedCity)
 
             if UserDefault.shared.filterCity?
                 .trimmingCharacters(in: .whitespacesAndNewlines)

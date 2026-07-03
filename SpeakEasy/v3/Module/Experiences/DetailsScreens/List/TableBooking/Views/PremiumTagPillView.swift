@@ -774,6 +774,10 @@ final class PremiumAgreementView: UIView {
         didSet { updateCheckbox() }
     }
 
+    var showsCheckbox: Bool = true {
+        didSet { updateCheckboxVisibility() }
+    }
+
     var bodyText: String = "" {
         didSet {
             isExpanded = false
@@ -809,6 +813,8 @@ final class PremiumAgreementView: UIView {
     private var titleTopConstraint: NSLayoutConstraint?
     private var bodyTopToTitleConstraint: NSLayoutConstraint?
     private var bodyTopToContainerConstraint: NSLayoutConstraint?
+    private var titleLeadingToCheckboxConstraint: NSLayoutConstraint?
+    private var titleLeadingToContainerConstraint: NSLayoutConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -854,13 +860,18 @@ final class PremiumAgreementView: UIView {
         bodyTopToTitleConstraint = bodyToTitle
         bodyTopToContainerConstraint = bodyToContainer
 
+        let titleToCheckbox = titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 8)
+        let titleToContainer = titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+        titleLeadingToCheckboxConstraint = titleToCheckbox
+        titleLeadingToContainerConstraint = titleToContainer
+
         NSLayoutConstraint.activate([
             checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             checkButton.topAnchor.constraint(equalTo: topAnchor),
             checkButton.widthAnchor.constraint(equalToConstant: 24),
             checkButton.heightAnchor.constraint(equalToConstant: 24),
 
-            titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 8),
+            titleToCheckbox,
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleTop,
 
@@ -871,6 +882,7 @@ final class PremiumAgreementView: UIView {
         ])
 
         updateCheckbox()
+        updateCheckboxVisibility()
     }
 
     private func updateCheckbox() {
@@ -879,6 +891,15 @@ final class PremiumAgreementView: UIView {
         checkButton.setImage(image, for: .normal)
         checkButton.tintColor = .white
         checkButton.imageView?.tintColor = .white
+    }
+
+    private func updateCheckboxVisibility() {
+        checkButton.isHidden = !showsCheckbox
+        checkButton.isUserInteractionEnabled = showsCheckbox
+        titleLeadingToCheckboxConstraint?.isActive = showsCheckbox
+        titleLeadingToContainerConstraint?.isActive = !showsCheckbox
+        setNeedsLayout()
+        reportHeightIfNeeded()
     }
 
     private func updateText() {

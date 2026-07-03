@@ -13,7 +13,9 @@ final class UserDefault {
     // MARK: - Singleton
     
     static let shared = UserDefault()
-    private init() {}
+    private init() {
+        defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
+    }
     
     // MARK: - Keys
     
@@ -35,6 +37,7 @@ final class UserDefault {
     // Publishers
     private let citySubject = CurrentValueSubject<String, Never>("")
     private let filterCitySubject = CurrentValueSubject<String?, Never>(nil)
+    private var temporaryFilterCity: String?
     
     var localCityPublisher: AnyPublisher<String, Never> {
         citySubject.eraseToAnyPublisher()
@@ -165,7 +168,7 @@ final class UserDefault {
     
     var filterCity: String? {
         get {
-            guard let city: String = getValue(for: .filterCity) else {
+            guard let city = temporaryFilterCity else {
                 return nil
             }
 
@@ -176,9 +179,11 @@ final class UserDefault {
             let trimmed = newValue?.trimmingCharacters(in: .whitespacesAndNewlines)
 
             if let trimmed, !trimmed.isEmpty {
-                setValue(trimmed, for: .filterCity)
+                temporaryFilterCity = trimmed
+                defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
                 filterCitySubject.send(trimmed)
             } else {
+                temporaryFilterCity = nil
                 defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
                 filterCitySubject.send(nil)
             }
@@ -211,6 +216,8 @@ final class UserDefault {
     
     func clearAll(except preserved: Set<UserDefaultKey> = []) {
         let all = defaults.dictionaryRepresentation()
+        temporaryFilterCity = nil
+        filterCitySubject.send(nil)
         
         all.keys.forEach { key in
             guard let typedKey = UserDefaultKey(rawValue: key) else {

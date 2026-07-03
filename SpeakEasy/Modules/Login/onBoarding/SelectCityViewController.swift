@@ -87,7 +87,8 @@ final class SelectCityViewController: UIViewController {
             }
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
-                UserDefault.shared.localCity = self.selectedCity
+                UserDefault.shared.setPrimaryCity(self.selectedCity)
+                UserDefault.shared.filterCity = nil
                 UserDefault.shared.isLoggedIn = true
                 UserDefault.shared.user?.isProfileCompleted = true
                 AppDelegate.shared.changeRootViewController()
