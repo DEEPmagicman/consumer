@@ -396,12 +396,14 @@ private extension PremiumInquiryCardView {
 private extension PremiumInquiryCardView {
 
     @objc func onRequest() {
-        guard UserDefault.shared.isLoggedIn ?? false else {
-            Navigate.to.openPhoneLoginPopup(
-                Utility.main.topViewController() ?? UIViewController()
-            )
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            guard let presenter = Utility.main.topViewController() else { return }
+            LoginRequiredCoordinator.presentLogin(from: presenter) { [weak self] in
+                self?.onRequest()
+            }
             return
         }
+
         guard validateUserProfile() else { return }
         createRequest()
     }

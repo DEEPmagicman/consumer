@@ -698,8 +698,10 @@ private extension PremiumTableSeatingVC {
     @objc func onCheckoutTapped() {
         guard let area = seatingArea, let event else { return }
 
-        guard UserDefault.shared.isLoggedIn ?? false else {
-            Navigate.to.openPhoneLoginPopup(self)
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.onCheckoutTapped()
+            }
             return
         }
 

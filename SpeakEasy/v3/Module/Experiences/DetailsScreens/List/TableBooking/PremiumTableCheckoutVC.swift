@@ -1312,25 +1312,31 @@ private extension PremiumTableCheckoutVC {
     }
 
     func depositCredit(from breakdown: PriceBreakdown?) -> Double {
-        let backendTotal = breakdown?.total
-            ?? checkoutItems.first?.deposit
-            ?? selectedTimeSlot?.depositWithFees
-            ?? seatingAreas.first?.depositWithFees
-            ?? 0
-        let backendSalesTax = breakdown?.salesTax ?? 0
-        let backendProcessingFees = (breakdown?.seFees ?? 0) + (breakdown?.stripeFees ?? 0)
-        let shouldRemoveProcessingFees = event?
-            .venue?
-            .venueSettings?
-            .tableBookingSettings?
-            .isProcessingFeePassToCustomer == true
+        let breakdownTotal = breakdown?.total
+        let checkoutDeposit = checkoutItems.first?.deposit
+        let slotDeposit = selectedTimeSlot?.depositWithFees
+        let seatingDeposit = seatingAreas.first?.depositWithFees
 
-        return max(
-            0,
-            backendTotal
-            - backendSalesTax
-            - (shouldRemoveProcessingFees ? backendProcessingFees : 0)
-        )
+        let backendTotal = breakdownTotal
+            ?? checkoutDeposit
+            ?? slotDeposit
+            ?? seatingDeposit
+            ?? 0
+
+        let salesTax = breakdown?.salesTax ?? 0
+        let seFees = breakdown?.seFees ?? 0
+        let stripeFees = breakdown?.stripeFees ?? 0
+        let processingFees = seFees + stripeFees
+
+        let tableBookingSettings = event?.venue?.venueSettings?.tableBookingSettings
+        let shouldRemoveProcessingFees =
+            tableBookingSettings?.isProcessingFeePassToCustomer ?? false
+
+        let deposit = backendTotal
+            - salesTax
+            - (shouldRemoveProcessingFees ? processingFees : 0)
+
+        return max(0, deposit)
     }
 
     func calculateSpendSEFees(for amount: Double, settings: PremiumCheckoutSpendSettings) -> Double {

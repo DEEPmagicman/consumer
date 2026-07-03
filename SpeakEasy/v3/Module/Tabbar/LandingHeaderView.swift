@@ -213,10 +213,9 @@ final class LandingHeaderView: UIView {
     }
 
     @objc private func onProfile() {
-        if UserDefault.shared.isLoggedIn == true {
-            Navigate.to.profileMenuVC(currentVC)
-        } else {
-            Navigate.to.openPhoneLoginPopup(currentVC)
+        LoginRequiredCoordinator.perform(from: currentVC) { [weak self] in
+            guard let self else { return }
+            Navigate.to.profileMenuVC(self.currentVC)
         }
 //        delegate?.landingHeaderDidTapProfile(self)
     }

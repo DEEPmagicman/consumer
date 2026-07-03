@@ -7,6 +7,37 @@
 
 import UIKit
 
+enum LoginRequiredCoordinator {
+
+    static var isAuthenticated: Bool {
+        UserDefault.shared.user != nil
+    }
+
+    static func presentLogin(
+        from presenter: UIViewController,
+        onSuccess: (() -> Void)? = nil
+    ) {
+        Navigate.to.openPhoneLoginPopup(presenter) {
+            onSuccess?()
+        }
+    }
+
+    static func perform(
+        from presenter: UIViewController,
+        action: @escaping () -> Void
+    ) {
+        guard isAuthenticated else {
+            presentLogin(
+                from: presenter,
+                onSuccess: action
+            )
+            return
+        }
+
+        action()
+    }
+}
+
 extension UIViewController {
 
     func presentPremium(

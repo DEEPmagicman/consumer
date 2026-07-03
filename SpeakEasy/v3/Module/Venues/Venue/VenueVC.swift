@@ -362,7 +362,12 @@ final class VenueVC: UIViewController {
 
     @IBAction func onClickFollowBtn(_ sender: Any) {
         guard !isFollowLoading else { return }
-        guard !UserDefault.shared.isGuest else { return }
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.onClickFollowBtn(sender)
+            }
+            return
+        }
 
         guard let venueUniqueId =
                 venueDetails?.uniqueId,

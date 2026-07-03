@@ -18,6 +18,28 @@ final class MyOrdersVC: UIViewController {
         navigationOrientation: .horizontal
     )
 
+    private var isLoggedIn: Bool {
+        UserDefault.shared.user != nil
+    }
+
+    private let emptyStateView = UIView()
+
+    private let emptyIconContainer = LiquidGlassBackgroundView(
+        cornerRadius: 40,
+        fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.08),
+        borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
+        borderWidth: 0.8
+    )
+
+    private let emptyIcon = UIImageView()
+
+    private let emptyTitle = UILabel()
+    private let emptySubtitle = UILabel()
+
+    private let signInButton = PrimaryButton()
+
+    private let featuresStack = UIStackView()
+
     private lazy var ticketsVC = TicketsOrdersVC()
     private lazy var tablesVC = TablesOrdersVC()
 
@@ -47,7 +69,10 @@ final class MyOrdersVC: UIViewController {
         setupNav()
         setupSegment()
         setupPageVC()
+        setupEmptyState()
         setupConstraints()
+
+        updateLoginState()
         updateHeaderUI()
     }
     
@@ -72,6 +97,163 @@ final class MyOrdersVC: UIViewController {
             landingHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             landingHeaderView.heightAnchor.constraint(equalToConstant: 40)
         ])
+    }
+
+    private func setupEmptyState() {
+
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyStateView)
+
+        emptyIconContainer.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateView.addSubview(emptyIconContainer)
+
+        emptyIcon.translatesAutoresizingMaskIntoConstraints = false
+        emptyIcon.image = UIImage(systemName: "ticket.fill")
+        emptyIcon.tintColor = .white
+        emptyIcon.contentMode = .scaleAspectFit
+        emptyIconContainer.addSubview(emptyIcon)
+
+        emptyTitle.text = "Keep track of every booking"
+        emptyTitle.textColor = .white
+        emptyTitle.font = Constant.Font.geistMedium(size: 20)
+        emptyTitle.textAlignment = .center
+        emptyTitle.numberOfLines = 0
+        emptyTitle.translatesAutoresizingMaskIntoConstraints = false
+
+        emptySubtitle.text = """
+        View upcoming tickets, table reservations,
+        past orders, and booking details
+        after signing in.
+        """
+        emptySubtitle.textColor = .white.withAlphaComponent(0.65)
+        emptySubtitle.font = Constant.Font.geistRegular(size: 12)
+        emptySubtitle.textAlignment = .center
+        emptySubtitle.numberOfLines = 0
+        emptySubtitle.translatesAutoresizingMaskIntoConstraints = false
+
+        signInButton.configure(
+            title: "Sign In to Continue",
+            fontSize: 16,
+            cornerRadius: 14
+        )
+
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        signInButton.addTarget(self, action: #selector(onClickLogin), for: .touchUpInside)
+
+        featuresStack.axis = .vertical
+        featuresStack.spacing = 14
+        featuresStack.translatesAutoresizingMaskIntoConstraints = false
+
+        featuresStack.addArrangedSubview(
+            featureRow(
+                icon: "ticket.fill",
+                title: "Upcoming ticket bookings"
+            )
+        )
+
+        featuresStack.addArrangedSubview(
+            featureRow(
+                icon: "fork.knife",
+                title: "Table reservations"
+            )
+        )
+
+        featuresStack.addArrangedSubview(
+            featureRow(
+                icon: "clock.arrow.circlepath",
+                title: "Past orders & booking history"
+            )
+        )
+
+        emptyStateView.addSubview(emptyTitle)
+        emptyStateView.addSubview(emptySubtitle)
+        emptyStateView.addSubview(signInButton)
+        emptyStateView.addSubview(featuresStack)
+
+        NSLayoutConstraint.activate([
+
+            emptyStateView.topAnchor.constraint(equalTo: segmentView.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            emptyIconContainer.topAnchor.constraint(equalTo: emptyStateView.topAnchor, constant: 70),
+            emptyIconContainer.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            emptyIconContainer.widthAnchor.constraint(equalToConstant: 60),
+            emptyIconContainer.heightAnchor.constraint(equalToConstant: 60),
+
+            emptyIcon.centerXAnchor.constraint(equalTo: emptyIconContainer.centerXAnchor),
+            emptyIcon.centerYAnchor.constraint(equalTo: emptyIconContainer.centerYAnchor),
+            emptyIcon.widthAnchor.constraint(equalToConstant: 25),
+            emptyIcon.heightAnchor.constraint(equalToConstant: 25),
+
+            emptyTitle.topAnchor.constraint(equalTo: emptyIconContainer.bottomAnchor, constant: 28),
+            emptyTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emptyTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+
+            emptySubtitle.topAnchor.constraint(equalTo: emptyTitle.bottomAnchor, constant: 14),
+            emptySubtitle.leadingAnchor.constraint(equalTo: emptyTitle.leadingAnchor),
+            emptySubtitle.trailingAnchor.constraint(equalTo: emptyTitle.trailingAnchor),
+
+            signInButton.topAnchor.constraint(equalTo: emptySubtitle.bottomAnchor, constant: 24),
+            signInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            signInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            signInButton.heightAnchor.constraint(equalToConstant: 44),
+
+            featuresStack.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 24),
+            featuresStack.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor)
+        ])
+    }
+
+    @objc private func onClickLogin() {
+        LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+            self?.reloadAfterLogin()
+        }
+    }
+
+    private func updateLoginState() {
+
+        let loggedIn = isLoggedIn
+
+        emptyStateView.isHidden = loggedIn
+
+        segmentView.isHidden = !loggedIn
+        pageVC.view.isHidden = !loggedIn
+
+        if loggedIn {
+            // ticketsVC.fetchOrders()
+            // tablesVC.fetchOrders()
+        }
+    }
+
+    private func reloadAfterLogin() {
+        updateLoginState()
+        ticketsVC.loadInitialData()
+        tablesVC.loadInitialData()
+    }
+
+    private func featureRow(icon: String, title: String) -> UIView {
+
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 12
+        stack.alignment = .center
+
+        let image = UIImageView(image: UIImage(systemName: icon))
+        image.tintColor = .white
+        image.contentMode = .scaleAspectFit
+        image.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 18).isActive = true
+
+        let label = UILabel()
+        label.text = title
+        label.textColor = .white.withAlphaComponent(0.75)
+        label.font = Constant.Font.geistRegular(size: 12)
+
+        stack.addArrangedSubview(image)
+        stack.addArrangedSubview(label)
+
+        return stack
     }
 
     private func setupNav() {

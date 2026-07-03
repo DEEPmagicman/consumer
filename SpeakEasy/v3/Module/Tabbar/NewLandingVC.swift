@@ -337,10 +337,9 @@ final class NewLandingVC: UIViewController {
     }
     
     @objc private func onClickProfile() {
-        if UserDefault.shared.isLoggedIn == true {
+        LoginRequiredCoordinator.perform(from: self) { [weak self] in
+            guard let self else { return }
             Navigate.to.profileMenuVC(self)
-        } else {
-            Navigate.to.openPhoneLoginPopup(self)
         }
     }
 

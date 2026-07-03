@@ -231,7 +231,12 @@ final class CoverTicketListVC: UIViewController {
 
     @IBAction func onClickFollowBtn(_ sender: Any) {
         guard !isFollowLoading else { return }
-        guard !UserDefault.shared.isGuest else { return }
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.onClickFollowBtn(sender)
+            }
+            return
+        }
 
         guard let venueUniqueId = venueDetails?.uniqueId,
               !venueUniqueId.isEmpty
@@ -1127,14 +1132,9 @@ extension CoverTicketListVC {
     private func onClickContinueBtn() {
         guard !isCheckoutNavigationInProgress else { return }
 
-        if UserDefault.shared.user == nil {
-            Navigate.to.openPhoneLoginPopup(self) { [weak self] in
-                guard let self else { return }
-                self.continueFlow()
-            }
-            return
+        LoginRequiredCoordinator.perform(from: self) { [weak self] in
+            self?.continueFlow()
         }
-        continueFlow()
     }
 
     @objc private func onClickDirectUpsellButton() {
