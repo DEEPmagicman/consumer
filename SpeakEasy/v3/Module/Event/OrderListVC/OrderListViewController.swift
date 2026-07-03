@@ -163,6 +163,7 @@ final class OrderListViewController: UIViewController {
         feesAndTaxesHiddenView.isHidden = true
         updateFeesAndTaxesVisibility()
 
+        paymentTypeView.isHidden = true
         paymentTypeView.isUserInteractionEnabled = false
         updatePaymentMethodUI()
         configureQuestionSection()
@@ -694,7 +695,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private func updateFreeTicketUI() {
-        paymentTypeView.isHidden = isFreeTicket
+        paymentTypeView.isHidden = true
         paymentTypeView.isUserInteractionEnabled = !isFreeTicket && paymentSheet != nil
 
         guard isFreeTicket else {

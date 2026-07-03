@@ -260,7 +260,7 @@ final class EventsListVC: UIViewController {
 
         screenFilterCity = trimmedCity?.isEmpty == false
             ? trimmedCity
-            : nil
+            : UserDefault.shared.primaryDisplayCity
 
         updateCityTitle()
         fetchEvents(reset: true)

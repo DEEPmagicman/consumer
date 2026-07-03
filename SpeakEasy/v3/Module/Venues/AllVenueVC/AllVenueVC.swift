@@ -184,7 +184,7 @@ final class AllVenueVC: UIViewController {
 
         screenFilterCity = trimmedCity?.isEmpty == false
             ? trimmedCity
-            : nil
+            : UserDefault.shared.primaryDisplayCity
 
         setupVenueTitle()
         fetchVenues(reset: true)

@@ -30,6 +30,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     private let cardCornerRadius: CGFloat = 20
     private let defaultQRCodeSize: CGFloat = 254
     private let minimumTicketTableHeight: CGFloat = 64
+    private let maximumTicketTableHeight: CGFloat = 192
     private let fixedVerticalPadding: CGFloat = 58
 
     override func awakeFromNib() {
@@ -45,7 +46,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
             QRTicketTableViewCell.nib,
             forCellReuseIdentifier: QRTicketTableViewCell.identifier
         )
-        ticketsTableView.isScrollEnabled = false
+        ticketsTableView.isScrollEnabled = true
         ticketsTableView.separatorStyle = .none
         ticketsTableView.backgroundColor = .clear
         ticketsTableView.rowHeight = UITableView.automaticDimension
@@ -180,11 +181,12 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     private func applyTicketTableHeight(for contentHeight: CGFloat) {
         let rowCount = currentTicketCount()
         let hasTickets = rowCount > 0
-        let cappedHeight = hasTickets ? max(minimumTicketTableHeight, contentHeight) : 0
+        let cappedHeight = hasTickets ? min(max(minimumTicketTableHeight, contentHeight), maximumTicketTableHeight) : 0
         let preferredHeight = fixedVerticalPadding + defaultQRCodeSize + cappedHeight
+        let shouldScroll = contentHeight > cappedHeight + 1
 
         guard abs(cappedHeight - lastTableHeight) > 1 else {
-            ticketsTableView.isScrollEnabled = false
+            ticketsTableView.isScrollEnabled = shouldScroll
             applyQRCodeSize(defaultQRCodeSize)
             onContentHeightChange?(preferredHeight)
             return
@@ -192,7 +194,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
 
         lastTableHeight = cappedHeight
         ticketTableViewHeight.constant = cappedHeight
-        ticketsTableView.isScrollEnabled = false
+        ticketsTableView.isScrollEnabled = shouldScroll
         applyQRCodeSize(defaultQRCodeSize)
         onContentHeightChange?(preferredHeight)
     }
@@ -248,12 +250,7 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let booking = booking {
-            return booking.uniqueTickets.count
-        } else if let addOnsBooking = addOnsBooking {
-            return addOnsBooking.uniqueTickets.count
-        }
-        return 0
+        currentTicketCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

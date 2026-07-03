@@ -151,6 +151,17 @@ final class UserDefault {
         
         return city?.isEmpty == false ? city : nil
     }
+
+    var primaryDisplayCity: String {
+        let city = (primaryCity ?? localCity)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return city.isEmpty ? "Chicago" : city
+    }
+
+    func isPrimaryCity(_ city: String?) -> Bool {
+        normalizedCity(city) == normalizedCity(primaryDisplayCity)
+    }
     
     func setPrimaryCity(_ city: String) {
         let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -203,6 +214,13 @@ final class UserDefault {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         return primaryCity.isEmpty ? "Chicago" : primaryCity
+    }
+
+    func normalizedCity(_ city: String?) -> String {
+        city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            .lowercased() ?? ""
     }
     
     // MARK: - Selected Venue

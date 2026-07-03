@@ -484,7 +484,7 @@ extension PremiumExpVC {
 
         let resolvedCity = trimmedCity?.isEmpty == false
             ? trimmedCity!
-            : UserDefault.shared.activeCity
+            : UserDefault.shared.primaryDisplayCity
 
         guard resolvedCity.caseInsensitiveCompare(selectedCity) != .orderedSame else {
             headerView.configure(city: selectedCity)

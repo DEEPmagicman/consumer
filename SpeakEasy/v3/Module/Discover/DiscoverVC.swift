@@ -48,9 +48,7 @@ final class DiscoverVC: UIViewController {
         super.viewDidLoad()
 
         filterCity = UserDefault.shared.filterCity
-        if filterCity?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .caseInsensitiveCompare(UserDefault.shared.localCity) == .orderedSame {
+        if UserDefault.shared.isPrimaryCity(filterCity) {
             filterCity = nil
             UserDefault.shared.filterCity = nil
         }
@@ -255,11 +253,9 @@ final class DiscoverVC: UIViewController {
     private func applyCityFilter(_ city: String?) {
         let trimmedCity = city?
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        let primaryCity = UserDefault.shared.localCity
-            .trimmingCharacters(in: .whitespacesAndNewlines)
 
         filterCity = trimmedCity?.isEmpty == false &&
-            trimmedCity?.caseInsensitiveCompare(primaryCity) != .orderedSame
+            !UserDefault.shared.isPrimaryCity(trimmedCity)
             ? trimmedCity
             : nil
 

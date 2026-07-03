@@ -1081,20 +1081,23 @@ final class EventService {
         
     func fetchEventAttendees(
         eventId: String,
+        skip: Int = 0,
+        take: Int = 10,
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
             _ attendees: [Attendee]?,
             _ total: Int?,
+            _ hasMore: Bool,
             _ errCode: Int?
         ) -> Void
     ) {
 
         let params: [String: Any] = [
             "include": "consumerUserImage",
-            "take": 10,
-            "skip": 0,
-            "page": 1,
+            "take": take,
+            "skip": skip,
+            "page": (skip / max(take, 1)) + 1,
             "orderBy": "createdAt|desc"
         ]
 
@@ -1113,6 +1116,7 @@ final class EventService {
                     nil,
                     nil,
                     nil,
+                    false,
                     nil
                 )
 
@@ -1131,17 +1135,25 @@ final class EventService {
                     from: data
                 )
 
-                completion(
-                    true,
-                    nil,
-                    decoded.list ?? decoded.eventAttendees,
+                let list = decoded.list ?? decoded.eventAttendees
+                let total =
                     decoded.total ??
                     decoded.totalAttendees ??
                     decoded.attendeesTotal ??
                     decoded.attendeesCount ??
                     decoded.eventAttendeesCount ??
                     decoded.totalCount ??
-                    decoded.count,
+                    decoded.count
+                let hasMore =
+                    decoded.hasMany ??
+                    ((total ?? 0) > skip + (list?.count ?? 0))
+
+                completion(
+                    true,
+                    nil,
+                    list,
+                    total,
+                    hasMore,
                     nil
                 )
 
@@ -1152,6 +1164,7 @@ final class EventService {
                     "Parsing failed",
                     nil,
                     nil,
+                    false,
                     nil
                 )
             }
@@ -1163,6 +1176,7 @@ final class EventService {
                 error?.localizedDescription,
                 nil,
                 nil,
+                false,
                 nil
             )
         }

@@ -24,6 +24,7 @@ final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewD
     private let venueService = VenueService()
     private var isLoading = false
     private var isVenueSettingsLoading = false
+    private var isOrderExpanded = true
     private var isFeesExpanded = true
     private var feeDetailRows: [ReservationOrderRow] = []
     private var hydratedVenue: ClipVenue?
@@ -67,7 +68,8 @@ final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewD
     // MARK: - UI
 
     private let backgroundImageView = UIImageView()
-    private let backgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let backgroundBlurView = VisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let backgroundDimView = UIView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let closeButton = AppIconButton()
@@ -90,14 +92,20 @@ final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewD
 
     private let orderTitleLabel = UILabel()
     private let orderChevron = UIImageView()
+    private let orderHeaderButton = UIButton(type: .system)
     private let orderStack = UIStackView()
     private let orderDividerTop = UIView()
+    private let shimmerView = PremiumReservationConfirmationShimmerView()
 
     private var guestTagTrailingToTimeConstraint: NSLayoutConstraint?
     private var guestTagTrailingToCardConstraint: NSLayoutConstraint?
     private var confirmationMessageHeightConstraint: NSLayoutConstraint?
     private var orderTopToInfoConstraint: NSLayoutConstraint?
     private var orderTopToMessageConstraint: NSLayoutConstraint?
+    private var orderStackBottomConstraint: NSLayoutConstraint?
+    private var orderCollapsedHeightConstraint: NSLayoutConstraint?
+    private var orderTitleTopConstraint: NSLayoutConstraint?
+    private var orderTitleCenterYConstraint: NSLayoutConstraint?
 
     // MARK: - Life Cycle
 
@@ -136,13 +144,19 @@ private extension PremiumTableReservationConfirmationVC {
     func setupBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.image = UIImage(resource: .premiumExpBg)
-        backgroundImageView.alpha = 1
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundImageView)
 
-        backgroundBlurView.alpha = 0.16
+        backgroundBlurView.blurRadius = 14
+        backgroundBlurView.colorTint = AppColor.primaryBlackColor
+        backgroundBlurView.colorTintAlpha = 0.14
+        backgroundBlurView.alpha = 0.70
         backgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundBlurView)
+
+        backgroundDimView.backgroundColor = AppColor.primaryBlackColor.withAlphaComponent(0.42)
+        backgroundDimView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backgroundDimView)
     }
 
     func setupScroll() {
@@ -262,6 +276,10 @@ private extension PremiumTableReservationConfirmationVC {
         orderChevron.contentMode = .scaleAspectFit
         orderChevron.translatesAutoresizingMaskIntoConstraints = false
 
+        orderHeaderButton.backgroundColor = .clear
+        orderHeaderButton.addTarget(self, action: #selector(onOrderHeaderTap), for: .touchUpInside)
+        orderHeaderButton.translatesAutoresizingMaskIntoConstraints = false
+
         orderStack.axis = .vertical
         orderStack.spacing = 13
         orderStack.translatesAutoresizingMaskIntoConstraints = false
@@ -273,6 +291,7 @@ private extension PremiumTableReservationConfirmationVC {
         orderCard.addSubview(orderChevron)
         orderCard.addSubview(orderDividerTop)
         orderCard.addSubview(orderStack)
+        orderCard.addSubview(orderHeaderButton)
     }
 
     func setupActionRows() {
@@ -289,6 +308,10 @@ private extension PremiumTableReservationConfirmationVC {
         loader.hidesWhenStopped = true
         loader.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loader)
+
+        shimmerView.translatesAutoresizingMaskIntoConstraints = false
+        shimmerView.isHidden = true
+        contentView.addSubview(shimmerView)
     }
 }
 
@@ -309,6 +332,11 @@ private extension PremiumTableReservationConfirmationVC {
             backgroundBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundBlurView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            backgroundDimView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundDimView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundDimView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundDimView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             closeButton.topAnchor.constraint(equalTo: safe.topAnchor, constant: 11),
             closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -374,13 +402,17 @@ private extension PremiumTableReservationConfirmationVC {
             orderCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
             orderCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
 
-            orderTitleLabel.topAnchor.constraint(equalTo: orderCard.topAnchor, constant: 23),
             orderTitleLabel.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
 
             orderChevron.centerYAnchor.constraint(equalTo: orderTitleLabel.centerYAnchor),
             orderChevron.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor, constant: -22),
             orderChevron.widthAnchor.constraint(equalToConstant: 9),
             orderChevron.heightAnchor.constraint(equalToConstant: 6),
+
+            orderHeaderButton.topAnchor.constraint(equalTo: orderCard.topAnchor),
+            orderHeaderButton.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor),
+            orderHeaderButton.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor),
+            orderHeaderButton.bottomAnchor.constraint(equalTo: orderDividerTop.topAnchor),
 
             orderDividerTop.topAnchor.constraint(equalTo: orderTitleLabel.bottomAnchor, constant: 14),
             orderDividerTop.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
@@ -390,7 +422,6 @@ private extension PremiumTableReservationConfirmationVC {
             orderStack.topAnchor.constraint(equalTo: orderDividerTop.bottomAnchor, constant: 16),
             orderStack.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
             orderStack.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor, constant: -22),
-            orderStack.bottomAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: -22),
 
             eventsDetailsRow.topAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: 12),
             eventsDetailsRow.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
@@ -402,6 +433,11 @@ private extension PremiumTableReservationConfirmationVC {
             supportRow.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
             supportRow.heightAnchor.constraint(equalToConstant: 50),
             supportRow.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -48),
+
+            shimmerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            shimmerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            shimmerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            shimmerView.heightAnchor.constraint(equalToConstant: shimmerView.preferredHeight),
 
             loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loader.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -416,6 +452,12 @@ private extension PremiumTableReservationConfirmationVC {
         orderTopToInfoConstraint = orderCard.topAnchor.constraint(equalTo: infoCard.bottomAnchor, constant: 8)
         orderTopToMessageConstraint = orderCard.topAnchor.constraint(equalTo: confirmationMessageCard.bottomAnchor, constant: 8)
         orderTopToInfoConstraint?.isActive = true
+        orderStackBottomConstraint = orderStack.bottomAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: -22)
+        orderCollapsedHeightConstraint = orderCard.heightAnchor.constraint(equalToConstant: 50)
+        orderTitleTopConstraint = orderTitleLabel.topAnchor.constraint(equalTo: orderCard.topAnchor, constant: 23)
+        orderTitleCenterYConstraint = orderTitleLabel.centerYAnchor.constraint(equalTo: orderCard.centerYAnchor)
+        orderStackBottomConstraint?.isActive = true
+        orderTitleTopConstraint?.isActive = true
     }
 }
 
@@ -666,7 +708,10 @@ private extension PremiumTableReservationConfirmationVC {
         orderStack.addArrangedSubview(totalRow)
         orderStack.setCustomSpacing(14, after: separator)
 
-        guard let spendAgreement, shouldShowSpendAgreement(spendAgreement) else { return }
+        guard let spendAgreement, shouldShowSpendAgreement(spendAgreement) else {
+            applyOrderExpanded(isOrderExpanded, animated: false)
+            return
+        }
 
         orderStack.setCustomSpacing(20, after: totalRow)
         orderStack.addArrangedSubview(ReservationOrderRow(
@@ -679,6 +724,8 @@ private extension PremiumTableReservationConfirmationVC {
         spendAgreementRows(spendAgreement).forEach {
             orderStack.addArrangedSubview($0)
         }
+
+        applyOrderExpanded(isOrderExpanded, animated: false)
     }
 
     func makeOrderSeparator() -> UIView {
@@ -747,13 +794,13 @@ private extension PremiumTableReservationConfirmationVC {
               !isLoading else { return }
 
         isLoading = true
-        loader.startAnimating()
+        updateReservationLoadingState(isLoading: true)
 
         tableService.fetchConsumerReservation(uniqueId: uniqueId) { [weak self] success, message, reservation in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.isLoading = false
-                self.loader.stopAnimating()
+                self.updateReservationLoadingState(isLoading: false)
                 if success, let reservation {
                     self.reservation = reservation
                     self.reservationUniqueId = reservation.uniqueId
@@ -827,6 +874,14 @@ private extension PremiumTableReservationConfirmationVC {
         if let feesRow = orderStack.arrangedSubviews.compactMap({ $0 as? ReservationOrderRow }).first(where: { $0.rowTitle == "Fees" }) {
             feesRow.setChevronExpanded(isFeesExpanded)
         }
+
+        UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseInOut]) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    @objc func onOrderHeaderTap() {
+        applyOrderExpanded(!isOrderExpanded, animated: true)
     }
 
     @objc func onEventDetailsTap() {
@@ -836,6 +891,49 @@ private extension PremiumTableReservationConfirmationVC {
 
     @objc func onSupportTap() {
         Navigate.externalURL(APIBuilder.supportURL)
+    }
+
+    func applyOrderExpanded(_ expanded: Bool, animated: Bool) {
+        isOrderExpanded = expanded
+
+        let updates = {
+            self.orderStackBottomConstraint?.isActive = expanded
+            self.orderCollapsedHeightConstraint?.isActive = !expanded
+            self.orderTitleTopConstraint?.isActive = expanded
+            self.orderTitleCenterYConstraint?.isActive = !expanded
+            self.orderDividerTop.isHidden = !expanded
+            self.orderStack.isHidden = !expanded
+            self.orderCard.setCornerRadius(expanded ? 22 : 13)
+            self.orderChevron.transform = expanded
+                ? .identity
+                : CGAffineTransform(rotationAngle: .pi)
+            self.view.layoutIfNeeded()
+        }
+
+        if animated {
+            UIView.animate(
+                withDuration: 0.24,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction],
+                animations: updates
+            )
+        } else {
+            updates()
+        }
+    }
+
+    func updateReservationLoadingState(isLoading: Bool) {
+        let shouldShowShimmer = isLoading && reservation == nil && sourceBooking == nil
+
+        loader.stopAnimating()
+        shimmerView.isHidden = !shouldShowShimmer
+
+        if shouldShowShimmer {
+            shimmerView.startShimmer()
+            contentView.bringSubviewToFront(shimmerView)
+        } else {
+            shimmerView.stopShimmer()
+        }
     }
 }
 
@@ -949,11 +1047,375 @@ private extension PremiumTableReservationConfirmationVC {
 
 // MARK: - Supporting Views
 
+private final class PremiumReservationConfirmationShimmerView: UIView {
+
+    let preferredHeight: CGFloat = 644
+
+    private let eventImage = ShimmerViewV3(frame: .zero, lighter: true)
+    private let infoCard = GradientBorderCardView()
+    private let tableLine = ShimmerViewV3()
+    private let minimumLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let guestPill = ShimmerViewV3(frame: .zero, lighter: true)
+    private let timePill = ShimmerViewV3(frame: .zero, lighter: true)
+    private let confirmationTitle = ShimmerViewV3()
+    private let confirmationNumber = ShimmerViewV3(frame: .zero, lighter: true)
+    private let copyPill = ShimmerViewV3(frame: .zero, lighter: true)
+
+    private let messageCard = GradientBorderCardView()
+    private let messageLineOne = ShimmerViewV3()
+    private let messageLineTwo = ShimmerViewV3(frame: .zero, lighter: true)
+
+    private let orderCard = GradientBorderCardView()
+    private let orderTitle = ShimmerViewV3()
+    private let orderDivider = UIView()
+    private let orderRowsStack = UIStackView()
+    private let orderRows = [
+        PremiumReservationConfirmationShimmerRow(titleWidthMultiplier: 0.42, amountWidthMultiplier: 0.20),
+        PremiumReservationConfirmationShimmerRow(titleWidthMultiplier: 0.30, amountWidthMultiplier: 0.18),
+        PremiumReservationConfirmationShimmerRow(titleWidthMultiplier: 0.22, amountWidthMultiplier: 0.22),
+        PremiumReservationConfirmationShimmerRow(titleWidthMultiplier: 0.26, amountWidthMultiplier: 0.26)
+    ]
+
+    private let actionOne = PremiumReservationConfirmationActionShimmerView()
+    private let actionTwo = PremiumReservationConfirmationActionShimmerView()
+
+    private var shimmerLines: [ShimmerViewV3] {
+        [
+            eventImage,
+            tableLine,
+            minimumLine,
+            guestPill,
+            timePill,
+            confirmationTitle,
+            confirmationNumber,
+            copyPill,
+            messageLineOne,
+            messageLineTwo,
+            orderTitle
+        ]
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        eventImage.layer.cornerRadius = 8
+        [infoCard, messageCard].forEach {
+            $0.glassCornerRadius = 18
+        }
+        orderCard.glassCornerRadius = 22
+    }
+
+    func startShimmer() {
+        shimmerLines.forEach { $0.startShimmer() }
+        orderRows.forEach { $0.startShimmer() }
+        actionOne.startShimmer()
+        actionTwo.startShimmer()
+    }
+
+    func stopShimmer() {
+        shimmerLines.forEach { $0.stopShimmer() }
+        orderRows.forEach { $0.stopShimmer() }
+        actionOne.stopShimmer()
+        actionTwo.stopShimmer()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+            stopShimmer()
+        }
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        isUserInteractionEnabled = false
+
+        eventImage.clipsToBounds = true
+        eventImage.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(eventImage)
+
+        [infoCard, messageCard, orderCard].forEach {
+            configureCard($0)
+            addSubview($0)
+        }
+
+        [
+            tableLine,
+            minimumLine,
+            guestPill,
+            timePill,
+            confirmationTitle,
+            confirmationNumber,
+            copyPill
+        ].forEach {
+            configureLine($0)
+            infoCard.addSubview($0)
+        }
+
+        configureLine(messageLineOne)
+        configureLine(messageLineTwo)
+        messageCard.addSubview(messageLineOne)
+        messageCard.addSubview(messageLineTwo)
+
+        configureLine(orderTitle)
+        orderCard.addSubview(orderTitle)
+
+        orderDivider.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        orderDivider.translatesAutoresizingMaskIntoConstraints = false
+        orderCard.addSubview(orderDivider)
+
+        orderRowsStack.axis = .vertical
+        orderRowsStack.spacing = 13
+        orderRowsStack.translatesAutoresizingMaskIntoConstraints = false
+        orderCard.addSubview(orderRowsStack)
+
+        orderRows.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            orderRowsStack.addArrangedSubview($0)
+            $0.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        }
+
+        [actionOne, actionTwo].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
+
+        setupConstraints()
+    }
+
+    private func configureCard(_ card: GradientBorderCardView) {
+        card.translatesAutoresizingMaskIntoConstraints = false
+        card.fillColor = UIColor.white.withAlphaComponent(0.055).cgColor
+        card.showsBlur = true
+        card.blurAlpha = 0.55
+        card.thinBorder = true
+    }
+
+    private func configureLine(_ view: ShimmerViewV3) {
+        view.cornerRadius = 6
+        view.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            eventImage.topAnchor.constraint(equalTo: topAnchor),
+            eventImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            eventImage.widthAnchor.constraint(equalToConstant: 135),
+            eventImage.heightAnchor.constraint(equalToConstant: 135),
+
+            infoCard.topAnchor.constraint(equalTo: eventImage.bottomAnchor, constant: 13),
+            infoCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            infoCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            infoCard.heightAnchor.constraint(equalToConstant: 126),
+
+            tableLine.topAnchor.constraint(equalTo: infoCard.topAnchor, constant: 13),
+            tableLine.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor, constant: 22),
+            tableLine.widthAnchor.constraint(equalTo: infoCard.widthAnchor, multiplier: 0.38),
+            tableLine.heightAnchor.constraint(equalToConstant: 16),
+
+            minimumLine.topAnchor.constraint(equalTo: tableLine.bottomAnchor, constant: 5),
+            minimumLine.leadingAnchor.constraint(equalTo: tableLine.leadingAnchor),
+            minimumLine.widthAnchor.constraint(equalTo: infoCard.widthAnchor, multiplier: 0.32),
+            minimumLine.heightAnchor.constraint(equalToConstant: 10),
+
+            timePill.topAnchor.constraint(equalTo: infoCard.topAnchor, constant: 18),
+            timePill.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor, constant: -16),
+            timePill.widthAnchor.constraint(equalToConstant: 58),
+            timePill.heightAnchor.constraint(equalToConstant: 22),
+
+            guestPill.centerYAnchor.constraint(equalTo: timePill.centerYAnchor),
+            guestPill.trailingAnchor.constraint(equalTo: timePill.leadingAnchor, constant: -4),
+            guestPill.widthAnchor.constraint(equalToConstant: 72),
+            guestPill.heightAnchor.constraint(equalToConstant: 22),
+
+            confirmationTitle.topAnchor.constraint(equalTo: minimumLine.bottomAnchor, constant: 17),
+            confirmationTitle.leadingAnchor.constraint(equalTo: tableLine.leadingAnchor),
+            confirmationTitle.widthAnchor.constraint(equalTo: infoCard.widthAnchor, multiplier: 0.50),
+            confirmationTitle.heightAnchor.constraint(equalToConstant: 16),
+
+            confirmationNumber.topAnchor.constraint(equalTo: confirmationTitle.bottomAnchor, constant: 10),
+            confirmationNumber.leadingAnchor.constraint(equalTo: tableLine.leadingAnchor),
+            confirmationNumber.widthAnchor.constraint(equalTo: infoCard.widthAnchor, multiplier: 0.42),
+            confirmationNumber.heightAnchor.constraint(equalToConstant: 14),
+
+            copyPill.centerYAnchor.constraint(equalTo: confirmationNumber.centerYAnchor),
+            copyPill.leadingAnchor.constraint(equalTo: confirmationNumber.trailingAnchor, constant: 12),
+            copyPill.widthAnchor.constraint(equalToConstant: 58),
+            copyPill.heightAnchor.constraint(equalToConstant: 24),
+
+            messageCard.topAnchor.constraint(equalTo: infoCard.bottomAnchor, constant: 8),
+            messageCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
+            messageCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
+            messageCard.heightAnchor.constraint(equalToConstant: 82),
+
+            messageLineOne.topAnchor.constraint(equalTo: messageCard.topAnchor, constant: 18),
+            messageLineOne.leadingAnchor.constraint(equalTo: messageCard.leadingAnchor, constant: 22),
+            messageLineOne.trailingAnchor.constraint(equalTo: messageCard.trailingAnchor, constant: -22),
+            messageLineOne.heightAnchor.constraint(equalToConstant: 13),
+
+            messageLineTwo.topAnchor.constraint(equalTo: messageLineOne.bottomAnchor, constant: 10),
+            messageLineTwo.leadingAnchor.constraint(equalTo: messageLineOne.leadingAnchor),
+            messageLineTwo.widthAnchor.constraint(equalTo: messageCard.widthAnchor, multiplier: 0.62),
+            messageLineTwo.heightAnchor.constraint(equalToConstant: 13),
+
+            orderCard.topAnchor.constraint(equalTo: messageCard.bottomAnchor, constant: 8),
+            orderCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
+            orderCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
+
+            orderTitle.topAnchor.constraint(equalTo: orderCard.topAnchor, constant: 23),
+            orderTitle.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
+            orderTitle.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.34),
+            orderTitle.heightAnchor.constraint(equalToConstant: 16),
+
+            orderDivider.topAnchor.constraint(equalTo: orderTitle.bottomAnchor, constant: 14),
+            orderDivider.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
+            orderDivider.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor, constant: -22),
+            orderDivider.heightAnchor.constraint(equalToConstant: 0.5),
+
+            orderRowsStack.topAnchor.constraint(equalTo: orderDivider.bottomAnchor, constant: 16),
+            orderRowsStack.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 22),
+            orderRowsStack.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor, constant: -22),
+            orderRowsStack.bottomAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: -22),
+
+            actionOne.topAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: 12),
+            actionOne.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
+            actionOne.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
+            actionOne.heightAnchor.constraint(equalToConstant: 50),
+
+            actionTwo.topAnchor.constraint(equalTo: actionOne.bottomAnchor, constant: 10),
+            actionTwo.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
+            actionTwo.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
+            actionTwo.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+}
+
+private final class PremiumReservationConfirmationShimmerRow: UIView {
+
+    private let titleLine = ShimmerViewV3()
+    private let amountLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let titleWidthMultiplier: CGFloat
+    private let amountWidthMultiplier: CGFloat
+
+    init(titleWidthMultiplier: CGFloat, amountWidthMultiplier: CGFloat) {
+        self.titleWidthMultiplier = titleWidthMultiplier
+        self.amountWidthMultiplier = amountWidthMultiplier
+        super.init(frame: .zero)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    func startShimmer() {
+        titleLine.startShimmer()
+        amountLine.startShimmer()
+    }
+
+    func stopShimmer() {
+        titleLine.stopShimmer()
+        amountLine.stopShimmer()
+    }
+
+    private func setup() {
+        [titleLine, amountLine].forEach {
+            $0.cornerRadius = 6
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            titleLine.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: titleWidthMultiplier),
+            titleLine.heightAnchor.constraint(equalToConstant: 12),
+
+            amountLine.trailingAnchor.constraint(equalTo: trailingAnchor),
+            amountLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            amountLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: amountWidthMultiplier),
+            amountLine.heightAnchor.constraint(equalToConstant: 12)
+        ])
+    }
+}
+
+private final class PremiumReservationConfirmationActionShimmerView: UIView {
+
+    private let card = GradientBorderCardView()
+    private let titleLine = ShimmerViewV3()
+    private let chevronLine = ShimmerViewV3(frame: .zero, lighter: true)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        card.glassCornerRadius = 13
+    }
+
+    func startShimmer() {
+        titleLine.startShimmer()
+        chevronLine.startShimmer()
+    }
+
+    func stopShimmer() {
+        titleLine.stopShimmer()
+        chevronLine.stopShimmer()
+    }
+
+    private func setup() {
+        card.translatesAutoresizingMaskIntoConstraints = false
+        card.fillColor = UIColor.white.withAlphaComponent(0.055).cgColor
+        card.showsBlur = true
+        card.blurAlpha = 0.55
+        card.thinBorder = true
+        addSubview(card)
+
+        [titleLine, chevronLine].forEach {
+            $0.cornerRadius = 6
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            card.topAnchor.constraint(equalTo: topAnchor),
+            card.leadingAnchor.constraint(equalTo: leadingAnchor),
+            card.trailingAnchor.constraint(equalTo: trailingAnchor),
+            card.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            titleLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 22),
+            titleLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.32),
+            titleLine.heightAnchor.constraint(equalToConstant: 14),
+
+            chevronLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -22),
+            chevronLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            chevronLine.widthAnchor.constraint(equalToConstant: 18),
+            chevronLine.heightAnchor.constraint(equalToConstant: 8)
+        ])
+    }
+}
+
 private final class ReservationGlassCardView: UIView {
 
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let fillView = UIView()
-    private let cornerRadiusValue: CGFloat
+    private var cornerRadiusValue: CGFloat
 
     init(cornerRadius: CGFloat) {
         cornerRadiusValue = cornerRadius
@@ -962,6 +1424,12 @@ private final class ReservationGlassCardView: UIView {
     }
 
     required init?(coder: NSCoder) { fatalError() }
+
+    func setCornerRadius(_ radius: CGFloat) {
+        cornerRadiusValue = radius
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()

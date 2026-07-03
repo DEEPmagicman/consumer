@@ -118,6 +118,10 @@ class EventDetailsVC: UIViewController {
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
+    private var attendeeLeadName = "Someone"
+    private var attendeesHasMore = false
+    private var isFetchingMoreAttendees = false
+    private let attendeesPageSize = 10
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
     private var faqs: [EventFAQ] = []
@@ -645,7 +649,7 @@ class EventDetailsVC: UIViewController {
             self.applyEventDetailBundle(detail)
             if let show = self.event?.showEventAttendees {
                 self.attendeesView.isHidden = !show
-                if show {
+                if show, self.attendees.isEmpty {
                     self.getEventAttendees()
                 }
             } else {
@@ -797,45 +801,40 @@ class EventDetailsVC: UIViewController {
 
             attendees = []
             totalAttendees = 0
+            attendeeLeadName = "Someone"
+            attendeesHasMore = false
             guestListTitleLbl.text = ""
             guestListCollectionView.reloadData()
             updateAttendeesView()
             return
         }
 
-        attendees =
-        sortAttendeesImageFirst(
-            list
-        )
+        attendeeLeadName = displayNameForAttendee(list.first)
+        attendees = sortAttendeesImageFirst(list)
 
         totalAttendees = max(total ?? attendees.count, attendees.count)
+        attendeesHasMore = totalAttendees > attendees.count
         guestListCollectionView.reloadData()
         updateAttendeesView()
         updateGuestListTitle()
     }
 
     private func updateGuestListTitle() {
-        guard let firstAttendee = attendees.first else {
+        guard !attendees.isEmpty else {
             guestListTitleLbl.text = ""
             return
         }
 
-        let firstName =
-        firstAttendee.firstName?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        let displayName =
-        firstName.isEmpty ? firstAttendee.fullName : firstName
-
         let count = max(totalAttendees, attendees.count)
 
         if count == 1 {
-            guestListTitleLbl.text = "\(displayName) is going"
-        } else if count > 1 {
-            let othersCount = count - 1
-            let otherText = othersCount == 1 ? "other" : "others"
-            guestListTitleLbl.text =
-            "\(displayName) and \(othersCount) \(otherText) going"
+            guestListTitleLbl.text = "\(attendeeLeadName) is going"
+        } else if count == 2 {
+            guestListTitleLbl.text = "\(attendeeLeadName) and 1 other going"
+        } else if count < 10 {
+            guestListTitleLbl.text = "\(attendeeLeadName) and \(count - 1) others going"
+        } else {
+            guestListTitleLbl.text = "\(attendeeLeadName) +\(count - 1) going"
         }
     }
     
@@ -1044,11 +1043,20 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        eventService.fetchEventAttendees(eventId: eventId) { [weak self] success, _, data, total, _ in
+        guard !isFetchingMoreAttendees else { return }
+        isFetchingMoreAttendees = true
+
+        eventService.fetchEventAttendees(
+            eventId: eventId,
+            skip: 0,
+            take: attendeesPageSize
+        ) { [weak self] success, _, data, total, hasMore, _ in
             guard let self = self else { return }
+            self.isFetchingMoreAttendees = false
 
             if success {
                 self.applyAttendees(data, total: total)
+                self.attendeesHasMore = hasMore || self.totalAttendees > self.attendees.count
             }
         }
     }
@@ -1315,6 +1323,18 @@ class EventDetailsVC: UIViewController {
         let withImage = list.filter { $0.hasImage }
         let withoutImage = list.filter { !$0.hasImage }
         return withImage + withoutImage
+    }
+
+    private func displayNameForAttendee(_ attendee: Attendee?) -> String {
+        let firstName = attendee?.firstName?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        if !firstName.isEmpty {
+            return firstName
+        }
+
+        let fullName = attendee?.fullName ?? ""
+        return fullName.isEmpty ? "Someone" : fullName
     }
     
     private func setupEventHeaderData() {
@@ -2195,6 +2215,9 @@ class EventDetailsVC: UIViewController {
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
         vc.attendees = attendees
+        vc.eventId = event?.uniqueId
+        vc.totalAttendees = max(totalAttendees, attendees.count)
+        vc.hasMore = attendeesHasMore || totalAttendees > attendees.count
         present(vc, animated: false)
     }
     

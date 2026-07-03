@@ -18,9 +18,10 @@ private enum PremiumSearchHeaderMetrics {
     static let venueRowHeight: CGFloat = 54
     static let venueRowSpacing: CGFloat = 8
     static let maxDisplayedVenues = 3
-    static let artistRowHeight: CGFloat = 101
-    static let artistItemWidth: CGFloat = 105
+    static let artistRowHeight: CGFloat = 99
+    static let artistItemWidth: CGFloat = 84
     static let artistImageSize: CGFloat = 75
+    static let artistItemSpacing: CGFloat = 10
     static let artistItemImageInset: CGFloat = (artistItemWidth - artistImageSize) / 2
     static let artistScrollLeadingInset: CGFloat = horizontalPadding - artistItemImageInset
 
@@ -344,13 +345,26 @@ final class PremiumSearchVC: UIViewController {
     }
 
     private func reloadCollectionWithoutAnimation() {
+        // Prevent implicit cross-fade/frame animations on full reloads (search, filter change, etc.)
+        UIView.performWithoutAnimation {
             collectionView.reloadData()
+        }
     }
 
     private func insertEventsWithoutAnimation(_ indexPaths: [IndexPath]) {
         guard !indexPaths.isEmpty else { return }
-        collectionView.insertItems(at: indexPaths)
-       
+
+        // PinterestLayout is a masonry layout, so appending items recalculates
+        // frames for every visible cell (not just the new ones). Doing this inside
+        // a plain insertItems(at:) call lets UICollectionView apply its default
+        // implicit animation to those frame changes, which is what caused the
+        // flicker/jump on scroll during pagination. Wrapping the batch update in
+        // performWithoutAnimation keeps it a single, animation-free layout pass.
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates({
+                collectionView.insertItems(at: indexPaths)
+            }, completion: nil)
+        }
     }
 
     private func updateEmptyState(animated: Bool) {
@@ -767,7 +781,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         artistStackView.translatesAutoresizingMaskIntoConstraints = false
         artistStackView.axis = .horizontal
         artistStackView.alignment = .top
-        artistStackView.spacing = 16
+        artistStackView.spacing = PremiumSearchHeaderMetrics.artistItemSpacing
         artistScrollView.addSubview(artistStackView)
 
         artistShimmerContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -777,7 +791,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         artistShimmerStackView.translatesAutoresizingMaskIntoConstraints = false
         artistShimmerStackView.axis = .horizontal
         artistShimmerStackView.alignment = .top
-        artistShimmerStackView.spacing = 16
+        artistShimmerStackView.spacing = PremiumSearchHeaderMetrics.artistItemSpacing
         artistShimmerContainer.addSubview(artistShimmerStackView)
 
         for _ in 0 ..< 3 {
@@ -977,7 +991,7 @@ private final class PremiumSearchArtistResultView: UIControl {
             imageView.widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
             imageView.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
 
-            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 6),
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             nameLabel.heightAnchor.constraint(equalToConstant: 18)
@@ -1042,9 +1056,9 @@ private final class PremiumSearchArtistShimmerItemView: UIView {
             imageView.widthAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
             imageView.heightAnchor.constraint(equalToConstant: PremiumSearchHeaderMetrics.artistImageSize),
 
-            textView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            textView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 6),
             textView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            textView.widthAnchor.constraint(equalToConstant: 72),
+            textView.widthAnchor.constraint(equalToConstant: 62),
             textView.heightAnchor.constraint(equalToConstant: 12)
         ])
 

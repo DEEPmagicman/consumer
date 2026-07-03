@@ -86,9 +86,12 @@ final class SelectLocationVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        primaryCity = UserDefault.shared.primaryCity ?? ""
-        selectedCity = primaryCity
-        initialPrimaryCity = primaryCity
+        let storedPrimaryCity = UserDefault.shared.primaryCity ?? ""
+        primaryCity = storedPrimaryCity.isEmpty
+            ? UserDefault.shared.primaryDisplayCity
+            : storedPrimaryCity
+        selectedCity = storedPrimaryCity
+        initialPrimaryCity = storedPrimaryCity
         if persistsFilterSelection {
             selectedFilterCity = selectedFilterCity ?? UserDefault.shared.filterCity
         }
@@ -135,10 +138,7 @@ private extension SelectLocationVC {
     }
     
     private func resolvedCity() -> String {
-        let city = UserDefault.shared.localCity
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return city.isEmpty ? "New York" : city
+        UserDefault.shared.primaryDisplayCity
     }
 
     func setupTableView() {
@@ -217,10 +217,11 @@ private extension SelectLocationVC {
     func updateLocationButtonState() {
         applyBtn.isHidden = true
         updateLocationBtn.isHidden =
-        selectedCity == initialPrimaryCity
+        normalizedCity(selectedCity) == normalizedCity(initialPrimaryCity)
     }
 
     func normalizeFilterSelectionIfNeeded() {
+        guard persistsFilterSelection else { return }
         guard normalizedCity(selectedFilterCity) == normalizedCity(primaryCity) else {
             return
         }
@@ -279,9 +280,13 @@ extension SelectLocationVC {
 
     @IBAction func onClickApply(_ sender: Any) {
 
-        let city = normalizedCity(selectedFilterCity) == normalizedCity(primaryCity)
+        let selectedCity = selectedFilterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let city = persistsFilterSelection &&
+            normalizedCity(selectedCity) == normalizedCity(primaryCity)
             ? nil
-            : selectedFilterCity
+            : selectedCity
 
         if persistsFilterSelection {
             UserDefault.shared.filterCity = city
@@ -381,23 +386,7 @@ private extension SelectLocationVC {
 
             if isSuccess {
                 
-                switch self.mode {
-
-                case .selectCity:
-
-                    let primaryLocation = UserDefault.shared.localCity
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                        .lowercased()
-
-                    self.fullCityList = cityList.filter {
-                        $0.value.trimmingCharacters(in: .whitespacesAndNewlines)
-                            .lowercased() != primaryLocation
-                    }
-
-                case .updatePrimaryLocation:
-
-                    self.fullCityList = cityList
-                }
+                self.fullCityList = cityList
 
                 self.displayList = self.fullCityList
 
@@ -447,11 +436,11 @@ UITableViewDataSource {
 
         case .selectCity:
 
-            isSelected = city.value == selectedFilterCity
+            isSelected = normalizedCity(city.value) == normalizedCity(selectedFilterCity)
 
         case .updatePrimaryLocation:
 
-            isSelected = city.value == selectedCity
+            isSelected = normalizedCity(city.value) == normalizedCity(selectedCity)
         }
 
         cell.configure(
@@ -474,7 +463,7 @@ UITableViewDataSource {
         switch mode {
 
         case .selectCity:
-            if selectedFilterCity == city {
+            if normalizedCity(selectedFilterCity) == normalizedCity(city) {
 
                 selectedFilterCity = nil
 

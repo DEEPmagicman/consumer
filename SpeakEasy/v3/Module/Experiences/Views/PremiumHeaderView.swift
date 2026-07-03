@@ -365,6 +365,10 @@ final class PremiumLocationView: UIControl {
         titleLabel.isUserInteractionEnabled = false
         titleLabel.font = Constant.Font.geistMedium(size: 14)
         titleLabel.textColor = .white.withAlphaComponent(0.9)
+        titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
@@ -389,5 +393,14 @@ final class PremiumLocationView: UIControl {
 
     func configure(city: String) {
         titleLabel.text = city
+        invalidateIntrinsicContentSize()
+        setNeedsLayout()
+        superview?.setNeedsLayout()
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let textWidth = ceil(titleLabel.intrinsicContentSize.width)
+        let width = 10 + 12 + 6 + textWidth + 10
+        return CGSize(width: min(max(width, 76), 190), height: 36)
     }
 }

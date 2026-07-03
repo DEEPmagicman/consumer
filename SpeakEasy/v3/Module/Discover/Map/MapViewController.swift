@@ -371,7 +371,7 @@ class MapViewController: UIViewController {
 
         screenFilterCity = trimmedCity?.isEmpty == false
             ? trimmedCity
-            : nil
+            : UserDefault.shared.primaryDisplayCity
 
         updateBrowsingTitle()
         resetDataAndFetchCurrentTab()

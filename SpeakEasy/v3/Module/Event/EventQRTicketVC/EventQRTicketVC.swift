@@ -94,7 +94,7 @@ class EventQRTicketVC: UIViewController {
         super.viewDidLoad()
 
         setupPosterBackground()
-        setupLoadingShimmer()
+//        setupLoadingShimmer()
         setupLegacyContentHidden()
         setupTicketPassLayout()
         configurePresentationMode()

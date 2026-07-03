@@ -459,7 +459,26 @@ private extension NewLandingVC {
         }
 
         pendingLocationPurpose = purpose
+
+        if let cachedLocation = recentCachedLocation() {
+            pendingLocationPurpose = nil
+            resolveCity(for: cachedLocation, purpose: purpose)
+            return
+        }
+
         locationManager.requestLocation()
+    }
+
+    func recentCachedLocation() -> CLLocation? {
+        guard let location = locationManager.location else {
+            return nil
+        }
+
+        let isRecent = abs(location.timestamp.timeIntervalSinceNow) <= 300
+        let isUsableAccuracy = location.horizontalAccuracy >= 0 &&
+            location.horizontalAccuracy <= 3_000
+
+        return isRecent && isUsableAccuracy ? location : nil
     }
 
     func resolveCity(for location: CLLocation, purpose: LocationBootstrapPurpose) {
@@ -520,8 +539,7 @@ private extension NewLandingVC {
         case .filter:
             guard UserDefault.shared.filterCity == nil else { return }
 
-            if UserDefault.shared.primaryCity?
-                .caseInsensitiveCompare(cityName) == .orderedSame {
+            if UserDefault.shared.isPrimaryCity(cityName) {
                 UserDefault.shared.filterCity = nil
             } else {
                 UserDefault.shared.filterCity = cityName
@@ -532,9 +550,8 @@ private extension NewLandingVC {
     }
 
     func clearMatchingFilterCity(_ cityName: String) {
-        if UserDefault.shared.filterCity?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .caseInsensitiveCompare(cityName) == .orderedSame {
+        if UserDefault.shared.normalizedCity(UserDefault.shared.filterCity) ==
+            UserDefault.shared.normalizedCity(cityName) {
             UserDefault.shared.filterCity = nil
         }
     }

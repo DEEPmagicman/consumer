@@ -316,6 +316,7 @@ class TicketsTVC: UITableViewCell {
     private func applyComingSoonUI() {
         quantityLbl.isHidden = false
         quantityLbl.text = "Coming soon"
+        quantityLbl.font = Constant.Font.geistRegular(size: 14)
         minusView.isHidden = true
         plusView.isHidden = true
         rsvpBtnView.isHidden = true
