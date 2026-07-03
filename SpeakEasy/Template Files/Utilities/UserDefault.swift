@@ -232,6 +232,6 @@ final class UserDefault {
     }
     
     func emptyData() {
-        clearAll()
+        clearAll(except: [.isVersionV3Key])
     }
 }

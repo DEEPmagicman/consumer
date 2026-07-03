@@ -818,11 +818,14 @@ class TicketSelectionViewController: UIViewController {
     @IBAction func onClickContinueBtn(_ sender: Any) {
         guard !isCheckoutInProgress else { return }
 
-        guard let user = UserDefault.shared.user else {
-            Navigate.to.openPhoneLoginPopup(self)
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.onClickContinueBtn(sender)
+            }
             return
         }
 
+        guard let user = UserDefault.shared.user else { return }
         guard let event = event else { return }
 
         switch mode {

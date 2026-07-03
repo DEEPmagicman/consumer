@@ -2251,29 +2251,17 @@ class EventDetailsVC: UIViewController {
     }
 
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
-        checkOutBtn.showLoader(userInteraction: false)
-        
-        guard let user = UserDefault.shared.user else {
-            let loginVC = Navigate.to.loginPopUpVc(self)
-
-            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
-                guard let self else { return }
-
-                Navigate.to.enterVerificationCodeVc(
-                    self,
-                    isFromLogin: true,
-                    otp: otp,
-                    otpRef: otpRef,
-                    phoneNum: phone,
-                    countryCode: countryCode
-                ) { [weak self] in
-                    self?.createInlineBookingAndCheckout(selectedTickets: selectedTickets)
-                }
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.createInlineBookingAndCheckout(selectedTickets: selectedTickets)
             }
             return
         }
 
+        guard let user = UserDefault.shared.user else { return }
         guard let event = event else { return }
+
+        checkOutBtn.showLoader(userInteraction: false)
 
         let ticketsPayload = selectedTickets.map {
             [
@@ -2420,17 +2408,17 @@ class EventDetailsVC: UIViewController {
     }
         
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
-        if UserDefault.shared.isLoggedIn ??  false {
-            if let _ = UserDefault.shared.user?.instagramUserId  {
-                showGuestListPopup()
-            } else {
-                showIntsaPopup()
-            }
-          
-        } else {
-            Alert.showToast("please login ot purches ticket for view gurst list")
+        LoginRequiredCoordinator.perform(from: self) { [weak self] in
+            self?.showGuestListForAuthenticatedUser()
         }
-        
+    }
+
+    private func showGuestListForAuthenticatedUser() {
+        if let _ = UserDefault.shared.user?.instagramUserId {
+            showGuestListPopup()
+        } else {
+            showIntsaPopup()
+        }
     }
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {
@@ -2493,7 +2481,10 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickSaveBtn(_ sender: Any) {
         guard !isSaveLoading else { return }
 
-        guard !UserDefault.shared.isGuest else {
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.onClickSaveBtn(sender)
+            }
             return
         }
 
@@ -4207,10 +4198,14 @@ extension EventDetailsVC: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
 
-        guard let user = UserDefault.shared.user else {
-            Navigate.to.openPhoneLoginPopup(self)
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.checkoutBarDidTapButton()
+            }
             return
         }
+
+        guard let user = UserDefault.shared.user else { return }
         guard let event else { return }
 
         let selectedNormalTickets = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
