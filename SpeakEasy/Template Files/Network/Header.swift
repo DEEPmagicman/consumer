@@ -21,6 +21,7 @@ struct Header {
          "app_version": Bundle.main.releaseVersionNumber,
          "build_number": Bundle.main.buildVersionNumber,
          "platform": "ios",
+         "api_version": "2026",
          "app_bundle_id": Bundle.main.bundleIdentifier ?? "invalid bundle id"]
         
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))

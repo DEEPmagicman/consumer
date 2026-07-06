@@ -195,6 +195,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -280,6 +281,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -312,6 +314,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -336,6 +339,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         

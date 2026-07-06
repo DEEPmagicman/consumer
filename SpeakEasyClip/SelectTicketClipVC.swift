@@ -129,6 +129,7 @@ final class SelectTicketClipVC: UIViewController {
         request.httpMethod = "GET"
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
 
         DispatchQueue.main.async {
@@ -168,6 +169,7 @@ final class SelectTicketClipVC: UIViewController {
         request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
@@ -224,6 +226,7 @@ final class SelectTicketClipVC: UIViewController {
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
+        request.addValue("2026", forHTTPHeaderField: "api_version")
         
         if withLoader {
             DispatchQueue.main.async {
