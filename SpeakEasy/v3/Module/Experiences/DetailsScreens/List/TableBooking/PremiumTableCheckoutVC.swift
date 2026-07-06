@@ -200,7 +200,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func setupHeader() {
-        eventTitleLabel.font      = Constant.Font.geistMedium(size: 22)
+        eventTitleLabel.font      = Constant.Font.geistMedium(size: 24)
         eventTitleLabel.textColor = .white
         eventTitleLabel.numberOfLines = 0
         eventTitleLabel.textAlignment = .left
@@ -210,11 +210,11 @@ private extension PremiumTableCheckoutVC {
         eventTitleMarqueeLabel.install(over: eventTitleLabel, in: contentView, height: 30, horizontalInset: 20)
 
         venueLabel.font      = Constant.Font.geistMedium(size: 12)
-        venueLabel.textColor = UIColor.white.withAlphaComponent(0.55)
+        venueLabel.textColor = UIColor.white
         venueLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(venueLabel)
 
-        dateLabel.font      = Constant.Font.geistRegular(size: 12)
+        dateLabel.font      = Constant.Font.geistMedium(size: 12)
         dateLabel.textColor = UIColor(hex: event?.whiteLabelColor ?? "#E8A030")
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
@@ -393,7 +393,7 @@ private extension PremiumTableCheckoutVC {
         stack.spacing = 2
         stack.translatesAutoresizingMaskIntoConstraints = false
 
-        buyBtn.setTitle("Buy tickets", for: .normal)
+        buyBtn.setTitle("Buy now", for: .normal)
         buyBtn.setTitleColor(UIColor(hex: "#121212"), for: .normal)
         buyBtn.titleLabel?.font        = Constant.Font.geistMedium(size: 16)
         buyBtn.backgroundColor         = UIColor(hex: "#D99935")
@@ -467,7 +467,7 @@ private extension PremiumTableCheckoutVC {
             venueLabel.topAnchor.constraint(equalTo: eventTitleLabel.bottomAnchor, constant: 4),
             venueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
 
-            dateLabel.topAnchor.constraint(equalTo: venueLabel.bottomAnchor, constant: 2),
+            dateLabel.topAnchor.constraint(equalTo: venueLabel.bottomAnchor, constant: 4),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
 
             headerDivider.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
@@ -646,7 +646,7 @@ private extension PremiumTableCheckoutVC {
 
     func configureGuest() {
         let guestText = guestCount == 1 ? "1 guest" : "\(guestCount) guests"
-        guestTag.configure(icon: "person.2", text: guestText)
+        guestTag.configure(icon: "guestIcon", text: guestText)
         let timeText = selectedTimeText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             ? selectedTimeText
             : formattedTime(selectedTimeSlot?.startTime)
@@ -658,7 +658,7 @@ private extension PremiumTableCheckoutVC {
             timeTag.isHidden = true
         }
         guestDisplayRow.configure(
-            icon:  UIImage(systemName: "person.2"),
+            icon:  UIImage(named: "guestIcon"),
             title: "Guests",
             value: "\(guestCount)"
         )
@@ -883,11 +883,11 @@ private extension PremiumTableCheckoutVC {
 
         if let item = checkoutItems.first {
             guestDisplayRow.configure(
-                icon:  UIImage(systemName: "person.2"),
+                icon:  UIImage(named: "guestIcon"),
                 title: "Guests",
                 value: "\(item.guests)"
             )
-            guestTag.configure(icon: "person.2", text: item.guests == 1 ? "1 guest" : "\(item.guests) guests")
+            guestTag.configure(icon: "guestIcon", text: item.guests == 1 ? "1 guest" : "\(item.guests) guests")
 
             if selectedTimeText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty != false,
                let timeSlot = item.timeSlot {
@@ -1853,7 +1853,7 @@ private extension PremiumTableCheckoutVC {
 
     func setBuyLoading(_ isLoading: Bool) {
         buyBtn.isUserInteractionEnabled = !isLoading
-        buyBtn.setTitle(isLoading ? nil : "Buy tickets", for: .normal)
+        buyBtn.setTitle(isLoading ? nil : "Buy now", for: .normal)
         isLoading ? buyLoader.startAnimating() : buyLoader.stopAnimating()
     }
 }

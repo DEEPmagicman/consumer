@@ -179,7 +179,12 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         
         imageView.sd_setImage(
             with: URL(string: model.imageURL ?? ""),
-            placeholderImage: model.placeholder
+            placeholderImage: model.placeholder,
+            options: [
+                .retryFailed,
+                .continueInBackground,
+                .scaleDownLargeImages
+            ]
         )
     }
     

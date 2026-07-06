@@ -7,17 +7,14 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Geist-Bold.ttf">
+            <string>Geist-Bold</string>
+        </array>
         <array key="Geist-Medium.ttf">
             <string>Geist-Medium</string>
         </array>
         <array key="Geist-Regular.ttf">
             <string>Geist-Regular</string>
-        </array>
-        <array key="Poppins-Bold.ttf">
-            <string>Poppins-Bold</string>
-        </array>
-        <array key="Poppins-Medium.ttf">
-            <string>Poppins-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -69,7 +66,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIx-wo-u5Z">
-                                <rect key="frame" x="82.333333333333314" y="82.333333333333314" width="250" height="250.00000000000006"/>
+                                <rect key="frame" x="82.333333333333314" y="82.333333333333314" width="250" height="250"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRCodeAP" translatesAutoresizingMaskIntoConstraints="NO" id="gtb-Ov-8zW">
                                         <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
@@ -78,14 +75,14 @@
                                         <rect key="frame" x="20" y="0.0" width="210" height="250"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Mr-5e-ZdY">
-                                                <rect key="frame" x="91.666666666666671" y="0.0" width="26.333333333333329" height="56"/>
-                                                <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="40"/>
+                                                <rect key="frame" x="90.999999999999986" y="0.0" width="28" height="52"/>
+                                                <fontDescription key="fontDescription" name="Geist-Bold" family="Geist" pointSize="40"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchased on 11:29PM June 21" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRP-Cm-wT1">
-                                                <rect key="frame" x="0.0" y="59.999999999999986" width="210" height="190.33333333333331"/>
-                                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
+                                                <rect key="frame" x="0.0" y="55.999999999999986" width="210" height="194.33333333333331"/>
+                                                <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>

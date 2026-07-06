@@ -7,7 +7,8 @@
 // swiftlint: disable all
 
 import UIKit
-import MapKit
+import CoreLocation
+import GoogleMaps
 import YouTubeiOSPlayerHelper
 import MHLoadingButton
 import SDWebImage
@@ -22,7 +23,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var policyLbl: UILabel!
     @IBOutlet weak var faqsTableView: UITableView!
     @IBOutlet weak var venueNameLbl: UILabel!
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: UIView!
     @IBOutlet weak var venueAddressLbl: UILabel!
     @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
@@ -99,6 +100,7 @@ class EventDetailsVC: UIViewController {
     private let eventTitleMarqueeLabel = PremiumMarqueeLabel()
     private let youTubeShimmerView = ShimmerViewV3(frame: .zero, lighter: true)
     private var isYouTubePlayerReady = false
+    private var googleMapView: GMSMapView?
 
     var venueDetails: ClipVenue?
     var event: Event?
@@ -2536,7 +2538,6 @@ class EventDetailsVC: UIViewController {
                   !savedEventId.isEmpty
             else {
                 resolveAndUnsaveEventAPI(
-                    eventUniqueId: eventUniqueId,
                     previousState: previousState,
                     previousSavedEventId: previousSavedEventId
                 )
@@ -2622,31 +2623,12 @@ class EventDetailsVC: UIViewController {
     }
 
     private func resolveAndUnsaveEventAPI(
-        eventUniqueId: String,
         previousState: Bool,
         previousSavedEventId: String?
     ) {
-
-        eventService.fetchSavedEventId(
-            uniqueId: eventUniqueId
-        ) { [weak self] savedEventId in
-
-            guard let self else { return }
-
-            guard let savedEventId,
-                  !savedEventId.isEmpty
-            else {
-
-                self.rollbackSaveState(
-                    previousState: previousState,
-                    previousSavedEventId: previousSavedEventId
-                )
-                return
-            }
-
-            self.savedEventId = savedEventId
-            self.event?.savedEventId = savedEventId
-
+        
+        if let savedEventId = self.event?.consumerSavedEvents?.id {
+            
             self.unsaveEventAPI(
                 savedEventId: savedEventId,
                 previousState: previousState,
@@ -2850,34 +2832,80 @@ class EventDetailsVC: UIViewController {
         imageURL: String?
     ) {
         mapView.isHidden = false
-        mapView.delegate = self
-        mapView.applySpeakEasyDarkStyle(showPointsOfInterest: false)
-
-        mapView.showsCompass = false
-        mapView.showsScale = false
-        mapView.showsTraffic = false
-        mapView.showsBuildings = false
-        mapView.isRotateEnabled = false
-        mapView.isPitchEnabled = false
-        let oldAnnotations = mapView.annotations.filter { !($0 is MKUserLocation) }
-        mapView.removeAnnotations(oldAnnotations)
+        let googleMapView = configuredGoogleMapView(center: coordinate)
+        googleMapView.clear()
 
         let point = EventDetailsMapAnnotation(
             coordinate: coordinate,
             title: title,
             imageURL: imageURL
         )
-        mapView.addAnnotation(point)
+        let marker = GMSMarker(position: point.coordinate)
+        marker.title = point.title
+        marker.iconView = EventDetailsImageMarkerView(imageURL: point.imageURL)
+        marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
+        marker.map = googleMapView
 
-        let region = MKCoordinateRegion(
-            center: coordinate,
-            latitudinalMeters: 2600,
-            longitudinalMeters: 2600
-        )
+        googleMapView.moveCamera(GMSCameraUpdate.setTarget(coordinate, zoom: 14))
 
-        mapView.setRegion(region, animated: false)
         mapView.layer.cornerRadius = 16
         mapView.clipsToBounds = true
+    }
+
+    private func configuredGoogleMapView(center coordinate: CLLocationCoordinate2D) -> GMSMapView {
+        if let googleMapView {
+            return googleMapView
+        }
+
+        let camera = GMSCameraPosition(
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            zoom: 14
+        )
+        let options = GMSMapViewOptions()
+        options.frame = mapView.bounds
+        options.camera = camera
+        options.backgroundColor = .black
+
+        let googleMapView = GMSMapView(options: options)
+        googleMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        googleMapView.settings.compassButton = false
+        googleMapView.settings.myLocationButton = false
+        googleMapView.settings.rotateGestures = false
+        googleMapView.settings.tiltGestures = false
+        googleMapView.mapStyle = try? GMSMapStyle(
+            jsonString: Self.googleDarkMapStyle(showPointsOfInterest: false)
+        )
+
+        mapView.addSubview(googleMapView)
+        self.googleMapView = googleMapView
+        return googleMapView
+    }
+
+    private static func googleDarkMapStyle(showPointsOfInterest: Bool) -> String {
+        let poiVisibility = showPointsOfInterest ? "simplified" : "off"
+
+        return """
+        [
+          { "elementType": "geometry", "stylers": [{ "color": "#242424" }] },
+          { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] },
+          { "elementType": "labels.text.fill", "stylers": [{ "color": "#8f8f8f" }] },
+          { "elementType": "labels.text.stroke", "stylers": [{ "color": "#101010" }] },
+          { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "color": "#3a3a3a" }] },
+          { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#222222" }] },
+          { "featureType": "poi", "stylers": [{ "visibility": "\(poiVisibility)" }] },
+          { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#262626" }] },
+          { "featureType": "poi", "elementType": "labels.text.fill", "stylers": [{ "color": "#787878" }] },
+          { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#343434" }] },
+          { "featureType": "road", "elementType": "geometry.stroke", "stylers": [{ "color": "#1a1a1a" }] },
+          { "featureType": "road", "elementType": "labels.text.fill", "stylers": [{ "color": "#8a8a8a" }] },
+          { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "color": "#2c2c2c" }] },
+          { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#111111" }] },
+          { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#272727" }] },
+          { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#111111" }] },
+          { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "color": "#555555" }] }
+        ]
+        """
     }
 }
 
@@ -3465,34 +3493,6 @@ extension EventDetailsVC: YTPlayerViewDelegate {
     }
 }
 
-extension EventDetailsVC: MKMapViewDelegate {
-
-    func mapView(
-        _ mapView: MKMapView,
-        rendererFor overlay: MKOverlay
-    ) -> MKOverlayRenderer {
-        mapView.speakEasyDarkOverlayRenderer(for: overlay) ?? MKOverlayRenderer(overlay: overlay)
-    }
-
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let annotation = annotation as? EventDetailsMapAnnotation else {
-            return nil
-        }
-
-        let id = "EventDetailsImagePin"
-        let view = mapView.dequeueReusableAnnotationView(
-            withIdentifier: id
-        ) as? EventDetailsImageAnnotationView ?? EventDetailsImageAnnotationView(
-            annotation: annotation,
-            reuseIdentifier: id
-        )
-
-        view.annotation = annotation
-        view.configure(imageURL: annotation.imageURL)
-        return view
-    }
-}
-
 extension EventDetailsVC: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -3508,7 +3508,7 @@ extension EventDetailsVC: UIGestureRecognizerDelegate {
     }
 }
 
-private final class EventDetailsMapAnnotation: NSObject, MKAnnotation {
+private final class EventDetailsMapAnnotation: NSObject {
 
     let coordinate: CLLocationCoordinate2D
     let title: String?
@@ -3526,14 +3526,15 @@ private final class EventDetailsMapAnnotation: NSObject, MKAnnotation {
     }
 }
 
-private final class EventDetailsImageAnnotationView: MKAnnotationView {
+private final class EventDetailsImageMarkerView: UIView {
 
     private let imageView = UIImageView()
     private let ringView = UIView()
 
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    init(imageURL: String?) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 46, height: 46))
         setup()
+        configure(imageURL: imageURL)
     }
 
     required init?(coder: NSCoder) {
@@ -3541,24 +3542,7 @@ private final class EventDetailsImageAnnotationView: MKAnnotationView {
         setup()
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.sd_cancelCurrentImageLoad()
-        imageView.image = UIImage(named: "newSpeakeasy")
-    }
-
-    func configure(imageURL: String?) {
-        imageView.sd_setImage(
-            with: URL(string: imageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
-        )
-    }
-
     private func setup() {
-        frame = CGRect(x: 0, y: 0, width: 46, height: 46)
-        centerOffset = CGPoint(x: 0, y: -18)
-        canShowCallout = false
-
         ringView.frame = bounds
         ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
         ringView.layer.cornerRadius = bounds.width / 2
@@ -3576,6 +3560,13 @@ private final class EventDetailsImageAnnotationView: MKAnnotationView {
         imageView.layer.cornerRadius = imageView.bounds.width / 2
         imageView.image = UIImage(named: "newSpeakeasy")
         addSubview(imageView)
+    }
+
+    private func configure(imageURL: String?) {
+        imageView.sd_setImage(
+            with: URL(string: imageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
     }
 }
 

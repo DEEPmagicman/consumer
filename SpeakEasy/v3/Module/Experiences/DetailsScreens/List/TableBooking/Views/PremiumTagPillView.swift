@@ -43,7 +43,7 @@ final class PremiumTagPillView: UIView {
         iconView.contentMode    = .scaleAspectFit
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
-        textLabel.font      = Constant.Font.geistRegular(size: 9)
+        textLabel.font      = Constant.Font.geistMedium(size: 10)
         textLabel.textColor = .white
         textLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -70,7 +70,7 @@ final class PremiumTagPillView: UIView {
     }
 
     func configure(icon: String, text: String) {
-        iconView.image = UIImage(systemName: icon)
+        iconView.image = UIImage(named: icon)
         textLabel.text = text
     }
 
@@ -140,8 +140,8 @@ final class PremiumStepperRow: UIView {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         cardView.addSubview(iconView)
 
-        titleLabel.font      = Constant.Font.geistRegular(size: 15)
-        titleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+        titleLabel.font      = Constant.Font.geistRegular(size: 16)
+        titleLabel.textColor = UIColor.white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         cardView.addSubview(titleLabel)
 
@@ -329,8 +329,8 @@ final class PremiumArrivalTimeView: UIView {
         cardView.addSubview(iconView)
 
         titleLabel.text = "Arrival Time"
-        titleLabel.font = Constant.Font.geistRegular(size: 15)
-        titleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+        titleLabel.font = Constant.Font.geistRegular(size: 16)
+        titleLabel.textColor = UIColor.white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         cardView.addSubview(titleLabel)
 
@@ -604,8 +604,8 @@ final class PremiumInfoRow: UIView {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(iconView)
 
-        titleLabel.font      = Constant.Font.geistRegular(size: 15)
-        titleLabel.textColor = UIColor.white.withAlphaComponent(0.85)
+        titleLabel.font      = Constant.Font.geistRegular(size: 16)
+        titleLabel.textColor = UIColor.white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(titleLabel)
 

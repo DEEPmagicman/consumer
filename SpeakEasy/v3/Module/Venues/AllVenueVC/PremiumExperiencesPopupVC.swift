@@ -78,7 +78,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
         let kern = -0.01 * 12.0
 
         let attributedDesc = NSAttributedString(
-            string: "Your direct connection to the world's most coveted live experiences. Secure access, reservations, and curated packages in seconds. By directly powering the live experience economy's top global brands, we eliminate third-party friction and grant you unparalleled access to extraordinary moments.",
+            string: "Your direct connection to the world’s most coveted live experiences. Secure access, reservations, and curated packages in seconds. By powering the world’s leading live experience brands, we eliminate third-party friction and deliver unparalleled access to extraordinary moments.",
             attributes: [
                 .font: Constant.Font.geistRegular(size: 12),
                 .foregroundColor: UIColor.white.withAlphaComponent(0.75),

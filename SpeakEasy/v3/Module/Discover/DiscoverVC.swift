@@ -23,6 +23,7 @@ final class DiscoverVC: UIViewController {
     private var cityCloseContainerConstraints = [NSLayoutConstraint]()
     private var cityLabelTrailingConstraint: NSLayoutConstraint?
     private var cityChipWidthConstraint: NSLayoutConstraint?
+    private var dateChipWidthConstraint: NSLayoutConstraint?
     private var viewControllers = [UIViewController]()
     private var cancellables = Set<AnyCancellable>()
     var startDate: String?
@@ -54,11 +55,13 @@ final class DiscoverVC: UIViewController {
         }
         setupLandingHeader()
         setupCityChipLayout()
+        setupDateChipLayout()
         setupSkeletonView()
         showSkeletonScreen()
 
         showSegmentView(0)
         bindSelectedCity()
+        refreshDateChipLayout()
     }
 
     override func viewDidLayoutSubviews() {
@@ -110,6 +113,16 @@ final class DiscoverVC: UIViewController {
         cityChipWidthConstraint = widthConstraint
     }
 
+    private func setupDateChipLayout() {
+        dateLbl.setContentHuggingPriority(.required, for: .horizontal)
+        dateLbl.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        let widthConstraint = dateView.widthAnchor.constraint(equalToConstant: 0)
+        widthConstraint.priority = .required
+        widthConstraint.isActive = true
+        dateChipWidthConstraint = widthConstraint
+    }
+
     private func setupSkeletonView() {
         shimmerView.translatesAutoresizingMaskIntoConstraints = false
         shimmerView.isHidden = true
@@ -139,7 +152,10 @@ final class DiscoverVC: UIViewController {
     }
 
     func refreshLocationFromDefaults() {
-        applyCityFilter(UserDefault.shared.filterCity)
+        applyCityFilter(
+            UserDefault.shared.filterCity,
+            showsLoading: false
+        )
     }
 
     private func updateDateSelectionUI() {
@@ -189,6 +205,7 @@ final class DiscoverVC: UIViewController {
             }
         }
 
+        self.refreshDateChipLayout()
         self.showSegmentView(self.isDateSelected ? 1 : 0)
     }
 
@@ -250,7 +267,10 @@ final class DiscoverVC: UIViewController {
         return UserDefault.shared.activeCity
     }
 
-    private func applyCityFilter(_ city: String?) {
+    private func applyCityFilter(
+        _ city: String?,
+        showsLoading: Bool = true
+    ) {
         let trimmedCity = city?
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -268,7 +288,10 @@ final class DiscoverVC: UIViewController {
             $0 is DiscoverAllVC
         }) as? DiscoverAllVC {
 
-            discoverAllVC.reloadCityData(city: resolvedCity())
+            discoverAllVC.reloadCityData(
+                city: resolvedCity(),
+                showsLoading: showsLoading
+            )
         }
 
         if let discoverDateFilterVC = children.first(where: {
@@ -321,6 +344,29 @@ final class DiscoverVC: UIViewController {
         cityChipWidthConstraint?.constant = min(max(width, 76), 220)
     }
 
+    private func refreshDateChipLayout() {
+        updateDateChipWidth()
+        dateLbl.invalidateIntrinsicContentSize()
+        dateView.invalidateIntrinsicContentSize()
+        dateView.superview?.setNeedsLayout()
+        dateView.superview?.superview?.setNeedsLayout()
+        dateView.superview?.superview?.superview?.setNeedsLayout()
+
+        UIView.performWithoutAnimation {
+            view.layoutIfNeeded()
+        }
+    }
+
+    private func updateDateChipWidth() {
+        let text = dateLbl.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? "All Dates"
+        let font = dateLbl.font ?? Constant.Font.geistMedium(size: 12)
+        let textWidth = ceil((text as NSString).size(withAttributes: [.font: font]).width)
+        let width = 12 + 12 + 6 + textWidth + 12
+
+        dateChipWidthConstraint?.constant = min(max(width, 88), 240)
+    }
+
     private func bindSelectedCity() {
         UserDefault.shared.localCityPublisher
             .dropFirst()
@@ -335,7 +381,10 @@ final class DiscoverVC: UIViewController {
 
                 guard !hasTemporaryCity else { return }
 
-                self.applyCityFilter(nil)
+                self.applyCityFilter(
+                    nil,
+                    showsLoading: false
+                )
             }
             .store(in: &cancellables)
 

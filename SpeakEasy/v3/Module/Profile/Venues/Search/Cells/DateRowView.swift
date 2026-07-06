@@ -28,6 +28,7 @@ struct SearchEventItem {
     let imageURL: String?
     var venueName: String? = nil
     var event: Event? = nil
+    var cellHeight: CGFloat = 0
 }
 
 struct SearchArtistItem {

@@ -3248,6 +3248,7 @@
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
 				04C0C3D02C04B50F00DF2970 /* ShellScript */,
 				CED54E422C3E585500D3A942 /* Upload dSYM */,
+				025033172CA5E7C9B84CD8A3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3311,7 +3312,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -3509,6 +3510,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		025033172CA5E7C9B84CD8A3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		04C0C3D02C04B50F00DF2970 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3539,13 +3557,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4601,7 +4615,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -4714,12 +4728,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

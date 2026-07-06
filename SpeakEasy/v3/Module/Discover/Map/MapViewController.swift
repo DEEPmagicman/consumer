@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import MapKit
+import CoreLocation
+import GoogleMaps
 
 final class SegmentedTabView: UIView {
 
@@ -171,12 +172,13 @@ class MapViewController: UIViewController {
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var browsingLbl: UILabel!
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: UIView!
     @IBOutlet weak var bottomPanelView: UIView!
     @IBOutlet weak var bottomPanelHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectedCityLbl: UILabel!
     private weak var cityChipView: UIView?
     private var cityChipWidthConstraint: NSLayoutConstraint?
+    private var googleMapView: GMSMapView?
     private let discoverService = DiscoverService()
 
     // MARK: - Tab Bar
@@ -396,19 +398,30 @@ class MapViewController: UIViewController {
     }
 
     private func setupMapView() {
-        mapView.delegate = self
-        mapView.showsCompass = false
-        mapView.showsScale = false
-        mapView.showsUserLocation = false
-        mapView.applySpeakEasyDarkStyle(showPointsOfInterest: true)
-        
-        mapView.setRegion(
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 41.8781, longitude: -87.6298),
-                span: MKCoordinateSpan(latitudeDelta: 0.12, longitudeDelta: 0.12)
-            ),
-            animated: false
+        let camera = GMSCameraPosition(
+            latitude: 41.8781,
+            longitude: -87.6298,
+            zoom: 11.5
         )
+        let options = GMSMapViewOptions()
+        options.frame = mapView.bounds
+        options.camera = camera
+        options.backgroundColor = .black
+
+        let googleMapView = GMSMapView(options: options)
+        googleMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        googleMapView.delegate = self
+        googleMapView.isMyLocationEnabled = false
+        googleMapView.settings.compassButton = false
+        googleMapView.settings.myLocationButton = false
+        googleMapView.settings.rotateGestures = false
+        googleMapView.settings.tiltGestures = false
+        googleMapView.mapStyle = try? GMSMapStyle(
+            jsonString: Self.googleDarkMapStyle(showPointsOfInterest: true)
+        )
+
+        mapView.addSubview(googleMapView)
+        self.googleMapView = googleMapView
     }
 
     private func resetDataAndFetchCurrentTab() {
@@ -686,8 +699,7 @@ class MapViewController: UIViewController {
     }
 
     private func refreshMapAnnotations(animated: Bool) {
-        let oldAnnotations = mapView.annotations.filter { !($0 is MKUserLocation) }
-        mapView.removeAnnotations(oldAnnotations)
+        googleMapView?.clear()
 
         let annotations: [DiscoverMapAnnotation]
 
@@ -708,7 +720,16 @@ class MapViewController: UIViewController {
             annotations = eventAnnotationsWithOffsets()
         }
 
-        mapView.addAnnotations(annotations)
+        annotations.forEach { annotation in
+            let marker = GMSMarker(position: annotation.coordinate)
+            marker.title = annotation.title
+            marker.snippet = annotation.subtitle
+            marker.iconView = DiscoverImageMarkerView(imageURL: annotation.imageURL)
+            marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
+            marker.userData = annotation
+            marker.map = googleMapView
+        }
+
         updateMapRegion(for: annotations, animated: animated)
     }
 
@@ -716,18 +737,43 @@ class MapViewController: UIViewController {
         for annotations: [DiscoverMapAnnotation],
         animated: Bool
     ) {
+        guard let googleMapView else { return }
         guard !annotations.isEmpty else { return }
 
         guard let coordinate = annotations.first?.coordinate else { return }
 
-        mapView.setRegion(
-            MKCoordinateRegion(
-                center: coordinate,
-                latitudinalMeters: 2600,
-                longitudinalMeters: 2600
-            ),
-            animated: animated
-        )
+        let update = GMSCameraUpdate.setTarget(coordinate, zoom: 14)
+        if animated {
+            googleMapView.animate(with: update)
+        } else {
+            googleMapView.moveCamera(update)
+        }
+    }
+
+    private static func googleDarkMapStyle(showPointsOfInterest: Bool) -> String {
+        let poiVisibility = showPointsOfInterest ? "simplified" : "off"
+
+        return """
+        [
+          { "elementType": "geometry", "stylers": [{ "color": "#242424" }] },
+          { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] },
+          { "elementType": "labels.text.fill", "stylers": [{ "color": "#8f8f8f" }] },
+          { "elementType": "labels.text.stroke", "stylers": [{ "color": "#101010" }] },
+          { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "color": "#3a3a3a" }] },
+          { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#222222" }] },
+          { "featureType": "poi", "stylers": [{ "visibility": "\(poiVisibility)" }] },
+          { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#262626" }] },
+          { "featureType": "poi", "elementType": "labels.text.fill", "stylers": [{ "color": "#787878" }] },
+          { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#343434" }] },
+          { "featureType": "road", "elementType": "geometry.stroke", "stylers": [{ "color": "#1a1a1a" }] },
+          { "featureType": "road", "elementType": "labels.text.fill", "stylers": [{ "color": "#8a8a8a" }] },
+          { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "color": "#2c2c2c" }] },
+          { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#111111" }] },
+          { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#272727" }] },
+          { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#111111" }] },
+          { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "color": "#555555" }] }
+        ]
+        """
     }
 
     private func eventAnnotationsWithOffsets() -> [DiscoverMapAnnotation] {
@@ -1078,49 +1124,21 @@ extension MapViewController: UITableViewDataSourcePrefetching {
     }
 }
 
-// MARK: - MKMapViewDelegate
+// MARK: - GMSMapViewDelegate
 
-extension MapViewController: MKMapViewDelegate {
-
-    func mapView(
-        _ mapView: MKMapView,
-        rendererFor overlay: MKOverlay
-    ) -> MKOverlayRenderer {
-        mapView.speakEasyDarkOverlayRenderer(for: overlay) ?? MKOverlayRenderer(overlay: overlay)
-    }
+extension MapViewController: GMSMapViewDelegate {
 
     func mapView(
-        _ mapView: MKMapView,
-        viewFor annotation: MKAnnotation
-    ) -> MKAnnotationView? {
-        guard let annotation = annotation as? DiscoverMapAnnotation else {
-            return nil
-        }
-
-        let identifier = "DiscoverImagePin"
-        let annotationView = mapView.dequeueReusableAnnotationView(
-            withIdentifier: identifier
-        ) as? DiscoverImageAnnotationView ?? DiscoverImageAnnotationView(
-            annotation: annotation,
-            reuseIdentifier: identifier
-        )
-
-        annotationView.annotation = annotation
-        annotationView.configure(imageURL: annotation.imageURL)
-        return annotationView
-    }
-
-    func mapView(
-        _ mapView: MKMapView,
-        didSelect view: MKAnnotationView
-    ) {
-        guard let annotation = view.annotation as? DiscoverMapAnnotation else { return }
-        mapView.deselectAnnotation(annotation, animated: false)
+        _ mapView: GMSMapView,
+        didTap marker: GMSMarker
+    ) -> Bool {
+        guard let annotation = marker.userData as? DiscoverMapAnnotation else { return false }
         navigate(to: annotation.kind)
+        return true
     }
 }
 
-private final class DiscoverMapAnnotation: NSObject, MKAnnotation {
+private final class DiscoverMapAnnotation: NSObject {
 
     enum Kind {
         case venue(ClipVenue)
@@ -1149,14 +1167,15 @@ private final class DiscoverMapAnnotation: NSObject, MKAnnotation {
     }
 }
 
-private final class DiscoverImageAnnotationView: MKAnnotationView {
+private final class DiscoverImageMarkerView: UIView {
 
     private let imageView = UIImageView()
     private let ringView = UIView()
 
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    init(imageURL: String?) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 46, height: 46))
         setup()
+        configure(imageURL: imageURL)
     }
 
     required init?(coder: NSCoder) {
@@ -1164,24 +1183,7 @@ private final class DiscoverImageAnnotationView: MKAnnotationView {
         setup()
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.sd_cancelCurrentImageLoad()
-        imageView.image = UIImage(named: "newSpeakeasy")
-    }
-
-    func configure(imageURL: String?) {
-        imageView.sd_setImage(
-            with: URL(string: imageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
-        )
-    }
-
     private func setup() {
-        frame = CGRect(x: 0, y: 0, width: 46, height: 46)
-        centerOffset = CGPoint(x: 0, y: -18)
-        canShowCallout = false
-
         ringView.frame = bounds
         ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
         ringView.layer.cornerRadius = bounds.width / 2
@@ -1199,6 +1201,13 @@ private final class DiscoverImageAnnotationView: MKAnnotationView {
         imageView.layer.cornerRadius = imageView.bounds.width / 2
         imageView.image = UIImage(named: "newSpeakeasy")
         addSubview(imageView)
+    }
+
+    private func configure(imageURL: String?) {
+        imageView.sd_setImage(
+            with: URL(string: imageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
     }
 }
 

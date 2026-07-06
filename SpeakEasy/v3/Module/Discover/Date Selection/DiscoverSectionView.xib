@@ -30,7 +30,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X6o-bU-gzF">
-                    <rect key="frame" x="0.0" y="297" width="393" height="258"/>
+                    <rect key="frame" x="0.0" y="293.66666666666669" width="393" height="265.00000000000006"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events tonight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pbo-pP-FyB">
                             <rect key="frame" x="16.000000000000007" y="10" width="108.66666666666669" height="22"/>
@@ -70,7 +70,7 @@
                             </constraints>
                         </view>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1Lt-ac-7xw">
-                            <rect key="frame" x="0.0" y="48" width="393" height="210"/>
+                            <rect key="frame" x="0.0" y="55" width="393" height="210"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="210" id="pBa-no-Id1"/>
@@ -102,7 +102,7 @@
                         <constraint firstItem="1Lt-ac-7xw" firstAttribute="leading" secondItem="X6o-bU-gzF" secondAttribute="leading" id="ZYE-P6-4xP"/>
                         <constraint firstAttribute="bottom" secondItem="1Lt-ac-7xw" secondAttribute="bottom" id="p2C-N4-Yxs"/>
                         <constraint firstItem="cfi-li-7zg" firstAttribute="centerY" secondItem="Pbo-pP-FyB" secondAttribute="centerY" id="yHb-OB-E0P"/>
-                        <constraint firstItem="1Lt-ac-7xw" firstAttribute="top" secondItem="cfi-li-7zg" secondAttribute="bottom" constant="10" id="zJS-I4-O1i"/>
+                        <constraint firstItem="1Lt-ac-7xw" firstAttribute="top" secondItem="cfi-li-7zg" secondAttribute="bottom" constant="17" id="zJS-I4-O1i"/>
                     </constraints>
                 </view>
             </subviews>

@@ -135,13 +135,11 @@ final class PremiumSearchBarView: UIControl {
     func setText(_ text: String) {
         textField.text = text
         clearButton.isHidden = text.isEmpty
-        onTextChanged?(text)
     }
 
     func clear() {
         textField.text = ""
         clearButton.isHidden = true
-        onTextChanged?("")
     }
 
     func focus() {
@@ -167,7 +165,6 @@ final class PremiumSearchBarView: UIControl {
         textField.text = ""
         clearButton.isHidden = true
 
-        onTextChanged?("")
         onClear?()
     }
 

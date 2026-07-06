@@ -52,7 +52,7 @@ final class PremiumInfoPillView: UIView {
         addSubview(iconView)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = Constant.Font.geistRegular(size: 9)
+        titleLabel.font = Constant.Font.geistMedium(size: 10)
         titleLabel.textColor = UIColor.white
         titleLabel.numberOfLines = 1
         addSubview(titleLabel)
@@ -92,7 +92,6 @@ final class PremiumInfoPillView: UIView {
         switch style {
             
         case .guests:
-            iconView.image = UIImage(resource: .guestIcon)
             iconView.image = UIImage(resource: .guestIcon)
             
         case .time:

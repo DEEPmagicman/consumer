@@ -9,6 +9,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 import Firebase
+import GoogleMaps
 import LGSideMenuController
 
 @main
@@ -41,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        configureGoogleMaps()
         self.application = application
 
         IQKeyboardManager.shared.enable = true
@@ -57,6 +59,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefault.shared.isVersionV3 = true
         launchApplication()
         return true
+    }
+
+    private func configureGoogleMaps() {
+        guard
+            let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+            let plist = NSDictionary(contentsOfFile: path),
+            let apiKey = plist["API_KEY"] as? String,
+            apiKey.isEmpty == false
+        else {
+            return
+        }
+
+        GMSServices.provideAPIKey(apiKey)
     }
 
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

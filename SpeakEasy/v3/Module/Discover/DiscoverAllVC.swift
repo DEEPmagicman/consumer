@@ -229,11 +229,13 @@ private extension DiscoverAllVC {
             guard isSuccess,
                   let data else {
 
-                Alert.showAlertSheet(
-                    style: .alert,
-                    title: errMsg ?? "Something went wrong",
-                    message: ""
-                )
+                if self.activeLoadShowsSkeleton {
+                    Alert.showAlertSheet(
+                        style: .alert,
+                        title: errMsg ?? "Something went wrong",
+                        message: ""
+                    )
+                }
 
                 self.finishInitialLoad(loadID: loadID)
                 return
@@ -279,29 +281,34 @@ private extension DiscoverAllVC {
 
 private extension DiscoverAllVC {
 
-    func refreshAllList(showsSkeleton: Bool = true) {
+    func refreshAllList(
+        showsSkeleton: Bool = true,
+        clearsExistingContent: Bool = true
+    ) {
 
-        todaysEvents.removeAll()
-        allEvents.removeAll()
-        venues.removeAll()
+        if clearsExistingContent {
+            todaysEvents.removeAll()
+            allEvents.removeAll()
+            venues.removeAll()
 
-        todaysEventsView.configure(
-            type: .tonightEvents,
-            data: .events([]),
-            city: selectedCity
-        )
+            todaysEventsView.configure(
+                type: .tonightEvents,
+                data: .events([]),
+                city: selectedCity
+            )
 
-        venuesView.configure(
-            type: .venues,
-            data: .venues([]),
-            city: selectedCity
-        )
+            venuesView.configure(
+                type: .venues,
+                data: .venues([]),
+                city: selectedCity
+            )
 
-        allEventsView.configure(
-            type: .allEvents,
-            data: .events([]),
-            city: selectedCity
-        )
+            allEventsView.configure(
+                type: .allEvents,
+                data: .events([]),
+                city: selectedCity
+            )
+        }
 
         let loadID = beginInitialLoading(showsSkeleton: showsSkeleton)
         fetchDiscoverData(loadID: loadID)
@@ -332,15 +339,36 @@ private extension DiscoverAllVC {
 
 extension DiscoverAllVC {
 
-    func reloadCityData(city: String) {
+    func reloadCityData(
+        city: String,
+        showsLoading: Bool = true
+    ) {
 
         let resolvedCity = city
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        selectedCity = resolvedCity.isEmpty
+        let nextCity = resolvedCity.isEmpty
             ? UserDefault.shared.activeCity
             : resolvedCity
-        refreshAllList()
+
+        guard nextCity != selectedCity else {
+            return
+        }
+
+        selectedCity = nextCity
+
+        let hasContent =
+            !todaysEvents.isEmpty ||
+            !allEvents.isEmpty ||
+            !venues.isEmpty
+
+        let shouldShowSkeleton =
+            showsLoading || !hasContent
+
+        refreshAllList(
+            showsSkeleton: shouldShowSkeleton,
+            clearsExistingContent: shouldShowSkeleton
+        )
     }
 }
 

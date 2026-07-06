@@ -57,6 +57,7 @@ struct Event: Codable {
     var eventGallery: [EventGallery]?
     var eventAddOnTicket: [EventTicket]?
     var hasSavedEvent: Bool?
+    var consumerSavedEvents: ConsumerSavedEvent?
     var savedEventId: String?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
@@ -249,6 +250,7 @@ struct Event: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(flyer, forKey: .flyer)
+        try container.encodeIfPresent(consumerSavedEvents, forKey: .consumerSavedEvents)
         try container.encode(customVenue, forKey: .customVenue)
         try container.encode(id, forKey: .id)
         try container.encode(uniqueId, forKey: .uniqueId)
@@ -285,6 +287,14 @@ struct Event: Codable {
         try container.encode(allowGuestCheckin, forKey: .allowGuestCheckin)
         try container.encode(isPremium, forKey: .isPremium)
     }
+}
+
+struct ConsumerSavedEvent: Codable {
+    let id: String
+    let consumerUserId: String
+    let eventId: String
+    let status: String
+    let isDeleted: Bool
 }
 
 struct EventResponse: Codable {

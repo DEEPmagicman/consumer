@@ -641,7 +641,7 @@ private final class LocationPermissionPromptVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Find the best\nevents around you"
+        titleLabel.text = "Find better\nexperiences near you"
         titleLabel.textAlignment = .center
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 0
@@ -649,7 +649,7 @@ private final class LocationPermissionPromptVC: UIViewController {
 
         let bodyLabel = UILabel()
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        bodyLabel.text = "Stay updated on the events, venues, reservations, and live experiences happening around you."
+        bodyLabel.text = "Stay updated on the events, venues, reservations, and live experiences happening near you."
         bodyLabel.textAlignment = .center
         bodyLabel.textColor = UIColor.white.withAlphaComponent(0.58)
         bodyLabel.numberOfLines = 0

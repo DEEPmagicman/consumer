@@ -13,6 +13,7 @@ target 'SpeakEasy-Consumer' do
   pod 'OTPFieldView'
   pod 'SVProgressHUD'
   pod 'GoogleSignIn'
+  pod 'GoogleMaps'
   pod 'JWTDecode'
   pod 'NBBottomSheet', '~> 1.2'
   pod 'LGSideMenuController'
