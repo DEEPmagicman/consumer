@@ -287,7 +287,7 @@ extension UpSellClipVC: WebSocketCallBackDelegate {
             }
             if hasMatchedTicket {
                 if navigationController?.viewControllers.last is UpSellClipVC {
-                    alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
+                    alertPopup("Update", "The venue updated the ticket options.") {
                         self.navigationController?.popToRootViewController(animated: true)
                     }
                 }

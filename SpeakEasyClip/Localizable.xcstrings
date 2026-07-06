@@ -541,17 +541,6 @@
         }
       }
     },
-    "Venue you trying to booking, updated it's ticket" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lugar que estás intentando reservar, actualizado su ticket"
-          }
-        }
-      }
-    },
     "Venue your trying to booking is closed" : {
       "extractionState" : "manual",
       "localizations" : {

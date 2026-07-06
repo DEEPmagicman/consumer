@@ -1812,7 +1812,7 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
         }
         if hasMatchedTicket {
             if navigationController?.viewControllers.last is CheckOutClipVC {
-                alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
+                alertPopup("Update", "The venue updated the ticket options.") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             }
@@ -1828,7 +1828,7 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
         })
         if upSellTickets.count != 0 {
             if navigationController?.viewControllers.last is CheckOutClipVC {
-                alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
+                alertPopup("Update", "The venue updated the ticket options.") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             }
