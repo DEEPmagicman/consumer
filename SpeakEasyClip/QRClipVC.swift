@@ -105,7 +105,7 @@ final class QRClipVC: UIViewController {
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         request.httpMethod = "GET"
         
         DispatchQueue.main.async {
@@ -149,7 +149,7 @@ final class QRClipVC: UIViewController {
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         request.httpMethod = "GET"
         
         DispatchQueue.main.async {

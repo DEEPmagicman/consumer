@@ -405,7 +405,7 @@ extension URLSession {
     func fetchData(at url: URL, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         var request = URLRequest(url: url)
         request.addValue("Bearer \(UserDefault.shared.accessToken ?? "")", forHTTPHeaderField: "Authorization")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         self.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(nil, error)

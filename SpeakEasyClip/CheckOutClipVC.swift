@@ -394,7 +394,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -495,7 +495,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -552,7 +552,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         request.httpMethod = "GET"
         
         DispatchQueue.main.async {
@@ -617,7 +617,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -831,7 +831,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         )
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         
         request.httpBody = bodyData
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
@@ -952,7 +952,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1017,7 +1017,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1081,7 +1081,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "GET"
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1141,7 +1141,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1406,7 +1406,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1499,7 +1499,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -1599,7 +1599,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("2026", forHTTPHeaderField: "api_version")
+        request.addValue("2027", forHTTPHeaderField: "api_version")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
