@@ -83,6 +83,10 @@ private struct GlassButtonView: View {
                         }
                     }
                     .frame(width: buttonSize, height: buttonSize)
+                    .background(
+                        Circle()
+                            .fill(Color.white.opacity(0.08))
+                    )
                     .glassEffect(.regular.interactive(), in: .circle)
                     
                 }
