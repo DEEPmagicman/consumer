@@ -213,6 +213,7 @@ final class NewLandingVC: UIViewController {
         customTabBar.configure(items: [
             FloatingTabItem(title: "Discover", icon: UIImage(resource: .discoverIconV3)),
             FloatingTabItem(title: "Premium", icon: UIImage(resource: .experiencesIcon)),
+            FloatingTabItem(title: "Orders", icon: UIImage(resource: .ordersIcon)),
             FloatingTabItem(title: "Search", icon: UIImage(resource: .searchIconV3))
         ])
 

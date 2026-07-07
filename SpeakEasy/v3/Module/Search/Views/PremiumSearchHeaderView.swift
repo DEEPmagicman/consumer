@@ -22,7 +22,7 @@ final class PremiumSearchHeaderView: UIView {
     // MARK: Profile
     
     private let avatarGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 15,
+        cornerRadius: 16,
         fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.10),
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
@@ -43,7 +43,7 @@ final class PremiumSearchHeaderView: UIView {
     private let mapButton = UIButton(type: .system)
     
     private let mapGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 15,
+        cornerRadius: 18,
         fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.08),
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
@@ -157,8 +157,8 @@ final class PremiumSearchHeaderView: UIView {
             
             avatarGlassView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarGlassView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarGlassView.widthAnchor.constraint(equalToConstant: 30),
-            avatarGlassView.heightAnchor.constraint(equalToConstant: 30),
+            avatarGlassView.widthAnchor.constraint(equalToConstant: 32),
+            avatarGlassView.heightAnchor.constraint(equalToConstant: 32),
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
@@ -181,8 +181,8 @@ final class PremiumSearchHeaderView: UIView {
             
             mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
             mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            mapButton.widthAnchor.constraint(equalToConstant: 32),
-            mapButton.heightAnchor.constraint(equalToConstant: 32),
+            mapButton.widthAnchor.constraint(equalToConstant: 36),
+            mapButton.heightAnchor.constraint(equalToConstant: 36),
             
             mapGlassView.leadingAnchor.constraint(equalTo: mapButton.leadingAnchor),
             mapGlassView.trailingAnchor.constraint(equalTo: mapButton.trailingAnchor),

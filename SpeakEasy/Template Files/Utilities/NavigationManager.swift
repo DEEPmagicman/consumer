@@ -193,6 +193,13 @@ final class Navigate {
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overFullScreen
         sender.tabBarController?.present(vc, animated: false)
+        let presenter =
+                sender.tabBarController ??
+                sender.presentedViewController ??
+                sender.navigationController ??
+                sender
+
+        presenter.present(vc, animated: false)
     }
     
     func presentGSImageViewerController(_ sender: UIViewController, imageView: UIImageView) {

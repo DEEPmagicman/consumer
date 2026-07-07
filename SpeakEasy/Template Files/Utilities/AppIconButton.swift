@@ -69,21 +69,23 @@ private struct GlassButtonView: View {
     var body: some View {
 
         Group {
-            if #available(iOS 26.0, *) {
-
-                Button(action: action) {
-                    if let image = iconType.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: iconSize, height: iconSize)
-                            .foregroundStyle(Color(tintColor))
+            if AppDesign.useModernIOS26Design {
+                if #available(iOS 26.0, *) {
+                    
+                    Button(action: action) {
+                        if let image = iconType.image {
+                            Image(uiImage: image)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: iconSize, height: iconSize)
+                                .foregroundStyle(Color(tintColor))
+                        }
                     }
+                    .frame(width: buttonSize, height: buttonSize)
+                    .glassEffect(.regular.interactive(), in: .circle)
+                    
                 }
-                .frame(width: buttonSize, height: buttonSize)
-                .glassEffect(.regular.interactive(), in: .circle)
-
             } else {
 
                 Button(action: action) {
@@ -97,8 +99,7 @@ private struct GlassButtonView: View {
                     }
                 }
                 .frame(width: buttonSize, height: buttonSize)
-                .background(Color.white.opacity(0.2))
-                .clipShape(Circle())
+                .glassFallback()
             }
         }
     }
@@ -308,5 +309,32 @@ final class AppIconButton: UIButton {
                 )
             )
         }
+    }
+}
+
+struct GlassFallbackModifier: ViewModifier {
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                ZStack {
+                    Circle()
+                        .fill(.ultraThinMaterial)
+                    
+                    Circle()
+                        .fill(Color.white.opacity(0.02))
+                }
+            )
+            .overlay(
+                Circle()
+                    .stroke(Color.white.opacity(0.6), lineWidth: 0.2)
+            )
+            .shadow(radius: 10, y: 4)
+    }
+}
+
+extension View {
+    func glassFallback() -> some View {
+        modifier(GlassFallbackModifier())
     }
 }
