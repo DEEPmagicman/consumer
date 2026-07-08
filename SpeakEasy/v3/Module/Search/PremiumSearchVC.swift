@@ -78,13 +78,19 @@ final class PremiumSearchVC: UIViewController {
     private var searchWorkItem: DispatchWorkItem?
     private var searchRequestId = UUID()
     private var currentQuery = ""
+    private var displayedQuery: String?
     private var hasMoreVenues = false
     private var hasMoreEvents = false
     private var isInitialLoading = false
     private var isLoadingMoreEvents = false
+    private var paginatingSection: Int?
     private let venueTake = 10
     private let eventTake = 10
     private var lastCollectionLayoutWidth: CGFloat = 0
+    private var lastKeyboardBottomInset: CGFloat = -1
+    private var appliedGradientBounds: CGRect = .zero
+    private var emptyStateVisible = false
+    private var heightCache: [String: CGFloat] = [:]
 
     init() {
         let layout = PinterestLayout()
@@ -92,7 +98,7 @@ final class PremiumSearchVC: UIViewController {
         layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: 34, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
-        layout.showsHeaders = true
+        layout.showsHeaders = false
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
@@ -105,7 +111,7 @@ final class PremiumSearchVC: UIViewController {
 //        layout.sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 34, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
-        layout.showsHeaders = true
+        layout.showsHeaders = false
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(coder: coder)
@@ -113,6 +119,7 @@ final class PremiumSearchVC: UIViewController {
     }
 
     deinit {
+        searchWorkItem?.cancel()
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -134,7 +141,10 @@ final class PremiumSearchVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.applyScreenBgGradient()
+        if appliedGradientBounds != view.bounds {
+            appliedGradientBounds = view.bounds
+            view.applyScreenBgGradient()
+        }
         refreshCollectionLayoutIfNeeded()
     }
 
@@ -176,6 +186,11 @@ final class PremiumSearchVC: UIViewController {
             PremiumSearchHeaderSupplementaryView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: PremiumSearchHeaderSupplementaryView.identifier
+        )
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier
         )
         view.addSubview(collectionView)
     }
@@ -225,44 +240,50 @@ final class PremiumSearchVC: UIViewController {
 
     private func applySearch(_ text: String) {
         searchWorkItem?.cancel()
-        currentQuery = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        searchRequestId = UUID()
+        let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard query != currentQuery || isInitialLoading || displayedQuery != query else {
+            return
+        }
 
-        venues.removeAll()
-        events.removeAll()
-        artists.removeAll()
-        hasMoreVenues = false
-        hasMoreEvents = false
-        isInitialLoading = true
+        currentQuery = query
+        searchRequestId = UUID()
         isLoadingMoreEvents = false
+        paginatingSection = nil
         updateEmptyState(animated: false)
-        reloadCollectionWithoutAnimation()
 
         let requestId = searchRequestId
-        let query = currentQuery
+        let isFirstLoad = events.isEmpty && venues.isEmpty && artists.isEmpty
         let workItem = DispatchWorkItem { [weak self] in
-            self?.fetchInitialSearch(
+            guard let self,
+                  self.searchRequestId == requestId,
+                  self.currentQuery == query else { return }
+
+            self.showInitialLoadingIfNeeded(clearExistingResults: true)
+            self.loadSearch(
+                reset: true,
                 query: query,
                 requestId: requestId
             )
         }
 
         searchWorkItem = workItem
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.35,
-            execute: workItem
-        )
+        let delay: TimeInterval = isFirstLoad ? 0 : 0.35
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
     }
 
-    private func fetchInitialSearch(
+    private func loadSearch(
+        reset: Bool,
         query: String,
         requestId: UUID
     ) {
+        let oldCount = events.count
+        let eventSkip = reset ? 0 : oldCount
+
         searchService.search(
             keyword: query,
             venueSkip: 0,
-            venueTake: venueTake,
-            eventSkip: 0,
+            venueTake: reset ? venueTake : 0,
+            eventSkip: eventSkip,
             eventTake: eventTake
         ) { [weak self] isSuccess, _, result in
             DispatchQueue.main.async {
@@ -270,71 +291,57 @@ final class PremiumSearchVC: UIViewController {
                       self.searchRequestId == requestId,
                       self.currentQuery == query else { return }
 
-                self.isInitialLoading = false
+                if reset {
+                    self.isInitialLoading = false
+                    self.displayedQuery = query
+                }
 
                 guard isSuccess else {
-                    self.venues.removeAll()
-                    self.events.removeAll()
-                    self.artists.removeAll()
-                    self.hasMoreVenues = false
+                    if reset {
+                        self.venues.removeAll()
+                        self.events.removeAll()
+                        self.artists.removeAll()
+                        self.hasMoreVenues = false
+                        self.heightCache.removeAll(keepingCapacity: true)
+                        self.reloadCollectionWithoutAnimation()
+                    } else {
+                        self.isLoadingMoreEvents = false
+                        self.paginatingSection = nil
+                        self.invalidatePaginationFooter()
+                    }
+
                     self.hasMoreEvents = false
+                    self.updateEmptyState(animated: true)
+                    return
+                }
+
+                if reset {
+                    self.venues = result.venues
+                    self.events = result.events
+                    self.artists = result.artists
+                    self.hasMoreVenues = result.hasMoreVenues
+                    self.hasMoreEvents = result.hasMoreEvents
+                    self.heightCache.removeAll(keepingCapacity: true)
                     self.reloadCollectionWithoutAnimation()
                     self.updateEmptyState(animated: true)
                     return
                 }
 
-                self.venues = result.venues
-                self.events = result.events
-                self.artists = result.artists
-                self.hasMoreVenues = result.hasMoreVenues
-                self.hasMoreEvents = result.hasMoreEvents
-                self.reloadCollectionWithoutAnimation()
-                self.updateEmptyState(animated: true)
-            }
-        }
-    }
-
-    private func loadMoreEventsIfNeeded() {
-        guard !isInitialLoading,
-              !isLoadingMoreEvents,
-              hasMoreEvents else { return }
-
-        isLoadingMoreEvents = true
-        let query = currentQuery
-        let requestId = searchRequestId
-        let currentCount = events.count
-
-        searchService.search(
-            keyword: query,
-            venueSkip: 0,
-            venueTake: 0,
-            eventSkip: currentCount,
-            eventTake: eventTake
-        ) { [weak self] isSuccess, _, result in
-            DispatchQueue.main.async {
-                guard let self,
-                      self.searchRequestId == requestId,
-                      self.currentQuery == query else { return }
-
-                self.isLoadingMoreEvents = false
-
-                guard isSuccess else {
-                    self.hasMoreEvents = false
-                    return
-                }
-
-                let newEvents = result.events
+                let incomingEvents = result.events
                 self.hasMoreEvents = result.hasMoreEvents
 
-                guard !newEvents.isEmpty else {
+                guard !incomingEvents.isEmpty else {
+                    self.isLoadingMoreEvents = false
+                    self.paginatingSection = nil
+                    self.invalidatePaginationFooter()
                     self.updateEmptyState(animated: true)
                     return
                 }
 
-                let oldCount = self.events.count
-                self.events += newEvents
+                self.events += incomingEvents
 
-                let indexPaths = (oldCount..<self.events.count).map {
+                let newCount = self.events.count
+                let indexPaths = (oldCount..<newCount).map {
                     IndexPath(item: $0, section: 0)
                 }
 
@@ -344,27 +351,84 @@ final class PremiumSearchVC: UIViewController {
         }
     }
 
-    private func reloadCollectionWithoutAnimation() {
-        // Prevent implicit cross-fade/frame animations on full reloads (search, filter change, etc.)
+    private func loadMoreEventsIfNeeded() {
+        guard !isInitialLoading,
+              !isLoadingMoreEvents,
+              hasMoreEvents,
+              !events.isEmpty else { return }
+
+        isLoadingMoreEvents = true
+        paginatingSection = 0
+
         UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+
+        let query = currentQuery
+        let requestId = searchRequestId
+
+        loadSearch(
+            reset: false,
+            query: query,
+            requestId: requestId
+        )
+    }
+
+    private func reloadCollectionWithoutAnimation() {
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
             collectionView.reloadData()
+            collectionView.layoutIfNeeded()
         }
     }
 
     private func insertEventsWithoutAnimation(_ indexPaths: [IndexPath]) {
-        guard !indexPaths.isEmpty else { return }
-
-        // PinterestLayout is a masonry layout, so appending items recalculates
-        // frames for every visible cell (not just the new ones). Doing this inside
-        // a plain insertItems(at:) call lets UICollectionView apply its default
-        // implicit animation to those frame changes, which is what caused the
-        // flicker/jump on scroll during pagination. Wrapping the batch update in
-        // performWithoutAnimation keeps it a single, animation-free layout pass.
-        UIView.performWithoutAnimation {
-            collectionView.performBatchUpdates({
-                collectionView.insertItems(at: indexPaths)
-            }, completion: nil)
+        guard !indexPaths.isEmpty else {
+            isLoadingMoreEvents = false
+            paginatingSection = nil
+            invalidatePaginationFooter()
+            return
         }
+
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates {
+                collectionView.insertItems(at: indexPaths)
+            } completion: { [weak self] _ in
+                guard let self else { return }
+
+                self.isLoadingMoreEvents = false
+                self.paginatingSection = nil
+
+                UIView.performWithoutAnimation {
+                    self.collectionView.collectionViewLayout.invalidateLayout()
+                }
+            }
+        }
+    }
+
+    private func invalidatePaginationFooter() {
+        if let layout = collectionView.collectionViewLayout as? PinterestLayout {
+            layout.invalidateFooter()
+        } else {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
+    private func showInitialLoadingIfNeeded(clearExistingResults: Bool) {
+        if clearExistingResults {
+            venues.removeAll(keepingCapacity: true)
+            events.removeAll(keepingCapacity: true)
+            artists.removeAll(keepingCapacity: true)
+            heightCache.removeAll(keepingCapacity: true)
+            hasMoreVenues = false
+            hasMoreEvents = false
+            paginatingSection = nil
+        }
+
+        isLoadingMoreEvents = false
+        isInitialLoading = true
+        updateEmptyState(animated: false)
+        reloadCollectionWithoutAnimation()
     }
 
     private func updateEmptyState(animated: Bool) {
@@ -374,6 +438,9 @@ final class PremiumSearchVC: UIViewController {
         events.isEmpty
         && venues.isEmpty
         && artists.isEmpty
+
+        guard shouldShow != emptyStateVisible else { return }
+        emptyStateVisible = shouldShow
 
         let updates = {
             self.emptyView.alpha = shouldShow ? 1 : 0
@@ -407,6 +474,7 @@ final class PremiumSearchVC: UIViewController {
               abs(width - lastCollectionLayoutWidth) > 0.5 else { return }
 
         lastCollectionLayoutWidth = width
+        heightCache.removeAll(keepingCapacity: true)
         UIView.performWithoutAnimation {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
@@ -441,6 +509,9 @@ final class PremiumSearchVC: UIViewController {
         } else {
             bottomInset = 0
         }
+
+        guard abs(bottomInset - lastKeyboardBottomInset) > 0.5 else { return }
+        lastKeyboardBottomInset = bottomInset
 
         UIView.animate(withDuration: duration, delay: 0, options: options) {
             self.collectionView.contentInset.bottom = bottomInset
@@ -532,6 +603,17 @@ extension PremiumSearchVC: UICollectionViewDataSource {
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath
     ) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: PaginationShimmerFooterView.identifier,
+                for: indexPath
+            ) as! PaginationShimmerFooterView
+
+            footer.isHidden = !isLoadingMoreEvents || paginatingSection != indexPath.section
+            return footer
+        }
+
         let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: PremiumSearchHeaderSupplementaryView.identifier,
@@ -594,17 +676,22 @@ extension PremiumSearchVC: UICollectionViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let threshold: CGFloat = 240
+        guard !isInitialLoading else { return }
+        guard !isLoadingMoreEvents else { return }
+        guard hasMoreEvents else { return }
+        guard !events.isEmpty else { return }
+
         let offsetY = scrollView.contentOffset.y
         let visibleHeight = scrollView.bounds.height
         let contentHeight = scrollView.contentSize.height
 
-        guard contentHeight > 0,
-              offsetY + visibleHeight + threshold >= contentHeight else {
-            return
-        }
+        guard contentHeight > visibleHeight else { return }
 
-        loadMoreEventsIfNeeded()
+        let threshold: CGFloat = 280
+
+        if offsetY + visibleHeight + threshold >= contentHeight {
+            loadMoreEventsIfNeeded()
+        }
     }
 }
 
@@ -624,6 +711,11 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
         }
 
         let event = events[indexPath.item]
+        let cacheKey = "\(event.id)-\(Int(width.rounded(.toNearestOrAwayFromZero)))"
+        if let cachedHeight = heightCache[cacheKey] {
+            return cachedHeight
+        }
+
         let imageHeight = width * 1.2
         let titleFont = Constant.Font.geistMedium(size: 15)
         let venueFont = Constant.Font.geistMedium(size: 14)
@@ -650,7 +742,9 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
             context: nil
         ).height
 
-        return ceil(imageHeight + 16 + titleHeight + 3 + venueHeight + 10 + dateHeight)
+        let height = ceil(imageHeight + 16 + titleHeight + 3 + venueHeight + 10 + dateHeight)
+        heightCache[cacheKey] = height
+        return height
     }
 
     func collectionView(
@@ -664,7 +758,10 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
         _ collectionView: UICollectionView,
         referenceHeightForFooterIn section: Int
     ) -> CGFloat {
-        0
+        guard isLoadingMoreEvents else { return 0 }
+        guard paginatingSection == section else { return 0 }
+
+        return 300
     }
 }
 
@@ -685,6 +782,8 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     private let artistShimmerContainer = UIView()
     private let artistShimmerStackView = UIStackView()
     private let titleLabel = UILabel()
+    private var artistViews: [PremiumSearchArtistResultView] = []
+    private var configuredArtistIDs: [String] = []
 
     var onViewVenue: ((SearchVenueItem) -> Void)?
     var onViewMoreVenues: (() -> Void)?
@@ -783,6 +882,16 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         artistStackView.spacing = PremiumSearchHeaderMetrics.artistItemSpacing
         artistScrollView.addSubview(artistStackView)
 
+        for _ in 0..<10 {
+            let view = PremiumSearchArtistResultView()
+            view.onViewArtist = { [weak self] artist in
+                self?.onViewArtist?(artist)
+            }
+            artistViews.append(view)
+            artistStackView.addArrangedSubview(view)
+            view.isHidden = true
+        }
+
         artistShimmerContainer.translatesAutoresizingMaskIntoConstraints = false
         artistShimmerContainer.backgroundColor = .clear
         stackView.addArrangedSubview(artistShimmerContainer)
@@ -868,6 +977,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
 
         for (index, row) in venueShimmerRows.enumerated() {
             row.isHidden = !isLoading
+            row.setAnimating(isLoading)
             stackView.setCustomSpacing(
                 isLoading && index < venueShimmerRows.count - 1
                     ? PremiumSearchHeaderMetrics.venueRowSpacing
@@ -901,6 +1011,9 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         artistScrollContainer.isHidden = !showsArtists
         artistScrollView.isHidden = !showsArtists
         artistShimmerContainer.isHidden = !showsArtistShimmer
+        artistShimmerStackView.arrangedSubviews
+            .compactMap { $0 as? PremiumSearchArtistShimmerItemView }
+            .forEach { $0.setAnimating(showsArtistShimmer) }
         stackView.setCustomSpacing(
             (showsArtists || showsArtistShimmer) ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
             after: artistTitleLabel
@@ -923,18 +1036,31 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     }
 
     private func configureArtists(_ artists: [SearchArtistItem]) {
-        artistStackView.arrangedSubviews.forEach {
-            artistStackView.removeArrangedSubview($0)
-            $0.removeFromSuperview()
+        let artistIDs = artists.map(\.id)
+        if artistIDs == configuredArtistIDs {
+            return
+        }
+        configuredArtistIDs = artistIDs
+
+        if artists.count > artistViews.count {
+            for _ in artistViews.count..<artists.count {
+                let view = PremiumSearchArtistResultView()
+                view.onViewArtist = { [weak self] artist in
+                    self?.onViewArtist?(artist)
+                }
+                artistViews.append(view)
+                artistStackView.addArrangedSubview(view)
+            }
         }
 
-        artists.forEach { item in
-            let view = PremiumSearchArtistResultView()
-            view.configure(item)
-            view.onViewArtist = { [weak self] artist in
-                self?.onViewArtist?(artist)
+        for (index, view) in artistViews.enumerated() {
+            if artists.indices.contains(index) {
+                view.configure(artists[index])
+                view.isHidden = false
+            } else {
+                view.prepareForDisplayReuse()
+                view.isHidden = true
             }
-            artistStackView.addArrangedSubview(view)
         }
     }
 
@@ -950,6 +1076,7 @@ private final class PremiumSearchArtistResultView: UIControl {
     private let imageView = UIImageView()
     private let nameLabel = UILabel()
     private var artist: SearchArtistItem?
+    private var representedImageURL: String?
 
     var onViewArtist: ((SearchArtistItem) -> Void)?
 
@@ -1004,10 +1131,32 @@ private final class PremiumSearchArtistResultView: UIControl {
         if let imageURL = item.imageURL,
            !imageURL.isEmpty,
            let url = URL(string: imageURL) {
-            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "premiumExpBg"))
+            guard representedImageURL != imageURL else { return }
+            representedImageURL = imageURL
+            imageView.sd_cancelCurrentImageLoad()
+            let targetPixelSize = CGSize(
+                width: PremiumSearchHeaderMetrics.artistImageSize * UIScreen.main.scale,
+                height: PremiumSearchHeaderMetrics.artistImageSize * UIScreen.main.scale
+            )
+            imageView.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "premiumExpBg"),
+                options: [.retryFailed, .continueInBackground, .scaleDownLargeImages],
+                context: [.imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)]
+            )
         } else {
+            representedImageURL = nil
+            imageView.sd_cancelCurrentImageLoad()
             imageView.image = UIImage(named: "premiumExpBg") ?? Constant.Icon.uploadImage
         }
+    }
+
+    func prepareForDisplayReuse() {
+        artist = nil
+        nameLabel.text = nil
+        representedImageURL = nil
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
     }
 
     @objc private func onTap() {
@@ -1032,7 +1181,7 @@ private final class PremiumSearchArtistShimmerItemView: UIView {
         super.init(coder: coder)
         setup()
     }
-
+    
     private func setup() {
         backgroundColor = .clear
 
@@ -1064,6 +1213,14 @@ private final class PremiumSearchArtistShimmerItemView: UIView {
         startShimmer()
     }
 
+    func setAnimating(_ isAnimating: Bool) {
+        if isAnimating {
+            startShimmer()
+        } else {
+            stopShimmer()
+        }
+    }
+
     private func startShimmer() {
         imageView.startShimmer()
         textView.startShimmer()
@@ -1072,16 +1229,6 @@ private final class PremiumSearchArtistShimmerItemView: UIView {
     private func stopShimmer() {
         imageView.stopShimmer()
         textView.stopShimmer()
-    }
-
-    override func willMove(toWindow newWindow: UIWindow?) {
-        super.willMove(toWindow: newWindow)
-
-        if newWindow == nil {
-            stopShimmer()
-        } else {
-            startShimmer()
-        }
     }
 }
 
@@ -1147,19 +1294,17 @@ private final class PremiumSearchVenueShimmerView: UIView {
         ])
     }
 
-    override func willMove(toWindow newWindow: UIWindow?) {
-        super.willMove(toWindow: newWindow)
-
+    func setAnimating(_ isAnimating: Bool) {
         [
             imageView,
             titleView,
             subtitleView,
             buttonView
         ].forEach {
-            if newWindow == nil {
-                $0.stopShimmer()
-            } else {
+            if isAnimating {
                 $0.startShimmer()
+            } else {
+                $0.stopShimmer()
             }
         }
     }
@@ -1174,6 +1319,7 @@ private final class PremiumSearchVenueResultView: UIView {
     private let subtitleLabel = UILabel()
     private let button = UIButton(type: .system)
     private var venue: SearchVenueItem?
+    private var representedImageURL: String?
     var onViewVenue: ((SearchVenueItem) -> Void)?
 
     override init(frame: CGRect) {
@@ -1245,8 +1391,22 @@ private final class PremiumSearchVenueResultView: UIView {
         titleLabel.text = item.name
 
         if let imageURL = item.imageURL, let url = URL(string: imageURL) {
-            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "newSpeakeasy"))
+            guard representedImageURL != imageURL else { return }
+            representedImageURL = imageURL
+            imageView.sd_cancelCurrentImageLoad()
+            let targetPixelSize = CGSize(
+                width: 40 * UIScreen.main.scale,
+                height: 40 * UIScreen.main.scale
+            )
+            imageView.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "newSpeakeasy"),
+                options: [.retryFailed, .continueInBackground, .scaleDownLargeImages],
+                context: [.imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)]
+            )
         } else {
+            representedImageURL = nil
+            imageView.sd_cancelCurrentImageLoad()
             imageView.image = UIImage(named: "newSpeakeasy") ?? Constant.Icon.uploadImage
         }
     }
