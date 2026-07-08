@@ -186,10 +186,11 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         guard representedImageURL != imageURL else { return }
 
         representedImageURL = imageURL
+        
         imageView.sd_cancelCurrentImageLoad()
-
+//
         guard let url = URL(string: imageURL) else {
-            imageView.image = model.placeholder
+            imageView.image = Constant.Icon.uploadImage
             return
         }
 
@@ -198,10 +199,10 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             width: max(bounds.width, 180) * screenScale,
             height: max(bounds.width * 1.2, 216) * screenScale
         )
-
+        
         imageView.sd_setImage(
             with: url,
-            placeholderImage: model.placeholder,
+            placeholderImage: Constant.Icon.uploadImage,
             options: [
                 .retryFailed,
                 .continueInBackground,

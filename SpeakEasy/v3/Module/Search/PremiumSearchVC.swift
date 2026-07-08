@@ -98,7 +98,7 @@ final class PremiumSearchVC: UIViewController {
         layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: 34, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
-        layout.showsHeaders = false
+        layout.showsHeaders = true
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
@@ -111,7 +111,7 @@ final class PremiumSearchVC: UIViewController {
 //        layout.sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 34, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
-        layout.showsHeaders = false
+        layout.showsHeaders = true
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(coder: coder)
