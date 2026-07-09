@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 struct OrderCardViewModel {
     let imageURL: String?
@@ -32,6 +33,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
     private let subtitleLabel = UILabel()
     private let dateLabel = UILabel()
     private let statusBadge = PaddingLabel()
+    private var representedImageURL: String?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,6 +50,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
 
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
+        representedImageURL = nil
 
         countBadge.text = nil
         countBadge.isHidden = true
@@ -56,6 +59,8 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         subtitleLabel.text = nil
         dateLabel.text = nil
         dateLabel.isHidden = false
+        statusBadge.text = nil
+        statusBadge.isHidden = true
     }
 
     private func setupUI() {
@@ -176,14 +181,35 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         } else {
             statusBadge.isHidden = true
         }
+
+        let imageURL = model.imageURL ?? ""
+        guard representedImageURL != imageURL else { return }
+
+        representedImageURL = imageURL
+        
+        imageView.sd_cancelCurrentImageLoad()
+//
+        guard let url = URL(string: imageURL) else {
+            imageView.image = Constant.Icon.uploadImage
+            return
+        }
+
+        let screenScale = UIScreen.main.scale
+        let targetPixelSize = CGSize(
+            width: max(bounds.width, 180) * screenScale,
+            height: max(bounds.width * 1.2, 216) * screenScale
+        )
         
         imageView.sd_setImage(
-            with: URL(string: model.imageURL ?? ""),
-            placeholderImage: model.placeholder,
+            with: url,
+            placeholderImage: Constant.Icon.uploadImage,
             options: [
                 .retryFailed,
                 .continueInBackground,
                 .scaleDownLargeImages
+            ],
+            context: [
+                .imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)
             ]
         )
     }

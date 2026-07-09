@@ -1394,11 +1394,18 @@ private extension Tables3DMapVC {
         dotColor: UIColor, scale: CGFloat = 1.0
     ) -> SCNNode {
 
-        let padding: CGFloat = 14
-        let titleFont: CGFloat = 22
-        let subFont: CGFloat = 19
-        let guestFont: CGFloat = 19
+//        let padding: CGFloat = 14
+//        let titleFont: CGFloat = 22
+//        let subFont: CGFloat = 19
+//        let guestFont: CGFloat = 19
+//        let gap: CGFloat = 6
 
+        let padding: CGFloat = 20      // was 14
+        let titleFont: CGFloat = 26    // was 22
+        let subFont: CGFloat = 22      // was 19
+        let guestFont: CGFloat = 22    // was 19
+        let gap: CGFloat = 10          // was 6
+        
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .boldSystemFont(ofSize: titleFont)
@@ -1419,7 +1426,7 @@ private extension Tables3DMapVC {
 
         let rowWidth = guestsLabel.bounds.width
         let canvasW = max(titleLabel.bounds.width, minAmountLabel.bounds.width, rowWidth) + padding * 2
-        let gap: CGFloat = 6
+        
         let canvasH = padding
             + titleLabel.bounds.height + gap
             + (minAmountLabel.text?.isEmpty == false ? minAmountLabel.bounds.height + gap : 0)
@@ -1428,8 +1435,8 @@ private extension Tables3DMapVC {
 
         let container = UIView(frame: CGRect(x: 0, y: 0, width: canvasW, height: canvasH))
         container.backgroundColor = UIColor.black.withAlphaComponent(0.82)
-        container.layer.cornerRadius = 12
-        container.layer.borderWidth = 1.5
+        container.layer.cornerRadius = 16
+        container.layer.borderWidth = 2
         container.layer.borderColor = UIColor.white.withAlphaComponent(0.6).cgColor
 
         var yPos: CGFloat = padding

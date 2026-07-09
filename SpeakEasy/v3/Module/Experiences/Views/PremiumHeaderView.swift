@@ -43,7 +43,7 @@ final class PremiumHeaderView: UIView {
     private let helpButton = UIButton(type: .system)
     
     private let helpGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 15,
+        cornerRadius: 16,
         fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.05),
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
