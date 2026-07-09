@@ -118,9 +118,8 @@ final class EventDetailVC: UIViewController {
         mapView.isScrollEnabled = false
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
         WebSocketWrapper.shared.addDelegate(self) 
-        unLockTF.addTarget(self, action: #selector(unLockPassword), for: .allEvents)
-        unLockBtn.alpha = 0.5
-        unLockBtn.isUserInteractionEnabled = false
+        unLockTF.addTarget(self, action: #selector(unLockPassword), for: .editingChanged)
+        updateUnlockButtonState()
         continueBtn.isHidden = true
         continueBtnBGView.isHidden = true
         invalidPasswordLbl.isHidden = true
@@ -132,8 +131,38 @@ final class EventDetailVC: UIViewController {
     }
     
     @objc func unLockPassword() {
-        unLockBtn.alpha = unLockTF.text ?? "" == "" ? 0.5 : 1
-        unLockBtn.isUserInteractionEnabled = unLockTF.text ?? "" == "" ? false : true
+        invalidPasswordLbl.isHidden = true
+        updateUnlockButtonState()
+    }
+
+    private var unlockPassword: String {
+        (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func updateUnlockButtonState() {
+        let isEnabled = !unlockPassword.isEmpty
+        unLockBtn.alpha = isEnabled ? 1 : 0.5
+        unLockBtn.isEnabled = isEnabled
+        unLockBtn.isUserInteractionEnabled = isEnabled
+    }
+
+    private func availableTickets(from tickets: [EventTicket]?) -> [EventTicket] {
+        tickets?.filter {
+            ($0.isDeleted == false) &&
+            ($0.sellingPaused == false) &&
+            (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) &&
+            (($0.issuedUnits ?? 0) >= ($0.soldUnits ?? 0))
+        } ?? []
+    }
+
+    private func updateUnlockTicketVisibility() {
+        let protectedTickets: [EventTicket]
+        if event?.eventTicketSettings?.isUpFront == true {
+            protectedTickets = availableTickets(from: event?.modifiedPasswordProtectedTicket)
+        } else {
+            protectedTickets = availableTickets(from: event?.protectedEventTicket)
+        }
+        unLockTicketView.isHidden = protectedTickets.isEmpty
     }
     
     private func setupData() {
@@ -155,31 +184,11 @@ final class EventDetailVC: UIViewController {
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
         if event?.eventTicketSettings?.isUpFront == true {
-            activeTickets = event?.modifiedEventTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+            activeTickets = availableTickets(from: event?.modifiedEventTicket)
         } else {
-            activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+            activeTickets = availableTickets(from: event?.eventTicket)
         }
-        
-        var filteredProtectedTickets = [EventTicket]()
-        if event?.eventTicketSettings?.isUpFront == true {
-            filteredProtectedTickets = event?.modifiedPasswordProtectedTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
-        } else {
-            filteredProtectedTickets = event?.protectedEventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
-        }
-            if activeTickets == nil {
-              activeTickets = filteredProtectedTickets
-            } else {
-              filteredProtectedTickets.forEach { tic in
-                if activeTickets?.contains(where: { $0.id == tic.id }) ?? false == false {
-                  activeTickets?.append(tic)
-                }
-              }
-            }
-            filteredProtectedTickets.forEach { tic in
-              if event?.eventTicket?.contains(where: { $0.id == tic.id }) ?? false == false {
-                event?.eventTicket?.append(tic)
-              }
-            }
+        updateUnlockTicketVisibility()
         if event?.eventTicket == nil {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
@@ -257,11 +266,11 @@ final class EventDetailVC: UIViewController {
                     self.ticketListTableView.reloadData()
                 }
                 
+                self.eventTicketId.removeAll()
                 let ticket = self.event?.eventTicket ?? []
                 ticket.forEach({tic in
                     self.eventTicketId.append(tic.id ?? "")
                 })
-                self.unLockTicketView.isHidden = (self.event?.totalTickets == self.event?.eventTicket?.count ?? 0)
                 self.artists = self.event?.eventHasArtist?.filter( { $0.artist.status == "ENABLED" }) ?? []
                 self.setupData()
                 self.zeroCaseView(isHidden: true)
@@ -314,35 +323,49 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickUnLock(_ sender: Any) {
+        guard !unlockPassword.isEmpty else {
+            updateUnlockButtonState()
+            return
+        }
         getTicketByPassWord()
     }
     
     private func getTicketByPassWord() {
-        EventPresenter.getEventTicketByPassWord(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
+        EventPresenter.getEventTicketByPassWord(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, password: unlockPassword) { isSuccess, errMsg, ticket in
             if isSuccess {
-                self.invalidPasswordLbl.isHidden = !(ticket?.count ?? 0 == 0)
-                let tickets = ticket ?? []
+                let tickets = self.availableTickets(from: ticket)
+                guard !tickets.isEmpty else {
+                    self.invalidPasswordLbl.isHidden = false
+                    return
+                }
+                guard var event = self.event else {
+                    return
+                }
+                self.invalidPasswordLbl.isHidden = true
+                if event.eventTicket == nil {
+                    event.eventTicket = []
+                }
                 for tics in tickets {
                     if self.eventTicketId.contains(where: { $0 == tics.id}) == false {
                         self.eventTicketId.append(tics.id ?? "")
                     }
-                }
-                self.unLockTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
-                    for data in tickets {
-                        if self.event?.protectedEventTicket?.contains(where: {$0.id == data.id}) ?? false == false {
-                            if self.event?.protectedEventTicket == nil {
-//                                self.protectedTickets = [data]
-                                self.event?.protectedEventTicket = [data]
-                            } else {
-//                                self.protectedTickets?.append(data)
-                                self.event?.protectedEventTicket?.append(data)
-                                
-                            }
-                        }
+                    if (event.eventTicket?.contains(where: { $0.id == tics.id }) ?? false) == false {
+                        event.eventTicket?.append(tics)
                     }
+                }
+                let unlockedIds = Set(tickets.compactMap { $0.id })
+                event.protectedEventTicket = event.protectedEventTicket?.filter { protectedTicket in
+                    guard let id = protectedTicket.id else {
+                        return true
+                    }
+                    return !unlockedIds.contains(id)
+                }
+                self.event = event
+                self.updateUnlockTicketVisibility()
                 self.unLockTF.text = ""
                 self.unLockPassword()
                 self.setupData()
+                self.ticketListTableView.reloadData()
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }

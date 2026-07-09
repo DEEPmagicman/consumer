@@ -223,6 +223,7 @@ final class DiscoverService {
         skip: Int,
         take: Int = 10,
         search: String? = nil,
+        checkIsPremium: Bool = false,
         timeZone: String = TimeZone.current.identifier,
         completion: @escaping (
             Bool,
@@ -241,6 +242,11 @@ final class DiscoverService {
            !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             params["search"] = search
         }
+
+        if checkIsPremium {
+            params["checkIsPremium"] = "true"
+        }
+        print(params)
 
         AFWrapper.getRequest(
             APIBuilder.discoverVenuesURL,
@@ -529,6 +535,7 @@ private extension DiscoverService {
         venue["website"] = venue["website"] ?? ""
         venue["status"] = venue["status"] ?? "ENABLED"
         venue["isDeleted"] = venue["isDeleted"] ?? false
+        venue["isPremium"] = venue["isPremium"] ?? false
         venue["createdAt"] = venue["createdAt"] ?? now
         venue["updatedAt"] = venue["updatedAt"] ?? now
         venue["lat"] = venue["lat"] ?? "0"

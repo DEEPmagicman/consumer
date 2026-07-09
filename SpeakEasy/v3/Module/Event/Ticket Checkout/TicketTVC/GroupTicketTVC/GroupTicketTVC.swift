@@ -14,6 +14,7 @@ class GroupTicketTVC: UITableViewCell {
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var expandBnt: UIButton!
     @IBOutlet weak var tableParentView: UIView!
+    @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
     
     var tickets: [EventTicket] = []
     var currency: String = "$"
@@ -28,6 +29,7 @@ class GroupTicketTVC: UITableViewCell {
     var onRSVPTap: ((EventTicket) -> Void)?
     var onRowTap: ((EventTicket) -> Void)?
     var onDescriptionToggle: ((EventTicket) -> Void)?
+    var onExpandChanged: ((Bool) -> Void)?
     var onHeightChanged: (() -> Void)?
 
     private var isExpanded = false
@@ -40,6 +42,14 @@ class GroupTicketTVC: UITableViewCell {
         ticketListTableView.dataSource = self
         ticketListTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
         ticketListTableView.isScrollEnabled = false
+        ticketListTableView.contentInset = .zero
+        ticketListTableView.scrollIndicatorInsets = .zero
+        ticketListTableView.sectionHeaderHeight = .leastNonzeroMagnitude
+        ticketListTableView.sectionFooterHeight = .leastNonzeroMagnitude
+
+        if #available(iOS 15.0, *) {
+            ticketListTableView.sectionHeaderTopPadding = 0
+        }
 
         startTicketTableObserver()
     }
@@ -51,6 +61,7 @@ class GroupTicketTVC: UITableViewCell {
         onRSVPTap = nil
         onRowTap = nil
         onDescriptionToggle = nil
+        onExpandChanged = nil
         onHeightChanged = nil
     }
 
@@ -76,7 +87,9 @@ class GroupTicketTVC: UITableViewCell {
         whiteLabelColor: String?,
         eventTicketSetting: EventTicketSettings?,
         expandedTicketDescriptions: Set<String>,
-        disabledTicketIds: Set<String>
+        disabledTicketIds: Set<String>,
+        isExpanded: Bool = false,
+        bottomSpacing: CGFloat = 0
     ) {
         self.groupTitle.text = groupName
         self.tickets = tickets
@@ -86,8 +99,13 @@ class GroupTicketTVC: UITableViewCell {
         self.eventTicketSetting = eventTicketSetting
         self.expandedTicketDescriptions = expandedTicketDescriptions
         self.disabledTicketIds = disabledTicketIds
+        self.isExpanded = isExpanded
         
+        containerBottomConstraint.constant = bottomSpacing
         tableParentView.isHidden = !isExpanded
+        expandBnt.transform = isExpanded
+            ? CGAffineTransform(rotationAngle: .pi)
+            : .identity
         ticketListTableView.reloadData()
         ticketListTableView.layoutIfNeeded()
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
@@ -98,6 +116,7 @@ class GroupTicketTVC: UITableViewCell {
         tableParentView.isHidden = !isExpanded
         ticketListTableView.layoutIfNeeded()
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
+        onExpandChanged?(isExpanded)
         onHeightChanged?()
         expandBnt.transform = isExpanded
             ? CGAffineTransform(rotationAngle: .pi)
@@ -135,6 +154,7 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
             isDescriptionExpanded: isDescriptionExpanded,
             isLinkDisabled: isDisabled
         )
+        cell.applyGroupTicketSpacing(isFirst: indexPath.row == 0)
         cell.hideShimmer()
 
         cell.onPlusTap = { [weak self] ticket in
@@ -170,5 +190,13 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
         if price != 0 {
             onRowTap?(ticket)
         }
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
     }
 }

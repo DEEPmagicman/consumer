@@ -134,6 +134,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="containerBottomConstraint" destination="8bz-aJ-bRV" id="group-container-bottom-spacing"/>
                 <outlet property="expandBnt" destination="FGR-cD-ZqA" id="Hmw-CJ-r75"/>
                 <outlet property="groupTitle" destination="UN9-6Y-hFx" id="AHi-Bk-sCc"/>
                 <outlet property="tableParentView" destination="lHT-IL-wd3" id="dkh-Qf-cKN"/>

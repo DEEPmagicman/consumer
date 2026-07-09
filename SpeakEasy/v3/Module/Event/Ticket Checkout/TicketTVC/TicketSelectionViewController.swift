@@ -42,7 +42,8 @@ class TicketSelectionViewController: UIViewController {
     private var normalTickets: [EventTicket] = []
     private var addOnTickets: [EventTicket] = []
     private var selectedNormalTickets: [EventTicket] = []
-    private var groupedNormalTickets: [(groupName: String, tickets: [EventTicket])] = []
+    private var groupedNormalTickets: [(groupId: String, groupName: String, tickets: [EventTicket])] = []
+    private var expandedGroupIds: Set<String> = []
     private var expandedTicketDescriptions: Set<String> = []
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
@@ -62,6 +63,7 @@ class TicketSelectionViewController: UIViewController {
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var groupListHeightObservation: NSKeyValueObservation?
     private var eventTicketId = [String]()
+    private let groupRowSpacing: CGFloat = 12
 
     private let paymentService = PaymentService()
     private let eventService = EventService()
@@ -116,6 +118,7 @@ class TicketSelectionViewController: UIViewController {
         setupTableViews()
         setupTableViewObservers()
         setupContinueButton()
+        setupUnlockButton()
         setupTitleMarqueeLabel()
         getTicketLinksAndSetup()
         setupHeaderData()
@@ -180,8 +183,13 @@ class TicketSelectionViewController: UIViewController {
         ticketTableView.scrollIndicatorInsets = .zero
         ticketTableView.rowHeight = UITableView.automaticDimension
         ticketTableView.estimatedRowHeight = 150
+        ticketTableView.sectionHeaderHeight = .leastNonzeroMagnitude
+        ticketTableView.sectionFooterHeight = .leastNonzeroMagnitude
         if #available(iOS 11.0, *) {
             ticketTableView.contentInsetAdjustmentBehavior = .never
+        }
+        if #available(iOS 15.0, *) {
+            ticketTableView.sectionHeaderTopPadding = 0
         }
 
         groupTableView.delegate = self
@@ -190,12 +198,19 @@ class TicketSelectionViewController: UIViewController {
         groupTableView.showsHorizontalScrollIndicator = false
         groupTableView.isScrollEnabled = false
         groupTableView.alwaysBounceVertical = false
+        groupTableView.separatorStyle = .none
+        groupTableView.backgroundColor = .clear
         groupTableView.contentInset = .zero
         groupTableView.scrollIndicatorInsets = .zero
         groupTableView.rowHeight = UITableView.automaticDimension
         groupTableView.estimatedRowHeight = 220
+        groupTableView.sectionHeaderHeight = .leastNonzeroMagnitude
+        groupTableView.sectionFooterHeight = .leastNonzeroMagnitude
         if #available(iOS 11.0, *) {
             groupTableView.contentInsetAdjustmentBehavior = .never
+        }
+        if #available(iOS 15.0, *) {
+            groupTableView.sectionHeaderTopPadding = 0
         }
         groupTableView.register(GroupTicketTVC.nib, forCellReuseIdentifier: GroupTicketTVC.identifier)
 
@@ -316,6 +331,40 @@ class TicketSelectionViewController: UIViewController {
         interactionBlockerView.isHidden = !inProgress
         if inProgress {
             view.bringSubviewToFront(interactionBlockerView)
+        }
+    }
+
+    private func setupUnlockButton() {
+        unLockTF.addTarget(self, action: #selector(unLockPassword), for: .editingChanged)
+        updateUnlockButtonState()
+    }
+
+    private var unlockCode: String {
+        (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var unlockIconImageView: UIImageView? {
+        unLockBtn.subviews.compactMap { $0 as? UIImageView }.first
+    }
+
+    private func updateUnlockButtonState() {
+        let isEnabled = !unlockCode.isEmpty
+        unLockBtn.alpha = isEnabled ? 1 : 0.5
+        unLockBtn.isUserInteractionEnabled = isEnabled
+
+        guard let iconView = unlockIconImageView else { return }
+        iconView.alpha = isEnabled ? 1 : 0.65
+
+        if #available(iOS 13.0, *) {
+            if isEnabled {
+                iconView.image = UIImage(systemName: "lock.open.fill")?.withRenderingMode(.alwaysTemplate)
+                iconView.tintColor = .white
+            } else {
+                iconView.image = UIImage(named: "lockIcon")
+                iconView.tintColor = nil
+            }
+        } else if !isEnabled {
+            iconView.image = UIImage(named: "lockIcon")
         }
     }
 
@@ -451,6 +500,8 @@ class TicketSelectionViewController: UIViewController {
 
         normalTickets = split.nonGrouped
         groupedNormalTickets = split.grouped
+        let validGroupIds = Set(groupedNormalTickets.map { $0.groupId })
+        expandedGroupIds = expandedGroupIds.intersection(validGroupIds)
         addOnTickets = filteredAddOn
 
         groupTableView.reloadData()
@@ -587,9 +638,10 @@ class TicketSelectionViewController: UIViewController {
         resetTicketScrollPosition()
     }
 
-    private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupName: String, tickets: [EventTicket])]) {
+    private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupId: String, groupName: String, tickets: [EventTicket])]) {
         var nonGrouped: [EventTicket] = []
-        var groupedMap: [String: (groupName: String, tickets: [EventTicket])] = [:]
+        var groupOrder: [String] = []
+        var groupedMap: [String: (groupId: String, groupName: String, tickets: [EventTicket])] = [:]
 
         for ticket in list {
             if let group = ticket.eventTicketGroupHasTicket?.eventTicketGroup,
@@ -598,14 +650,18 @@ class TicketSelectionViewController: UIViewController {
                 if groupedMap[groupId] != nil {
                     groupedMap[groupId]?.tickets.append(ticket)
                 } else {
-                    groupedMap[groupId] = (groupName: groupName, tickets: [ticket])
+                    groupOrder.append(groupId)
+                    groupedMap[groupId] = (groupId: groupId, groupName: groupName, tickets: [ticket])
                 }
             } else {
                 nonGrouped.append(ticket)
             }
         }
 
-        return (nonGrouped, Array(groupedMap.values))
+        return (
+            nonGrouped,
+            groupOrder.compactMap { groupedMap[$0] }
+        )
     }
 
     private func updateContinueButtonForMode() {
@@ -681,17 +737,15 @@ class TicketSelectionViewController: UIViewController {
         }
     }
 
-    @objc func unLockPassword() {}
+    @objc func unLockPassword() {
+        updateUnlockButtonState()
+    }
 
     @IBAction func onClickUnLockBtn(
         _ sender: Any
     ) {
 
-        let code =
-        (unLockTF.text ?? "")
-            .trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
+        let code = unlockCode
 
         guard !code.isEmpty,
               var event = event else {
@@ -1353,7 +1407,9 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             whiteLabelColor: event?.whiteLabelColor,
             eventTicketSetting: event?.eventTicketSettings,
             expandedTicketDescriptions: expandedTicketDescriptions,
-            disabledTicketIds: disabledTicketIds
+            disabledTicketIds: disabledTicketIds,
+            isExpanded: expandedGroupIds.contains(item.groupId),
+            bottomSpacing: indexPath.row == groupedNormalTickets.count - 1 ? 0 : groupRowSpacing
         )
 
         cell.onPlusTap = { [weak self] ticket in self?.handleGroupPlus(ticket: ticket) }
@@ -1374,6 +1430,15 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             self.updateGroupTableHeightFromContent()
         }
 
+        cell.onExpandChanged = { [weak self] isExpanded in
+            guard let self else { return }
+            if isExpanded {
+                self.expandedGroupIds.insert(item.groupId)
+            } else {
+                self.expandedGroupIds.remove(item.groupId)
+            }
+        }
+
         cell.onHeightChanged = { [weak self] in
             guard let self else { return }
             UIView.performWithoutAnimation {
@@ -1392,6 +1457,14 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         }
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

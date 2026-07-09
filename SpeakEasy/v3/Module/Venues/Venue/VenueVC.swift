@@ -1183,8 +1183,19 @@ final class GlassSegmentView: UIControl {
     var onIndexChanged: ((Int) -> Void)?
     private(set) var selectedIndex: Int = 0
 
-    private let glassBackground = LiquidGlassBackgroundView()
-    private let selectedView = LiquidGlassBackgroundView()
+    private let glassBackground = LiquidGlassBackgroundView(
+        cornerRadius: 24,
+        fillColor: UIColor.black.withAlphaComponent(0.18),
+        borderColor: UIColor.white.withAlphaComponent(0.2),
+        borderWidth: 0.8
+    )
+    private let selectedView = LiquidGlassBackgroundView(
+        cornerRadius: 20,
+        fillColor: .clear,
+        borderColor: UIColor.white.withAlphaComponent(0.2),
+        borderWidth: 0.8
+    )
+    private let selectedGradientLayer = CAGradientLayer()
 
     private var labels: [UILabel] = []
     private var selectedLeading: NSLayoutConstraint!
@@ -1212,14 +1223,17 @@ final class GlassSegmentView: UIControl {
 
         glassBackground.layer.cornerRadius = bounds.height / 2
         selectedView.layer.cornerRadius = selectedView.bounds.height / 2
+        selectedGradientLayer.frame = selectedView.bounds
+        selectedGradientLayer.cornerRadius = selectedView.bounds.height / 2
 
         updateSelectedPosition(animated: false)
     }
 
     private func setupUI() {
+        translatesAutoresizingMaskIntoConstraints = false
         glassBackground.translatesAutoresizingMaskIntoConstraints = false
         glassBackground.isUserInteractionEnabled = false
-        glassBackground.cornerRadius = 25
+        glassBackground.clipsToBounds = true
         insertSubview(glassBackground, at: 0)
 
         NSLayoutConstraint.activate([
@@ -1230,8 +1244,19 @@ final class GlassSegmentView: UIControl {
         ])
 
         selectedView.translatesAutoresizingMaskIntoConstraints = false
-        selectedView.cornerRadius = 25
         selectedView.isUserInteractionEnabled = false
+        selectedView.clipsToBounds = true
+
+        selectedGradientLayer.colors = [
+            UIColor.white.withAlphaComponent(0.18).cgColor,
+            UIColor.white.withAlphaComponent(0.08).cgColor
+        ]
+        selectedGradientLayer.locations = [0, 1]
+        selectedGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        selectedGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        selectedGradientLayer.masksToBounds = true
+        selectedView.layer.insertSublayer(selectedGradientLayer, at: 0)
+
         addSubview(selectedView)
 
         setupLabels()
@@ -1246,7 +1271,7 @@ final class GlassSegmentView: UIControl {
             lbl.text = title
             lbl.textAlignment = .center
             lbl.font = Constant.Font.geistMedium(size: 14)
-            lbl.textColor = .white
+            lbl.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.95)
             lbl.translatesAutoresizingMaskIntoConstraints = false
             lbl.isUserInteractionEnabled = false
             addSubview(lbl)
@@ -1260,11 +1285,7 @@ final class GlassSegmentView: UIControl {
         let count = CGFloat(labels.count)
 
         selectedLeading = selectedView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4)
-        selectedWidth = selectedView.widthAnchor.constraint(
-            equalTo: widthAnchor,
-            multiplier: 1 / count,
-            constant: -2
-        )
+        selectedWidth = selectedView.widthAnchor.constraint(equalToConstant: 100)
 
         NSLayoutConstraint.activate([
             selectedLeading,
@@ -1303,23 +1324,24 @@ final class GlassSegmentView: UIControl {
 
         let count = CGFloat(labels.count)
         let slot = bounds.width / count
-        let isFirst = selectedIndex == 0
-        let isLast = selectedIndex == labels.count - 1
 
         selectedLeading.constant = slot * CGFloat(selectedIndex) + 4
-        selectedWidth.constant = isLast ? -8 : isFirst ? -2 : -2
+        selectedWidth.constant = slot - 8
 
         let animations = {
             self.layoutIfNeeded()
+            self.updateLabelStyle()
+            self.selectedGradientLayer.frame = self.selectedView.bounds
+            self.selectedGradientLayer.cornerRadius = self.selectedView.bounds.height / 2
         }
 
         if animated {
             UIView.animate(
-                withDuration: 0.32,
+                withDuration: 0.25,
                 delay: 0,
-                usingSpringWithDamping: 0.82,
-                initialSpringVelocity: 0.48,
-                options: [.curveEaseOut, .beginFromCurrentState],
+                usingSpringWithDamping: 0.85,
+                initialSpringVelocity: 0.5,
+                options: [.curveEaseInOut, .beginFromCurrentState],
                 animations: animations
             )
         } else {
@@ -1328,8 +1350,16 @@ final class GlassSegmentView: UIControl {
     }
 
     private func updateLabelAlpha() {
+        updateLabelStyle()
+    }
+
+    private func updateLabelStyle() {
         for (i, lbl) in labels.enumerated() {
-            lbl.alpha = i == selectedIndex ? 1.0 : 0.45
+            let isSelected = i == selectedIndex
+            lbl.alpha = isSelected ? 1.0 : 0.72
+            lbl.font = isSelected
+                ? Constant.Font.geistMedium(size: 14)
+                : Constant.Font.geistRegular(size: 14)
         }
     }
 

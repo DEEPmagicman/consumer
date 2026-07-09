@@ -486,6 +486,7 @@ class MapViewController: UIViewController {
         discoverService.fetchDiscoverVenues(
             city: city,
             skip: venueSkip,
+            checkIsPremium: true,
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
             guard let self else { return }

@@ -219,6 +219,7 @@ class EventDetailsVC: UIViewController {
         startFAQsTableObserver()
         startAdditionalButtonsTableObserver()
         setupUI()
+        setupUnlockButton()
         setupSkeletonView()
         setupTitleMarqueeLabel()
         setupYouTubeShimmerView()
@@ -322,6 +323,46 @@ class EventDetailsVC: UIViewController {
             self.groupTableViewHeight.constant =
             tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
+        }
+    }
+
+    private func setupUnlockButton() {
+        unLockTF.addTarget(self, action: #selector(unLockPasswordDidChange), for: .editingChanged)
+
+        if let button = unLockBtn as? UIButton {
+            button.addTarget(self, action: #selector(onClickUnLockBtn(_:)), for: .touchUpInside)
+        } else {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(onClickUnLockBtn(_:)))
+            unLockBtn.addGestureRecognizer(tap)
+        }
+
+        updateUnlockButtonState()
+    }
+
+    private var unlockCode: String {
+        (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    @objc private func unLockPasswordDidChange() {
+        updateUnlockButtonState()
+    }
+
+    private func updateUnlockButtonState() {
+        let isEnabled = !unlockCode.isEmpty
+        unLockBtn.alpha = isEnabled ? 1 : 0.5
+        unLockBtn.isUserInteractionEnabled = isEnabled
+        lockIcon.alpha = isEnabled ? 1 : 0.65
+
+        if #available(iOS 13.0, *) {
+            if isEnabled {
+                lockIcon.image = UIImage(systemName: "lock.open.fill")?.withRenderingMode(.alwaysTemplate)
+                lockIcon.tintColor = .white
+            } else {
+                lockIcon.image = UIImage(named: "lockIcon")
+                lockIcon.tintColor = nil
+            }
+        } else if !isEnabled {
+            lockIcon.image = UIImage(named: "lockIcon")
         }
     }
     
@@ -2447,7 +2488,7 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {
-        let code = (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let code = unlockCode
         guard !code.isEmpty else { return }
         guard var event = event else { return }
 
@@ -2498,6 +2539,7 @@ class EventDetailsVC: UIViewController {
 
         self.event = event
         unLockTF.text = ""
+        updateUnlockButtonState()
 
         setupData()
     }
@@ -2978,6 +3020,8 @@ extension EventDetailsVC {
             forCellReuseIdentifier: GroupTicketTVC.identifier
         )
         groupTableView.isScrollEnabled = false
+        groupTableView.separatorStyle = .none
+        groupTableView.backgroundColor = .clear
     }
 }
 

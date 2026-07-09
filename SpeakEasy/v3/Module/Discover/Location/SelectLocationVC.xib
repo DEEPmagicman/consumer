@@ -47,44 +47,33 @@
                     <rect key="frame" x="0.0" y="0.0" width="409" height="852"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Di-AZ-FaY" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="16" y="139" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="bfH-Wb-fLD"/>
+                        <constraint firstAttribute="height" constant="40" id="rOF-fW-1pt"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="12"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="close"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="VS1-3g-jBw"/>
+                    </connections>
+                </button>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XmK-sG-mgH">
                     <rect key="frame" x="16" y="139" width="361" height="40"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JGk-Xb-AIF">
                             <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OqP-we-G44" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" image="closeMarkIcon"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="close"/>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                            <real key="value" value="12"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="Kyf-7e-cf1"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" red="1" green="0.97647058823529409" blue="0.97647058823529409" alpha="0.14748543906810035" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="QLC-KO-CdB"/>
-                                <constraint firstAttribute="bottom" secondItem="OqP-we-G44" secondAttribute="bottom" id="Tau-W3-KYU"/>
                                 <constraint firstAttribute="height" constant="40" id="W5g-WC-OHI"/>
-                                <constraint firstItem="OqP-we-G44" firstAttribute="leading" secondItem="JGk-Xb-AIF" secondAttribute="leading" id="gKX-bc-Zec"/>
-                                <constraint firstItem="OqP-we-G44" firstAttribute="top" secondItem="JGk-Xb-AIF" secondAttribute="top" id="iKq-CA-3ck"/>
-                                <constraint firstAttribute="trailing" secondItem="OqP-we-G44" secondAttribute="trailing" id="nDY-Gx-l9s"/>
                             </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                    <color key="value" name="PrimaryColor"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick a city" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61G-xF-YOf">
                             <rect key="frame" x="134.33333333333334" y="7" width="96.666666666666657" height="26"/>
@@ -439,14 +428,18 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Le2-9m-X32" secondAttribute="trailing" constant="18" id="ASh-Nm-6Jj"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2NN-5f-dIB" secondAttribute="trailing" constant="-16" id="BqU-lq-MgI"/>
                 <constraint firstItem="YDe-tv-bQO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="MrL-NP-PHS"/>
+                <constraint firstItem="4Di-AZ-FaY" firstAttribute="trailing" secondItem="JGk-Xb-AIF" secondAttribute="trailing" id="Mz3-58-cYr"/>
+                <constraint firstItem="4Di-AZ-FaY" firstAttribute="leading" secondItem="JGk-Xb-AIF" secondAttribute="leading" id="Ni2-gQ-qnG"/>
                 <constraint firstItem="P8w-1a-NzI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="Ofc-aE-Cto"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="YDe-tv-bQO" secondAttribute="trailing" constant="16" id="PEd-T5-87a"/>
                 <constraint firstItem="2NN-5f-dIB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="TUG-Qw-kiR"/>
                 <constraint firstItem="Le2-9m-X32" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="18" id="YCi-50-30Y"/>
                 <constraint firstItem="XmK-sG-mgH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="ccj-0g-xjf"/>
+                <constraint firstItem="4Di-AZ-FaY" firstAttribute="top" secondItem="JGk-Xb-AIF" secondAttribute="top" id="den-9y-8q1"/>
                 <constraint firstAttribute="bottom" secondItem="2NN-5f-dIB" secondAttribute="bottom" id="ia3-bP-7xO"/>
                 <constraint firstItem="P8w-1a-NzI" firstAttribute="top" secondItem="XmK-sG-mgH" secondAttribute="bottom" constant="20" id="mmV-ic-824"/>
                 <constraint firstAttribute="bottom" secondItem="YDe-tv-bQO" secondAttribute="bottom" constant="16" id="n90-fQ-RpM"/>
+                <constraint firstItem="4Di-AZ-FaY" firstAttribute="bottom" secondItem="JGk-Xb-AIF" secondAttribute="bottom" id="q2p-zL-But"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="XmK-sG-mgH" secondAttribute="trailing" constant="16" id="waI-Rb-U6K"/>
                 <constraint firstItem="XmK-sG-mgH" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="21" id="xDh-xG-76f"/>
             </constraints>
@@ -454,14 +447,10 @@
         </view>
     </objects>
     <resources>
-        <image name="closeMarkIcon" width="12" height="12"/>
         <image name="primaryLocationIcon" width="14" height="18"/>
         <image name="searchIcon" width="13.666666984558105" height="13.666666984558105"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="PrimaryBlackColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="PrimaryColor">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="PrimaryWhiteColor">

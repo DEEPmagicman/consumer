@@ -70,6 +70,7 @@ class TicketsTVC: UITableViewCell {
         isDescriptionExpanded = false
         isLinkDisabled = false
         isCoverTicketMode = false
+        isFromGroupTicket = false
 
         shimmerView.stopAnimating()
         shimmerView.isHidden = true
@@ -118,6 +119,12 @@ class TicketsTVC: UITableViewCell {
 
         bgView.layer.cornerRadius = 10
         topConstraint.constant = 12
+        topSapraterView.isHidden = true
+    }
+
+    func applyGroupTicketSpacing(isFirst: Bool) {
+        isFromGroupTicket = true
+        topConstraint.constant = isFirst ? 0 : 12
         topSapraterView.isHidden = true
     }
 
@@ -316,7 +323,7 @@ class TicketsTVC: UITableViewCell {
     private func applyComingSoonUI() {
         quantityLbl.isHidden = false
         quantityLbl.text = "Coming soon"
-        quantityLbl.font = Constant.Font.geistRegular(size: 14)
+        quantityLbl.font = Constant.Font.geistRegular(size: 12)
         minusView.isHidden = true
         plusView.isHidden = true
         rsvpBtnView.isHidden = true
