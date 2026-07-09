@@ -84,7 +84,7 @@ private extension PremiumEventSegmentView {
 
         addSubview(glassView)
 
-        glassView.clipsToBounds = true
+        glassView.clipsToBounds = false
         selectedView.isUserInteractionEnabled = false
         
         glassView.translatesAutoresizingMaskIntoConstraints = false
