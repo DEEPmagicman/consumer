@@ -46,11 +46,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var processingFeeAmount: UILabel!
     @IBOutlet weak var customFeeView: UIView!
     @IBOutlet weak var salesTextView: UIView!
-    @IBOutlet weak var salesTextAmount: UILabel!
+//    @IBOutlet weak var salesTextAmount: UILabel!
     @IBOutlet weak var noFeeView: UIView!
-    @IBOutlet weak var salesTaxPr: UILabel!
+//    @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var emailValidationLbl: UILabel!
-    @IBOutlet weak var salesTaxName: UILabel!
+//    @IBOutlet weak var salesTaxName: UILabel!
     @IBOutlet weak var addOnsTableView: UITableView!
     @IBOutlet weak var addOnsTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var addOnsSubTotalView: UIView!
@@ -258,8 +258,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if ((venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true) && paymentDetail?.salesTax ?? 0 > 0 {
-            let customTicket = selectedCoverTickets.first(where: { $0.isCustom == true && $0.price > 0 })
-            salesTaxPr.text = customTicket == nil ? "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)" : "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
+//            let customTicket = selectedCoverTickets.first(where: { $0.isCustom == true && $0.price > 0 })
+//            salesTaxPr.text = customTicket == nil ? "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)" : "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return true
         }
         return false

@@ -21,9 +21,12 @@ struct Header {
          "app_version": Bundle.main.releaseVersionNumber,
          "build_number": Bundle.main.buildVersionNumber,
          "platform": "ios",
-         "api_version": "2027",
          "app_bundle_id": Bundle.main.bundleIdentifier ?? "invalid bundle id"]
-        
+#if DEBUG
+        header["api_version"] = "2026"
+#else
+        header["api_version"] = "2027"
+#endif
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
         header["token"] = date.encryptedHeader()
         
