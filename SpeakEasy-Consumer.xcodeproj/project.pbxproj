@@ -227,6 +227,7 @@
 		6AE9FDA52FF3A15900990CF9 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA42FF3A15900990CF9 /* Utilities.swift */; };
 		6AE9FDA72FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
 		6AE9FDA82FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
+		6AF1B0102FFF7FF300F8711A /* SplashAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */; };
 		6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */; };
 		6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */; };
 		6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9CE2F09477300069A90 /* TableCheckOutVC.xib */; };
@@ -834,6 +835,7 @@
 		6AE9FDA12FF3861E00990CF9 /* ZoneSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneSelectorView.swift; sourceTree = "<group>"; };
 		6AE9FDA42FF3A15900990CF9 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesTaxTVC.swift; sourceTree = "<group>"; };
+		6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SplashAnimation.gif; sourceTree = "<group>"; };
 		6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tables3DMapVC.swift; sourceTree = "<group>"; };
 		6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Tables3DMapVC.xib; sourceTree = "<group>"; };
 		6AF2B9CD2F09477300069A90 /* TableCheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCheckOutVC.swift; sourceTree = "<group>"; };
@@ -2569,6 +2571,7 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */,
 				04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
@@ -3466,6 +3469,7 @@
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
 				CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */,
 				CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */,
+				6AF1B0102FFF7FF300F8711A /* SplashAnimation.gif in Resources */,
 				CEADBDC92FB1D67F004F8BE6 /* Geist-SemiBold.ttf in Resources */,
 				CEADBDCA2FB1D67F004F8BE6 /* Geist-Regular.ttf in Resources */,
 				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
