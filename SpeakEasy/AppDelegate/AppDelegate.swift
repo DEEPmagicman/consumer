@@ -194,7 +194,7 @@ extension AppDelegate {
         }
 //
         navigation.navigationBar.isHidden = true
-        self.window?.rootViewController = navigation
+        setRootViewController(navigation)
         self.window?.makeKeyAndVisible()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -202,6 +202,23 @@ extension AppDelegate {
         }
     }
 
+    func setRootViewController(
+        _ viewController: UIViewController,
+        duration: TimeInterval = 0.3
+    ) {
+
+        guard let window = self.window else { return }
+
+        UIView.transition(
+            with: window,
+            duration: duration,
+            options: [.transitionCrossDissolve, .allowAnimatedContent],
+            animations: {
+                window.rootViewController = viewController
+            }
+        )
+    }
+    
     private func handlePendingDeepLink() {
         guard let deepLink = pendingDeepLink,
               let rootNav = window?.rootViewController as? UINavigationController else { return }

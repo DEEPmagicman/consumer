@@ -142,7 +142,8 @@
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
 		69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */; };
-		6A2A99EC2FBC24CF00A2A68B /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */; };
+		6A0DFE472FFFB54600AB7379 /* SplashAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */; };
+		6A10AD122FFF9FCB0062707F /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6A10AD112FFF9FCB0062707F /* GLTFKit2 */; };
 		6A2A99F02FBC27E800A2A68B /* ProfileMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A99EF2FBC27E800A2A68B /* ProfileMenuVC.swift */; };
 		6A40D1AF2FBDCC3100F3FAAB /* ConfirmContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A40D1AE2FBDCC3100F3FAAB /* ConfirmContactVC.swift */; };
 		6A40D1B12FBECF2100F3FAAB /* LogoutConfirmationBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A40D1B02FBECF2100F3FAAB /* LogoutConfirmationBottomSheet.swift */; };
@@ -227,7 +228,6 @@
 		6AE9FDA52FF3A15900990CF9 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA42FF3A15900990CF9 /* Utilities.swift */; };
 		6AE9FDA72FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
 		6AE9FDA82FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
-		6AF1B0102FFF7FF300F8711A /* SplashAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */; };
 		6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */; };
 		6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */; };
 		6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9CE2F09477300069A90 /* TableCheckOutVC.xib */; };
@@ -753,6 +753,7 @@
 		691609422C7F418000C74F48 /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Motor-Regular.ttf"; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
+		6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SplashAnimation.gif; sourceTree = "<group>"; };
 		6A2A99EF2FBC27E800A2A68B /* ProfileMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuVC.swift; sourceTree = "<group>"; };
 		6A40D1AE2FBDCC3100F3FAAB /* ConfirmContactVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmContactVC.swift; sourceTree = "<group>"; };
 		6A40D1B02FBECF2100F3FAAB /* LogoutConfirmationBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutConfirmationBottomSheet.swift; sourceTree = "<group>"; };
@@ -835,7 +836,6 @@
 		6AE9FDA12FF3861E00990CF9 /* ZoneSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneSelectorView.swift; sourceTree = "<group>"; };
 		6AE9FDA42FF3A15900990CF9 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesTaxTVC.swift; sourceTree = "<group>"; };
-		6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SplashAnimation.gif; sourceTree = "<group>"; };
 		6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tables3DMapVC.swift; sourceTree = "<group>"; };
 		6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Tables3DMapVC.xib; sourceTree = "<group>"; };
 		6AF2B9CD2F09477300069A90 /* TableCheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCheckOutVC.swift; sourceTree = "<group>"; };
@@ -1209,7 +1209,7 @@
 				CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
-				6A2A99EC2FBC24CF00A2A68B /* GLTFKit2 in Frameworks */,
+				6A10AD122FFF9FCB0062707F /* GLTFKit2 in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
 				CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */,
 				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
@@ -2571,7 +2571,7 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6AF1B00F2FFF7FF300F8711A /* SplashAnimation.gif */,
+				6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */,
 				04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
@@ -3275,7 +3275,7 @@
 				04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */,
 				04749CFC2F56AB6F0035898F /* Hero */,
 				CE78964D2FB33AE800F9DFDF /* HorizonCalendar */,
-				6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */,
+				6A10AD112FFF9FCB0062707F /* GLTFKit2 */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -3323,7 +3323,7 @@
 				04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 				04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */,
 				CE78964C2FB33AE800F9DFDF /* XCRemoteSwiftPackageReference "HorizonCalendar" */,
-				6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */,
+				6A10AD102FFF9FCB0062707F /* XCRemoteSwiftPackageReference "GLTFKit2" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -3450,6 +3450,7 @@
 				04AB758B2F862478001D76D0 /* SearchVenueTableViewCell.xib in Resources */,
 				82847A792982485B00611DC4 /* Home.storyboard in Resources */,
 				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
+				6A0DFE472FFFB54600AB7379 /* SplashAnimation.gif in Resources */,
 				CEEACF452FD038690009EFB5 /* CoverQRCodeVC.xib in Resources */,
 				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
 				CEE646EC2FC4666B001DF84E /* OrderListViewController.xib in Resources */,
@@ -3469,7 +3470,6 @@
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
 				CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */,
 				CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */,
-				6AF1B0102FFF7FF300F8711A /* SplashAnimation.gif in Resources */,
 				CEADBDC92FB1D67F004F8BE6 /* Geist-SemiBold.ttf in Resources */,
 				CEADBDCA2FB1D67F004F8BE6 /* Geist-Regular.ttf in Resources */,
 				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
@@ -4547,7 +4547,7 @@
 				version = 6.5.12;
 			};
 		};
-		6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */ = {
+		6A10AD102FFF9FCB0062707F /* XCRemoteSwiftPackageReference "GLTFKit2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/warrenm/GLTFKit2";
 			requirement = {
@@ -4658,9 +4658,9 @@
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
 		};
-		6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */ = {
+		6A10AD112FFF9FCB0062707F /* GLTFKit2 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */;
+			package = 6A10AD102FFF9FCB0062707F /* XCRemoteSwiftPackageReference "GLTFKit2" */;
 			productName = GLTFKit2;
 		};
 		CE19C1AA2CA44469007050ED /* MHLoadingButton */ = {
