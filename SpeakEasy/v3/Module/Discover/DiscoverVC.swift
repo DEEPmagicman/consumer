@@ -30,6 +30,7 @@ final class DiscoverVC: UIViewController {
     var endDate: String?
     private var shimmerDidFinish = false
     private var filterCity: String?
+    private var appliedGradientBounds: CGRect = .zero
 
     private let shimmerView = HomeSkeletonView()
 
@@ -62,10 +63,15 @@ final class DiscoverVC: UIViewController {
         showSegmentView(0)
         bindSelectedCity()
         refreshDateChipLayout()
+        view.backgroundColor = .black
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if appliedGradientBounds != view.bounds {
+            appliedGradientBounds = view.bounds
+            view.applyScreenBgGradient()
+        }
         if !shimmerDidFinish,
            !shimmerView.isHidden {
             shimmerView.startShimmer()

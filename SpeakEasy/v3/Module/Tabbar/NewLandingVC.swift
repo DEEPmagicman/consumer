@@ -449,26 +449,35 @@ private extension NewLandingVC {
 
         present(vc, animated: true)
     }
-
+    
     func requestCurrentLocation(for purpose: LocationBootstrapPurpose) {
-        guard CLLocationManager.locationServicesEnabled() else {
+
+        switch locationManager.authorizationStatus {
+
+        case .authorizedAlways, .authorizedWhenInUse:
+            pendingLocationPurpose = purpose
+
+            if let cachedLocation = recentCachedLocation() {
+                pendingLocationPurpose = nil
+                resolveCity(for: cachedLocation, purpose: purpose)
+            } else {
+                locationManager.requestLocation()
+            }
+
+        case .denied, .restricted:
             if purpose == .primary {
                 presentManualPrimaryCitySelectionIfNeeded()
             }
-            return
+
+        case .notDetermined:
+            pendingLocationPurpose = purpose
+            locationManager.requestWhenInUseAuthorization()
+
+        @unknown default:
+            break
         }
-
-        pendingLocationPurpose = purpose
-
-        if let cachedLocation = recentCachedLocation() {
-            pendingLocationPurpose = nil
-            resolveCity(for: cachedLocation, purpose: purpose)
-            return
-        }
-
-        locationManager.requestLocation()
     }
-
+    
     func recentCachedLocation() -> CLLocation? {
         guard let location = locationManager.location else {
             return nil

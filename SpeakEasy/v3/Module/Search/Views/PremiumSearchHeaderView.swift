@@ -22,7 +22,7 @@ final class PremiumSearchHeaderView: UIView {
     // MARK: Profile
     
     private let avatarGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 16,
+        cornerRadius: 15,
         fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.10),
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
@@ -157,8 +157,8 @@ final class PremiumSearchHeaderView: UIView {
             
             avatarGlassView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarGlassView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarGlassView.widthAnchor.constraint(equalToConstant: 32),
-            avatarGlassView.heightAnchor.constraint(equalToConstant: 32),
+            avatarGlassView.widthAnchor.constraint(equalToConstant: 30),
+            avatarGlassView.heightAnchor.constraint(equalToConstant: 30),
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
@@ -179,7 +179,7 @@ final class PremiumSearchHeaderView: UIView {
             profileButton.topAnchor.constraint(equalTo: topAnchor),
             profileButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             mapButton.widthAnchor.constraint(equalToConstant: 36),
             mapButton.heightAnchor.constraint(equalToConstant: 36),
@@ -191,8 +191,8 @@ final class PremiumSearchHeaderView: UIView {
             
             mapIcon.centerXAnchor.constraint(equalTo: mapButton.centerXAnchor),
             mapIcon.centerYAnchor.constraint(equalTo: mapButton.centerYAnchor),
-            mapIcon.widthAnchor.constraint(equalToConstant: 14),
-            mapIcon.heightAnchor.constraint(equalToConstant: 14),
+            mapIcon.widthAnchor.constraint(equalToConstant: 13),
+            mapIcon.heightAnchor.constraint(equalToConstant: 13),
             
             searchView.leadingAnchor.constraint(equalTo: avatarGlassView.trailingAnchor, constant: 16),
             searchView.trailingAnchor.constraint(equalTo: mapButton.leadingAnchor, constant: -16),
