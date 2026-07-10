@@ -42,7 +42,7 @@ class MapVenueTableViewCell: UITableViewCell {
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
             .joined(separator: ", ")
 
-        actionLabel.text = "View venue"
+        actionLabel.text = "See events"
         badgeLabel.text = "Premium available"
         badgeView.isHidden = venue.isPremium != true
 
@@ -64,6 +64,12 @@ class MapVenueTableViewCell: UITableViewCell {
         addressLabel.numberOfLines = 1
         badgeView.layer.cornerRadius = 7
         badgeView.clipsToBounds = true
+        styleActionPill()
+    }
+
+    private func styleActionPill() {
+        actionLabel.textColor = AppColor.primaryWhiteColor
+        actionLabel.superview?.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10)
     }
     
 }

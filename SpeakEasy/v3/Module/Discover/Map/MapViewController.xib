@@ -196,7 +196,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </tableView>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.60329555457746475" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="0mL-lF-xlz" firstAttribute="top" secondItem="Uqj-Ee-FVg" secondAttribute="top" constant="30" id="464-5P-3Rr"/>
                         <constraint firstItem="eB8-yJ-Ymw" firstAttribute="leading" secondItem="Uqj-Ee-FVg" secondAttribute="leading" id="6dB-TD-crv"/>
@@ -218,7 +218,7 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Ism-wn-vLT"/>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="Ism-wn-vLT" firstAttribute="top" secondItem="dre-CP-gQE" secondAttribute="top" constant="-16" id="4Xo-Pa-XBM"/>
                 <constraint firstItem="nY4-cm-deX" firstAttribute="top" secondItem="P5K-zG-5cp" secondAttribute="top" id="9fw-WZ-qru"/>

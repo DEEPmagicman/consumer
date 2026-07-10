@@ -167,6 +167,23 @@ final class PremiumTableCheckoutVC: UIViewController {
 
 private extension PremiumTableCheckoutVC {
 
+    func layoutCheckoutContent(animated: Bool) {
+        guard animated else {
+            view.layoutIfNeeded()
+            return
+        }
+
+        view.setNeedsLayout()
+        UIView.animate(
+            withDuration: 0.24,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction],
+            animations: {
+                self.view.layoutIfNeeded()
+            }
+        )
+    }
+
     func setupUI() {
         setupScroll()
         setupHeader()
@@ -270,9 +287,9 @@ private extension PremiumTableCheckoutVC {
     func setupSpendCard() {
         spendCard.translatesAutoresizingMaskIntoConstraints = false
         spendCard.isHidden = true
-        spendCard.onHeightChanged = { [weak self] height in
+        spendCard.onHeightChanged = { [weak self] height, animated in
             self?.spendHeightConstraint?.constant = height
-            self?.view.layoutIfNeeded()
+            self?.layoutCheckoutContent(animated: animated)
         }
         contentView.addSubview(spendCard)
     }
@@ -280,9 +297,9 @@ private extension PremiumTableCheckoutVC {
     func setupDepositBreakdownCard() {
         depositBreakdownCard.translatesAutoresizingMaskIntoConstraints = false
         depositBreakdownCard.isHidden = true
-        depositBreakdownCard.onHeightChanged = { [weak self] height in
+        depositBreakdownCard.onHeightChanged = { [weak self] height, animated in
             self?.depositBreakdownHeightConstraint?.constant = height
-            self?.view.layoutIfNeeded()
+            self?.layoutCheckoutContent(animated: animated)
         }
         contentView.addSubview(depositBreakdownCard)
     }
@@ -323,8 +340,8 @@ private extension PremiumTableCheckoutVC {
         checkoutPolicyView.isChecked = true
         checkoutPolicyView.translatesAutoresizingMaskIntoConstraints = false
         checkoutPolicyView.isHidden = true
-        checkoutPolicyView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: false)
+        checkoutPolicyView.onHeightChanged = { [weak self] _, animated in
+            self?.updateAgreementHeights(animated: animated)
         }
         contentView.addSubview(checkoutPolicyView)
 
@@ -333,8 +350,8 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.isChecked = true
         termsAgreementView.translatesAutoresizingMaskIntoConstraints = false
         termsAgreementView.isHidden = true
-        termsAgreementView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: false)
+        termsAgreementView.onHeightChanged = { [weak self] _, animated in
+            self?.updateAgreementHeights(animated: animated)
         }
         contentView.addSubview(termsAgreementView)
 
@@ -343,8 +360,8 @@ private extension PremiumTableCheckoutVC {
         venueMessageView.isChecked = true
         venueMessageView.translatesAutoresizingMaskIntoConstraints = false
         venueMessageView.isHidden = true
-        venueMessageView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: false)
+        venueMessageView.onHeightChanged = { [weak self] _, animated in
+            self?.updateAgreementHeights(animated: animated)
         }
         contentView.addSubview(venueMessageView)
 
@@ -353,8 +370,8 @@ private extension PremiumTableCheckoutVC {
         emailMessageView.isChecked = true
         emailMessageView.translatesAutoresizingMaskIntoConstraints = false
         emailMessageView.isHidden = true
-        emailMessageView.onHeightChanged = { [weak self] _ in
-            self?.updateAgreementHeights(animated: false)
+        emailMessageView.onHeightChanged = { [weak self] _, animated in
+            self?.updateAgreementHeights(animated: animated)
         }
         contentView.addSubview(emailMessageView)
     }
@@ -544,7 +561,7 @@ private extension PremiumTableCheckoutVC {
             promoRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             // Checkout policy
-            checkoutPolicyView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 12),
+            checkoutPolicyView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10),
             checkoutPolicyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             checkoutPolicyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
@@ -553,12 +570,12 @@ private extension PremiumTableCheckoutVC {
             termsAgreementView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             // Venue message
-            venueMessageView.topAnchor.constraint(equalTo: termsAgreementView.bottomAnchor, constant: 14),
+            venueMessageView.topAnchor.constraint(equalTo: termsAgreementView.bottomAnchor, constant: 10),
             venueMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             venueMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
             // Email message
-            emailMessageView.topAnchor.constraint(equalTo: venueMessageView.bottomAnchor, constant: 14),
+            emailMessageView.topAnchor.constraint(equalTo: venueMessageView.bottomAnchor, constant: 10),
             emailMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             emailMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             emailMessageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
@@ -606,8 +623,8 @@ private extension PremiumTableCheckoutVC {
         promoHeightConstraint = promoRow.heightAnchor.constraint(equalToConstant: promoRow.preferredHeight)
         promoHeightConstraint?.isActive = true
 
-        termsTopToPolicyConstraint = termsAgreementView.topAnchor.constraint(equalTo: checkoutPolicyView.bottomAnchor, constant: 14)
-        termsTopToPromoConstraint = termsAgreementView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 12)
+        termsTopToPolicyConstraint = termsAgreementView.topAnchor.constraint(equalTo: checkoutPolicyView.bottomAnchor, constant: 10)
+        termsTopToPromoConstraint = termsAgreementView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10)
         termsTopToPromoConstraint?.isActive = true
 
         checkoutPolicyHeightConstraint = checkoutPolicyView.heightAnchor.constraint(equalToConstant: 0)
@@ -952,13 +969,13 @@ private extension PremiumTableCheckoutVC {
 
         let settings = event?.venue?.venueSettings
 
-        let importantInformation = cleanAgreementText(settings?.tableBookingImportantInformation ?? "")
-        checkoutPolicyView.titleText = importantInformation.isEmpty ? nil : "Important Information"
+        let importantInformation = ""
+        checkoutPolicyView.titleText = nil
         checkoutPolicyView.showsCheckbox = false
         checkoutPolicyView.bodyText = importantInformation
-        checkoutPolicyView.bodyAttributedText = formattedAgreementHTML(settings?.tableBookingImportantInformation ?? "")
+        checkoutPolicyView.bodyAttributedText = nil
         checkoutPolicyView.isChecked = true
-        checkoutPolicyView.isHidden = importantInformation.isEmpty
+        checkoutPolicyView.isHidden = true
 
         let terms = cleanAgreementText(settings?.tableBookingTermsAndCondition ?? "")
 
@@ -1033,7 +1050,7 @@ private extension PremiumTableCheckoutVC {
         venueMessageHeightConstraint?.constant = venueHeight
         emailMessageHeightConstraint?.constant = emailHeight
 
-        self.view.layoutIfNeeded()
+        layoutCheckoutContent(animated: animated)
     }
 
     func cleanAgreementText(_ text: String) -> String {
@@ -1514,7 +1531,7 @@ extension PremiumTableCheckoutVC: BookingQueueSocketDelegate {
 
 private final class PremiumTableCheckoutPriceLoadingView: UIView {
 
-    let preferredHeight: CGFloat = 164
+    let preferredHeight: CGFloat = 282
 
     private let card = GradientBorderCardView()
     private let titleLabel = UILabel()
@@ -1522,7 +1539,10 @@ private final class PremiumTableCheckoutPriceLoadingView: UIView {
     private let shimmerRows = [
         PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.40, amountWidthMultiplier: 0.20),
         PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.52, amountWidthMultiplier: 0.24),
-        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.34, amountWidthMultiplier: 0.28)
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.34, amountWidthMultiplier: 0.22),
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.42, amountWidthMultiplier: 0.20),
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.48, amountWidthMultiplier: 0.24),
+        PremiumTableCheckoutPriceShimmerRow(titleWidthMultiplier: 0.38, amountWidthMultiplier: 0.28)
     ]
 
     override init(frame: CGRect) {
@@ -1555,21 +1575,21 @@ private final class PremiumTableCheckoutPriceLoadingView: UIView {
         card.thinBorder = true
         addSubview(card)
 
-        titleLabel.text = "Payment summary"
+        titleLabel.text = "Deposit Breakdown"
         titleLabel.font = Constant.Font.geistMedium(size: 15)
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(titleLabel)
 
         rowsStack.axis = .vertical
-        rowsStack.spacing = 10
+        rowsStack.spacing = 14
         rowsStack.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(rowsStack)
 
         shimmerRows.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             rowsStack.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 18).isActive = true
         }
 
         NSLayoutConstraint.activate([
@@ -1582,9 +1602,10 @@ private final class PremiumTableCheckoutPriceLoadingView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: card.trailingAnchor, constant: -16),
 
-            rowsStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 18),
+            rowsStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
             rowsStack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
-            rowsStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16)
+            rowsStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+            rowsStack.bottomAnchor.constraint(lessThanOrEqualTo: card.bottomAnchor, constant: -18)
         ])
     }
 }

@@ -52,8 +52,10 @@ final class CoverQRCodeVC: UIViewController {
     private var currentPagerHeight: CGFloat = 465
     private var pass: PKPass?
     private let venueNameMarqueeLabel = PremiumMarqueeLabel()
+    private let loadingShimmerView = CoverQRLoadingShimmerView()
     private var wasInteractivePopGestureEnabled: Bool?
     private weak var interactivePopNavigationController: UINavigationController?
+    private var isInitialLoadingVisible = false
 
     private var showsAddOnsPage: Bool {
         isAddOnsAvailable && !isOnlyAddOnAvailable
@@ -71,6 +73,8 @@ final class CoverQRCodeVC: UIViewController {
         setupUI()
         setupPosterBackground()
         setupPagerView()
+        setupLoadingShimmerView()
+        setInitialLoadingVisible(shouldShowInitialLoadingShimmer, animated: false)
 
         NotificationCenter.default.addObserver(
             self,
@@ -263,6 +267,19 @@ final class CoverQRCodeVC: UIViewController {
         applyPagerHeight(currentPagerHeight, reloadPager: false)
     }
 
+    private func setupLoadingShimmerView() {
+        loadingShimmerView.translatesAutoresizingMaskIntoConstraints = false
+        loadingShimmerView.isHidden = true
+        view.addSubview(loadingShimmerView)
+
+        NSLayoutConstraint.activate([
+            loadingShimmerView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingShimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingShimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
     private func setupProgressDots(count: Int) {
         progressBarView.subviews.forEach { $0.removeFromSuperview() }
         dotViews.removeAll()
@@ -319,6 +336,27 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     // MARK: - Data Loading
+    private var shouldShowInitialLoadingShimmer: Bool {
+        isOnlyAddOnAvailable || booking == nil
+    }
+
+    private func setInitialLoadingVisible(_ isVisible: Bool, animated: Bool = true) {
+        guard isInitialLoadingVisible != isVisible else { return }
+        isInitialLoadingVisible = isVisible
+
+        pagerView.isHidden = isVisible
+        progressBarView.isHidden = isVisible || pagerItemCount <= 1
+        addToWalletBtn.isHidden = isVisible
+        buyAnotherTicketBtn.isHidden = isVisible
+
+        if isVisible {
+            loadingShimmerView.show(animated: animated)
+            view.bringSubviewToFront(loadingShimmerView)
+        } else {
+            loadingShimmerView.hide(animated: animated)
+        }
+    }
+
     private func loadInitialData() {
         if isOnlyAddOnAvailable {
             fetchAddOnsBooking(showLoader: false)
@@ -372,6 +410,7 @@ final class CoverQRCodeVC: UIViewController {
         posterHeaderView.loadImage(from: imageUrlString)
 
         refreshPagerUI()
+        setInitialLoadingVisible(false)
     }
 
     private func fetchAddOnsBookingIfNeeded(showLoader: Bool) {
@@ -419,6 +458,7 @@ final class CoverQRCodeVC: UIViewController {
         }
 
         refreshPagerUI()
+        setInitialLoadingVisible(false)
     }
 
     private func resolvedAddOnsBookingID() -> String {
@@ -600,16 +640,29 @@ final class CoverQRCodeVC: UIViewController {
 
     private func returnToVenueScreen(animated: Bool) {
         guard let navigationController else {
-            dismiss(animated: animated)
+            let presenter = presentingViewController
+            dismiss(animated: animated) {
+                if let presentingNavigationController = presenter as? UINavigationController {
+                    self.popPresenterToVenue(in: presentingNavigationController, animated: false)
+                } else if let presentingNavigationController = presenter?.navigationController {
+                    self.popPresenterToVenue(in: presentingNavigationController, animated: false)
+                }
+            }
             return
         }
 
+        popPresenterToVenue(in: navigationController, animated: animated)
+    }
+
+    private func popPresenterToVenue(in navigationController: UINavigationController, animated: Bool) {
         if let venueVC = navigationController.viewControllers.last(where: { $0 is VenueVC }) {
             navigationController.popToViewController(venueVC, animated: animated)
+        } else if let venueVC = navigationController.viewControllers.last(where: { $0 is MVPVenueDetailVc }) {
+            navigationController.popToViewController(venueVC, animated: animated)
+        } else if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) {
+            navigationController.popToViewController(coverListVC, animated: animated)
         } else if navigationController.viewControllers.count > 1 {
             navigationController.popViewController(animated: animated)
-        } else {
-            dismiss(animated: animated)
         }
     }
 
@@ -805,5 +858,180 @@ extension CoverQRCodeVC: WebSocketCallBackDelegate {
                 self.applyPagerHeight(for: self.currentPage, animated: false)
             }
         }
+    }
+}
+
+private final class CoverQRLoadingShimmerView: UIView {
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let titleLine = ShimmerViewV3()
+    private let subtitleLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let cardView = UIView()
+    private let qrSquare = ShimmerViewV3()
+    private let helperLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let ticketLineOne = ShimmerViewV3()
+    private let ticketMetaOne = ShimmerViewV3(frame: .zero, lighter: true)
+    private let ticketLineTwo = ShimmerViewV3()
+    private let ticketMetaTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let walletLine = ShimmerViewV3()
+    private let actionLine = ShimmerViewV3(frame: .zero, lighter: true)
+
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            titleLine,
+            subtitleLine,
+            qrSquare,
+            helperLine,
+            ticketLineOne,
+            ticketMetaOne,
+            ticketLineTwo,
+            ticketMetaTwo,
+            walletLine,
+            actionLine
+        ]
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    func show(animated: Bool) {
+        isHidden = false
+        shimmerViews.forEach { $0.startShimmer() }
+
+        guard animated else {
+            alpha = 1
+            return
+        }
+
+        alpha = 0
+        UIView.animate(withDuration: 0.18) {
+            self.alpha = 1
+        }
+    }
+
+    func hide(animated: Bool) {
+        let completion: (Bool) -> Void = { _ in
+            self.shimmerViews.forEach { $0.stopShimmer() }
+            self.isHidden = true
+            self.alpha = 1
+        }
+
+        guard animated else {
+            completion(true)
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.22,
+            animations: {
+                self.alpha = 0
+            },
+            completion: completion
+        )
+    }
+
+    private func setupUI() {
+        isHidden = true
+        alpha = 0
+        backgroundColor = UIColor.black.withAlphaComponent(0.72)
+        isUserInteractionEnabled = true
+
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(blurView)
+
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.backgroundColor = UIColor.white.withAlphaComponent(0.075)
+        cardView.layer.cornerRadius = 22
+        cardView.layer.borderWidth = 1
+        cardView.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
+        cardView.clipsToBounds = true
+        addSubview(cardView)
+
+        [titleLine, subtitleLine, walletLine, actionLine].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            addSubview($0)
+        }
+
+        [
+            qrSquare,
+            helperLine,
+            ticketLineOne,
+            ticketMetaOne,
+            ticketLineTwo,
+            ticketMetaTwo
+        ].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            cardView.addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            titleLine.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 44),
+            titleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.58),
+            titleLine.heightAnchor.constraint(equalToConstant: 22),
+
+            subtitleLine.topAnchor.constraint(equalTo: titleLine.bottomAnchor, constant: 12),
+            subtitleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            subtitleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.36),
+            subtitleLine.heightAnchor.constraint(equalToConstant: 14),
+
+            cardView.topAnchor.constraint(equalTo: subtitleLine.bottomAnchor, constant: 34),
+            cardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18),
+            cardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18),
+            cardView.heightAnchor.constraint(equalToConstant: 430),
+
+            qrSquare.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 26),
+            qrSquare.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
+            qrSquare.widthAnchor.constraint(equalToConstant: 230),
+            qrSquare.heightAnchor.constraint(equalTo: qrSquare.widthAnchor),
+
+            helperLine.topAnchor.constraint(equalTo: qrSquare.bottomAnchor, constant: 20),
+            helperLine.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
+            helperLine.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.50),
+            helperLine.heightAnchor.constraint(equalToConstant: 14),
+
+            ticketLineOne.topAnchor.constraint(equalTo: helperLine.bottomAnchor, constant: 28),
+            ticketLineOne.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 26),
+            ticketLineOne.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.48),
+            ticketLineOne.heightAnchor.constraint(equalToConstant: 16),
+
+            ticketMetaOne.centerYAnchor.constraint(equalTo: ticketLineOne.centerYAnchor),
+            ticketMetaOne.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -26),
+            ticketMetaOne.widthAnchor.constraint(equalToConstant: 42),
+            ticketMetaOne.heightAnchor.constraint(equalToConstant: 16),
+
+            ticketLineTwo.topAnchor.constraint(equalTo: ticketLineOne.bottomAnchor, constant: 26),
+            ticketLineTwo.leadingAnchor.constraint(equalTo: ticketLineOne.leadingAnchor),
+            ticketLineTwo.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.38),
+            ticketLineTwo.heightAnchor.constraint(equalToConstant: 16),
+
+            ticketMetaTwo.centerYAnchor.constraint(equalTo: ticketLineTwo.centerYAnchor),
+            ticketMetaTwo.trailingAnchor.constraint(equalTo: ticketMetaOne.trailingAnchor),
+            ticketMetaTwo.widthAnchor.constraint(equalToConstant: 34),
+            ticketMetaTwo.heightAnchor.constraint(equalToConstant: 16),
+
+            walletLine.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 22),
+            walletLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
+            walletLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -28),
+            walletLine.heightAnchor.constraint(equalToConstant: 50),
+
+            actionLine.topAnchor.constraint(equalTo: walletLine.bottomAnchor, constant: 14),
+            actionLine.leadingAnchor.constraint(equalTo: walletLine.leadingAnchor),
+            actionLine.trailingAnchor.constraint(equalTo: walletLine.trailingAnchor),
+            actionLine.heightAnchor.constraint(equalToConstant: 48)
+        ])
     }
 }

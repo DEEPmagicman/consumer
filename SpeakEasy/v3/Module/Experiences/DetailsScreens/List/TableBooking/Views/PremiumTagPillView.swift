@@ -764,7 +764,7 @@ final class PremiumNoteInputView: UIView {
 
 final class PremiumAgreementView: UIView {
 
-    var onHeightChanged: ((CGFloat) -> Void)?
+    var onHeightChanged: ((CGFloat, Bool) -> Void)?
 
     var preferredHeight: CGFloat {
         calculatedHeight()
@@ -807,14 +807,21 @@ final class PremiumAgreementView: UIView {
     private let checkButton = UIButton(type: .system)
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
+    private let toggleButton = UIButton(type: .system)
     private let collapsedLines = 2
+    private let toggleButtonHeight: CGFloat = 18
+    private let toggleButtonTopSpacing: CGFloat = 2
     private var isExpanded = false
     private var lastReportedHeight: CGFloat = 0
+    private var shouldAnimateNextHeightChange = false
+    private var lastLaidOutBodyWidth: CGFloat = 0
     private var titleTopConstraint: NSLayoutConstraint?
     private var bodyTopToTitleConstraint: NSLayoutConstraint?
     private var bodyTopToContainerConstraint: NSLayoutConstraint?
     private var titleLeadingToCheckboxConstraint: NSLayoutConstraint?
     private var titleLeadingToContainerConstraint: NSLayoutConstraint?
+    private var toggleTopConstraint: NSLayoutConstraint?
+    private var toggleHeightConstraint: NSLayoutConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -825,6 +832,8 @@ final class PremiumAgreementView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        guard abs(bodyLabel.bounds.width - lastLaidOutBodyWidth) > 0.5 else { return }
+        lastLaidOutBodyWidth = bodyLabel.bounds.width
         updateText()
     }
 
@@ -853,12 +862,24 @@ final class PremiumAgreementView: UIView {
         let bodyTap = UITapGestureRecognizer(target: self, action: #selector(onBodyTap(_:)))
         bodyLabel.addGestureRecognizer(bodyTap)
 
+        toggleButton.contentHorizontalAlignment = .leading
+        toggleButton.setTitleColor(.white, for: .normal)
+        toggleButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 10)
+        toggleButton.isHidden = true
+        toggleButton.translatesAutoresizingMaskIntoConstraints = false
+        toggleButton.addTarget(self, action: #selector(onToggleTap), for: .touchUpInside)
+        addSubview(toggleButton)
+
         let titleTop = titleLabel.topAnchor.constraint(equalTo: topAnchor)
         let bodyToTitle = bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6)
         let bodyToContainer = bodyLabel.topAnchor.constraint(equalTo: topAnchor)
         titleTopConstraint = titleTop
         bodyTopToTitleConstraint = bodyToTitle
         bodyTopToContainerConstraint = bodyToContainer
+        let toggleTop = toggleButton.topAnchor.constraint(equalTo: bodyLabel.bottomAnchor, constant: 0)
+        let toggleHeight = toggleButton.heightAnchor.constraint(equalToConstant: 0)
+        toggleTopConstraint = toggleTop
+        toggleHeightConstraint = toggleHeight
 
         let titleToCheckbox = titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 8)
         let titleToContainer = titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
@@ -878,7 +899,11 @@ final class PremiumAgreementView: UIView {
             bodyLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             bodyLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             bodyToTitle,
-            bodyLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            toggleButton.leadingAnchor.constraint(equalTo: bodyLabel.leadingAnchor),
+            toggleButton.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
+            toggleTop,
+            toggleHeight,
+            toggleButton.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
         updateCheckbox()
@@ -907,7 +932,8 @@ final class PremiumAgreementView: UIView {
             bodyLabel.attributedText = nil
             bodyLabel.text = ""
             bodyLabel.numberOfLines = 0
-            reportHeightIfNeeded()
+            updateToggleButton(isVisible: false, title: nil)
+            reportHeightIfNeeded(animated: false)
             return
         }
 
@@ -915,8 +941,8 @@ final class PremiumAgreementView: UIView {
         let toggleText = isExpanded ? "View\u{00A0}Less" : "View\u{00A0}More"
         let body = isExpanded || !needsToggle
             ? bodyText
-            : collapsedPreview(toggleText: toggleText)
-        let displayText = needsToggle ? "\(body) \(toggleText)" : body
+            : collapsedPreview()
+        let displayText = body
 
         let attributed: NSMutableAttributedString
         if (isExpanded || !needsToggle),
@@ -939,15 +965,6 @@ final class PremiumAgreementView: UIView {
                     ], range: range)
                 }
             }
-            if needsToggle {
-                attributed.append(NSAttributedString(
-                    string: " \(toggleText)",
-                    attributes: [
-                        .font: Constant.Font.geistSemiBold(size: 10),
-                        .foregroundColor: UIColor.white
-                    ]
-                ))
-            }
         } else {
             attributed = NSMutableAttributedString(
                 string: displayText,
@@ -958,29 +975,27 @@ final class PremiumAgreementView: UIView {
             )
         }
 
-        if needsToggle {
-            let range = (displayText as NSString).range(of: toggleText)
-            if range.location != NSNotFound,
-               range.location + range.length <= attributed.length {
-                attributed.addAttributes([
-                    .font: Constant.Font.geistSemiBold(size: 10),
-                    .foregroundColor: UIColor.white
-                ], range: range)
-            }
-        }
-
         bodyLabel.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
         bodyLabel.attributedText = attributed
+        updateToggleButton(isVisible: needsToggle, title: toggleText)
         invalidateIntrinsicContentSize()
-        reportHeightIfNeeded()
+        reportHeightIfNeeded(animated: shouldAnimateNextHeightChange)
+        shouldAnimateNextHeightChange = false
         superview?.setNeedsLayout()
     }
 
-    private func reportHeightIfNeeded() {
+    private func updateToggleButton(isVisible: Bool, title: String?) {
+        toggleButton.isHidden = !isVisible
+        toggleButton.setTitle(title, for: .normal)
+        toggleTopConstraint?.constant = isVisible ? toggleButtonTopSpacing : 0
+        toggleHeightConstraint?.constant = isVisible ? toggleButtonHeight : 0
+    }
+
+    private func reportHeightIfNeeded(animated: Bool = false) {
         let height = preferredHeight
         guard abs(height - lastReportedHeight) > 0.5 else { return }
         lastReportedHeight = height
-        onHeightChanged?(height)
+        onHeightChanged?(height, animated)
     }
 
     private func calculatedHeight() -> CGFloat {
@@ -1008,8 +1023,11 @@ final class PremiumAgreementView: UIView {
                 attributes: [.font: bodyFont],
                 context: nil
             ).height
-            let maxCollapsedHeight = collapsedHeight(for: bodyFont)
-            height += isExpanded ? ceil(bodyHeight) : min(ceil(bodyHeight), maxCollapsedHeight)
+            let needsToggle = shouldShowToggle()
+            height += (isExpanded || !needsToggle) ? ceil(bodyHeight) : collapsedHeight(for: bodyFont)
+            if needsToggle {
+                height += toggleButtonTopSpacing + toggleButtonHeight
+            }
         }
 
         return max(24, height)
@@ -1027,10 +1045,10 @@ final class PremiumAgreementView: UIView {
         return height > collapsedHeight(for: font)
     }
 
-    private func collapsedPreview(toggleText: String) -> String {
+    private func collapsedPreview() -> String {
         let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
         let font = Constant.Font.geistRegular(size: 10)
-        let maxHeight = collapsedHeight(for: font)
+        let maxHeight = ceil(font.lineHeight * CGFloat(collapsedLines))
 
         func height(for value: String) -> CGFloat {
             (value as NSString).boundingRect(
@@ -1041,7 +1059,7 @@ final class PremiumAgreementView: UIView {
             ).height
         }
 
-        guard height(for: "\(bodyText) \(toggleText)") > maxHeight else {
+        guard height(for: bodyText) > maxHeight else {
             return bodyText
         }
 
@@ -1054,7 +1072,7 @@ final class PremiumAgreementView: UIView {
             let endIndex = bodyText.index(bodyText.startIndex, offsetBy: mid)
             let candidate = String(bodyText[..<endIndex])
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-            let display = "\(candidate)... \(toggleText)"
+            let display = "\(candidate)..."
 
             if height(for: display) <= maxHeight {
                 best = candidate
@@ -1068,7 +1086,7 @@ final class PremiumAgreementView: UIView {
     }
 
     private func collapsedHeight(for font: UIFont) -> CGFloat {
-        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 2
     }
 
     @objc private func onCheckTap() {
@@ -1081,9 +1099,18 @@ final class PremiumAgreementView: UIView {
             return
         }
         guard shouldShowToggle() else { return }
+        toggleExpansion()
+    }
+
+    @objc private func onToggleTap() {
+        guard shouldShowToggle() else { return }
+        toggleExpansion()
+    }
+
+    private func toggleExpansion() {
+        shouldAnimateNextHeightChange = true
         isExpanded.toggle()
         updateText()
-        self.superview?.layoutIfNeeded()
     }
 
     private func openLinkIfNeeded(from gesture: UITapGestureRecognizer) -> Bool {
@@ -1148,7 +1175,7 @@ struct SpendLineItem {
 
 final class PremiumSpendAgreementView: UIView {
 
-    var onHeightChanged: ((CGFloat) -> Void)?
+    var onHeightChanged: ((CGFloat, Bool) -> Void)?
 
     var preferredHeight: CGFloat {
         guard itemCount > 0 else { return 0 }
@@ -1317,24 +1344,50 @@ final class PremiumSpendAgreementView: UIView {
     }
 
     @objc private func toggleExpand() {
-        setExpanded(!isExpanded, animated: false)
+        setExpanded(!isExpanded, animated: true)
     }
 
     private func setExpanded(_ expanded: Bool, animated: Bool) {
         isExpanded = expanded
         let rotate: CGFloat = expanded ? 0 : .pi
 
-        let update = {
-            self.divider.isHidden   = !expanded
-            self.stackView.isHidden = !expanded
-            self.stackTopConstraint?.isActive = expanded
-            self.stackBottomConstraint?.isActive = expanded
-            self.chevron.transform  = CGAffineTransform(rotationAngle: rotate)
-            self.onHeightChanged?(self.preferredHeight)
-            self.superview?.layoutIfNeeded()
+        if expanded {
+            divider.isHidden = false
+            stackView.isHidden = false
+            divider.alpha = animated ? 0 : 1
+            stackView.alpha = animated ? 0 : 1
         }
 
-        update()
+        stackTopConstraint?.isActive = expanded
+        stackBottomConstraint?.isActive = expanded
+        onHeightChanged?(preferredHeight, animated)
+
+        let updates = {
+            self.divider.alpha = expanded ? 1 : 0
+            self.stackView.alpha = expanded ? 1 : 0
+            self.chevron.transform = CGAffineTransform(rotationAngle: rotate)
+        }
+
+        let completion: (Bool) -> Void = { _ in
+            self.divider.isHidden = !expanded
+            self.stackView.isHidden = !expanded
+            self.divider.alpha = 1
+            self.stackView.alpha = 1
+        }
+
+        guard animated else {
+            updates()
+            completion(true)
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.24,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction],
+            animations: updates,
+            completion: completion
+        )
     }
 }
 

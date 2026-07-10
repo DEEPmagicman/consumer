@@ -555,6 +555,9 @@ extension Notification.Name {
 
     static let openPremiumTabFromDiscover =
         Notification.Name("openPremiumTabFromDiscover")
+
+    static let eventTransactionDidCancelAndReturnToDetails =
+        Notification.Name("eventTransactionDidCancelAndReturnToDetails")
 }
 
 extension String {

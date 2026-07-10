@@ -1101,6 +1101,15 @@ private extension CoverTicketListVC {
 
 extension CoverTicketListVC {
 
+    func resetToCoverTicketStep() {
+        currentStep = .coverTickets
+        expandedIndexSet.removeAll()
+        tableView.reloadData()
+        updateTicketsTitle()
+        updateCheckoutState()
+        scrollView.setContentOffset(.zero, animated: false)
+    }
+
     @IBAction func onClickBackBtn(_ sender: Any) {
         if currentStep == .addOns && !shouldShowDirectUpsell {
             currentStep = .coverTickets

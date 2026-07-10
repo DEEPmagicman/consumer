@@ -382,7 +382,7 @@ struct APIBuilder {
             withAllowedCharacters: .urlPathAllowed
         ) ?? venueId
 
-        return baseURL + route + venue + "/\(encodedVenueId)?include=venueSettings.tableBookingSettings&include=venueSettings.spendAgreementSettings"
+        return baseURL + route + venue + "/\(encodedVenueId)?include=venueSettings.tableBookingSettings&include=venueSettings.spendAgreementSettings&include=venueSettings.reservationWidgetSettings"
     }
 
     static var v3FollowedVenuesURL: String {

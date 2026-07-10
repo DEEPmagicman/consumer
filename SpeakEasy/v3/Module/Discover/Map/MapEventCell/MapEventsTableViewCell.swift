@@ -68,6 +68,12 @@ class MapEventsTableViewCell: UITableViewCell {
 //        dateLabel.numberOfLines = 1
         badgeView.layer.cornerRadius = 7
         badgeView.clipsToBounds = true
+        styleActionPill()
+    }
+
+    private func styleActionPill() {
+        actionLabel.textColor = AppColor.primaryWhiteColor
+        actionLabel.superview?.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10)
     }
 
     private func formattedDate(
