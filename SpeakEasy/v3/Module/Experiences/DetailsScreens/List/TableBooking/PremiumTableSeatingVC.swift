@@ -213,7 +213,7 @@ private extension PremiumTableSeatingVC {
     func setupSpendAgreementView() {
         spendAgreementView.translatesAutoresizingMaskIntoConstraints = false
         spendAgreementView.isHidden = true
-        spendAgreementView.onHeightChanged = { [weak self] height in
+        spendAgreementView.onHeightChanged = { [weak self] height, _ in
             self?.spendAgreementHeightConstraint?.constant = height
             self?.view.layoutIfNeeded()
         }

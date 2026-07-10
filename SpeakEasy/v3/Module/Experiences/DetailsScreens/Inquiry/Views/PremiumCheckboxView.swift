@@ -23,8 +23,14 @@ final class PremiumCheckboxView: UIView {
     private let box   = UIView()
     private let tick  = UIImageView()
     private let label = UILabel()
-    private let collapsedLines = 3
+    private let toggleButton = UIButton(type: .system)
+    private let collapsedLines = 2
+    private let toggleButtonHeight: CGFloat = 18
+    private let toggleButtonTopSpacing: CGFloat = 2
     private var isExpanded = false
+    private var lastLaidOutLabelWidth: CGFloat = 0
+    private var toggleTopConstraint: NSLayoutConstraint?
+    private var toggleHeightConstraint: NSLayoutConstraint?
 
     var labelText: String = "" {
         didSet {
@@ -40,6 +46,13 @@ final class PremiumCheckboxView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard abs(label.bounds.width - lastLaidOutLabelWidth) > 0.5 else { return }
+        lastLaidOutLabelWidth = label.bounds.width
+        updateLabelText()
+    }
+
     private func setup() {
         // Box
         box.backgroundColor     = .clear
@@ -54,15 +67,29 @@ final class PremiumCheckboxView: UIView {
         tick.isUserInteractionEnabled = true
 
         // Label
-        label.numberOfLines     = 0
+        label.numberOfLines     = collapsedLines
         label.font              = Constant.Font.geistRegular(size: 10)
         label.textColor         = UIColor.white.withAlphaComponent(0.9)
+        label.lineBreakMode     = .byWordWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isUserInteractionEnabled = true
+
+        toggleButton.contentHorizontalAlignment = .leading
+        toggleButton.setTitleColor(.white, for: .normal)
+        toggleButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 10)
+        toggleButton.isHidden = true
+        toggleButton.translatesAutoresizingMaskIntoConstraints = false
+        toggleButton.addTarget(self, action: #selector(handleExpansionTap), for: .touchUpInside)
 
         addSubview(box)
         box.addSubview(tick)
         addSubview(label)
+        addSubview(toggleButton)
+
+        let toggleTop = toggleButton.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 0)
+        let toggleHeight = toggleButton.heightAnchor.constraint(equalToConstant: 0)
+        toggleTopConstraint = toggleTop
+        toggleHeightConstraint = toggleHeight
 
         NSLayoutConstraint.activate([
             box.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
@@ -78,7 +105,11 @@ final class PremiumCheckboxView: UIView {
             label.leadingAnchor.constraint(equalTo: box.trailingAnchor, constant: 12),
             label.trailingAnchor.constraint(equalTo: trailingAnchor),
             label.topAnchor.constraint(equalTo: topAnchor),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor)
+            toggleButton.leadingAnchor.constraint(equalTo: label.leadingAnchor),
+            toggleButton.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
+            toggleTop,
+            toggleHeight,
+            toggleButton.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
         let boxTap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -101,12 +132,13 @@ final class PremiumCheckboxView: UIView {
             label.attributedText = nil
             label.text = labelText
             label.numberOfLines = 0
+            updateToggleButton(isVisible: false, title: nil)
             return
         }
 
         let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded ? labelText : collapsedPreview(from: labelText, toggleText: toggleText)
-        let displayText = "\(bodyText) \(toggleText)"
+        let bodyText = isExpanded ? labelText : collapsedPreview(from: labelText)
+        let displayText = bodyText
         let attributed = NSMutableAttributedString(
             string: displayText,
             attributes: [
@@ -114,27 +146,82 @@ final class PremiumCheckboxView: UIView {
                 .foregroundColor: UIColor.white.withAlphaComponent(0.9)
             ]
         )
-        let range = (displayText as NSString).range(of: toggleText)
-        attributed.addAttributes([
-            .font: Constant.Font.geistMedium(size: 10),
-            .foregroundColor: UIColor.lightGray
-        ], range: range)
 
         label.numberOfLines = isExpanded ? 0 : collapsedLines
         label.attributedText = attributed
+        updateToggleButton(isVisible: true, title: toggleText)
         label.invalidateIntrinsicContentSize()
         invalidateIntrinsicContentSize()
     }
 
-    private var shouldShowToggle: Bool {
-        labelText.count > 120
+    private func updateToggleButton(isVisible: Bool, title: String?) {
+        toggleButton.isHidden = !isVisible
+        toggleButton.setTitle(title, for: .normal)
+        toggleTopConstraint?.constant = isVisible ? toggleButtonTopSpacing : 0
+        toggleHeightConstraint?.constant = isVisible ? toggleButtonHeight : 0
     }
 
-    private func collapsedPreview(from text: String, toggleText: String) -> String {
-        guard text.count > 120 else { return text }
-        let endIndex = text.index(text.startIndex, offsetBy: min(115, text.count))
-        return String(text[..<endIndex])
-            .trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+    private var shouldShowToggle: Bool {
+        let width = label.bounds.width > 0
+            ? label.bounds.width
+            : max(UIScreen.main.bounds.width - 64, 240)
+        let font = Constant.Font.geistRegular(size: 10)
+        let height = (labelText as NSString).boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).height
+        return height > collapsedHeight(for: font)
+    }
+
+    private func collapsedPreview(from text: String) -> String {
+        let cleanText = text
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let width = label.bounds.width > 0
+            ? label.bounds.width
+            : max(UIScreen.main.bounds.width - 64, 240)
+        let font = Constant.Font.geistRegular(size: 10)
+        let maxHeight = ceil(font.lineHeight * CGFloat(collapsedLines))
+
+        func height(for value: String) -> CGFloat {
+            (value as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: font],
+                context: nil
+            ).height
+        }
+
+        guard height(for: cleanText) > maxHeight else {
+            return cleanText
+        }
+
+        var low = 0
+        var high = cleanText.count
+        var best = ""
+
+        while low <= high {
+            let mid = (low + high) / 2
+            let endIndex = cleanText.index(cleanText.startIndex, offsetBy: mid)
+            let candidate = String(cleanText[..<endIndex])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let display = "\(candidate)..."
+
+            if height(for: display) <= maxHeight {
+                best = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+        }
+
+        return best.isEmpty ? "..." : "\(best)..."
+    }
+
+    private func collapsedHeight(for font: UIFont) -> CGFloat {
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 10
     }
 
     @objc private func handleTap() {
@@ -148,6 +235,10 @@ final class PremiumCheckboxView: UIView {
             return
         }
 
+        handleExpansionTap()
+    }
+
+    @objc private func handleExpansionTap() {
         isExpanded.toggle()
         updateLabelText()
         onExpansionChanged?()

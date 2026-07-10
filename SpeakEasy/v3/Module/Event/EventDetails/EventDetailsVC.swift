@@ -133,10 +133,11 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
-    private var isTableSeatingRefreshLoading = false
+    private var shouldRefreshEventDetailOnReturn = false
+    private var hasLoadedSeatingAreas = false
+    private var didLoadSeatingAreasSuccessfully = false
     private var savedEventId: String?
     private let posterHeaderView = EventPosterHeaderView()
-    private let tableBookingLoader = UIActivityIndicatorView(style: .medium)
     private let collapseThreshold: CGFloat = 20
     private var isCollapsed = false
     private var galleryImageURLs: [String] = []
@@ -222,12 +223,12 @@ class EventDetailsVC: UIViewController {
         startFAQsTableObserver()
         startAdditionalButtonsTableObserver()
         setupUI()
-        setupTableBookingLoader()
         setupUnlockButton()
         setupSkeletonView()
         setupTitleMarqueeLabel()
         setupYouTubeShimmerView()
         setupEventDetailsTypography()
+        observeCanceledTransactionReturn()
         enableInteractiveSwipeBack()
         setupLeftEdgeBackGestureIfNeeded()
         showSkeleton()
@@ -267,6 +268,7 @@ class EventDetailsVC: UIViewController {
         view.layoutIfNeeded()
         updateVenueLogoCornerRadius()
         clearInlineRSVPSelectionIfNeeded()
+        refreshEventDetailOnReturnIfNeeded()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -282,6 +284,7 @@ class EventDetailsVC: UIViewController {
         groupTableObserver?.invalidate()
         faqsTableObserver?.invalidate()
         additionalButtonsTableObserver?.invalidate()
+        NotificationCenter.default.removeObserver(self)
         stopAutoScroll()
         autoScrollTimer?.invalidate()
     }
@@ -430,40 +433,6 @@ class EventDetailsVC: UIViewController {
         event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
-    }
-
-    private func setupTableBookingLoader() {
-        tableBookingLoader.translatesAutoresizingMaskIntoConstraints = false
-        tableBookingLoader.hidesWhenStopped = true
-        tableBookingLoader.color = AppColor.primaryBlackColor
-
-        if tableBookingLoader.superview == nil {
-            tableBookNowButtonView.addSubview(tableBookingLoader)
-            NSLayoutConstraint.activate([
-                tableBookingLoader.centerXAnchor.constraint(equalTo: tableBookNowButtonView.centerXAnchor),
-                tableBookingLoader.centerYAnchor.constraint(equalTo: tableBookNowButtonView.centerYAnchor)
-            ])
-        }
-
-        updateTableBookingLoadingState(false)
-    }
-
-    private func updateTableBookingLoadingState(_ isLoading: Bool) {
-        isTableSeatingRefreshLoading = isLoading
-        tableBookNowButtonView.isUserInteractionEnabled = !isLoading
-        tableBookNowButtonView.alpha = isLoading ? 0.85 : 1
-
-        tableBookNowButtonView.subviews.forEach { view in
-            guard view !== tableBookingLoader else { return }
-            view.alpha = isLoading ? 0 : 1
-        }
-
-        if isLoading {
-            tableBookingLoader.startAnimating()
-            tableBookNowButtonView.bringSubviewToFront(tableBookingLoader)
-        } else {
-            tableBookingLoader.stopAnimating()
-        }
     }
     
     private func updateSaveUI() {
@@ -620,6 +589,67 @@ class EventDetailsVC: UIViewController {
             sectionView.alpha = hidden ? 0 : 1
             self.contentStackView.layoutIfNeeded()
         }
+    }
+
+    private func setVIPTablesView(
+        hidden: Bool,
+        animated: Bool = true
+    ) {
+        let leadingOffset: CGFloat =
+        UIView.userInterfaceLayoutDirection(
+            for: vipTablesView.semanticContentAttribute
+        ) == .rightToLeft ? 50 : -50
+
+        if vipTablesView.isHidden == hidden {
+            vipTablesView.alpha = hidden ? 0 : 1
+            vipTablesView.transform = .identity
+            return
+        }
+
+        let shouldAnimate =
+        animated &&
+        view.window != nil &&
+        !contentStackView.isHidden
+
+        guard shouldAnimate else {
+            vipTablesView.alpha = hidden ? 0 : 1
+            vipTablesView.transform = .identity
+            vipTablesView.isHidden = hidden
+            return
+        }
+
+        view.layoutIfNeeded()
+
+        if !hidden {
+            vipTablesView.alpha = 0
+            vipTablesView.transform =
+            CGAffineTransform(translationX: leadingOffset, y: 0)
+            vipTablesView.isHidden = false
+            contentStackView.layoutIfNeeded()
+        }
+
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
+            self.vipTablesView.alpha = hidden ? 0 : 1
+            self.vipTablesView.transform =
+            hidden ? CGAffineTransform(translationX: leadingOffset, y: 0) : .identity
+        } completion: { _ in
+            self.vipTablesView.isHidden = hidden
+            self.vipTablesView.alpha = hidden ? 0 : 1
+            self.vipTablesView.transform = .identity
+            self.contentStackView.layoutIfNeeded()
+        }
+    }
+
+    private func setTicketListView(hidden: Bool) {
+        ticketHidenView.layer.removeAllAnimations()
+        ticketHidenView.alpha = hidden ? 0 : 1
+        ticketHidenView.transform = .identity
+        ticketHidenView.isHidden = hidden
+        contentStackView.layoutIfNeeded()
     }
 
     
@@ -1066,6 +1096,51 @@ class EventDetailsVC: UIViewController {
         hideCheckoutBarImmediately()
     }
 
+    private func observeCanceledTransactionReturn() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleCanceledTransactionReturn(_:)),
+            name: .eventTransactionDidCancelAndReturnToDetails,
+            object: nil
+        )
+    }
+
+    @objc private func handleCanceledTransactionReturn(
+        _ notification: Notification
+    ) {
+        let returnedEventId =
+        notification.userInfo?["eventId"] as? String
+
+        if let returnedEventId,
+           !returnedEventId.isEmpty {
+
+            let currentEventIds = [
+                event?.uniqueId,
+                uniqueId,
+                event?.id
+            ]
+            .compactMap { $0 }
+
+            guard currentEventIds.contains(returnedEventId) else { return }
+        }
+
+        shouldRefreshEventDetailOnReturn = true
+        shouldClearInlineRSVPSelectionOnReturn = true
+    }
+
+    private func refreshEventDetailOnReturnIfNeeded() {
+        guard shouldRefreshEventDetailOnReturn else { return }
+
+        shouldRefreshEventDetailOnReturn = false
+        isEventDetailAPICalled = false
+        hasLoadedSeatingAreas = false
+        didLoadSeatingAreasSuccessfully = false
+        applySeatingAreas([])
+        hideCheckoutBarImmediately()
+        setupData()
+        getEventDetail(showLoading: false)
+    }
+
     private func clearInlineTicketSelections() {
         normalTickets.indices.forEach {
             normalTickets[$0].selectedTicketCount = nil
@@ -1124,13 +1199,22 @@ class EventDetailsVC: UIViewController {
     private func loadInitialSeatingAreas() {
         guard event != nil else { return }
 
-        updateTableBookingLoadingState(true)
+        hasLoadedSeatingAreas = false
+        didLoadSeatingAreasSuccessfully = false
+        applySeatingAreas([])
+        setupData()
 
-        fetchSeatingAreas { [weak self] _, _, _ in
+        fetchSeatingAreas { [weak self] success, _, list in
             DispatchQueue.main.async {
                 guard let self else { return }
 
-                self.updateTableBookingLoadingState(false)
+                self.hasLoadedSeatingAreas = true
+                self.didLoadSeatingAreasSuccessfully = success
+
+                if !success || list.isEmpty {
+                    self.applySeatingAreas([])
+                }
+
                 self.setupData()
             }
         }
@@ -1596,7 +1680,7 @@ class EventDetailsVC: UIViewController {
             groupTableViewHeight.constant = 0
             protectedTicketView.isHidden = true
             lockIcon.isHidden = true
-            setSection(ticketHidenView, hidden: true)
+            setTicketListView(hidden: true)
         }
 
         if let youtubeVideoLink = event.youtubeVideoLink, !youtubeVideoLink.isEmpty {
@@ -1644,8 +1728,8 @@ class EventDetailsVC: UIViewController {
         let title: String
         let mapImageURL: String?
 
-        if let custom = event.customVenue,
-           venueDetails?.venueSettings?.isOrganizer == true {
+        if let custom = event.customVenue {
+//            , venueDetails?.venueSettings?.isOrganizer == true {
             
             coordinate = CLLocationCoordinate2D.valid(
                 latitude: Double(custom.lat ?? "") ?? 0,
@@ -1854,8 +1938,18 @@ class EventDetailsVC: UIViewController {
         let isOnlineTablesEnabled = event?.isEnableOnlineTables
         let isReservationRequestEnabled = event?.isEnableReservationRequest
         let is3DMapEnabled = event?.isEnable3DMap
+        let hasAnySeatingAreas = !seatingAreas.isEmpty
         let hasSeatingAreas = !seatingAreasFilteredOut.isEmpty
-    
+
+        guard
+            isEventDetailAPICalled,
+            hasLoadedSeatingAreas,
+            didLoadSeatingAreasSuccessfully,
+            hasAnySeatingAreas
+        else {
+            setVIPTablesView(hidden: true)
+            return
+        }
         
         let shouldShowVIPTablesView: Bool = {
             if isReservationRequestEnabled ?? false {
@@ -1870,7 +1964,7 @@ class EventDetailsVC: UIViewController {
             return false
         }()
         
-        setSection(vipTablesView, hidden: !(shouldShowVIPTablesView && isEventDetailAPICalled))
+        setVIPTablesView(hidden: !shouldShowVIPTablesView)
         
         // MARK: - Subtitle
         
@@ -1978,7 +2072,7 @@ class EventDetailsVC: UIViewController {
         !groupedNormalTickets.isEmpty ||
         !protectedVisibleCandidates.isEmpty
 
-        setSection(ticketHidenView, hidden: !hasInlineContent)
+        setTicketListView(hidden: !hasInlineContent)
         updateContinueBtnState()
     }
 
@@ -2385,6 +2479,7 @@ class EventDetailsVC: UIViewController {
 
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
         if hasAddOn {
+            shouldClearInlineRSVPSelectionOnReturn = true
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -2528,7 +2623,10 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickShareBtn(_ sender: Any) {}
 
     @IBAction func onClickVIPtable(_ sender: Any) {
-        guard !isTableSeatingRefreshLoading else { return }
+        guard didLoadSeatingAreasSuccessfully,
+              !seatingAreas.isEmpty else {
+            return
+        }
 
         openPremiumEventContainer(with: seatingAreas)
     }
@@ -2975,8 +3073,9 @@ class EventDetailsVC: UIViewController {
         )
         let marker = GMSMarker(position: point.coordinate)
         marker.title = point.title
-        marker.iconView = EventDetailsImageMarkerView(imageURL: point.imageURL)
-        marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
+        marker.iconView = EventDetailsLocationMarkerView()
+        marker.groundAnchor = CGPoint(x: 0.5, y: 1)
+        marker.userData = point
         marker.map = googleMapView
 
         googleMapView.moveCamera(GMSCameraUpdate.setTarget(coordinate, zoom: 14))
@@ -3006,6 +3105,7 @@ class EventDetailsVC: UIViewController {
         googleMapView.settings.myLocationButton = false
         googleMapView.settings.rotateGestures = false
         googleMapView.settings.tiltGestures = false
+        googleMapView.delegate = self
         googleMapView.mapStyle = try? GMSMapStyle(
             jsonString: Self.googleDarkMapStyle(showPointsOfInterest: false)
         )
@@ -3013,6 +3113,24 @@ class EventDetailsVC: UIViewController {
         mapView.addSubview(googleMapView)
         self.googleMapView = googleMapView
         return googleMapView
+    }
+
+    private func openLocationInGoogleMaps(
+        coordinate: CLLocationCoordinate2D
+    ) {
+        var components = URLComponents(
+            string: "https://www.google.com/maps/search/"
+        )
+        components?.queryItems = [
+            URLQueryItem(name: "api", value: "1"),
+            URLQueryItem(
+                name: "query",
+                value: "\(coordinate.latitude),\(coordinate.longitude)"
+            )
+        ]
+
+        guard let url = components?.url else { return }
+        UIApplication.shared.open(url)
     }
 
     private static func googleDarkMapStyle(showPointsOfInterest: Bool) -> String {
@@ -3039,6 +3157,27 @@ class EventDetailsVC: UIViewController {
           { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "color": "#555555" }] }
         ]
         """
+    }
+}
+
+extension EventDetailsVC: GMSMapViewDelegate {
+
+    func mapView(
+        _ mapView: GMSMapView,
+        didTap marker: GMSMarker
+    ) -> Bool {
+
+        if let point = marker.userData as? EventDetailsMapAnnotation {
+            openLocationInGoogleMaps(
+                coordinate: point.coordinate
+            )
+        } else {
+            openLocationInGoogleMaps(
+                coordinate: marker.position
+            )
+        }
+
+        return true
     }
 }
 
@@ -3662,15 +3801,13 @@ private final class EventDetailsMapAnnotation: NSObject {
     }
 }
 
-private final class EventDetailsImageMarkerView: UIView {
+private final class EventDetailsLocationMarkerView: UIView {
 
-    private let imageView = UIImageView()
-    private let ringView = UIView()
+    private let iconView = UIImageView()
 
-    init(imageURL: String?) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 46, height: 46))
+    init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 44, height: 54))
         setup()
-        configure(imageURL: imageURL)
     }
 
     required init?(coder: NSCoder) {
@@ -3679,30 +3816,17 @@ private final class EventDetailsImageMarkerView: UIView {
     }
 
     private func setup() {
-        ringView.frame = bounds
-        ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
-        ringView.layer.cornerRadius = bounds.width / 2
-        ringView.layer.borderColor = UIColor.white.withAlphaComponent(0.86).cgColor
-        ringView.layer.borderWidth = 2
-        ringView.layer.shadowColor = UIColor.black.cgColor
-        ringView.layer.shadowOpacity = 0.35
-        ringView.layer.shadowRadius = 8
-        ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
-        addSubview(ringView)
-
-        imageView.frame = bounds.insetBy(dx: 5, dy: 5)
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = imageView.bounds.width / 2
-        imageView.image = UIImage(named: "newSpeakeasy")
-        addSubview(imageView)
-    }
-
-    private func configure(imageURL: String?) {
-        imageView.sd_setImage(
-            with: URL(string: imageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
-        )
+        backgroundColor = .clear
+        iconView.frame = bounds.insetBy(dx: 5, dy: 3)
+        iconView.contentMode = .scaleAspectFit
+        iconView.tintColor = UIColor(hex: "#F4F5F7")
+        iconView.image = UIImage(named: "locationIcon2")?
+            .withRenderingMode(.alwaysTemplate)
+        iconView.layer.shadowColor = UIColor.black.cgColor
+        iconView.layer.shadowOpacity = 0.42
+        iconView.layer.shadowRadius = 8
+        iconView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        addSubview(iconView)
     }
 }
 

@@ -34,6 +34,7 @@ final class DiscoverAllVC: UIViewController {
         selectedCity = UserDefault.shared.activeCity
         setupPullToRefresh()
         setupSections()
+        updatePremiumExperiencePromptVisibility()
         fetchInitialData()
         
         bottomConstraint.constant = AppDesign.adaptiveConstraint(
@@ -48,7 +49,7 @@ final class DiscoverAllVC: UIViewController {
     }
 
     @IBAction func onClickPremiumCloseBtn(_ sender: Any) {
-        premiumExperiencesView.isHidden = true
+        dismissPremiumExperiencePrompt()
     }
 }
 
@@ -143,15 +144,27 @@ private extension DiscoverAllVC {
             target: self,
             action: #selector(onTapPremiumExperiences)
         )
+        tap.delegate = self
         premiumExperiencesView.addGestureRecognizer(tap)
     }
 
     @objc func onTapPremiumExperiences() {
+        dismissPremiumExperiencePrompt()
+
         NotificationCenter.default.post(
             name: .openPremiumTabFromDiscover,
             object: self,
             userInfo: ["city": selectedCity]
         )
+    }
+
+    func updatePremiumExperiencePromptVisibility() {
+        premiumExperiencesView.isHidden = UserDefault.shared.hasSeenDiscoverPremiumPrompt
+    }
+
+    func dismissPremiumExperiencePrompt() {
+        UserDefault.shared.hasSeenDiscoverPremiumPrompt = true
+        premiumExperiencesView.isHidden = true
     }
 
     func navigateToDiscoverItem(_ action: @escaping (DiscoverAllVC) -> Void) {
@@ -369,6 +382,26 @@ extension DiscoverAllVC {
             showsSkeleton: shouldShowSkeleton,
             clearsExistingContent: shouldShowSkeleton
         )
+    }
+}
+
+extension DiscoverAllVC: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        var touchedView = touch.view
+
+        while let view = touchedView {
+            if view is UIControl {
+                return false
+            }
+
+            touchedView = view.superview
+        }
+
+        return true
     }
 }
 

@@ -266,10 +266,7 @@ final class EventService {
             }
 
             guard var event =
-                    self.decode(
-                        Event.self,
-                        from: responseDic
-                    )
+                    Event.parse(responseDic)
             else {
 
                 completion(
@@ -289,30 +286,20 @@ final class EventService {
                 event.hasSavedEvent = true
             }
 
-            let seatingAreas =
-            self.decodeArray(
-                [SeatingArea].self,
-                from: responseDic["seatingArea"]
-            )
-
             let faqs =
-            self.decodeArray(
-                [EventFAQ].self,
-                from: responseDic["eventFAQ"]
-            )
+            (responseDic["eventFAQ"] as? [[String: Any]])
+                .flatMap { [EventFAQ].parse($0) } ?? []
 
             let ticketLinks =
-            self.decodeArray(
-                [EventTicketLink].self,
-                from: responseDic["eventTicketLinks"]
-            )
+            (responseDic["eventTicketLinks"] as? [[String: Any]])
+                .flatMap { [EventTicketLink].parse($0) } ?? []
 
             completion(
                 true,
                 nil,
                 EventDetailBundle(
                     event: event,
-                    seatingAreas: seatingAreas,
+                    seatingAreas: nil,
                     faqs: faqs,
                     ticketLinks: ticketLinks,
                     attendees: self.decodeAttendees(
@@ -758,17 +745,6 @@ final class EventService {
             print("Event detail parsing error:", error)
             return nil
         }
-    }
-
-    private func decodeArray<T: Decodable>(
-        _ type: [T].Type,
-        from object: Any?
-    ) -> [T] {
-
-        decode(
-            type,
-            from: object
-        ) ?? []
     }
 
     private func decodeAttendees(

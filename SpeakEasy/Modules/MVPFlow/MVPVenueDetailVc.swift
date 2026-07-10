@@ -339,7 +339,7 @@ final class MVPVenueDetailVc: UIViewController {
             closeTicketView.isHidden = true
             venuePageTitleView.isHidden = false
         }
-        updatedAtLbl.text = venueDetails?.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmmA) ?? ""
+        updatedAtLbl.text = venueDetails?.updatedAt?.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmmA) ?? ""
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         if venueDetails?.venueSettings?.isOrganizer == true {
             cityNameLbl.isHidden = true

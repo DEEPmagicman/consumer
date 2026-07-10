@@ -25,16 +25,16 @@ struct ClipVenue: Codable {
     var phone: String?
     var website: String?
     var description: String?
-    var status: String
+    var status: String?
 //    var bookingStatus: String?
 //    var venueVibes: [String]
-    var isDeleted: Bool
+    var isDeleted: Bool?
     var isEnabledGenderBasedTicket: Bool?
-    var createdAt: String
-    var updatedAt: String
+    var createdAt: String?
+    var updatedAt: String?
     var bookingWaiting: String?
-    var lat: String
-    var lng: String
+    var lat: String?
+    var lng: String?
     var coverTicket: [CoverTicket]?
     var checkInUser: Int?
     var timezone: String?
@@ -50,10 +50,10 @@ struct ClipVenue: Codable {
     var venueFollowedId: String?
     // MARK: app side parameters
     var latitude: Double {
-        Double(lat) ?? 0.0
+        Double(lat ?? "") ?? 0.0
     }
     var longitude: Double {
-        Double(lng) ?? 0.0
+        Double(lng ?? "") ?? 0.0
     }
     var displayWaitTime: String {
         if let waitTime = bookingWaiting {
@@ -323,7 +323,7 @@ struct VenueSettings: Codable {
     var policyText: String?
     var emailPolicyText: String?
     var optedEmailPolicy: Bool?
-    var enabledCustomBookingSMS: Bool
+    var enabledCustomBookingSMS: Bool?
     var bookingSMSText: String?
     var collectNameDuringBooking: Bool?
     var collectEmailDuringBooking: Bool?

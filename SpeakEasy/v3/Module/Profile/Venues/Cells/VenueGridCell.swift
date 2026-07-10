@@ -68,6 +68,7 @@ final class VenueGridCell: UICollectionViewCell {
         venueNameBadgeContainerView.isUserInteractionEnabled = false
         venueNameBadgeContainerView.translatesAutoresizingMaskIntoConstraints = false
         venueNameBadgeContainerView.isHidden = true
+        venueNameBadgeContainerView.layer.cornerRadius = 10
 
         venueNameBlurView.blurRadius = 28
         venueNameBlurView.colorTint = UIColor(hex: "#FFF2F2")
@@ -130,12 +131,12 @@ final class VenueGridCell: UICollectionViewCell {
         ])
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        venueNameBadgeContainerView.layer.cornerRadius =
-        venueNameBadgeContainerView.bounds.height / 2
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//
+//        venueNameBadgeContainerView.layer.cornerRadius =
+//        venueNameBadgeContainerView.bounds.height / 2
+//    }
 
     func configure(_ venue: ClipVenue) {
 

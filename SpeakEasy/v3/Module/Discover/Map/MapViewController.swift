@@ -1174,7 +1174,7 @@ private final class DiscoverImageMarkerView: UIView {
     private let ringView = UIView()
 
     init(imageURL: String?) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 46, height: 46))
+        super.init(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
         setup()
         configure(imageURL: imageURL)
     }
@@ -1186,17 +1186,11 @@ private final class DiscoverImageMarkerView: UIView {
 
     private func setup() {
         ringView.frame = bounds
-        ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
         ringView.layer.cornerRadius = bounds.width / 2
-        ringView.layer.borderColor = UIColor.white.withAlphaComponent(0.86).cgColor
-        ringView.layer.borderWidth = 2
-        ringView.layer.shadowColor = UIColor.black.cgColor
-        ringView.layer.shadowOpacity = 0.35
-        ringView.layer.shadowRadius = 8
         ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
         addSubview(ringView)
 
-        imageView.frame = bounds.insetBy(dx: 5, dy: 5)
+        imageView.frame = CGRect(x: 6, y: 6, width: 30, height: 30)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.bounds.width / 2

@@ -86,7 +86,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
     private var shouldShowCheckoutButton = false
-    private let collapsedLines = 5
+    private let collapsedLines = 2
     private let coverFeeShimmerRowCount = 3
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
@@ -1137,13 +1137,13 @@ extension CoverTicketCheckOutVC {
     private func handlePaymentCanceled() {
         resetPaymentInteractionAfterFailure()
         Alert.showToast("Payment canceled.")
-        cancelBooking()
     }
 
     private func returnToCoverFlow(animated: Bool) {
         guard let navigationController else { return }
 
-        if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) {
+        if let coverListVC = navigationController.viewControllers.first(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC {
+            coverListVC.resetToCoverTicketStep()
             navigationController.popToViewController(coverListVC, animated: animated)
         } else {
             navigationController.popViewController(animated: animated)

@@ -885,6 +885,7 @@ final class OrderListViewController: UIViewController {
 
         guard let bookingId, !bookingId.isEmpty else {
             isCancellingTransaction = false
+            notifyEventDetailsTransactionCanceled()
             returnToEventDetails(animated: false)
             return
         }
@@ -893,9 +894,25 @@ final class OrderListViewController: UIViewController {
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.isCancellingTransaction = false
+                self.notifyEventDetailsTransactionCanceled()
                 self.returnToEventDetails(animated: false)
             }
         }
+    }
+
+    private func notifyEventDetailsTransactionCanceled() {
+        var userInfo: [String: String] = [:]
+        if let eventId = event?.uniqueId ?? event?.id,
+           !eventId.isEmpty {
+
+            userInfo["eventId"] = eventId
+        }
+
+        NotificationCenter.default.post(
+            name: .eventTransactionDidCancelAndReturnToDetails,
+            object: nil,
+            userInfo: userInfo
+        )
     }
 
     private func returnToEventDetails(animated: Bool) {

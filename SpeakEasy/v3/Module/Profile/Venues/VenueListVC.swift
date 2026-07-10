@@ -98,6 +98,7 @@ final class VenueListVC: UIViewController {
         searchBtn.iconSize = 14
         searchBtn.buttonSize = 40
         searchBtn.iconTintColor = .white
+        searchBtn.isHidden = true
         searchBtn.addTarget(self, action: #selector(onClickSearch), for: .touchUpInside)
         searchBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBtn)

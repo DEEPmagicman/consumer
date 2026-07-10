@@ -400,10 +400,12 @@ final class Navigate {
         vc.modalPresentationStyle = .fullScreen
         vc.isModalInPresentation = true
 
-        if shouldPushFromVenueFlow,
-           let navigationController = sender.navigationController {
-            vc.hidesBottomBarWhenPushed = true
-            navigationController.pushViewController(vc, animated: true)
+        if shouldPushFromVenueFlow {
+            if let navigationController = sender.navigationController {
+                navigationController.present(vc, animated: true)
+            } else {
+                sender.present(vc, animated: true)
+            }
             return
         }
 

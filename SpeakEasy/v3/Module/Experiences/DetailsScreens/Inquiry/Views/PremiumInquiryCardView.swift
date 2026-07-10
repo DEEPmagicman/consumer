@@ -219,7 +219,14 @@ private extension PremiumInquiryCardView {
         }
         checkboxView.onExpansionChanged = { [weak self] in
             self?.setNeedsLayout()
-            self?.layoutIfNeeded()
+            UIView.animate(
+                withDuration: 0.22,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction],
+                animations: {
+                    self?.layoutIfNeeded()
+                }
+            )
         }
 
         emailCheckboxView.supportsExpansion = true
@@ -229,7 +236,14 @@ private extension PremiumInquiryCardView {
         }
         emailCheckboxView.onExpansionChanged = { [weak self] in
             self?.setNeedsLayout()
-            self?.layoutIfNeeded()
+            UIView.animate(
+                withDuration: 0.22,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction],
+                animations: {
+                    self?.layoutIfNeeded()
+                }
+            )
         }
 
         policyStackView.addArrangedSubview(emailCheckboxView)
@@ -385,7 +399,7 @@ private extension PremiumInquiryCardView {
             : (!customNote.isEmpty ? customNote : tableImportantInfo)
         descriptionLabel.text = information.isEmpty ? fallbackInformation : information
 
-        titleLabel.text = "Reservation request"
+//        titleLabel.text = "Reservation request"
 
         var marketingPolicy = cleanHTMLText(settings?.policyText ?? "")
         if settings?.optedPolicy == true, marketingPolicy.isEmpty {

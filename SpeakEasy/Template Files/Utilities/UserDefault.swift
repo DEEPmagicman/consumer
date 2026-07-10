@@ -31,6 +31,7 @@ final class UserDefault {
         case isVersionV3Key
         case filterCity
         case hasSeenPremiumIntro
+        case hasSeenDiscoverPremiumPrompt
         case selectedVenueId
     }
     
@@ -175,6 +176,11 @@ final class UserDefault {
     var hasSeenPremiumIntro: Bool? {
         get { getValue(for: .hasSeenPremiumIntro) ?? false }
         set { setValue(newValue, for: .hasSeenPremiumIntro) }
+    }
+
+    var hasSeenDiscoverPremiumPrompt: Bool {
+        get { getValue(for: .hasSeenDiscoverPremiumPrompt) ?? false }
+        set { setValue(newValue, for: .hasSeenDiscoverPremiumPrompt) }
     }
     
     var filterCity: String? {
