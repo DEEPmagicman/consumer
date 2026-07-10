@@ -606,6 +606,7 @@ final class Navigate {
         vc.venueDetails = event?.venue
         vc.onSaveStateChanged = onSaveStateChanged
         let nav = UINavigationController(rootViewController: vc)
+        nav.view.backgroundColor = .clear
         nav.navigationBar.isHidden = true
         nav.isModalInPresentation = true
         sender.presentPremium(nav)
@@ -828,29 +829,29 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-//    func profileMenuVC(_ sender: UIViewController) {
-//        let vc = ProfileMenuVC()
-//        let nav = UINavigationController(rootViewController: vc)
-//        nav.navigationBar.isHidden = true
-//        nav.modalTransitionStyle = .crossDissolve
-//        nav.modalPresentationStyle = .overCurrentContext
-//        sender.present(nav, animated: true)
-//    }
-    
     func profileMenuVC(_ sender: UIViewController) {
-        guard let navigation = sender.navigationController else { return }
-
-            let vc = ProfileMenuVC()
-
-            let transition = CATransition()
-            transition.duration = 0.35
-            transition.type = .moveIn
-            transition.subtype = .fromTop
-            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-
-            navigation.view.layer.add(transition, forKey: nil)
-            navigation.pushViewController(vc, animated: false)
+        let vc = ProfileMenuVC()
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        nav.modalTransitionStyle = .crossDissolve
+        nav.modalPresentationStyle = .overFullScreen
+        sender.present(nav, animated: true)
     }
+    
+//    func profileMenuVC(_ sender: UIViewController) {
+//        guard let navigation = sender.navigationController else { return }
+//
+//            let vc = ProfileMenuVC()
+//
+//            let transition = CATransition()
+//            transition.duration = 0.35
+//            transition.type = .moveIn
+//            transition.subtype = .fromTop
+//            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+//
+//            navigation.view.layer.add(transition, forKey: nil)
+//            navigation.pushViewController(vc, animated: false)
+//    }
     
     func editProfileVC(_ sender: UIViewController) {
         let vc = EditProfileVC()

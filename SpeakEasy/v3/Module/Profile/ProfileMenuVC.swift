@@ -24,8 +24,10 @@ final class ProfileMenuVC: UIViewController {
     private let settingsCard = ProfileCardView()
     private let logoutCard = ProfileCardView()
     private var versionLabel = UILabel()
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
-    private let darkBlurOverlay = UIView()
+    private let backgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let backgroundDimView = UIView()
+    private let topColorBloomView = ProfileBackgroundBloomView()
+    private let lowerColorBloomView = ProfileBackgroundBloomView()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -40,7 +42,6 @@ final class ProfileMenuVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.applyScreenBgGradient(colorAlpha: 0.30)
         avatarContainer.layer.cornerRadius = avatarContainer.bounds.height / 2
         imageView.layer.cornerRadius = imageView.bounds.height / 2
     }
@@ -60,15 +61,7 @@ final class ProfileMenuVC: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .clear
-
-        blurView.effect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-        blurView.alpha = 1
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(blurView, at: 0)
-
-        darkBlurOverlay.backgroundColor = UIColor(hex: "#191919").withAlphaComponent(0.75)
-        darkBlurOverlay.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(darkBlurOverlay, aboveSubview: blurView)
+        setupBackgroundBlur()
         
         setupBackButton()
         setupAvatar()
@@ -76,6 +69,35 @@ final class ProfileMenuVC: UIViewController {
         setupTopActions()
         setupMenuCards()
         setupConstraints()
+    }
+
+    private func setupBackgroundBlur() {
+        backgroundBlurView.effect = UIBlurEffect(style: .systemThinMaterialDark)
+        backgroundBlurView.alpha = 1
+        backgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(backgroundBlurView, at: 0)
+
+        topColorBloomView.configure(
+            color: UIColor(hex: "#8B4F78"),
+            centerAlpha: 0.36,
+            edgeAlpha: 0
+        )
+        topColorBloomView.layer.compositingFilter = "screenBlendMode"
+        topColorBloomView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(topColorBloomView, aboveSubview: backgroundBlurView)
+
+        lowerColorBloomView.configure(
+            color: UIColor(hex: "#687174"),
+            centerAlpha: 0.24,
+            edgeAlpha: 0
+        )
+        lowerColorBloomView.layer.compositingFilter = "screenBlendMode"
+        lowerColorBloomView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(lowerColorBloomView, aboveSubview: topColorBloomView)
+
+        backgroundDimView.backgroundColor = UIColor(hex: "#070808").withAlphaComponent(0.42)
+        backgroundDimView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(backgroundDimView, aboveSubview: lowerColorBloomView)
     }
 
     private func setupBackButton() {
@@ -195,15 +217,25 @@ final class ProfileMenuVC: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
-            darkBlurOverlay.topAnchor.constraint(equalTo: view.topAnchor),
-            darkBlurOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            darkBlurOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            darkBlurOverlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            blurView.topAnchor.constraint(equalTo: view.topAnchor),
-            blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            blurView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            backgroundBlurView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundBlurView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            topColorBloomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -110),
+            topColorBloomView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 235),
+            topColorBloomView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.45),
+            topColorBloomView.heightAnchor.constraint(equalToConstant: 260),
+
+            lowerColorBloomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -20),
+            lowerColorBloomView.topAnchor.constraint(equalTo: topColorBloomView.bottomAnchor, constant: -18),
+            lowerColorBloomView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.15),
+            lowerColorBloomView.heightAnchor.constraint(equalToConstant: 310),
+
+            backgroundDimView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundDimView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundDimView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundDimView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -328,7 +360,7 @@ final class ProfileMenuVC: UIViewController {
 
     private func makeMenuRow(_ row: ProfileMenuRow) -> UIControl {
         let control = UIControl()
-        control.heightAnchor.constraint(equalToConstant: 46).isActive = true
+        control.heightAnchor.constraint(equalToConstant: 47).isActive = true
 
         let iconView = UIImageView(image: row.icon)
         iconView.tintColor = .white
@@ -397,16 +429,21 @@ final class ProfileMenuVC: UIViewController {
     }
     
     func popProfileMenuVC(_ sender: UIViewController) {
+        if sender.presentingViewController != nil || sender.navigationController?.presentingViewController != nil {
+            sender.dismiss(animated: true)
+            return
+        }
+
         guard let navigation = sender.navigationController else { return }
 
-           let transition = CATransition()
-           transition.duration = 0.35
-           transition.type = .reveal
-           transition.subtype = .fromBottom
-           transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        let transition = CATransition()
+        transition.duration = 0.35
+        transition.type = .reveal
+        transition.subtype = .fromBottom
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-           navigation.view.layer.add(transition, forKey: nil)
-           navigation.popViewController(animated: false)
+        navigation.view.layer.add(transition, forKey: nil)
+        navigation.popViewController(animated: false)
     }
     
     @objc private func onClickProfile() {
@@ -440,7 +477,48 @@ private struct ProfileMenuRow {
     let action: Selector?
 }
 
+private final class ProfileBackgroundBloomView: UIView {
+
+    private let gradientLayer = CAGradientLayer()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+    }
+
+    func configure(color: UIColor, centerAlpha: CGFloat, edgeAlpha: CGFloat) {
+        gradientLayer.colors = [
+            color.withAlphaComponent(centerAlpha).cgColor,
+            color.withAlphaComponent(centerAlpha * 0.36).cgColor,
+            color.withAlphaComponent(edgeAlpha).cgColor
+        ]
+    }
+
+    private func setup() {
+        isUserInteractionEnabled = false
+        backgroundColor = .clear
+        gradientLayer.type = .radial
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        gradientLayer.locations = [0, 0.52, 1]
+        layer.addSublayer(gradientLayer)
+    }
+}
+
 final class ProfileCardView: UIView {
+
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let tintView = UIView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -453,10 +531,30 @@ final class ProfileCardView: UIView {
     }
 
     private func setup() {
-        backgroundColor = UIColor(hex: "#9B9B9B").withAlphaComponent(0.12)
-        layer.cornerRadius = 21
+        backgroundColor = .clear
+        layer.cornerRadius = 18
         layer.cornerCurve = .continuous
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
+
+        blurView.alpha = 0.82
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(blurView)
+
+        tintView.backgroundColor = UIColor(hex: "#9B9B9B").withAlphaComponent(0.05)
+        tintView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(tintView)
+
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            tintView.topAnchor.constraint(equalTo: topAnchor),
+            tintView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tintView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tintView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
 }
