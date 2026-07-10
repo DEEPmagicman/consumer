@@ -17,6 +17,8 @@ final class NotificationSettingsVC: UIViewController {
     private let contentView = UIView()
     private let mainStack = UIStackView()
 
+    private var shouldEnablePushAfterSettings = false
+
     private var sections: [NotificationSettingSection] = [
         NotificationSettingSection(
             title: "How should we notify you?",
@@ -34,12 +36,31 @@ final class NotificationSettingsVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         buildSections()
+        setupAppLifecycleObserver()
+        refreshPushNotificationState()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         refreshPushNotificationState()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.applyScreenBgGradient()
+    }
+
+    private func setupAppLifecycleObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onAppDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
     }
 
     private func setupUI() {
@@ -143,7 +164,16 @@ final class NotificationSettingsVC: UIViewController {
             }
 
             DispatchQueue.main.async {
-                self?.updatePushState(isSystemEnabled && UserDefault.shared.isNotificationOn, rebuild: true)
+                guard let self else { return }
+                let shouldTurnOn = self.shouldEnablePushAfterSettings
+                    ? isSystemEnabled
+                    : isSystemEnabled && UserDefault.shared.isNotificationOn
+
+                self.shouldEnablePushAfterSettings = false
+                if shouldTurnOn {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+                self.updatePushState(shouldTurnOn, rebuild: true)
             }
         }
     }
@@ -159,17 +189,20 @@ final class NotificationSettingsVC: UIViewController {
 
     private func requestPushNotificationPermission() {
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: [.alert, .badge, .sound]
-            ) { [weak self] isAllowed, _ in
+            UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
                 DispatchQueue.main.async {
-                    if isAllowed {
+                    guard let self else { return }
+
+                    switch settings.authorizationStatus {
+                    case .notDetermined:
+                        self.requestSystemPushNotificationPermission()
+                    case .denied:
+                        self.updatePushState(false, rebuild: true)
+                        self.presentNotificationSettingsPrompt()
+                    default:
                         UIApplication.shared.registerForRemoteNotifications()
-                    } else {
-                        Alert.showToast("Push notifications are disabled.")
+                        self.updatePushState(true, rebuild: true)
                     }
-                    self?.updatePushState(isAllowed, rebuild: true)
                 }
             }
         } else {
@@ -182,6 +215,42 @@ final class NotificationSettingsVC: UIViewController {
             }
             updatePushState(true, rebuild: false)
         }
+    }
+
+    @available(iOS 10.0, *)
+    private func requestSystemPushNotificationPermission() {
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .badge, .sound]
+        ) { [weak self] isAllowed, _ in
+            DispatchQueue.main.async {
+                if isAllowed {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+                self?.updatePushState(isAllowed, rebuild: true)
+            }
+        }
+    }
+
+    private func presentNotificationSettingsPrompt() {
+        let alert = UIAlertController(
+            title: "Turn on notifications",
+            message: "Notifications are turned off in Settings. Open Settings to enable push notifications for SpeakEasy.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Not now", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { [weak self] _ in
+            self?.shouldEnablePushAfterSettings = true
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        })
+
+        present(alert, animated: true)
     }
 
     private func updatePushState(_ isOn: Bool, rebuild: Bool) {
@@ -197,6 +266,10 @@ final class NotificationSettingsVC: UIViewController {
         if rebuild {
             buildSections()
         }
+    }
+
+    @objc private func onAppDidBecomeActive() {
+        refreshPushNotificationState()
     }
 
     @objc private func onClickBack() {

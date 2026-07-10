@@ -119,16 +119,20 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
         enableBtn.showLoader(userInteraction: false)
 
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self
-
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-
-            UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { [weak self] _, _ in
+            UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
                 DispatchQueue.main.async {
                     guard let self else { return }
-                    self.enableBtn.hideLoader()
-                    Navigate.to.setLocationVc(self)
-                    AppDelegate.shared.setRootVC()
+
+                    switch settings.authorizationStatus {
+                    case .notDetermined:
+                        self.requestSystemNotificationPermission()
+                    case .denied:
+                        self.enableBtn.hideLoader()
+                        self.presentNotificationSettingsPrompt()
+                    default:
+                        UIApplication.shared.registerForRemoteNotifications()
+                        self.finishNotificationPermissionFlow()
+                    }
                 }
             }
         } else {
@@ -144,6 +148,55 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
             enableBtn.hideLoader()
             AppDelegate.shared.setRootVC()
         }
+    }
+
+    @available(iOS 10.0, *)
+    private func requestSystemNotificationPermission() {
+        UNUserNotificationCenter.current().delegate = self
+
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { [weak self] isAllowed, _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.enableBtn.hideLoader()
+
+                if isAllowed {
+                    UIApplication.shared.registerForRemoteNotifications()
+                    self.finishNotificationPermissionFlow()
+                } else {
+                    self.presentNotificationSettingsPrompt()
+                }
+            }
+        }
+    }
+
+    private func finishNotificationPermissionFlow() {
+        enableBtn.hideLoader()
+        Navigate.to.setLocationVc(self)
+        AppDelegate.shared.setRootVC()
+    }
+
+    private func presentNotificationSettingsPrompt() {
+        let alert = UIAlertController(
+            title: "Turn on notifications",
+            message: "Notifications are turned off in Settings. Open Settings to enable push notifications for SpeakEasy.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Not now", style: .cancel) { _ in
+            AppDelegate.shared.setRootVC()
+        })
+        alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        })
+
+        present(alert, animated: true)
     }
 
     @objc private func onClickSkip() {

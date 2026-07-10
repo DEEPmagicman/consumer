@@ -20,8 +20,6 @@ final class GenderSelectionBottomSheetVC: UIViewController {
     private let titleLabel = UILabel()
     private let backBtn = AppIconButton()
     private let optionsCard = UIView()
-    private let updateBtn = PrimaryButton()
-    
     private let genders = ["Female", "Male", "Other"]
     private var selectedGender: String
 
@@ -84,14 +82,6 @@ final class GenderSelectionBottomSheetVC: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         sheetView.addSubview(titleLabel)
         
-        updateBtn.configure(title: "Update", fontSize: 13, cornerRadius: 18)
-        updateBtn.addTarget(
-            self,
-            action: #selector(onClickUpdate),
-            for: .touchUpInside
-        )
-        sheetView.addSubview(updateBtn)
-        
         optionsCard.backgroundColor = AuthTheme.fieldLightBackground
         optionsCard.layer.cornerRadius = 16
         optionsCard.layer.cornerCurve = .continuous
@@ -115,12 +105,6 @@ final class GenderSelectionBottomSheetVC: UIViewController {
 
             titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: sheetView.centerXAnchor),
-
-            updateBtn.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
-            updateBtn.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
-            updateBtn.widthAnchor.constraint(equalToConstant: 78),
-            updateBtn.heightAnchor.constraint(equalToConstant: 36),
-
             optionsCard.topAnchor.constraint(equalTo: backBtn.bottomAnchor, constant: 24),
             optionsCard.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
             optionsCard.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
@@ -229,6 +213,10 @@ final class GenderSelectionBottomSheetVC: UIViewController {
     @objc private func onGenderTap(_ sender: UIControl) {
         selectedGender = genders[sender.tag]
         buildOptions()
+        dismissSheet { [weak self] in
+            guard let self else { return }
+            self.delegate?.genderSelectionBottomSheet(self, didSelect: self.selectedGender.uppercased())
+        }
     }
 
     @objc private func onClickBack() {
@@ -237,12 +225,5 @@ final class GenderSelectionBottomSheetVC: UIViewController {
     
     @objc private func onClickOutside() {
         dismissSheet()
-    }
-
-    @objc private func onClickUpdate() {
-        dismissSheet { [weak self] in
-            guard let self else { return }
-            self.delegate?.genderSelectionBottomSheet(self, didSelect: self.selectedGender.uppercased())
-        }
     }
 }

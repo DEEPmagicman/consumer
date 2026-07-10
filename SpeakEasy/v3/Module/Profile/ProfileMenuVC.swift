@@ -393,7 +393,20 @@ final class ProfileMenuVC: UIViewController {
     }
 
     @objc private func onClickBack() {
-        dismiss(animated: true)
+        popProfileMenuVC(self)
+    }
+    
+    func popProfileMenuVC(_ sender: UIViewController) {
+        guard let navigation = sender.navigationController else { return }
+
+           let transition = CATransition()
+           transition.duration = 0.35
+           transition.type = .reveal
+           transition.subtype = .fromBottom
+           transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+           navigation.view.layer.add(transition, forKey: nil)
+           navigation.popViewController(animated: false)
     }
     
     @objc private func onClickProfile() {
