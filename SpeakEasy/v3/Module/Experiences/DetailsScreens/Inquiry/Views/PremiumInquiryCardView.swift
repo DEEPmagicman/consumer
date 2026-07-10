@@ -25,10 +25,13 @@ final class PremiumInquiryCardView: UIView {
     private let dateField         = PremiumTextField()
     private let timeField         = PremiumTextField()
     private let partySizeRow      = PartySizeFieldRow()
-    private let dseField          = PremiumTextView()
     private let commentView       = PremiumTextView()
+    private let questionSectionView = UIView()
+    private let questionStackView   = UIStackView()
 
+    private let policyStackView   = UIStackView()
     private let checkboxView      = PremiumCheckboxView()
+    private let emailCheckboxView = PremiumCheckboxView()
     private let sendButton        = PrimaryButton()
 
     // MARK: Picker
@@ -41,6 +44,10 @@ final class PremiumInquiryCardView: UIView {
     private var selectedDate: Date?
     private var selectedTime: Date?
     private var selectedPartySize = 0
+    private var reservationQuestions: [Questions] = []
+    private var questionAnswers: [String: Any] = [:]
+    private var questionViews: [PremiumRequestQuestionView] = []
+    private var loadedQuestionsEventId: String?
 
     // MARK: Init
 
@@ -67,8 +74,8 @@ private extension PremiumInquiryCardView {
         setupCard()
         setupTitle()
         setupStack()
-        setupFields()
         setupCheckbox()
+        setupFields()
         setupButton()
         setupConstraints()
     }
@@ -115,13 +122,13 @@ private extension PremiumInquiryCardView {
         setupDateField()
         setupTimeField()
         setupPartySizeRow()
-        setupDSEField()
         setupCommentView()
+        setupQuestionSection()
 
         stackView.addArrangedSubview(dateField)
         stackView.addArrangedSubview(timeField)
         stackView.addArrangedSubview(partySizeRow)
-        stackView.addArrangedSubview(dseField)
+        stackView.addArrangedSubview(questionSectionView)
         stackView.addArrangedSubview(commentView)
     }
 
@@ -133,7 +140,6 @@ private extension PremiumInquiryCardView {
         dateField.textField.tintColor        = .clear
         dateField.textField.isUserInteractionEnabled = false
         dateField.alpha = 0.7
-        dseField.viewCornerRadius = 14
 
         datePicker.datePickerMode         = .date
         datePicker.preferredDatePickerStyle = .wheels
@@ -169,18 +175,28 @@ private extension PremiumInquiryCardView {
         partySizeRow.viewCornerRadius = 14
     }
 
-    func setupDSEField() {
-        dseField.placeholder = "dse"
-        dseField.translatesAutoresizingMaskIntoConstraints = false
-        dseField.heightAnchor.constraint(equalToConstant: 52).isActive = true
-        dseField.viewCornerRadius = 14
-    }
-
     func setupCommentView() {
         commentView.placeholder = "Questions and comments"
         commentView.translatesAutoresizingMaskIntoConstraints = false
         commentView.heightAnchor.constraint(equalToConstant: 140).isActive = true
         commentView.viewCornerRadius = 14
+    }
+
+    func setupQuestionSection() {
+        questionSectionView.translatesAutoresizingMaskIntoConstraints = false
+        questionSectionView.isHidden = true
+
+        questionStackView.axis = .vertical
+        questionStackView.spacing = 10
+        questionStackView.translatesAutoresizingMaskIntoConstraints = false
+        questionSectionView.addSubview(questionStackView)
+
+        NSLayoutConstraint.activate([
+            questionStackView.topAnchor.constraint(equalTo: questionSectionView.topAnchor),
+            questionStackView.leadingAnchor.constraint(equalTo: questionSectionView.leadingAnchor),
+            questionStackView.trailingAnchor.constraint(equalTo: questionSectionView.trailingAnchor),
+            questionStackView.bottomAnchor.constraint(equalTo: questionSectionView.bottomAnchor)
+        ])
     }
 }
 
@@ -189,10 +205,35 @@ private extension PremiumInquiryCardView {
 private extension PremiumInquiryCardView {
 
     func setupCheckbox() {
+        policyStackView.axis = .vertical
+        policyStackView.spacing = 14
+        policyStackView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(policyStackView)
+
         checkboxView.labelText =
             "I agree to receive marketing related text messages from E11EVEN. Msg & data rates may apply. Reply STOP to opt out or HELP for support."
-        checkboxView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.addSubview(checkboxView)
+        checkboxView.supportsExpansion = true
+        checkboxView.isChecked = true
+        checkboxView.onToggle = { [weak self] _ in
+            self?.updateButtonState()
+        }
+        checkboxView.onExpansionChanged = { [weak self] in
+            self?.setNeedsLayout()
+            self?.layoutIfNeeded()
+        }
+
+        emailCheckboxView.supportsExpansion = true
+        emailCheckboxView.isChecked = true
+        emailCheckboxView.onToggle = { [weak self] _ in
+            self?.updateButtonState()
+        }
+        emailCheckboxView.onExpansionChanged = { [weak self] in
+            self?.setNeedsLayout()
+            self?.layoutIfNeeded()
+        }
+
+        policyStackView.addArrangedSubview(emailCheckboxView)
+        policyStackView.addArrangedSubview(checkboxView)
     }
 }
 
@@ -232,11 +273,11 @@ private extension PremiumInquiryCardView {
             stackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 22),
             stackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -22),
 
-            checkboxView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
-            checkboxView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            checkboxView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            policyStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
+            policyStackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            policyStackView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
-            sendButton.topAnchor.constraint(equalTo: checkboxView.bottomAnchor, constant: 24),
+            sendButton.topAnchor.constraint(equalTo: policyStackView.bottomAnchor, constant: 24),
             sendButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             sendButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             sendButton.heightAnchor.constraint(equalToConstant: 52),
@@ -271,7 +312,7 @@ private extension PremiumInquiryCardView {
 
 }
 
-// MARK: - UITextViewDelegate (dse field change tracking)
+// MARK: - UITextViewDelegate
 
 extension PremiumInquiryCardView: UITextViewDelegate {
 
@@ -300,11 +341,9 @@ private extension PremiumInquiryCardView {
 private extension PremiumInquiryCardView {
 
     func updateButtonState() {
-        let dseText = dseField.text.trimmingCharacters(in: .whitespacesAndNewlines)
         let enabled =
             !(timeField.text?.isEmpty ?? true) &&
-            selectedPartySize > 0 &&
-            !dseText.isEmpty
+            selectedPartySize > 0
 
         sendButton.isUserInteractionEnabled = enabled
         UIView.animate(withDuration: 0.2) {
@@ -321,6 +360,7 @@ extension PremiumInquiryCardView {
         configureTextsFromSettings()
         configureDefaultDateTime()
         configurePartySize()
+        fetchReservationQuestionsIfNeeded()
         updateButtonState()
     }
 }
@@ -335,16 +375,37 @@ private extension PremiumInquiryCardView {
         let fallbackPolicy =
             "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
 
-        let information = cleanHTMLText(settings?.tableBookingImportantInformation ?? "")
+        let widgetFormText = settings?.reservationWidgetSettings?.isReservationRequestFormTextEnabled == true
+            ? cleanHTMLText(settings?.reservationWidgetSettings?.reservationRequestFormText ?? "")
+            : ""
+        let customNote = cleanHTMLText(settings?.customNoteOnReservationManagementPage ?? "")
+        let tableImportantInfo = cleanHTMLText(settings?.tableBookingImportantInformation ?? "")
+        let information = !widgetFormText.isEmpty
+            ? widgetFormText
+            : (!customNote.isEmpty ? customNote : tableImportantInfo)
         descriptionLabel.text = information.isEmpty ? fallbackInformation : information
 
         titleLabel.text = "Reservation request"
 
-        let requestPolicy = cleanHTMLText(settings?.reservationRequestPolicy ?? "")
-        let marketingPolicy = cleanHTMLText(settings?.policyText ?? "")
-        checkboxView.labelText = requestPolicy.isEmpty
-            ? (marketingPolicy.isEmpty ? fallbackPolicy : marketingPolicy)
-            : requestPolicy
+        var marketingPolicy = cleanHTMLText(settings?.policyText ?? "")
+        if settings?.optedPolicy == true, marketingPolicy.isEmpty {
+            marketingPolicy = fallbackPolicy
+        }
+
+        let fallbackEmailPolicy = "I agree to receive marketing related email messages from \(venueName)."
+        var emailPolicy = cleanHTMLText(settings?.emailPolicyText ?? "")
+        if settings?.optedEmailPolicy == true, emailPolicy.isEmpty {
+            emailPolicy = fallbackEmailPolicy
+        }
+
+        checkboxView.labelText = marketingPolicy
+        checkboxView.isChecked = true
+        checkboxView.isHidden = settings?.optedPolicy != true || marketingPolicy.isEmpty
+
+        emailCheckboxView.labelText = emailPolicy
+        emailCheckboxView.isChecked = true
+        emailCheckboxView.isHidden = emailPolicy.isEmpty
+        policyStackView.isHidden = checkboxView.isHidden && emailCheckboxView.isHidden
     }
 
     func configureDefaultDateTime() {
@@ -405,6 +466,8 @@ private extension PremiumInquiryCardView {
         }
 
         guard validateUserProfile() else { return }
+        guard validatePolicyAcceptance() else { return }
+        guard validateQuestionAnswers() else { return }
         createRequest()
     }
 
@@ -420,7 +483,7 @@ private extension PremiumInquiryCardView {
             time:            formattedAPIDateTime(from: date),
             partySize:       "\(selectedPartySize)",
             comments:        commentView.text,
-            marketingOptIn:  checkboxView.isChecked
+            marketingOptIn:  areVisiblePoliciesAccepted()
         )
 
         callReservationAPI(payload)
@@ -466,7 +529,8 @@ private extension PremiumInquiryCardView {
             eventId:     event.id ?? "",
             seatingArea: nil,
             venueId:     event.venue?.id ?? "",
-            token:       UserDefault.shared.accessToken ?? ""
+            token:       UserDefault.shared.accessToken ?? "",
+            answers:     reservationQuestionAnswersPayload()
         ) { [weak self] success, message, _ in
             self?.sendButton.stopLoading()
             
@@ -486,11 +550,520 @@ private extension PremiumInquiryCardView {
     func resetForm() {
         selectedPartySize = 0
         partySizeRow.configure(max: seatingAreas.compactMap { $0.maxGuest }.max() ?? 100)
-        dseField.text    = ""
         commentView.text = ""
-        checkboxView.isChecked = false
+        checkboxView.isChecked = true
+        emailCheckboxView.isChecked = true
+        questionAnswers.removeAll()
+        reloadQuestionViews()
         configureDefaultDateTime()
         updateButtonState()
+    }
+}
+
+// MARK: - Reservation Questions
+
+private extension PremiumInquiryCardView {
+
+    func fetchReservationQuestionsIfNeeded() {
+        guard let eventId = event?.id, !eventId.isEmpty else {
+            reservationQuestions = []
+            questionAnswers.removeAll()
+            loadedQuestionsEventId = nil
+            reloadQuestionViews()
+            updateQuestionSectionVisibility()
+            return
+        }
+
+        guard loadedQuestionsEventId != eventId else {
+            updateQuestionSectionVisibility()
+            return
+        }
+
+        loadedQuestionsEventId = eventId
+
+        TablePresenter.getReservationRequestQuestions(
+            eventId: eventId,
+            venueId: event?.venue?.id ?? ""
+        ) { [weak self] isSuccess, _, questions in
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                if isSuccess {
+                    self.reservationQuestions = (questions ?? [])
+                        .filter {
+                            !$0.isDeleted &&
+                            $0.status.caseInsensitiveCompare("ENABLED") == .orderedSame
+                        }
+                        .sorted { $0.order < $1.order }
+                } else {
+                    self.reservationQuestions = []
+                }
+
+                self.questionAnswers = self.questionAnswers.filter { answer in
+                    self.reservationQuestions.contains { $0.id == answer.key }
+                }
+                self.reloadQuestionViews()
+                self.updateQuestionSectionVisibility()
+                self.updateButtonState()
+            }
+        }
+    }
+
+    func reloadQuestionViews() {
+        questionViews.removeAll()
+        questionStackView.arrangedSubviews.forEach {
+            questionStackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        reservationQuestions.forEach { question in
+            let view = PremiumRequestQuestionView()
+            view.configure(question: question, answer: questionAnswers[question.id])
+            view.onAnswerChanged = { [weak self] answer, question in
+                guard let self else { return }
+                self.questionAnswers[question.id] = answer
+                self.updateQuestionSectionVisibility()
+                self.updateButtonState()
+            }
+            view.onHeightChanged = { [weak self] in
+                self?.updateQuestionSectionVisibility()
+            }
+
+            questionStackView.addArrangedSubview(view)
+            questionViews.append(view)
+        }
+    }
+
+    func updateQuestionSectionVisibility() {
+        questionSectionView.isHidden = reservationQuestions.isEmpty
+        questionStackView.layoutIfNeeded()
+        layoutIfNeeded()
+    }
+
+    func validateQuestionAnswers() -> Bool {
+        guard let invalidQuestion = reservationQuestions.first(where: { question in
+            guard !question.isOptional else { return false }
+            return !hasValidAnswer(for: question)
+        }) else { return true }
+
+        Alert.showToast("Please answer: \(invalidQuestion.question)")
+        scrollToQuestion(invalidQuestion)
+        return false
+    }
+
+    func validatePolicyAcceptance() -> Bool {
+        guard !areVisiblePoliciesAccepted() else { return true }
+        Alert.showToast("Please accept the terms and privacy policy.")
+        return false
+    }
+
+    func areVisiblePoliciesAccepted() -> Bool {
+        let smsAccepted = checkboxView.isHidden || checkboxView.isChecked
+        let emailAccepted = emailCheckboxView.isHidden || emailCheckboxView.isChecked
+        return smsAccepted && emailAccepted
+    }
+
+    func scrollToQuestion(_ question: Questions) {
+        guard question.questionType == "TEXT",
+              let view = questionViews.first(where: { $0.questionId == question.id }) else { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            view.focusAnswerField()
+        }
+    }
+
+    func hasValidAnswer(for question: Questions) -> Bool {
+        let answer = questionAnswers[question.id]
+
+        switch question.questionType {
+        case "MULTI_SELECT":
+            return !(answer as? [String] ?? []).isEmpty
+        case "SINGLE_SELECT", "TEXT":
+            return !((answer as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        case "CHECKBOX":
+            return answer as? Bool == true
+        default:
+            return true
+        }
+    }
+
+    func reservationQuestionAnswersPayload() -> [Any] {
+        reservationQuestions.compactMap { question in
+            guard let answer = questionAnswers[question.id] else { return nil }
+
+            if question.isOptional, !hasValidAnswer(for: question) {
+                return nil
+            }
+
+            return [
+                "reservationQuestionId": question.id,
+                "answer": answer
+            ] as [String: Any]
+        }
+    }
+}
+
+// MARK: - Question View
+
+final class PremiumRequestQuestionView: UIView, UITextFieldDelegate {
+
+    var questionId: String { question?.id ?? "" }
+    var onAnswerChanged: ((Any, Questions) -> Void)?
+    var onHeightChanged: (() -> Void)?
+
+    private var question: Questions?
+    private var currentAnswer: Any?
+    private var optionButtons: [UIButton] = []
+    private var isOptionsExpanded = false
+    private var selectFieldHeightConstraint: NSLayoutConstraint?
+
+    private let mainStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let textFieldCard = GradientBorderCardView()
+    private let selectFieldCard = GradientBorderCardView()
+    private let selectDividerView = UIView()
+
+    private let textField: UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.textColor = .white
+        field.tintColor = .white
+        field.font = Constant.Font.geistMedium(size: 15)
+        return field
+    }()
+
+    private let selectTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.font = Constant.Font.geistMedium(size: 15)
+        label.textColor = UIColor.white.withAlphaComponent(0.45)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let selectArrowImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "arrowTopIcon")?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = UIColor.white.withAlphaComponent(0.65)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private let selectButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = .clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private let optionStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.isHidden = true
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let checkboxRow: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .top
+        stack.spacing = 12
+        return stack
+    }()
+
+    private let checkboxButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private let checkboxQuestionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = UIColor.white.withAlphaComponent(0.95)
+        label.font = Constant.Font.geistRegular(size: 15)
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    func configure(question: Questions, answer: Any?) {
+        self.question = question
+        currentAnswer = answer
+
+        let title = "\(question.question)\(question.isOptional ? "" : " *")"
+
+        textFieldCard.isHidden = question.questionType != "TEXT"
+        selectFieldCard.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
+        optionStack.isHidden = true
+        selectFieldHeightConstraint?.constant = 52
+        checkboxRow.isHidden = question.questionType != "CHECKBOX"
+        isOptionsExpanded = false
+        updateSelectExpandedAppearance(animated: false)
+
+        textField.text = answer as? String
+        textField.attributedPlaceholder = NSAttributedString(
+            string: title,
+            attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.45)]
+        )
+
+        checkboxQuestionLabel.text = title
+        configureOptions(question.eventQuestionHasOption?.filter { !$0.isDeleted }.map { $0.option } ?? [])
+        updateSelectTitle(title: title)
+        updateCheckboxState()
+        updateOptionStates()
+    }
+
+    func focusAnswerField() {
+        guard question?.questionType == "TEXT" else { return }
+        textField.becomeFirstResponder()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        addSubview(mainStack)
+        mainStack.addArrangedSubview(textFieldCard)
+        mainStack.addArrangedSubview(selectFieldCard)
+        mainStack.addArrangedSubview(checkboxRow)
+
+        [textFieldCard, selectFieldCard].forEach { card in
+            card.fillColor = UIColor.white.withAlphaComponent(0.05).cgColor
+            card.showsBlur = true
+            card.blurAlpha = 0.55
+            card.thinBorder = true
+            card.glassCornerRadius = 14
+            card.translatesAutoresizingMaskIntoConstraints = false
+            card.clipsToBounds = true
+        }
+
+        selectDividerView.backgroundColor = UIColor.white.withAlphaComponent(0.10)
+        selectDividerView.isHidden = true
+        selectDividerView.translatesAutoresizingMaskIntoConstraints = false
+
+        textFieldCard.addSubview(textField)
+        selectFieldCard.addSubview(selectTitleLabel)
+        selectFieldCard.addSubview(selectArrowImageView)
+        selectFieldCard.addSubview(selectButton)
+        selectFieldCard.addSubview(selectDividerView)
+        selectFieldCard.addSubview(optionStack)
+        checkboxRow.addArrangedSubview(checkboxButton)
+        checkboxRow.addArrangedSubview(checkboxQuestionLabel)
+
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        selectButton.addTarget(self, action: #selector(onTapSelectField), for: .touchUpInside)
+        checkboxButton.addTarget(self, action: #selector(onTapCheckbox), for: .touchUpInside)
+        checkboxQuestionLabel.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(onTapCheckbox))
+        )
+
+        let textTap = UITapGestureRecognizer(target: self, action: #selector(onTapTextFieldContainer))
+        textFieldCard.addGestureRecognizer(textTap)
+        textFieldCard.isUserInteractionEnabled = true
+
+        let selectHeight = selectFieldCard.heightAnchor.constraint(equalToConstant: 52)
+        selectFieldHeightConstraint = selectHeight
+
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: topAnchor),
+            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mainStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            textFieldCard.heightAnchor.constraint(equalToConstant: 52),
+            textField.topAnchor.constraint(equalTo: textFieldCard.topAnchor, constant: 4),
+            textField.leadingAnchor.constraint(equalTo: textFieldCard.leadingAnchor, constant: 14),
+            textField.trailingAnchor.constraint(equalTo: textFieldCard.trailingAnchor, constant: -14),
+            textField.bottomAnchor.constraint(equalTo: textFieldCard.bottomAnchor, constant: -4),
+
+            selectHeight,
+            selectTitleLabel.leadingAnchor.constraint(equalTo: selectFieldCard.leadingAnchor, constant: 14),
+            selectTitleLabel.trailingAnchor.constraint(equalTo: selectArrowImageView.leadingAnchor, constant: -12),
+            selectTitleLabel.centerYAnchor.constraint(equalTo: selectFieldCard.topAnchor, constant: 26),
+            selectArrowImageView.trailingAnchor.constraint(equalTo: selectFieldCard.trailingAnchor, constant: -16),
+            selectArrowImageView.centerYAnchor.constraint(equalTo: selectFieldCard.topAnchor, constant: 26),
+            selectArrowImageView.widthAnchor.constraint(equalToConstant: 9),
+            selectArrowImageView.heightAnchor.constraint(equalToConstant: 6),
+            selectButton.topAnchor.constraint(equalTo: selectFieldCard.topAnchor),
+            selectButton.leadingAnchor.constraint(equalTo: selectFieldCard.leadingAnchor),
+            selectButton.trailingAnchor.constraint(equalTo: selectFieldCard.trailingAnchor),
+            selectButton.heightAnchor.constraint(equalToConstant: 52),
+            selectDividerView.topAnchor.constraint(equalTo: selectFieldCard.topAnchor, constant: 52),
+            selectDividerView.leadingAnchor.constraint(equalTo: selectFieldCard.leadingAnchor, constant: 14),
+            selectDividerView.trailingAnchor.constraint(equalTo: selectFieldCard.trailingAnchor, constant: -14),
+            selectDividerView.heightAnchor.constraint(equalToConstant: 0.5),
+            optionStack.topAnchor.constraint(equalTo: selectFieldCard.topAnchor, constant: 52),
+            optionStack.leadingAnchor.constraint(equalTo: selectFieldCard.leadingAnchor, constant: 10),
+            optionStack.trailingAnchor.constraint(equalTo: selectFieldCard.trailingAnchor, constant: -10),
+
+            checkboxButton.widthAnchor.constraint(equalToConstant: 18),
+            checkboxButton.heightAnchor.constraint(equalToConstant: 18)
+        ])
+    }
+
+    private func configureOptions(_ options: [String]) {
+        optionStack.arrangedSubviews.forEach {
+            optionStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        optionButtons.removeAll()
+
+        options.enumerated().forEach { index, option in
+            let button = UIButton(type: .system)
+            button.tag = index
+            button.contentHorizontalAlignment = .left
+            button.titleLabel?.numberOfLines = 0
+            button.titleLabel?.font = Constant.Font.geistMedium(size: 14)
+            button.setTitle(option, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.tintColor = .white
+            button.backgroundColor = .clear
+            button.layer.cornerRadius = 0
+            button.layer.borderWidth = 0
+            button.contentEdgeInsets = UIEdgeInsets(top: 9, left: 4, bottom: 9, right: 4)
+            button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: -10)
+            button.addTarget(self, action: #selector(onTapOption(_:)), for: .touchUpInside)
+            button.heightAnchor.constraint(greaterThanOrEqualToConstant: 38).isActive = true
+            optionStack.addArrangedSubview(button)
+            optionButtons.append(button)
+        }
+    }
+
+    private func updateSelectFieldHeight() {
+        let optionCount = optionButtons.count
+        let optionHeight = CGFloat(optionCount * 38)
+        let spacingHeight = CGFloat(max(0, optionCount - 1) * 8)
+        selectFieldHeightConstraint?.constant = isOptionsExpanded
+            ? 52 + optionHeight + spacingHeight + 12
+            : 52
+    }
+
+    private func updateSelectExpandedAppearance(animated: Bool) {
+        let changes = {
+            self.selectDividerView.isHidden = !self.isOptionsExpanded
+            self.selectFieldCard.fillColor = UIColor.white
+                .withAlphaComponent(self.isOptionsExpanded ? 0.075 : 0.05)
+                .cgColor
+            self.selectFieldCard.blurAlpha = self.isOptionsExpanded ? 0.65 : 0.55
+            self.selectArrowImageView.transform = self.isOptionsExpanded
+                ? .identity
+                : CGAffineTransform(rotationAngle: .pi)
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: changes)
+        } else {
+            changes()
+        }
+    }
+
+    private func updateSelectTitle(title: String) {
+        selectTitleLabel.text = title
+        selectTitleLabel.textColor = UIColor.white.withAlphaComponent(0.45)
+    }
+
+    private func updateOptionStates() {
+        guard let question else { return }
+
+        optionButtons.forEach { button in
+            let option = button.title(for: .normal) ?? ""
+            let isSelected: Bool
+            if question.questionType == "MULTI_SELECT" {
+                isSelected = (currentAnswer as? [String] ?? []).contains(option)
+            } else {
+                isSelected = (currentAnswer as? String) == option
+            }
+
+            button.setImage(
+                (isSelected ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon)?
+                    .withRenderingMode(.alwaysOriginal),
+                for: .normal
+            )
+            button.setTitleColor(.white, for: .normal)
+        }
+    }
+
+    private func updateCheckboxState() {
+        let isChecked = currentAnswer as? Bool == true
+        checkboxButton.setImage(
+            (isChecked ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon)?
+                .withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
+        checkboxQuestionLabel.textColor = UIColor.white.withAlphaComponent(0.95)
+    }
+
+    @objc private func textFieldChanged() {
+        guard let question else { return }
+        let answer = textField.text ?? ""
+        currentAnswer = answer
+        onAnswerChanged?(answer, question)
+    }
+
+    @objc private func onTapTextFieldContainer() {
+        textField.becomeFirstResponder()
+    }
+
+    @objc private func onTapSelectField() {
+        guard !optionButtons.isEmpty else { return }
+        isOptionsExpanded.toggle()
+        optionStack.isHidden = !isOptionsExpanded
+        updateSelectFieldHeight()
+        updateSelectExpandedAppearance(animated: true)
+        onHeightChanged?()
+    }
+
+    @objc private func onTapOption(_ sender: UIButton) {
+        guard let question, let selectedOption = sender.title(for: .normal) else { return }
+
+        if question.questionType == "MULTI_SELECT" {
+            var answers = currentAnswer as? [String] ?? []
+            if let index = answers.firstIndex(of: selectedOption) {
+                answers.remove(at: index)
+            } else {
+                answers.append(selectedOption)
+            }
+            currentAnswer = answers
+            onAnswerChanged?(answers, question)
+        } else {
+            currentAnswer = selectedOption
+            onAnswerChanged?(selectedOption, question)
+        }
+
+        updateSelectTitle(title: "\(question.question)\(question.isOptional ? "" : " *")")
+        updateOptionStates()
+    }
+
+    @objc private func onTapCheckbox() {
+        guard let question else { return }
+        let answer = !(currentAnswer as? Bool ?? false)
+        currentAnswer = answer
+        updateCheckboxState()
+        onAnswerChanged?(answer, question)
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textFieldCard.fillColor = UIColor.white.withAlphaComponent(0.08).cgColor
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textFieldCard.fillColor = UIColor.white.withAlphaComponent(0.05).cgColor
     }
 }
 

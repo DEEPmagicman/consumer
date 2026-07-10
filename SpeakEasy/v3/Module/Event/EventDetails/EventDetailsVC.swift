@@ -120,6 +120,7 @@ class EventDetailsVC: UIViewController {
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
+    private var totalTicketSold: Int?
     private var attendeeLeadName = "Someone"
     private var attendeesHasMore = false
     private var isFetchingMoreAttendees = false
@@ -132,8 +133,10 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
+    private var isTableSeatingRefreshLoading = false
     private var savedEventId: String?
     private let posterHeaderView = EventPosterHeaderView()
+    private let tableBookingLoader = UIActivityIndicatorView(style: .medium)
     private let collapseThreshold: CGFloat = 20
     private var isCollapsed = false
     private var galleryImageURLs: [String] = []
@@ -219,6 +222,7 @@ class EventDetailsVC: UIViewController {
         startFAQsTableObserver()
         startAdditionalButtonsTableObserver()
         setupUI()
+        setupTableBookingLoader()
         setupUnlockButton()
         setupSkeletonView()
         setupTitleMarqueeLabel()
@@ -426,6 +430,40 @@ class EventDetailsVC: UIViewController {
         event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
+    }
+
+    private func setupTableBookingLoader() {
+        tableBookingLoader.translatesAutoresizingMaskIntoConstraints = false
+        tableBookingLoader.hidesWhenStopped = true
+        tableBookingLoader.color = AppColor.primaryBlackColor
+
+        if tableBookingLoader.superview == nil {
+            tableBookNowButtonView.addSubview(tableBookingLoader)
+            NSLayoutConstraint.activate([
+                tableBookingLoader.centerXAnchor.constraint(equalTo: tableBookNowButtonView.centerXAnchor),
+                tableBookingLoader.centerYAnchor.constraint(equalTo: tableBookNowButtonView.centerYAnchor)
+            ])
+        }
+
+        updateTableBookingLoadingState(false)
+    }
+
+    private func updateTableBookingLoadingState(_ isLoading: Bool) {
+        isTableSeatingRefreshLoading = isLoading
+        tableBookNowButtonView.isUserInteractionEnabled = !isLoading
+        tableBookNowButtonView.alpha = isLoading ? 0.85 : 1
+
+        tableBookNowButtonView.subviews.forEach { view in
+            guard view !== tableBookingLoader else { return }
+            view.alpha = isLoading ? 0 : 1
+        }
+
+        if isLoading {
+            tableBookingLoader.startAnimating()
+            tableBookNowButtonView.bringSubviewToFront(tableBookingLoader)
+        } else {
+            tableBookingLoader.stopAnimating()
+        }
     }
     
     private func updateSaveUI() {
@@ -798,13 +836,9 @@ class EventDetailsVC: UIViewController {
         detail.event.eventTicket?
             .compactMap { $0.id } ?? []
 
-        let filtered =
-        filterSeatingAreas(
-            detail.seatingAreas
-        )
-
-        seatingAreas = detail.seatingAreas
-        seatingAreasFilteredOut = filtered.visible
+        if let seatingAreas = detail.seatingAreas {
+            applySeatingAreas(seatingAreas)
+        }
 
         ticketLinks = detail.ticketLinks
 
@@ -825,17 +859,20 @@ class EventDetailsVC: UIViewController {
 
         applyAttendees(
             detail.attendees,
-            total: detail.totalAttendees
+            total: detail.totalAttendees,
+            totalTicketSold: detail.totalTicketSold ?? detail.event.totalTicketSold
         )
 
         setupData()
         hideSkeleton()
         showContinueBtn()
+        loadInitialSeatingAreas()
     }
 
     private func applyAttendees(
         _ list: [Attendee]?,
-        total: Int? = nil
+        total: Int? = nil,
+        totalTicketSold: Int? = nil
     ) {
 
         guard event?.showEventAttendees == true,
@@ -844,6 +881,7 @@ class EventDetailsVC: UIViewController {
 
             attendees = []
             totalAttendees = 0
+            self.totalTicketSold = totalTicketSold
             attendeeLeadName = "Someone"
             attendeesHasMore = false
             guestListTitleLbl.text = ""
@@ -856,6 +894,7 @@ class EventDetailsVC: UIViewController {
         attendees = sortAttendeesImageFirst(list)
 
         totalAttendees = max(total ?? attendees.count, attendees.count)
+        self.totalTicketSold = totalTicketSold ?? self.totalTicketSold
         attendeesHasMore = totalAttendees > attendees.count
         guestListCollectionView.reloadData()
         updateAttendeesView()
@@ -868,7 +907,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        let count = max(totalAttendees, attendees.count)
+        let count = max(totalTicketSold ?? totalAttendees, attendees.count)
 
         if count == 1 {
             guestListTitleLbl.text = "\(attendeeLeadName) is going"
@@ -1024,6 +1063,7 @@ class EventDetailsVC: UIViewController {
         guard shouldClearInlineRSVPSelectionOnReturn else { return }
         shouldClearInlineRSVPSelectionOnReturn = false
         clearInlineTicketSelections()
+        hideCheckoutBarImmediately()
     }
 
     private func clearInlineTicketSelections() {
@@ -1052,6 +1092,17 @@ class EventDetailsVC: UIViewController {
         updateCheckoutSummaryView()
     }
 
+    private func hideCheckoutBarImmediately() {
+        checkOutBtnView.layer.removeAllAnimations()
+        checkOutBtnView.hideLoader()
+        checkOutBtnView.alpha = 0
+        checkOutBtnView.transform = CGAffineTransform(
+            translationX: 0,
+            y: 120
+        )
+        checkOutBtnView.isHidden = true
+    }
+
     private func clearingSelectedCounts(in tickets: [EventTicket]?) -> [EventTicket]? {
         guard var updatedTickets = tickets else { return nil }
 
@@ -1062,21 +1113,50 @@ class EventDetailsVC: UIViewController {
         return updatedTickets
     }
     
-    private func fetchSeatingAreas() {
+    private func applySeatingAreas(
+        _ list: [SeatingArea]
+    ) {
+        let filtered = filterSeatingAreas(list)
+        seatingAreas = list
+        seatingAreasFilteredOut = filtered.visible
+    }
+
+    private func loadInitialSeatingAreas() {
+        guard event != nil else { return }
+
+        updateTableBookingLoadingState(true)
+
+        fetchSeatingAreas { [weak self] _, _, _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                self.updateTableBookingLoadingState(false)
+                self.setupData()
+            }
+        }
+    }
+
+    private func fetchSeatingAreas(
+        completion: ((Bool, String?, [SeatingArea]) -> Void)? = nil
+    ) {
+        guard let event else {
+            completion?(false, Constant.String.somethingWrong, [])
+            return
+        }
 
         tableService.fetchSeatingAreas(
-            eventId: event?.id ?? "",
+            eventId: event.id,
             skip: 0
         ) { [weak self] isSuccess, errMsg, list, _ in
             
             guard let self else { return }
 
             if isSuccess {
-                let filtered = self.filterSeatingAreas(list)
-                self.seatingAreas = list
-                self.seatingAreasFilteredOut = filtered.visible
+                self.applySeatingAreas(list)
+                completion?(true, nil, list)
             } else {
                 print(errMsg ?? "")
+                completion?(false, errMsg, [])
             }
         }
     }
@@ -1093,12 +1173,16 @@ class EventDetailsVC: UIViewController {
             eventId: eventId,
             skip: 0,
             take: attendeesPageSize
-        ) { [weak self] success, _, data, total, hasMore, _ in
+        ) { [weak self] success, _, data, total, totalTicketSold, hasMore, _ in
             guard let self = self else { return }
             self.isFetchingMoreAttendees = false
 
             if success {
-                self.applyAttendees(data, total: total)
+                self.applyAttendees(
+                    data,
+                    total: total,
+                    totalTicketSold: totalTicketSold
+                )
                 self.attendeesHasMore = hasMore || self.totalAttendees > self.attendees.count
             }
         }
@@ -2260,6 +2344,7 @@ class EventDetailsVC: UIViewController {
         vc.attendees = attendees
         vc.eventId = event?.uniqueId
         vc.totalAttendees = max(totalAttendees, attendees.count)
+        vc.totalTicketSold = totalTicketSold
         vc.hasMore = attendeesHasMore || totalAttendees > attendees.count
         present(vc, animated: false)
     }
@@ -2351,6 +2436,7 @@ class EventDetailsVC: UIViewController {
 
 
             if isSuccess {
+                self.shouldClearInlineRSVPSelectionOnReturn = true
                 Navigate.to.ticketCheckoutVC(
                     self,
                     event: event,
@@ -2442,14 +2528,19 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickShareBtn(_ sender: Any) {}
 
     @IBAction func onClickVIPtable(_ sender: Any) {
-        if let event = self.event {
-            Navigate.to.premiumEventContainerVC(
-                self,
-                event: event,
-                seatingAreas: seatingAreas
-            )
+        guard !isTableSeatingRefreshLoading else { return }
 
-        }
+        openPremiumEventContainer(with: seatingAreas)
+    }
+
+    private func openPremiumEventContainer(with seatingAreas: [SeatingArea]) {
+        guard let event = self.event else { return }
+
+        Navigate.to.premiumEventContainerVC(
+            self,
+            event: event,
+            seatingAreas: seatingAreas
+        )
     }
     
     @IBAction func onClickShare(_ sender: Any) {
@@ -3192,7 +3283,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 whiteLabelColor: event?.whiteLabelColor,
                 eventTicketSetting: event?.eventTicketSettings,
                 expandedTicketDescriptions: expandedTicketDescriptions,
-                disabledTicketIds: disabledTicketIds
+                disabledTicketIds: disabledTicketIds,
+                topSpacing: indexPath.row == 0 ? 0 : 16
             )
 
             cell.selectionStyle = .none
@@ -4295,6 +4387,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
 
             self.checkOutBtnView.hideLoader()
             if isSuccess {
+                self.shouldClearInlineRSVPSelectionOnReturn = true
                 Navigate.orderListVC(self, event: event, selectedTickets: selectedTickets, bookingId: bookingId, paymentMethod: nil, venueDetails: venueDetails)
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")

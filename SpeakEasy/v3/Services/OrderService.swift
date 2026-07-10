@@ -24,8 +24,10 @@ final class OrderService {
             "include": [
                 "bookingHasItem",
                 "event.customVenue",
+                "event.eventSettings",
                 "event.flyer",
                 "venue",
+                "venue.venueSettings",
                 "inviteLink.guestList"
             ],
             "orderBy": "createdAt|desc"
@@ -81,10 +83,12 @@ final class OrderService {
             "include": [
                 "bookingHasItem",
                 "event.customVenue",
+                "event.eventSettings",
                 "event.flyer",
                 "event",
                 "fees",
-                "venue"
+                "venue",
+                "venue.venueSettings"
             ],
             "orderBy": "createdAt|desc"
         ]

@@ -23,29 +23,29 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qzD-VQ-VbP">
-                        <rect key="frame" x="0.0" y="0.0" width="734" height="371"/>
+                        <rect key="frame" x="0.0" y="10" width="734" height="361"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RxZ-Ya-BRi">
-                                <rect key="frame" x="0.0" y="0.0" width="734" height="371"/>
+                                <rect key="frame" x="0.0" y="0.0" width="734" height="361"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJj-5I-MEe">
-                                        <rect key="frame" x="0.0" y="0.0" width="734" height="155"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="734" height="145"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UN9-6Y-hFx">
-                                                <rect key="frame" x="21" y="12" width="661" height="131"/>
+                                                <rect key="frame" x="21" y="12" width="661" height="121"/>
                                                 <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Voz-rN-DAk">
-                                                <rect key="frame" x="0.0" y="0.0" width="734" height="155"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="734" height="145"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <connections>
                                                     <action selector="onClickExpandBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="rcy-xP-BEI"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-cD-ZqA">
-                                                <rect key="frame" x="702" y="67.666666666666671" width="20" height="20"/>
+                                                <rect key="frame" x="702" y="62.666666666666671" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="LNe-4F-ErQ"/>
                                                     <constraint firstAttribute="width" constant="20" id="OJh-Ev-NxC"/>
@@ -75,7 +75,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHT-IL-wd3">
-                                        <rect key="frame" x="0.0" y="155" width="734" height="216"/>
+                                        <rect key="frame" x="0.0" y="145" width="734" height="216"/>
                                         <subviews>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3Xp-fj-xhg">
                                                 <rect key="frame" x="16" y="0.0" width="702" height="200"/>
@@ -128,7 +128,7 @@
                     <constraint firstAttribute="bottom" secondItem="qzD-VQ-VbP" secondAttribute="bottom" id="8bz-aJ-bRV"/>
                     <constraint firstAttribute="trailing" secondItem="qzD-VQ-VbP" secondAttribute="trailing" id="AP2-Wi-kFC"/>
                     <constraint firstItem="qzD-VQ-VbP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="LXT-QT-2ch"/>
-                    <constraint firstItem="qzD-VQ-VbP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="am2-lM-0TA"/>
+                    <constraint firstItem="qzD-VQ-VbP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="am2-lM-0TA"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -140,6 +140,7 @@
                 <outlet property="tableParentView" destination="lHT-IL-wd3" id="dkh-Qf-cKN"/>
                 <outlet property="tableViewHeight" destination="xph-ys-d6e" id="d0x-8G-w4d"/>
                 <outlet property="ticketListTableView" destination="3Xp-fj-xhg" id="EJb-YA-sVx"/>
+                <outlet property="viewTopConstraint" destination="am2-lM-0TA" id="IOW-dk-iW9"/>
             </connections>
             <point key="canvasLocation" x="116.03053435114504" y="229.22535211267606"/>
         </tableViewCell>

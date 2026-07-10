@@ -943,10 +943,40 @@ class EventQRTicketVC: UIViewController {
         purchaseTimeLabel.text = purchaseTimeText()
         qrCodeLabel.text = backupCodeText()
         qrImageView.image = EventQRPagerViewCell.generateQRCode(from: eventQRCodePayload(for: booking.id))
+        applyQRCodeBorderColor(for: booking)
 
         qrLogoImageView.image = UIImage(named: "qrLogo") ?? UIImage(named: "newSpeakeasy") ?? UIImage(named: "appLogo")
         renderTicketRows()
         renderOrderSummary()
+    }
+
+    private func applyQRCodeBorderColor(for booking: Booking) {
+        if let eventQRCodeColor = TicketQRCodeColorResolver.normalizeColor(
+            booking.event?.eventSettings?.qrCodeColor
+            ?? sourceEvent?.eventSettings?.qrCodeColor
+        ) {
+            qrGreenView.backgroundColor = UIColor(hex: eventQRCodeColor)
+            return
+        }
+
+        qrGreenView.backgroundColor = TicketQRCodeColorResolver.color(
+            venueSettings: booking.venueObject?.venueSettings
+            ?? booking.event?.venue?.venueSettings
+            ?? sourceEvent?.venue?.venueSettings,
+            ticketType: .event,
+            isFreeTicket: isFreeEventBooking(booking),
+            preferredColor: booking.isCompedTicket == true
+            ? booking.venueObject?.venueSettings?.compedTicketQrCodeBorderColor
+            : nil,
+            useFallbackWhenPreferredMissing: booking.isCompedTicket == true,
+            fallbackColor: "#19D43A"
+        ) ?? UIColor(hex: "#19D43A")
+    }
+
+    private func isFreeEventBooking(_ booking: Booking) -> Bool {
+        let tickets = booking.bookingHasItem
+        guard !tickets.isEmpty else { return false }
+        return tickets.allSatisfy { $0.ticketPrice <= 0 }
     }
 
     private func renderTicketRows() {

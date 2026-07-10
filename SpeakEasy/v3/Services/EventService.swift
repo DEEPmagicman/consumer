@@ -9,11 +9,12 @@ import Foundation
 
 struct EventDetailBundle {
     let event: Event
-    let seatingAreas: [SeatingArea]
+    let seatingAreas: [SeatingArea]?
     let faqs: [EventFAQ]
     let ticketLinks: [EventTicketLink]
     let attendees: [Attendee]?
     let totalAttendees: Int?
+    let totalTicketSold: Int?
 }
 
 struct SavedEventRelation: Codable {
@@ -318,6 +319,10 @@ final class EventService {
                         from: responseDic
                     ),
                     totalAttendees: self.decodeAttendeesTotal(
+                        from: responseDic
+                    ),
+                    totalTicketSold: event.totalTicketSold ??
+                    self.decodeTotalTicketSold(
                         from: responseDic
                     )
                 ),
@@ -857,6 +862,34 @@ final class EventService {
         return nil
     }
 
+    private func decodeTotalTicketSold(
+        from responseDic: [String: Any]
+    ) -> Int? {
+
+        let totalTicketSoldKey = "totalTicketSold"
+
+        if let total = intValue(from: responseDic[totalTicketSoldKey]) {
+            return total
+        }
+
+        if let event = responseDic["event"] as? [String: Any],
+           let total = intValue(from: event[totalTicketSoldKey]) {
+            return total
+        }
+
+        if let attendees = responseDic["attendees"] as? [String: Any],
+           let total = intValue(from: attendees[totalTicketSoldKey]) {
+            return total
+        }
+
+        if let eventAttendees = responseDic["eventAttendees"] as? [String: Any],
+           let total = intValue(from: eventAttendees[totalTicketSoldKey]) {
+            return total
+        }
+
+        return nil
+    }
+
     private func intValue(from value: Any?) -> Int? {
         switch value {
         case let value as Int:
@@ -1088,6 +1121,7 @@ final class EventService {
             _ errMsg: String?,
             _ attendees: [Attendee]?,
             _ total: Int?,
+            _ totalTicketSold: Int?,
             _ hasMore: Bool,
             _ errCode: Int?
         ) -> Void
@@ -1113,6 +1147,7 @@ final class EventService {
 
                 completion(
                     false,
+                    nil,
                     nil,
                     nil,
                     nil,
@@ -1144,6 +1179,7 @@ final class EventService {
                     decoded.eventAttendeesCount ??
                     decoded.totalCount ??
                     decoded.count
+                let totalTicketSold = decoded.totalTicketSold
                 let hasMore =
                     decoded.hasMany ??
                     ((total ?? 0) > skip + (list?.count ?? 0))
@@ -1153,6 +1189,7 @@ final class EventService {
                     nil,
                     list,
                     total,
+                    totalTicketSold,
                     hasMore,
                     nil
                 )
@@ -1162,6 +1199,7 @@ final class EventService {
                 completion(
                     false,
                     "Parsing failed",
+                    nil,
                     nil,
                     nil,
                     false,
@@ -1174,6 +1212,7 @@ final class EventService {
             completion(
                 false,
                 error?.localizedDescription,
+                nil,
                 nil,
                 nil,
                 false,

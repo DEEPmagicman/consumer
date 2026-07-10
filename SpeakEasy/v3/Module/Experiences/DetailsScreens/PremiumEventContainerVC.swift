@@ -163,7 +163,7 @@ private extension PremiumEventContainerVC {
         applySeatingAreas(providedSeatingAreas ?? [])
         // Temporarily disabled: premium flow now uses seating areas passed from
         // the first premium API response.
-        // fetchSeatingAreas()
+//         fetchSeatingAreas()
     }
 
     private func hydrateVenueSettingsIfNeeded() {
@@ -203,6 +203,7 @@ private extension PremiumEventContainerVC {
             || settings?.tableBookingPolicy == nil
             || settings?.tableBookingImportantInformation == nil
             || settings?.reservationRequestPolicy == nil
+            || settings?.reservationWidgetSettings == nil
             || settings?.reservationConfirmationMessage == nil
             || settings?.prepaidReservationConfirmationMessage == nil
     }

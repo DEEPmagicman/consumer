@@ -47,23 +47,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="409" height="852"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Di-AZ-FaY" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                    <rect key="frame" x="16" y="139" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="bfH-Wb-fLD"/>
-                        <constraint firstAttribute="height" constant="40" id="rOF-fW-1pt"/>
-                    </constraints>
-                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                            <real key="value" value="12"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="close"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="VS1-3g-jBw"/>
-                    </connections>
-                </button>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XmK-sG-mgH">
                     <rect key="frame" x="16" y="139" width="361" height="40"/>
                     <subviews>
@@ -133,6 +116,23 @@
                         <constraint firstAttribute="trailing" secondItem="gjB-Nw-Wy0" secondAttribute="trailing" id="uID-dZ-ebe"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Di-AZ-FaY" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="16" y="139" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="bfH-Wb-fLD"/>
+                        <constraint firstAttribute="height" constant="40" id="rOF-fW-1pt"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="12"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="close"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="VS1-3g-jBw"/>
+                    </connections>
+                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="P8w-1a-NzI">
                     <rect key="frame" x="16" y="199" width="361" height="207.33333333333337"/>
                     <subviews>

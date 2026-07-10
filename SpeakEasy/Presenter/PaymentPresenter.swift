@@ -181,7 +181,7 @@ final class PaymentPresenter {
     }
     
     static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink.guestList", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "fees", "event.flyer", "venue.venueSettings", "bookingHasCheckIn.bookingItemCheckIn", "venue.logo", "bookingDetails"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink.guestList", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "event.eventSettings", "fees", "event.flyer", "venue.venueSettings", "bookingHasCheckIn.bookingItemCheckIn", "venue.logo", "bookingDetails"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
@@ -201,7 +201,7 @@ final class PaymentPresenter {
     }
     
     static func getAddOnsBooking(addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(addOnsBookingId), params: ["include": ["addOnsBookingHasItem.addOns", "venue.venueAttachment", "addOnsBookingHasCheckIn.addOnsBookingItemCheckIn"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(addOnsBookingId), params: ["include": ["addOnsBookingHasItem.addOns", "venue.venueAttachment", "venue.venueSettings", "addOnsBookingHasCheckIn.addOnsBookingItemCheckIn"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return

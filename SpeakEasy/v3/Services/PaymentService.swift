@@ -317,6 +317,7 @@ final class PaymentService {
                 "bookingHasItem",
                 "venue.venueAttachment",
                 "event.customVenue",
+                "event.eventSettings",
                 "fees",
                 "event.flyer",
                 "venue.venueSettings",

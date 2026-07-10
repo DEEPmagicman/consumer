@@ -13,6 +13,7 @@ final class GuestListPopupVC: UIViewController {
     var attendees: [Attendee] = []
     var eventId: String?
     var totalAttendees = 0
+    var totalTicketSold: Int?
     var hasMore = false
 
     private let dimmedView = UIView()
@@ -154,7 +155,7 @@ final class GuestListPopupVC: UIViewController {
 
     private func reloadUI() {
         let count = attendees.count
-        let displayTotal = max(totalAttendees, count)
+        let displayTotal = max(totalTicketSold ?? totalAttendees, count)
         countLabel.text = "\(displayTotal) going"
 
         tableView.reloadData()
@@ -219,7 +220,7 @@ final class GuestListPopupVC: UIViewController {
             eventId: eventId,
             skip: attendees.count,
             take: pageSize
-        ) { [weak self] success, _, list, total, hasMore, _ in
+        ) { [weak self] success, _, list, total, totalTicketSold, hasMore, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
 
@@ -231,6 +232,7 @@ final class GuestListPopupVC: UIViewController {
                         max(total ?? self.totalAttendees, self.totalAttendees),
                         self.attendees.count
                     )
+                    self.totalTicketSold = totalTicketSold ?? self.totalTicketSold
                     self.hasMore =
                     appendedCount > 0 &&
                     (hasMore || self.totalAttendees > self.attendees.count)

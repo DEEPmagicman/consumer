@@ -35,20 +35,10 @@ final class PartySizePickerView: UIView {
     private func setup() {
         backgroundColor = .clear
 
-        // Minus
-        minusButton.setTitle("−", for: .normal)
-        minusButton.setTitleColor(.white, for: .normal)
-        minusButton.setTitleColor(UIColor.white.withAlphaComponent(0.3), for: .disabled)
-        minusButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .light)
-        minusButton.translatesAutoresizingMaskIntoConstraints = false
+        configureStepperButton(minusButton, title: "−", imageName: "minusIcon")
         minusButton.addTarget(self, action: #selector(minusTapped), for: .touchUpInside)
 
-        // Plus
-        plusButton.setTitle("+", for: .normal)
-        plusButton.setTitleColor(.white, for: .normal)
-        plusButton.setTitleColor(UIColor.white.withAlphaComponent(0.3), for: .disabled)
-        plusButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .light)
-        plusButton.translatesAutoresizingMaskIntoConstraints = false
+        configureStepperButton(plusButton, title: "+", imageName: "pluseIcon")
         plusButton.addTarget(self, action: #selector(plusTapped), for: .touchUpInside)
 
         // Count
@@ -65,25 +55,45 @@ final class PartySizePickerView: UIView {
         NSLayoutConstraint.activate([
             minusButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             minusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            minusButton.widthAnchor.constraint(equalToConstant: 44),
-            minusButton.heightAnchor.constraint(equalToConstant: 44),
+            minusButton.widthAnchor.constraint(equalToConstant: 32),
+            minusButton.heightAnchor.constraint(equalToConstant: 32),
 
-            countLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            countLabel.leadingAnchor.constraint(equalTo: minusButton.trailingAnchor, constant: 9),
+            countLabel.trailingAnchor.constraint(equalTo: plusButton.leadingAnchor, constant: -9),
             countLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            countLabel.widthAnchor.constraint(equalToConstant: 40),
 
             plusButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             plusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plusButton.widthAnchor.constraint(equalToConstant: 44),
-            plusButton.heightAnchor.constraint(equalToConstant: 44)
+            plusButton.widthAnchor.constraint(equalToConstant: 32),
+            plusButton.heightAnchor.constraint(equalToConstant: 32)
         ])
 
         updateButtons()
     }
 
+    private func configureStepperButton(_ button: UIButton, title: String, imageName: String) {
+        if let image = UIImage(named: imageName)?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(image, for: .normal)
+            button.tintColor = .white
+        } else {
+            button.setTitle(title, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .light)
+        }
+        button.setTitleColor(UIColor.white.withAlphaComponent(0.3), for: .disabled)
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.24)
+        button.layer.cornerRadius = 7
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.white.withAlphaComponent(0.09).cgColor
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+    }
+
     private func updateButtons() {
         minusButton.isEnabled = count > 0
         plusButton.isEnabled  = count < maxCount
+        minusButton.alpha = minusButton.isEnabled ? 1 : 0.45
+        plusButton.alpha = plusButton.isEnabled ? 1 : 0.45
     }
 
     @objc private func minusTapped() {

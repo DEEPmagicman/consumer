@@ -47,7 +47,9 @@ struct Event: Codable {
     var totalTickets: Int?
     var allowGuestCheckin: Bool?
     var eventTicketSettings: EventTicketSettings?
+    var eventSettings: EventSettings?
     var showEventAttendees: Bool?
+    var totalTicketSold: Int?
     var protectedEventTicket: [EventTicket]?
     var protectedeventAddOnTicket: [EventTicket]?
     var isEnableOnlineTables: Bool
@@ -275,6 +277,8 @@ struct Event: Codable {
         try container.encode(disclaimer, forKey: .disclaimer)
         try container.encode(upfront, forKey: .upfront)
         try container.encode(showEventAttendees, forKey: .showEventAttendees)
+        try container.encodeIfPresent(eventSettings, forKey: .eventSettings)
+        try container.encodeIfPresent(totalTicketSold, forKey: .totalTicketSold)
 //        try container.encode(isDeleted, forKey: .isDeleted)
 //        try container.encode(createdAt, forKey: .createdAt)
 //        try container.encode(updatedAt, forKey: .updatedAt)
@@ -337,6 +341,7 @@ struct AttendeesResponse: Codable {
     var eventAttendees: [Attendee]?
     var hasMany: Bool?
     var count: Int?
+    var totalTicketSold: Int?
 }
 
 struct Attendee: Codable {
@@ -458,6 +463,10 @@ struct EventTicketSettings: Codable {
     var endSalesOnEventEnd: Bool?
     var stripePerc: Double?
     var stripeFlat: Double?
+}
+
+struct EventSettings: Codable {
+    var qrCodeColor: String?
 }
 struct Artists: Codable {
 

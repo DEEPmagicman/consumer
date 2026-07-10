@@ -47,7 +47,8 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     @IBOutlet weak var ticketsTableView: UITableView!
     @IBOutlet weak var upsellBadgeView: UIView!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-
+    @IBOutlet weak var backgroundColorView: UIView!
+    
     private var booking: Booking?
     private var addOnsBooking: AddOnsBooking?
     private let qrLogoContainerView = UIView()
@@ -170,6 +171,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         self.addOnsBooking = addOnsBooking
 
         clearQRCodeBorders()
+        applyQRCodeBackgroundColor(venue: venue)
         qrImageView.image = qrImage
         qrLogoContainerView.isHidden = qrImage == nil
         ticketsTableView.contentOffset = .zero
@@ -196,6 +198,22 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         }
 
         ticketsTableView.reloadData()
+    }
+
+    private func applyQRCodeBackgroundColor(venue: ClipVenue?) {
+        backgroundColorView.backgroundColor = TicketQRCodeColorResolver.color(
+            venueSettings: booking?.venueObject?.venueSettings ?? venue?.venueSettings,
+            ticketType: .cover,
+            isFreeTicket: isFreeCoverBooking(),
+            fallbackColor: "#F1CE72"
+        ) ?? UIColor(hex: "#F1CE72")
+    }
+
+    private func isFreeCoverBooking() -> Bool {
+        guard let booking else { return false }
+        let tickets = booking.bookingHasItem
+        guard !tickets.isEmpty else { return false }
+        return tickets.allSatisfy { $0.ticketPrice <= 0 }
     }
 
     private func clearQRCodeBorders() {

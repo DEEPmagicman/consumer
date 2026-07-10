@@ -327,7 +327,7 @@ struct Reservation: Codable {
     let extraPersons: Int?
     let seatedAt: String?
     let checkInAt: String?
-    let checkInGuests: Int?
+//    let checkInGuests: Int?
     let reservationStatus: String?
     let isDeleted: Bool?
     let paymentStatus: String?

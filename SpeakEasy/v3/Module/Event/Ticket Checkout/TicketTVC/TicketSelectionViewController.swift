@@ -1409,6 +1409,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             expandedTicketDescriptions: expandedTicketDescriptions,
             disabledTicketIds: disabledTicketIds,
             isExpanded: expandedGroupIds.contains(item.groupId),
+            topSpacing: 0,
             bottomSpacing: indexPath.row == groupedNormalTickets.count - 1 ? 0 : groupRowSpacing
         )
 
@@ -1459,13 +1460,13 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        .leastNonzeroMagnitude
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        .leastNonzeroMagnitude
-    }
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        .leastNonzeroMagnitude
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        .leastNonzeroMagnitude
+//    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard tableView == ticketTableView else { return }

@@ -12,6 +12,10 @@ final class VenueGridCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let logoView = UIImageView()
     private let overlayView = UIView()
+    private let venueNameBadgeContainerView = UIView()
+    private let venueNameBlurView = VisualEffectView(effect: UIBlurEffect(style: .light))
+    private let venueNameTintView = UIView()
+    private let venueNameLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,6 +34,8 @@ final class VenueGridCell: UICollectionViewCell {
 
         imageView.image = nil
         logoView.image = nil
+        venueNameLabel.attributedText = nil
+        venueNameBadgeContainerView.isHidden = true
     }
 
     private func setupUI() {
@@ -55,6 +61,34 @@ final class VenueGridCell: UICollectionViewCell {
         logoView.translatesAutoresizingMaskIntoConstraints = false
         imageView.addSubview(logoView)
         imageView.bringSubviewToFront(logoView)
+
+        venueNameBadgeContainerView.backgroundColor = .clear
+        venueNameBadgeContainerView.clipsToBounds = true
+        venueNameBadgeContainerView.layer.masksToBounds = true
+        venueNameBadgeContainerView.isUserInteractionEnabled = false
+        venueNameBadgeContainerView.translatesAutoresizingMaskIntoConstraints = false
+        venueNameBadgeContainerView.isHidden = true
+
+        venueNameBlurView.blurRadius = 28
+        venueNameBlurView.colorTint = UIColor(hex: "#FFF2F2")
+        venueNameBlurView.colorTintAlpha = 0.14
+        venueNameBlurView.translatesAutoresizingMaskIntoConstraints = false
+
+        venueNameTintView.backgroundColor =
+            UIColor(hex: "#FFF2F2").withAlphaComponent(0.14)
+        venueNameTintView.translatesAutoresizingMaskIntoConstraints = false
+
+        venueNameLabel.font = Constant.Font.geistRegular(size: 11)
+        venueNameLabel.textColor = .white
+        venueNameLabel.numberOfLines = 1
+        venueNameLabel.lineBreakMode = .byTruncatingTail
+        venueNameLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        imageView.addSubview(venueNameBadgeContainerView)
+        venueNameBadgeContainerView.addSubview(venueNameBlurView)
+        venueNameBadgeContainerView.addSubview(venueNameTintView)
+        venueNameBadgeContainerView.addSubview(venueNameLabel)
+        imageView.bringSubviewToFront(venueNameBadgeContainerView)
         
         NSLayoutConstraint.activate([
 
@@ -72,8 +106,35 @@ final class VenueGridCell: UICollectionViewCell {
             logoView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
 
             logoView.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.55),
-            logoView.heightAnchor.constraint(equalToConstant: 90)
+            logoView.heightAnchor.constraint(equalToConstant: 90),
+
+            venueNameBadgeContainerView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 15),
+            venueNameBadgeContainerView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -11),
+            venueNameBadgeContainerView.trailingAnchor.constraint(lessThanOrEqualTo: imageView.trailingAnchor, constant: -15),
+            venueNameBadgeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 21),
+
+            venueNameBlurView.topAnchor.constraint(equalTo: venueNameBadgeContainerView.topAnchor),
+            venueNameBlurView.leadingAnchor.constraint(equalTo: venueNameBadgeContainerView.leadingAnchor),
+            venueNameBlurView.trailingAnchor.constraint(equalTo: venueNameBadgeContainerView.trailingAnchor),
+            venueNameBlurView.bottomAnchor.constraint(equalTo: venueNameBadgeContainerView.bottomAnchor),
+
+            venueNameTintView.topAnchor.constraint(equalTo: venueNameBadgeContainerView.topAnchor),
+            venueNameTintView.leadingAnchor.constraint(equalTo: venueNameBadgeContainerView.leadingAnchor),
+            venueNameTintView.trailingAnchor.constraint(equalTo: venueNameBadgeContainerView.trailingAnchor),
+            venueNameTintView.bottomAnchor.constraint(equalTo: venueNameBadgeContainerView.bottomAnchor),
+
+            venueNameLabel.topAnchor.constraint(equalTo: venueNameBadgeContainerView.topAnchor, constant: 3),
+            venueNameLabel.leadingAnchor.constraint(equalTo: venueNameBadgeContainerView.leadingAnchor, constant: 12),
+            venueNameLabel.trailingAnchor.constraint(equalTo: venueNameBadgeContainerView.trailingAnchor, constant: -12),
+            venueNameLabel.bottomAnchor.constraint(equalTo: venueNameBadgeContainerView.bottomAnchor, constant: -3)
         ])
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        venueNameBadgeContainerView.layer.cornerRadius =
+        venueNameBadgeContainerView.bounds.height / 2
     }
 
     func configure(_ venue: ClipVenue) {
@@ -96,6 +157,21 @@ final class VenueGridCell: UICollectionViewCell {
                 string:
                 "\(SharedURL.amazonStorage)\(venue.logo?.key ?? "")"
             )
+        )
+
+        setVenueName(venue.name)
+    }
+
+    private func setVenueName(_ name: String) {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        venueNameBadgeContainerView.isHidden = trimmedName.isEmpty
+        venueNameLabel.attributedText = NSAttributedString(
+            string: trimmedName,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 11),
+                .foregroundColor: UIColor.white,
+                .kern: -0.22
+            ]
         )
     }
 }

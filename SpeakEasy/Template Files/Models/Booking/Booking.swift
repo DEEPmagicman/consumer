@@ -682,6 +682,65 @@ struct Questions: Codable {
     var createdAt: String
     var updatedAt: String
     var eventQuestionHasOption: [EventQuestionHasOption]?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case eventId
+        case question
+        case order
+        case isOptional
+        case questionType
+        case status
+        case isDeleted
+        case createdAt
+        case updatedAt
+        case eventQuestionHasOption
+        case reservationQuestionHasOption
+    }
+
+    init(
+        id: String,
+        eventId: String,
+        question: String,
+        order: Int,
+        isOptional: Bool,
+        questionType: String,
+        status: String,
+        isDeleted: Bool,
+        createdAt: String,
+        updatedAt: String,
+        eventQuestionHasOption: [EventQuestionHasOption]? = nil
+    ) {
+        self.id = id
+        self.eventId = eventId
+        self.question = question
+        self.order = order
+        self.isOptional = isOptional
+        self.questionType = questionType
+        self.status = status
+        self.isDeleted = isDeleted
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.eventQuestionHasOption = eventQuestionHasOption
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+        eventId = try container.decodeIfPresent(String.self, forKey: .eventId) ?? ""
+        question = try container.decodeIfPresent(String.self, forKey: .question) ?? ""
+        order = try container.decodeIfPresent(Int.self, forKey: .order) ?? 0
+        isOptional = try container.decodeIfPresent(Bool.self, forKey: .isOptional) ?? true
+        questionType = try container.decodeIfPresent(String.self, forKey: .questionType) ?? ""
+        status = try container.decodeIfPresent(String.self, forKey: .status) ?? ""
+        isDeleted = try container.decodeIfPresent(Bool.self, forKey: .isDeleted) ?? false
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        eventQuestionHasOption =
+            try container.decodeIfPresent([EventQuestionHasOption].self, forKey: .eventQuestionHasOption)
+            ?? container.decodeIfPresent([EventQuestionHasOption].self, forKey: .reservationQuestionHasOption)
+    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -708,6 +767,50 @@ struct EventQuestionHasOption: Codable {
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case eventQuestionId
+        case reservationQuestionId
+        case option
+        case status
+        case isDeleted
+        case createdAt
+        case updatedAt
+    }
+
+    init(
+        id: String,
+        eventQuestionId: String,
+        option: String,
+        status: String,
+        isDeleted: Bool,
+        createdAt: String,
+        updatedAt: String
+    ) {
+        self.id = id
+        self.eventQuestionId = eventQuestionId
+        self.option = option
+        self.status = status
+        self.isDeleted = isDeleted
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+        eventQuestionId =
+            try container.decodeIfPresent(String.self, forKey: .eventQuestionId)
+            ?? container.decodeIfPresent(String.self, forKey: .reservationQuestionId)
+            ?? ""
+        option = try container.decodeIfPresent(String.self, forKey: .option) ?? ""
+        status = try container.decodeIfPresent(String.self, forKey: .status) ?? ""
+        isDeleted = try container.decodeIfPresent(Bool.self, forKey: .isDeleted) ?? false
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

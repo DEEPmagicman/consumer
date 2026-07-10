@@ -331,19 +331,24 @@ final class OrderListViewController: UIViewController {
         holdTimerView.layer.borderWidth = 1
         holdTimerView.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
         holdTimerView.clipsToBounds = true
+        holdTimerView.setContentHuggingPriority(.required, for: .vertical)
+        holdTimerView.setContentCompressionResistancePriority(.required, for: .vertical)
 
         holdTimerLabel.translatesAutoresizingMaskIntoConstraints = false
         holdTimerLabel.textColor = AppColor.primaryWhiteColor
         holdTimerLabel.font = Constant.Font.geistMedium(size: 14)
         holdTimerLabel.textAlignment = .center
         holdTimerLabel.numberOfLines = 1
+        holdTimerLabel.setContentHuggingPriority(.required, for: .vertical)
+        holdTimerLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         holdTimerView.addSubview(holdTimerLabel)
         NSLayoutConstraint.activate([
             holdTimerLabel.topAnchor.constraint(equalTo: holdTimerView.topAnchor, constant: 12),
             holdTimerLabel.leadingAnchor.constraint(equalTo: holdTimerView.leadingAnchor, constant: 16),
             holdTimerLabel.trailingAnchor.constraint(equalTo: holdTimerView.trailingAnchor, constant: -16),
-            holdTimerLabel.bottomAnchor.constraint(equalTo: holdTimerView.bottomAnchor, constant: -12)
+            holdTimerLabel.bottomAnchor.constraint(equalTo: holdTimerView.bottomAnchor, constant: -12),
+            holdTimerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
         ])
 
         if let orderIndex = contentStack.arrangedSubviews.firstIndex(of: yourOrderView) {
@@ -639,10 +644,14 @@ final class OrderListViewController: UIViewController {
         let range = (text as NSString).range(of: toggleText)
         guard range.location != NSNotFound else { return }
         let tappedToggle = gesture.didTapAttributedTextInLabel(label: label, inRange: range)
-        guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
+        guard tappedToggle else { return }
         toggle()
         updateAgreementLabels()
-        UIView.animate(withDuration: 0.25) { self.view.layoutIfNeeded() }
+        let contentStack = yourOrderView.superview
+        UIView.animate(withDuration: 0.25) {
+            label.superview?.layoutIfNeeded()
+            contentStack?.layoutIfNeeded()
+        }
     }
 
     // MARK: - KVO

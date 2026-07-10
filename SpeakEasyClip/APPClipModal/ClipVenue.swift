@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct ClipVenue: Codable {
     
@@ -338,6 +339,11 @@ struct VenueSettings: Codable {
     var coverTicketViewSettings: CoverTicketViewSettings?
     var isEnableCoverTicketViewSettings: Bool?
     var whiteLabelColor: String?
+    var paidEventTicketQrCodeBorderColor: String?
+    var freeEventTicketQrCodeBorderColor: String?
+    var paidCoverTicketQrCodeBorderColor: String?
+    var freeCoverTicketQrCodeBorderColor: String?
+    var compedTicketQrCodeBorderColor: String?
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
     var barTabBookingPolicy: String?
@@ -347,6 +353,8 @@ struct VenueSettings: Codable {
     var reservationConfirmationMessage: String?
     var prepaidReservationConfirmationMessage: String?
     var reservationRequestPolicy: String?
+    var customNoteOnReservationManagementPage: String?
+    var reservationWidgetSettings: ReservationWidgetSettings?
     var websiteUrl: String?
     var instagramUrl: String?
     var tiktokUrl: String?
@@ -379,6 +387,11 @@ struct VenueSettings: Codable {
         try container.encode(bookingStatus, forKey: .bookingStatus)
         try container.encodeIfPresent(isEnableCoverTicketViewSettings, forKey: .isEnableCoverTicketViewSettings)
         try container.encodeIfPresent(whiteLabelColor, forKey: .whiteLabelColor)
+        try container.encodeIfPresent(paidEventTicketQrCodeBorderColor, forKey: .paidEventTicketQrCodeBorderColor)
+        try container.encodeIfPresent(freeEventTicketQrCodeBorderColor, forKey: .freeEventTicketQrCodeBorderColor)
+        try container.encodeIfPresent(paidCoverTicketQrCodeBorderColor, forKey: .paidCoverTicketQrCodeBorderColor)
+        try container.encodeIfPresent(freeCoverTicketQrCodeBorderColor, forKey: .freeCoverTicketQrCodeBorderColor)
+        try container.encodeIfPresent(compedTicketQrCodeBorderColor, forKey: .compedTicketQrCodeBorderColor)
         try container.encodeIfPresent(showCoverDisclaimer, forKey: .showCoverDisclaimer)
         try container.encodeIfPresent(coverDisclaimerText, forKey: .coverDisclaimerText)
         try container.encodeIfPresent(barTabBookingPolicy, forKey: .barTabBookingPolicy)
@@ -388,6 +401,8 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(reservationConfirmationMessage, forKey: .reservationConfirmationMessage)
         try container.encodeIfPresent(prepaidReservationConfirmationMessage, forKey: .prepaidReservationConfirmationMessage)
         try container.encodeIfPresent(reservationRequestPolicy, forKey: .reservationRequestPolicy)
+        try container.encodeIfPresent(customNoteOnReservationManagementPage, forKey: .customNoteOnReservationManagementPage)
+        try container.encodeIfPresent(reservationWidgetSettings, forKey: .reservationWidgetSettings)
         try container.encodeIfPresent(websiteUrl, forKey: .websiteUrl)
         try container.encodeIfPresent(instagramUrl, forKey: .instagramUrl)
         try container.encodeIfPresent(tiktokUrl, forKey: .tiktokUrl)
@@ -398,6 +413,86 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(isEnabledSpendAgreement, forKey: .isEnabledSpendAgreement)
         try container.encodeIfPresent(spendAgreementSettings, forKey: .spendAgreementSettings)
         try container.encodeIfPresent(currencyPosition, forKey: .currencyPosition)
+    }
+}
+
+struct ReservationWidgetSettings: Codable {
+    var id: String?
+    var isReservationRequestFormTextEnabled: Bool?
+    var reservationRequestFormText: String?
+    var formSubmitButtonText: String?
+    var status: String?
+    var isDeleted: Bool?
+}
+
+enum TicketQRCodeType {
+    case event
+    case cover
+}
+
+enum TicketQRCodeColorResolver {
+
+    static func normalizeColor(_ color: String?) -> String? {
+        guard var normalized = color?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !normalized.isEmpty else {
+            return nil
+        }
+
+        if normalized.hasPrefix("#") {
+            normalized.removeFirst()
+        }
+
+        let isHex = normalized.range(
+            of: "^[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$",
+            options: .regularExpression
+        ) != nil
+
+        guard isHex else {
+            return color?.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        if normalized.count == 3 {
+            normalized = normalized.map { "\($0)\($0)" }.joined()
+        }
+
+        return "#\(normalized)"
+    }
+
+    static func color(
+        venueSettings: VenueSettings?,
+        ticketType: TicketQRCodeType,
+        isFreeTicket: Bool,
+        preferredColor: String? = nil,
+        useFallbackWhenPreferredMissing: Bool = false,
+        fallbackColor: String? = nil
+    ) -> UIColor? {
+
+        let configuredColor: String?
+        switch ticketType {
+        case .event:
+            configuredColor = isFreeTicket
+            ? venueSettings?.freeEventTicketQrCodeBorderColor
+            : venueSettings?.paidEventTicketQrCodeBorderColor
+        case .cover:
+            configuredColor = isFreeTicket
+            ? venueSettings?.freeCoverTicketQrCodeBorderColor
+            : venueSettings?.paidCoverTicketQrCodeBorderColor
+        }
+
+        if let normalizedPreferredColor = normalizeColor(preferredColor) {
+            return UIColor(hex: normalizedPreferredColor)
+        }
+
+        if useFallbackWhenPreferredMissing {
+            guard let normalizedFallbackColor = normalizeColor(fallbackColor) else {
+                return nil
+            }
+            return UIColor(hex: normalizedFallbackColor)
+        }
+
+        let resolvedColor = normalizeColor(configuredColor) ?? normalizeColor(fallbackColor)
+        guard let resolvedColor else { return nil }
+        return UIColor(hex: resolvedColor)
     }
 }
 

@@ -89,7 +89,6 @@ final class PartySizeFieldRow: UIView {
 
             stepper.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8),
             stepper.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
-            stepper.widthAnchor.constraint(equalToConstant: 130),
             stepper.heightAnchor.constraint(equalToConstant: 44)
         ])
     }

@@ -15,6 +15,7 @@ class GroupTicketTVC: UITableViewCell {
     @IBOutlet weak var expandBnt: UIButton!
     @IBOutlet weak var tableParentView: UIView!
     @IBOutlet weak var containerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var viewTopConstraint: NSLayoutConstraint!
     
     var tickets: [EventTicket] = []
     var currency: String = "$"
@@ -89,6 +90,7 @@ class GroupTicketTVC: UITableViewCell {
         expandedTicketDescriptions: Set<String>,
         disabledTicketIds: Set<String>,
         isExpanded: Bool = false,
+        topSpacing: CGFloat = 10,
         bottomSpacing: CGFloat = 0
     ) {
         self.groupTitle.text = groupName
@@ -101,6 +103,7 @@ class GroupTicketTVC: UITableViewCell {
         self.disabledTicketIds = disabledTicketIds
         self.isExpanded = isExpanded
         
+        viewTopConstraint.constant = topSpacing
         containerBottomConstraint.constant = bottomSpacing
         tableParentView.isHidden = !isExpanded
         expandBnt.transform = isExpanded

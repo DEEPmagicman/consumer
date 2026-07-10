@@ -257,6 +257,10 @@ struct APIBuilder {
     static func reservationRequestURL() -> String {
         return SharedURL.tableBaseURL + route + "/reservation-request"
     }
+
+    static func reservationQuestionsURL() -> String {
+        return SharedURL.tableBaseURL + route + "/reservation-questions"
+    }
     
     static func seatingAreaBookingConfirmURL(eventId: String) -> String {
         return SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + bookingConfirm
@@ -301,7 +305,7 @@ struct APIBuilder {
     }
 
     static func v3EventDetailURL(_ uniqueId: String) -> String {
-        v3baseURL + route + event + "/\(uniqueId)"
+        baseURL + route + event + "/\(uniqueId)"
     }
     
     static func eventAttendeesURL(_ id: String) -> String {
