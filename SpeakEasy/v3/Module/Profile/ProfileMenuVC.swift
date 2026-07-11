@@ -38,6 +38,7 @@ final class ProfileMenuVC: UIViewController {
         setupUI()
         setupUserData()
         observeProfileUpdate()
+        setupSideBackGesture()
     }
 
     override func viewDidLayoutSubviews() {
@@ -46,6 +47,15 @@ final class ProfileMenuVC: UIViewController {
         imageView.layer.cornerRadius = imageView.bounds.height / 2
     }
     
+    private func setupSideBackGesture() {
+        let edgePan = UIScreenEdgePanGestureRecognizer(
+            target: self,
+            action: #selector(onSideBackGesture(_:))
+        )
+        edgePan.edges = .left
+        view.addGestureRecognizer(edgePan)
+    }
+
     private func observeProfileUpdate() {
         NotificationCenter.default.addObserver(
             self,
@@ -237,8 +247,8 @@ final class ProfileMenuVC: UIViewController {
             backgroundDimView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundDimView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14),
             backBtn.widthAnchor.constraint(equalToConstant: 40),
             backBtn.heightAnchor.constraint(equalToConstant: 40),
 
@@ -424,26 +434,18 @@ final class ProfileMenuVC: UIViewController {
         }
     }
 
-    @objc private func onClickBack() {
-        popProfileMenuVC(self)
-    }
-    
-    func popProfileMenuVC(_ sender: UIViewController) {
-        if sender.presentingViewController != nil || sender.navigationController?.presentingViewController != nil {
-            sender.dismiss(animated: true)
-            return
+    @objc private func onSideBackGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        guard gesture.state == .ended else { return }
+
+        let translation = gesture.translation(in: view)
+        let velocity = gesture.velocity(in: view)
+        if translation.x > 70 || velocity.x > 500 {
+            onClickBack()
         }
+    }
 
-        guard let navigation = sender.navigationController else { return }
-
-        let transition = CATransition()
-        transition.duration = 0.35
-        transition.type = .reveal
-        transition.subtype = .fromBottom
-        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-
-        navigation.view.layer.add(transition, forKey: nil)
-        navigation.popViewController(animated: false)
+    @objc private func onClickBack() {
+        dismiss(animated: true)
     }
     
     @objc private func onClickProfile() {
@@ -541,7 +543,7 @@ final class ProfileCardView: UIView {
         blurView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(blurView)
 
-        tintView.backgroundColor = UIColor(hex: "#9B9B9B").withAlphaComponent(0.05)
+        tintView.backgroundColor = UIColor(hex: "#9B9B9B").withAlphaComponent(0.07)
         tintView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(tintView)
 
