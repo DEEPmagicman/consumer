@@ -1180,6 +1180,7 @@ extension CoverTicketListVC {
             guard let self else { return }
 
             if isSuccess, let id {
+                NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.scanQR(
                     self,
                     bookingId: id,

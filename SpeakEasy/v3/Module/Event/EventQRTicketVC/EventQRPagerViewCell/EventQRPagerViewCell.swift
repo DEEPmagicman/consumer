@@ -6,6 +6,7 @@ struct EventTicketQR {
     let ticketName: String
     let qrString: String
     let backupCode: String
+    let purchasedAtText: String
 }
 
 class EventQRPagerViewCell: FSPagerViewCell {
@@ -14,24 +15,52 @@ class EventQRPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var ticketNameLbl: UILabel!
     @IBOutlet weak var ticketProgressLbl: UILabel!
     @IBOutlet weak var noTicketHiddenView: UIView!
-    
+
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var ticketCodeView: UIView!
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
+
+    private var flipBackWorkItem: DispatchWorkItem?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         qrCodeImageView.layer.magnificationFilter = .nearest
         noTicketHiddenView.isHidden = true
+        ticketCodeView.isHidden = true
+        backupCode.textColor = .black
+        bookingDateTime.textColor = .black
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+        containerView.addGestureRecognizer(tap)
+        containerView.isUserInteractionEnabled = true
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        flipBackWorkItem?.cancel()
+        flipBackWorkItem = nil
+        ticketCodeView.isHidden = true
+        qrCodeImageView.isHidden = false
+        qrCodeImageView.image = nil
+        containerView.isUserInteractionEnabled = true
+    }
+
+    deinit {
+        flipBackWorkItem?.cancel()
     }
 
     func configure(with ticket: EventTicketQR, index: Int, total: Int) {
         ticketNameLbl.text = ticket.ticketName
         ticketProgressLbl.text = "\(index + 1) of \(total)"
+        backupCode.text = ticket.backupCode
+        bookingDateTime.text = ticket.purchasedAtText
 
         let hasQR = !ticket.qrString.isEmpty
         noTicketHiddenView.isHidden = hasQR
         qrCodeImageView.isHidden = !hasQR
+        ticketCodeView.isHidden = true
+        containerView.isUserInteractionEnabled = hasQR && !ticket.backupCode.isEmpty
 
         if hasQR {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
@@ -68,5 +97,33 @@ class EventQRPagerViewCell: FSPagerViewCell {
         }
 
         return UIImage(cgImage: cgImage)
+    }
+
+    @objc private func qrImageTapped() {
+        guard ticketCodeView.isHidden else { return }
+
+        containerView.isUserInteractionEnabled = false
+        flipBackWorkItem?.cancel()
+        flipView()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.flipView()
+            self.containerView.isUserInteractionEnabled = true
+        }
+        flipBackWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: workItem)
+    }
+
+    private func flipView() {
+        UIView.transition(
+            with: containerView,
+            duration: 1,
+            options: [.transitionFlipFromRight, .allowUserInteraction]
+        ) { [weak self] in
+            guard let self else { return }
+            self.ticketCodeView.isHidden.toggle()
+            self.qrCodeImageView.isHidden.toggle()
+        }
     }
 }

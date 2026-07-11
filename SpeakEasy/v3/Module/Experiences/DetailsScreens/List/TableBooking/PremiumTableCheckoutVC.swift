@@ -1848,6 +1848,7 @@ private extension PremiumTableCheckoutVC {
                 if success {
                     self.didFinishBooking = true
                     self.timer?.invalidate()
+                    NotificationCenter.default.postOrdersRefresh(.tables)
                     self.showReservationConfirmation(response?.reservations.first)
                 } else {
                     Alert.showToast(message ?? Constant.String.somethingWrong)

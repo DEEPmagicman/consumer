@@ -1190,7 +1190,7 @@ private final class DiscoverImageMarkerView: UIView {
         ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
         addSubview(ringView)
 
-        imageView.frame = CGRect(x: 6, y: 6, width: 30, height: 30)
+        imageView.frame = bounds.insetBy(dx: 4, dy: 4)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.bounds.width / 2

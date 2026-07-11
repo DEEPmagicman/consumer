@@ -555,6 +555,7 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
+                NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.showQRCode(
                     self,
                     booking: nil,
@@ -597,6 +598,7 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess, let id = id {
                 self.countdownTimer?.invalidate()
+                NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.showQRCode(
                     self,
                     booking: nil,

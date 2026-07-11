@@ -200,6 +200,19 @@ class BaseOrdersGridVC: UIViewController {
         loadPast(reset: true)
     }
 
+    func refreshOrders() {
+        upcomingSkip = 0
+        pastSkip = 0
+        upcomingHasMany = false
+        pastHasMany = false
+        didLoadUpcoming = false
+        didLoadPast = false
+        isInitialLoading = true
+        isPaginating = false
+        paginatingSection = nil
+        loadInitialData()
+    }
+
     func loadUpcoming(reset: Bool) { }
 
     func loadPast(reset: Bool) { }

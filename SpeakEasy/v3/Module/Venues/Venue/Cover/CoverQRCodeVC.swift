@@ -65,6 +65,15 @@ final class CoverQRCodeVC: UIViewController {
         showsAddOnsPage ? 2 : 1
     }
 
+    private var coverWalletBookingID: String {
+        guard !isOnlyAddOnAvailable else { return "" }
+        return (booking?.id ?? bookingId).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var shouldShowWalletButton: Bool {
+        !coverWalletBookingID.isEmpty
+    }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -341,13 +350,18 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     private func setInitialLoadingVisible(_ isVisible: Bool, animated: Bool = true) {
-        guard isInitialLoadingVisible != isVisible else { return }
+        let didChangeVisibility = isInitialLoadingVisible != isVisible
         isInitialLoadingVisible = isVisible
 
         pagerView.isHidden = isVisible
         progressBarView.isHidden = isVisible || pagerItemCount <= 1
-        addToWalletBtn.isHidden = isVisible
+        addToWalletBtn.isHidden = isVisible || !shouldShowWalletButton
         buyAnotherTicketBtn.isHidden = isVisible
+
+        guard didChangeVisibility else {
+            updateScrollableContentHeight()
+            return
+        }
 
         if isVisible {
             loadingShimmerView.show(animated: animated)
@@ -554,8 +568,8 @@ final class CoverQRCodeVC: UIViewController {
         let pagerTop = pagerView.convert(pagerView.bounds, to: contentView).minY
         let progressTopSpacing: CGFloat = 14
         let progressHeight: CGFloat = 10
-        let walletTopSpacing: CGFloat = 12
-        let walletHeight: CGFloat = 50
+        let walletTopSpacing: CGFloat = addToWalletBtn.isHidden ? 0 : 12
+        let walletHeight: CGFloat = addToWalletBtn.isHidden ? 0 : 50
         let buyButtonTopSpacing: CGFloat = 14
         let buyButtonHeight: CGFloat = 48
         let bottomPadding: CGFloat = 20
@@ -689,14 +703,7 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     @IBAction func onClickAddToWalletBtn(_ sender: Any) {
-        let bookingID: String
-        if isOnlyAddOnAvailable {
-            bookingID = addOnsBookingId
-        } else if currentPage == 1 && showsAddOnsPage {
-            bookingID = addOnsBookingId
-        } else {
-            bookingID = bookingId
-        }
+        let bookingID = coverWalletBookingID
 
         guard !bookingID.isEmpty else {
             Alert.showAlertSheet(style: .alert, title: "Booking not found", message: "")
@@ -713,7 +720,7 @@ final class CoverQRCodeVC: UIViewController {
             return
         }
 
-        guard let url = URL(string: APIBuilder.appClipAppleWallet(bookingID)) else { return }
+        guard let url = URL(string: APIBuilder.coverAppleWallet(bookingID)) else { return }
 
         addToWalletBtn.isUserInteractionEnabled = false
         addToWalletBtn.alpha = 0.65

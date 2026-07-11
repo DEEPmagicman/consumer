@@ -60,6 +60,7 @@ final class OrderListViewController: UIViewController {
     private var savedPaymentMethods: [PaymentMethod] = []
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
+    private var isFreeBookingInProgress = false
     private var isCancellingTransaction = false
     private var wasInteractivePopGestureEnabled = true
     private var countdownTimer: Timer?
@@ -1229,7 +1230,15 @@ final class OrderListViewController: UIViewController {
     // MARK: - Stripe Checkout
 
     private func startPaymentFlow() {
-        guard !isPaymentInitiated, !isCancellingTransaction else { return }
+        guard !isCancellingTransaction else { return }
+
+        if isFreeTicket {
+            guard !isFreeBookingInProgress else { return }
+            // A stale Stripe state must not block redemption of a free ticket.
+            isPaymentInitiated = false
+        } else {
+            guard !isPaymentInitiated else { return }
+        }
 
         guard isTermsAccepted || termsAndConditions.isHidden else {
             Alert.showToast("Please accept the terms and conditions")
@@ -1258,7 +1267,7 @@ final class OrderListViewController: UIViewController {
 
     private func continuePaymentFlow() {
         if isFreeTicket {
-            confirmPaymentAndNavigate()
+            createFreeEventBookingAndNavigate()
             return
         }
 
@@ -1288,6 +1297,57 @@ final class OrderListViewController: UIViewController {
 
     // MARK: - Confirm + Navigate
 
+    private func createFreeEventBookingAndNavigate() {
+        guard let eventId = event?.id else {
+            isPaymentInitiated = false
+            hidePurchaseLoading()
+            Alert.showToast("Missing event information.")
+            return
+        }
+
+        guard !isFreeBookingInProgress else { return }
+        isFreeBookingInProgress = true
+
+        let tickets = selectedTickets.map {
+            [
+                "ticketId": $0.id ?? "",
+                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketPrice": $0.price ?? 0
+            ] as [String: Any]
+        }
+
+        PaymentPresenter.createEventFreeBooking(
+            eventId: eventId,
+            phone: UserDefault.shared.user?.phone ?? "",
+            userId: UserDefault.shared.user?.id ?? "",
+            tickets: tickets,
+            bookingId: bookingId
+        ) { [weak self] isSuccess, errMsg, freeBookingId, message in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.hidePurchaseLoading()
+                self.isPaymentInitiated = false
+                self.isFreeBookingInProgress = false
+
+                guard isSuccess else {
+                    Alert.showToast(message ?? errMsg ?? "Unable to redeem tickets")
+                    return
+                }
+
+                self.countdownTimer?.invalidate()
+                NotificationCenter.default.postOrdersRefresh(.tickets)
+                Navigate.to.showQRCode(
+                    self,
+                    booking: nil,
+                    bookingId: freeBookingId ?? self.bookingId ?? "",
+                    type: .singleTickedEvent,
+                    sourceEvent: self.event,
+                    presentationMode: .pushedFromPurchase
+                )
+            }
+        }
+    }
+
     private func confirmPaymentAndNavigate() {
         guard let bookingId else {
             isPaymentInitiated = false
@@ -1311,6 +1371,7 @@ final class OrderListViewController: UIViewController {
 
                 if isSuccess {
                     self.countdownTimer?.invalidate()
+                    NotificationCenter.default.postOrdersRefresh(.tickets)
                     Navigate.to.showQRCode(
                         self,
                         booking: nil,

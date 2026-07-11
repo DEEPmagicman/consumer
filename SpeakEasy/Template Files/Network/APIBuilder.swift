@@ -461,8 +461,12 @@ struct APIBuilder {
         baseURL + mvpCity
     }
     
-    static func appClipAppleWallet(_ bookingId: String) -> String {
+    static func coverAppleWallet(_ bookingId: String) -> String {
         baseURL + route + cover + "/\(bookingId)" + appleWallet
+    }
+
+    static func appClipAppleWallet(_ bookingId: String) -> String {
+        coverAppleWallet(bookingId)
     }
     
     static func eventAppleWallet(_ bookingId: String) -> String {

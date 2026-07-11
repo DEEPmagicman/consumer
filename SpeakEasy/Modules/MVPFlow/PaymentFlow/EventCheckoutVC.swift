@@ -108,6 +108,7 @@ final class EventCheckoutVC: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
+                NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.showQRCode(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
             } else {
                 if errMsg != nil {
@@ -134,6 +135,7 @@ final class EventCheckoutVC: UIViewController {
                 self.bookingId = id
                 if eventQuestions.count == 0 {
                     Loader.hide()
+                    NotificationCenter.default.postOrdersRefresh(.tickets)
                     Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: .singleTickedEvent)
                 } else {
                     postQueAns()

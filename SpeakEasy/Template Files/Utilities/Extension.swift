@@ -558,6 +558,26 @@ extension Notification.Name {
 
     static let eventTransactionDidCancelAndReturnToDetails =
         Notification.Name("eventTransactionDidCancelAndReturnToDetails")
+
+    static let ordersShouldRefresh =
+        Notification.Name("ordersShouldRefresh")
+}
+
+enum OrdersRefreshKind: String {
+    case tickets
+    case tables
+    case all
+}
+
+extension NotificationCenter {
+
+    func postOrdersRefresh(_ kind: OrdersRefreshKind) {
+        post(
+            name: .ordersShouldRefresh,
+            object: nil,
+            userInfo: ["kind": kind.rawValue]
+        )
+    }
 }
 
 extension String {

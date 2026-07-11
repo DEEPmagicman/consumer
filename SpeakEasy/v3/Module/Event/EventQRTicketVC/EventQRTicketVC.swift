@@ -416,7 +416,7 @@ class EventQRTicketVC: UIViewController {
 
     private func setupQRCodeView() {
         qrGreenView.translatesAutoresizingMaskIntoConstraints = false
-        qrGreenView.backgroundColor = UIColor(hex: "#19D43A")
+        qrGreenView.backgroundColor = .clear
         qrGreenView.layer.cornerRadius = 22
         qrGreenView.clipsToBounds = true
 
@@ -656,7 +656,8 @@ class EventQRTicketVC: UIViewController {
                 EventTicketQR(
                     ticketName: ticket.ticketName ?? "",
                     qrString: qrString,
-                    backupCode: backupCodeText()
+                    backupCode: backupCodeText(),
+                    purchasedAtText: purchaseTimeText()
                 )
             )
         }
@@ -1409,6 +1410,9 @@ class EventQRTicketVC: UIViewController {
     }
 
     private func backupCodeText() -> String {
+        let venueBookingCode = (booking?.venueObject?.bookingCode ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard venueBookingCode.isEmpty else { return venueBookingCode }
+
         let rawCode = booking?.id.prefix(8).uppercased() ?? ""
         return rawCode.isEmpty ? "" : "#\(rawCode)"
     }

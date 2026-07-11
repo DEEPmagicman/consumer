@@ -1406,6 +1406,7 @@ extension CoverTicketCheckOutVC {
     private func finishAndNavigate(isAddOnsAvailable: Bool, isOnlyAddOn: Bool) {
         checkOutBtnView.hideLoader()
         countdownTimer?.invalidate()
+        NotificationCenter.default.postOrdersRefresh(.tickets)
         Navigate.to.scanQR(
             self,
             isAddOnsAvailable: isAddOnsAvailable,

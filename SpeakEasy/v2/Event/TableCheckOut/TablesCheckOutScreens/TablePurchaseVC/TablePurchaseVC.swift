@@ -605,6 +605,7 @@ final class TablePurchaseVC: UIViewController {
     private func completePaymentSuccess() {
         confirmTableBooking { [weak self] success in
             guard let self = self, success else { return }
+            NotificationCenter.default.postOrdersRefresh(.tables)
 
             let alert = UIAlertController(
                 title: "Success",

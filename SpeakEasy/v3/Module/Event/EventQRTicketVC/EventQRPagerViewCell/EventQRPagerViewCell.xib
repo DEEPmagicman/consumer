@@ -163,6 +163,7 @@
                 <outlet property="containerView" destination="ZIx-wo-u5Z" id="gl2-Mi-0J6"/>
                 <outlet property="noTicketHiddenView" destination="9IP-9W-R45" id="tcf-tZ-zeT"/>
                 <outlet property="qrCodeImageView" destination="gtb-Ov-8zW" id="9RF-hp-EwI"/>
+                <outlet property="ticketCodeView" destination="dg0-sK-BXm" id="H5f-xP-S3j"/>
                 <outlet property="ticketNameLbl" destination="FbZ-ut-8Tk" id="frm-3s-VAY"/>
                 <outlet property="ticketProgressLbl" destination="B1S-2j-JdS" id="IPF-xZ-sVD"/>
             </connections>

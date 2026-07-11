@@ -406,7 +406,11 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
-        let allTickets = (event?.eventTicket ?? []) + (event?.eventAddOnTicket ?? []) + (event?.protectedEventTicket ?? [])
+        let allTickets =
+            (event?.eventTicket ?? []) +
+            (event?.eventAddOnTicket ?? []) +
+            (event?.protectedEventTicket ?? []) +
+            (event?.protectedeventAddOnTicket ?? [])
 
         return list.filter { ticket in
             guard isTicketAvailableForDisplay(ticket) else { return false }
@@ -700,6 +704,12 @@ class TicketSelectionViewController: UIViewController {
         ]}
     }
 
+    private func hasVisibleAddOnOptions() -> Bool {
+        guard let event else { return false }
+        return !filterAvailableTickets(event.eventAddOnTicket ?? []).isEmpty ||
+            !filterAvailableTickets(event.protectedeventAddOnTicket ?? []).isEmpty
+    }
+
     private func getTicketByPassWord() {
         eventService.fetchTicketsByPassword(
             eventId: event?.uniqueId ?? "",
@@ -891,12 +901,12 @@ class TicketSelectionViewController: UIViewController {
 
             selectedNormalTickets = selected
 
-            if addOnTickets.isEmpty {
+            if hasVisibleAddOnOptions() {
+                switchToAddOnMode()
+            } else {
                 continueToCheckOutBtn.showLoader(userInteraction: false)
                 setCheckoutInProgress(true)
                 createBooking(event: event, user: user, tickets: selectedNormalTickets)
-            } else {
-                switchToAddOnMode()
             }
 
         case .addOn:
@@ -1112,8 +1122,15 @@ class TicketSelectionViewController: UIViewController {
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
 
         guard !isCheckoutInProgress else { return }
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.handleRSVP(ticket: ticket, cell: cell)
+            }
+            return
+        }
         guard !isTicketDisabledByLink(ticket),
-              let event = event else { return }
+              let event = event,
+              let user = UserDefault.shared.user else { return }
         
         normalTickets.indices.forEach {
             normalTickets[$0].selectedTicketCount = nil
@@ -1135,18 +1152,12 @@ class TicketSelectionViewController: UIViewController {
 
         selectedNormalTickets = [updatedTicket]
 
-        if addOnTickets.isEmpty {
-            setCheckoutInProgress(true)
-            Navigate.orderListVC(
-                self,
-                event: event,
-                selectedTickets: selectedNormalTickets,
-                bookingId: nil,
-                paymentMethod: nil,
-                venueDetails: venueDetails
-            )
-        } else {
+        if hasVisibleAddOnOptions() {
             switchToAddOnMode()
+        } else {
+            continueToCheckOutBtn.showLoader(userInteraction: false)
+            setCheckoutInProgress(true)
+            createBooking(event: event, user: user, tickets: selectedNormalTickets)
         }
     }
 
@@ -1208,9 +1219,16 @@ class TicketSelectionViewController: UIViewController {
     private func handleGroupRSVP(ticket: EventTicket) {
 
         guard !isCheckoutInProgress else { return }
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.handleGroupRSVP(ticket: ticket)
+            }
+            return
+        }
         guard !isTicketDisabledByLink(ticket),
               let event = event,
-              let ticketId = ticket.id else { return }
+              let ticketId = ticket.id,
+              let user = UserDefault.shared.user else { return }
 
         // Remove all previous selections
         normalTickets.indices.forEach {
@@ -1240,18 +1258,12 @@ class TicketSelectionViewController: UIViewController {
 
             selectedNormalTickets = [selected]
 
-            if addOnTickets.isEmpty {
-                setCheckoutInProgress(true)
-                Navigate.orderListVC(
-                    self,
-                    event: event,
-                    selectedTickets: selectedNormalTickets,
-                    bookingId: nil,
-                    paymentMethod: nil,
-                    venueDetails: venueDetails
-                )
-            } else {
+            if hasVisibleAddOnOptions() {
                 switchToAddOnMode()
+            } else {
+                continueToCheckOutBtn.showLoader(userInteraction: false)
+                setCheckoutInProgress(true)
+                createBooking(event: event, user: user, tickets: selectedNormalTickets)
             }
 
             return

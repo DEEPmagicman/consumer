@@ -1439,7 +1439,11 @@ class EventDetailsVC: UIViewController {
     }
 
     private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
-        let allTickets = (event?.eventTicket ?? []) + (event?.eventAddOnTicket ?? []) + (event?.protectedEventTicket ?? [])
+        let allTickets =
+            (event?.eventTicket ?? []) +
+            (event?.eventAddOnTicket ?? []) +
+            (event?.protectedEventTicket ?? []) +
+            (event?.protectedeventAddOnTicket ?? [])
 
         return list.filter { ticket in
             guard isTicketAvailableForDisplay(ticket) else { return false }
@@ -2297,14 +2301,18 @@ class EventDetailsVC: UIViewController {
         return selectedTicket
     }
 
+    private func hasVisibleAddOnOptions(for event: Event) -> Bool {
+        !filterAvailableTickets(event.eventAddOnTicket ?? []).isEmpty ||
+        !filterAvailableTickets(event.protectedeventAddOnTicket ?? []).isEmpty
+    }
+
     private func handleRSVP(ticket: EventTicket) {
         guard !isTicketDisabledByLink(ticket) else { return }
         guard let event, let selectedTicket = selectOnlyInlineTicket(ticket) else { return }
 
         shouldClearInlineRSVPSelectionOnReturn = true
 
-        let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
-        if hasAddOn {
+        if hasVisibleAddOnOptions(for: event) {
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -2314,14 +2322,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        Navigate.orderListVC(
-            self,
-            event: event,
-            selectedTickets: [selectedTicket],
-            bookingId: nil,
-            paymentMethod: nil,
-            venueDetails: venueDetails
-        )
+        createInlineOrderBookingAndCheckout(selectedTickets: [selectedTicket])
     }
 
     private func handleGroupPlus(ticket: EventTicket) {
@@ -2404,8 +2405,7 @@ class EventDetailsVC: UIViewController {
 
         shouldClearInlineRSVPSelectionOnReturn = true
 
-        let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
-        if hasAddOn {
+        if hasVisibleAddOnOptions(for: event) {
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -2415,14 +2415,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        Navigate.orderListVC(
-            self,
-            event: event,
-            selectedTickets: [selectedTicket],
-            bookingId: nil,
-            paymentMethod: nil,
-            venueDetails: venueDetails
-        )
+        createInlineOrderBookingAndCheckout(selectedTickets: [selectedTicket])
     }
 
     private func updateContinueBtnState() {
@@ -2477,8 +2470,7 @@ class EventDetailsVC: UIViewController {
         let selected = selectedNormal + selectedGrouped
         guard !selected.isEmpty else { return }
 
-        let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
-        if hasAddOn {
+        if hasVisibleAddOnOptions(for: event) {
             shouldClearInlineRSVPSelectionOnReturn = true
             Navigate.to.ticketSelectionVc(
                 self,
@@ -2489,7 +2481,55 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        createInlineBookingAndCheckout(selectedTickets: selected)
+        createInlineOrderBookingAndCheckout(selectedTickets: selected)
+    }
+
+    private func createInlineOrderBookingAndCheckout(selectedTickets: [EventTicket]) {
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.createInlineOrderBookingAndCheckout(selectedTickets: selectedTickets)
+            }
+            return
+        }
+
+        guard let user = UserDefault.shared.user,
+              let event else { return }
+
+        checkOutBtnView.showLoader()
+
+        let payload: [[String: Any]] = selectedTickets.map {
+            [
+                "ticketId": $0.id ?? "",
+                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketPrice": $0.price ?? 0
+            ]
+        }
+
+        paymentService.createEventBooking(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: payload
+        ) { [weak self] isSuccess, errMsg, bookingId, _ in
+            guard let self else { return }
+
+            self.checkOutBtnView.hideLoader()
+            if isSuccess {
+                self.shouldClearInlineRSVPSelectionOnReturn = true
+                Navigate.orderListVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedTickets,
+                    bookingId: bookingId,
+                    paymentMethod: nil,
+                    venueDetails: self.venueDetails
+                )
+            } else {
+                Alert.showToast(errMsg ?? "Something went wrong")
+            }
+        }
     }
     
     @IBAction func onClickVenueTitle(_ sender: Any) {

@@ -45,6 +45,7 @@ final class MyOrdersVC: UIViewController {
 
     private let landingHeaderView = LandingHeaderView()
     private var segmentTopConstraint: NSLayoutConstraint!
+    private var ordersRefreshObserver: NSObjectProtocol?
     
     var showsBackButtonHeader: Bool = false
     
@@ -57,6 +58,13 @@ final class MyOrdersVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        observeOrderRefreshRequests()
+    }
+
+    deinit {
+        if let ordersRefreshObserver {
+            NotificationCenter.default.removeObserver(ordersRefreshObserver)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -228,8 +236,35 @@ final class MyOrdersVC: UIViewController {
 
     private func reloadAfterLogin() {
         updateLoginState()
-        ticketsVC.loadInitialData()
-        tablesVC.loadInitialData()
+        ticketsVC.refreshOrders()
+        tablesVC.refreshOrders()
+    }
+
+    private func observeOrderRefreshRequests() {
+        ordersRefreshObserver = NotificationCenter.default.addObserver(
+            forName: .ordersShouldRefresh,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            self?.handleOrderRefreshRequest(notification)
+        }
+    }
+
+    private func handleOrderRefreshRequest(_ notification: Notification) {
+        guard isLoggedIn else { return }
+
+        let rawKind = notification.userInfo?["kind"] as? String
+        let kind = rawKind.flatMap(OrdersRefreshKind.init(rawValue:)) ?? .all
+
+        switch kind {
+        case .tickets:
+            ticketsVC.refreshOrders()
+        case .tables:
+            tablesVC.refreshOrders()
+        case .all:
+            ticketsVC.refreshOrders()
+            tablesVC.refreshOrders()
+        }
     }
 
     private func featureRow(icon: String, title: String) -> UIView {
