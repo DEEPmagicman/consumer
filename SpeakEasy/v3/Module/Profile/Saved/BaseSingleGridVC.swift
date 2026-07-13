@@ -11,9 +11,11 @@ import UIKit
 class BaseSingleGridVC: UIViewController {
 
     let collectionView: UICollectionView
-    private let emptyView = UILabel()
+    private let emptyView = V3EmptyStateView(style: .savedEvents)
 
     var emptyTitle: String { "No data found" }
+    var emptyStateStyle: V3EmptyStateStyle { .savedEvents }
+    var onBrowseEvents: (() -> Void)?
 
     var items: [Booking] = []
     var skip = 0
@@ -75,11 +77,10 @@ class BaseSingleGridVC: UIViewController {
 
         view.addSubview(collectionView)
 
-        emptyView.textColor = UIColor.white.withAlphaComponent(0.55)
-        emptyView.font = Constant.Font.geistMedium(size: 16)
-        emptyView.textAlignment = .center
-        emptyView.numberOfLines = 0
         emptyView.isHidden = true
+        emptyView.onBrowseEvents = { [weak self] in
+            self?.onBrowseEvents?()
+        }
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
 
@@ -89,10 +90,10 @@ class BaseSingleGridVC: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
-            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
+            emptyView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -107,7 +108,7 @@ class BaseSingleGridVC: UIViewController {
 
         emptyView.isHidden = !isEmpty
         collectionView.isHidden = isEmpty
-        emptyView.text = emptyTitle
+        emptyView.configure(style: emptyStateStyle)
 
         UIView.performWithoutAnimation {
             collectionView.reloadData()

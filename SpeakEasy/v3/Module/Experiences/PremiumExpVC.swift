@@ -20,9 +20,7 @@ final class PremiumExpVC: UIViewController {
     private let collectionView: UICollectionView
     private let refreshControl = UIRefreshControl()
     
-    private let emptyView = UIView()
-    private let emptyTitleLabel = UILabel()
-    private let emptySubTitleLabel = UILabel()
+    private let emptyView = V3EmptyStateView(style: .premiumEvents)
     
     private let service = PremiumExperienceService()
     private var items: [PremiumExperienceItem] = []
@@ -171,41 +169,15 @@ final class PremiumExpVC: UIViewController {
 
     private func setupEmptyView() {
         emptyView.isHidden = true
+        emptyView.configure(style: .premiumEvents)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
 
-        emptyTitleLabel.text = "No premium experiences yet"
-        emptyTitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.92)
-        emptyTitleLabel.font = Constant.Font.geistMedium(size: 18)
-        emptyTitleLabel.textAlignment = .center
-
-        emptySubTitleLabel.text = "Check back soon for curated access."
-        emptySubTitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.58)
-        emptySubTitleLabel.font = Constant.Font.geistRegular(size: 14)
-        emptySubTitleLabel.textAlignment = .center
-
-        let stack = UIStackView(
-            arrangedSubviews: [
-                emptyTitleLabel,
-                emptySubTitleLabel
-            ]
-        )
-        stack.axis = .vertical
-        stack.spacing = 8
-        stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        emptyView.addSubview(stack)
-
         NSLayoutConstraint.activate([
-            emptyView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            emptyView.topAnchor.constraint(equalTo: view.topAnchor),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            stack.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor, constant: -70),
-            stack.leadingAnchor.constraint(greaterThanOrEqualTo: emptyView.leadingAnchor, constant: 32),
-            stack.trailingAnchor.constraint(lessThanOrEqualTo: emptyView.trailingAnchor, constant: -32)
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 

@@ -15,6 +15,10 @@ final class SavedGridVC: BaseSingleGridVC {
         "No saved items found"
     }
 
+    override var emptyStateStyle: V3EmptyStateStyle {
+        .savedEvents
+    }
+
     override func loadData(reset: Bool) {
         guard !UserDefault.shared.isGuest else { return }
         guard !isLoading else { return }
@@ -102,8 +106,16 @@ final class SavedGridVC: BaseSingleGridVC {
             return
         }
 
+        let shouldShowEmptyAfterDelete = items.count == 1
         items.remove(at: index)
         skip = items.count
+
+        guard !shouldShowEmptyAfterDelete else {
+            hasMany = false
+            collectionView.reloadData()
+            reloadUI()
+            return
+        }
 
         collectionView.performBatchUpdates {
             collectionView.deleteItems(

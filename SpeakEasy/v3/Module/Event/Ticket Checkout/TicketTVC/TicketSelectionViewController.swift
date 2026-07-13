@@ -355,17 +355,8 @@ class TicketSelectionViewController: UIViewController {
         guard let iconView = unlockIconImageView else { return }
         iconView.alpha = isEnabled ? 1 : 0.65
 
-        if #available(iOS 13.0, *) {
-            if isEnabled {
-                iconView.image = UIImage(systemName: "lock.open.fill")?.withRenderingMode(.alwaysTemplate)
-                iconView.tintColor = .white
-            } else {
-                iconView.image = UIImage(named: "lockIcon")
-                iconView.tintColor = nil
-            }
-        } else if !isEnabled {
-            iconView.image = UIImage(named: "lockIcon")
-        }
+        iconView.image = UIImage(named: isEnabled ? "unLockIcon" : "lockIcon")
+        iconView.tintColor = nil
     }
 
     private func ticketDate(_ value: String?) -> Date? {
@@ -719,6 +710,11 @@ class TicketSelectionViewController: UIViewController {
             if isSuccess {
                 let tickets = ticket ?? []
 
+                guard !tickets.isEmpty else {
+                    Alert.showToast("Invalid password. Please try again.")
+                    return
+                }
+
                 for tics in tickets {
                     if !self.eventTicketId.contains(where: { $0 == tics.id }) {
                         self.eventTicketId.append(tics.id ?? "")
@@ -742,7 +738,7 @@ class TicketSelectionViewController: UIViewController {
                 self.unLockPassword()
                 self.setupData()
             } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                Alert.showToast("Invalid password. Please try again.")
             }
         }
     }
@@ -788,7 +784,7 @@ class TicketSelectionViewController: UIViewController {
         guard !matched.isEmpty else {
 
             Alert.showToast(
-                "Invalid password please try again"
+                "Invalid password. Please try again."
             )
 
             return

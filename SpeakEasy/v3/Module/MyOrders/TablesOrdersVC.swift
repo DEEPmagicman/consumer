@@ -12,6 +12,7 @@ final class TablesOrdersVC: BaseOrdersGridVC {
     override var upcomingTitle: String { "Upcoming tables" }
     override var pastTitle: String { "Past tables" }
     override var emptyTitle: String { "No table reservations found" }
+    override var emptyStateStyle: V3EmptyStateStyle { .reservations }
 
     private let orderService = OrderService()
     

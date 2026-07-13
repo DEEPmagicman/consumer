@@ -48,6 +48,10 @@ final class SavedVC: UIViewController {
     }
 
     private func setupChild() {
+        savedGridVC.onBrowseEvents = { [weak self] in
+            self?.openDiscover()
+        }
+
         addChild(savedGridVC)
         savedGridVC.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(savedGridVC.view)
@@ -71,5 +75,51 @@ final class SavedVC: UIViewController {
 
     @objc private func onClickBack() {
         navigationController?.popViewController(animated: true)
+    }
+
+    private func openDiscover() {
+        if let landingVC = presentingLandingVC() {
+            landingVC.showDiscoverTab()
+            navigationController?.dismiss(animated: true)
+            return
+        }
+
+        NotificationCenter.default.post(name: .openDiscoverTab, object: nil)
+
+        if let navigationController {
+            navigationController.popToRootViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
+    }
+
+    private func presentingLandingVC() -> NewLandingVC? {
+        func landingVC(in hierarchy: UIViewController?) -> NewLandingVC? {
+            var current = hierarchy
+
+            while let viewController = current {
+                if let landingVC = viewController as? NewLandingVC {
+                    return landingVC
+                }
+
+                current = viewController.parent
+            }
+
+            return nil
+        }
+
+        var controller: UIViewController? =
+            navigationController?.presentingViewController ??
+            presentingViewController
+
+        while let current = controller {
+            if let landingVC = landingVC(in: current) {
+                return landingVC
+            }
+
+            controller = current.presentingViewController
+        }
+
+        return nil
     }
 }

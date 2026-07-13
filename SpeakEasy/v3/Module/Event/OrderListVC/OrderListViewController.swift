@@ -713,6 +713,11 @@ final class OrderListViewController: UIViewController {
             return
         }
 
+        guard !isPromoCodeApplied else {
+            updatePromoCodeUI()
+            return
+        }
+
         promoCodeTitleView.isHidden = true
         promoCodeStackView.isHidden = true
         addPromoCodeView.isHidden = true
@@ -1078,7 +1083,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private func updatePromoCodeUI() {
-        guard !isFreeTicket else {
+        guard !isFreeTicket || isPromoCodeApplied else {
             updateFreeTicketUI()
             return
         }
@@ -1088,7 +1093,7 @@ final class OrderListViewController: UIViewController {
         promoCodeStackView.isHidden = isPromoCodeApplied
         removePromoCodeView.isHidden = !isPromoCodeApplied
         if isPromoCodeApplied {
-            addedPromoCodeFeild.text = addCodeTextFeild.text
+            addedPromoCodeFeild.text = appliedPromoCode.isEmpty ? addCodeTextFeild.text : appliedPromoCode
             addCodeTextFeild.isUserInteractionEnabled = false
             let discount = paymentDetail?.discount ?? 0
             promoCodeTitleLbl.text = "Discount Applied"

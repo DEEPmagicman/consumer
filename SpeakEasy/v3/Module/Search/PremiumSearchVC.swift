@@ -1140,14 +1140,14 @@ private final class PremiumSearchArtistResultView: UIControl {
             )
             imageView.sd_setImage(
                 with: url,
-                placeholderImage: UIImage(named: "premiumExpBg"),
+                placeholderImage: UIImage(named: "artistEmptyIcon"),
                 options: [.retryFailed, .continueInBackground, .scaleDownLargeImages],
                 context: [.imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)]
             )
         } else {
             representedImageURL = nil
             imageView.sd_cancelCurrentImageLoad()
-            imageView.image = UIImage(named: "premiumExpBg") ?? Constant.Icon.uploadImage
+            imageView.image = UIImage(named: "artistEmptyIcon") ?? Constant.Icon.uploadImage
         }
     }
 

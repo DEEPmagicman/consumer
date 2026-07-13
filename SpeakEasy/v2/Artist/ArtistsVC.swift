@@ -146,34 +146,15 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
         let container = UIView(frame: tableView.bounds)
         container.backgroundColor = .clear
 
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No artists found"
-        titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 18)
-        titleLabel.textAlignment = .center
-
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "This venue does not have artists listed yet."
-        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.numberOfLines = 0
-
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        container.addSubview(stackView)
+        let emptyStateView = V3EmptyStateView(style: .artists)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(emptyStateView)
 
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -48),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+            emptyStateView.topAnchor.constraint(equalTo: container.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         ])
 
         return container

@@ -173,7 +173,7 @@
                             </constraints>
                         </view>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AMA-wH-FHu">
-                            <rect key="frame" x="0.0" y="109.99999999999997" width="393" height="397.66666666666663"/>
+                            <rect key="frame" x="0.0" y="109.99999999999997" width="393" height="393.66666666666663"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RmE-3h-ojt">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="1148"/>
@@ -509,7 +509,7 @@
                             </constraints>
                         </scrollView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="gdk-Rw-zT7">
-                            <rect key="frame" x="20" y="512.66666666666663" width="353" height="142"/>
+                            <rect key="frame" x="20" y="508.66666666666663" width="353" height="142"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jsm-M8-dIF" customClass="CheckoutBarView" customModule="Speakeasy" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="353" height="142"/>
@@ -531,7 +531,7 @@
                         <constraint firstItem="gdk-Rw-zT7" firstAttribute="top" relation="greaterThanOrEqual" secondItem="AMA-wH-FHu" secondAttribute="bottom" constant="5" id="fmI-S3-OvK"/>
                         <constraint firstItem="4V2-dX-l8F" firstAttribute="top" secondItem="Bv0-ga-ny2" secondAttribute="top" id="kHY-fD-kTe"/>
                         <constraint firstItem="4V2-dX-l8F" firstAttribute="leading" secondItem="Bv0-ga-ny2" secondAttribute="leading" constant="20" id="xPP-j8-bv2"/>
-                        <constraint firstAttribute="bottom" secondItem="gdk-Rw-zT7" secondAttribute="bottom" constant="12" id="xT5-Vq-0E5"/>
+                        <constraint firstAttribute="bottom" secondItem="gdk-Rw-zT7" secondAttribute="bottom" constant="16" id="xT5-Vq-0E5"/>
                         <constraint firstItem="AMA-wH-FHu" firstAttribute="leading" secondItem="Bv0-ga-ny2" secondAttribute="leading" id="ygp-I8-aXq"/>
                     </constraints>
                 </view>

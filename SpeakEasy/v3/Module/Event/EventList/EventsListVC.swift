@@ -49,6 +49,7 @@ final class EventsListVC: UIViewController {
     private var lastCollectionLayoutWidth: CGFloat = 0
     private var screenFilterCity: String?
     private var loadID = 0
+    private var topTitleWidthConstraint: NSLayoutConstraint?
 
     var venue: SearchVenueItem? = nil
     var listMode: EventsListMode = .cityEvents
@@ -87,6 +88,8 @@ final class EventsListVC: UIViewController {
     }
 
     private func setupUI() {
+        setupTopTitleSizing()
+
         if let venue = venue {
             topRightSideBtn.isHidden = false
             topRightSideBtn.iconTypeValue = AppIconType.search.rawValue
@@ -103,6 +106,22 @@ final class EventsListVC: UIViewController {
             topRightSideBtn.isHidden = true
             updateCityTitle()
         }
+
+        refreshTopTitleLayout()
+    }
+
+    private func setupTopTitleSizing() {
+        titleLbl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        titleLbl.setContentHuggingPriority(.required, for: .horizontal)
+        cityTitleLbl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        cityTitleLbl.setContentHuggingPriority(.required, for: .horizontal)
+
+        guard topTitleWidthConstraint == nil else { return }
+
+        let widthConstraint = topTitleView.widthAnchor.constraint(equalToConstant: 180)
+        widthConstraint.priority = .required
+        widthConstraint.isActive = true
+        topTitleWidthConstraint = widthConstraint
     }
 
     private func setupCollectionView() {
@@ -282,6 +301,7 @@ final class EventsListVC: UIViewController {
         switch listMode {
         case .cityEvents:
             titleLbl.text = "Events in \(resolvedCity())"
+            cityTitleLbl.text = ""
             cityTitleLbl.isHidden = true
             self.topTitleView.cornerRadius = 20
             topViewLeftSideConstraint.constant = 20
@@ -290,11 +310,53 @@ final class EventsListVC: UIViewController {
         case .tonight:
             titleLbl.text = "Events Tonight"
             cityTitleLbl.text = resolvedCity()
+            cityTitleLbl.isHidden = false
 
         case .venueSearch:
             titleLbl.text = venue?.name ?? "Events"
             cityTitleLbl.text = ""
             cityTitleLbl.isHidden = true
+        }
+
+        refreshTopTitleLayout()
+    }
+
+    private func refreshTopTitleLayout() {
+        let screenWidth = view.bounds.width > 0
+            ? view.bounds.width
+            : UIScreen.main.bounds.width
+
+        let titleText = titleLbl.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let cityText = cityTitleLbl.isHidden
+            ? ""
+            : (cityTitleLbl.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
+
+        let titleWidth = ceil((titleText as NSString).size(
+            withAttributes: [.font: titleLbl.font ?? Constant.Font.geistRegular(size: 18)]
+        ).width)
+        let cityWidth = ceil((cityText as NSString).size(
+            withAttributes: [.font: cityTitleLbl.font ?? Constant.Font.geistMedium(size: 9)]
+        ).width)
+
+        let horizontalPadding = topViewLeftSideConstraint.constant + topViewRightSideConstraint.constant
+        let maxWidth = max(140, screenWidth - (topRightSideBtn.isHidden ? 132 : 152))
+        let minWidth: CGFloat = cityTitleLbl.isHidden ? 132 : 160
+        let targetWidth = min(max(max(titleWidth, cityWidth) + horizontalPadding, minWidth), maxWidth)
+
+        guard abs((topTitleWidthConstraint?.constant ?? 0) - targetWidth) > 0.5 else {
+            return
+        }
+
+        topTitleWidthConstraint?.constant = targetWidth
+        titleLbl.invalidateIntrinsicContentSize()
+        cityTitleLbl.invalidateIntrinsicContentSize()
+        topTitleView.invalidateIntrinsicContentSize()
+        topTitleView.setNeedsLayout()
+        topTitleView.superview?.setNeedsLayout()
+
+        UIView.performWithoutAnimation {
+            view.layoutIfNeeded()
         }
     }
 
@@ -331,34 +393,15 @@ final class EventsListVC: UIViewController {
         let container = UIView(frame: collectionView.bounds)
         container.backgroundColor = .clear
 
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No events found"
-        titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 18)
-        titleLabel.textAlignment = .center
-
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = venue == nil ? "Try another city." : "Try another search or date."
-        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.numberOfLines = 0
-
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        container.addSubview(stackView)
+        let emptyView = V3EmptyStateView(style: .events)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(emptyView)
 
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -40),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+            emptyView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -24),
+            emptyView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 24),
+            emptyView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -24)
         ])
 
         return container
@@ -383,6 +426,7 @@ final class EventsListVC: UIViewController {
         lastCollectionLayoutWidth = width
 
         UIView.performWithoutAnimation {
+            refreshTopTitleLayout()
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
         }

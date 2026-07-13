@@ -16,6 +16,7 @@ final class VenueEventsVC: UIViewController,
     weak var scrollDelegate: ChildScrollDelegate?
     var venueId = ""
 
+    private let emptyStateView = V3EmptyStateView(style: .venueEvents)
     private var events: [Event] = []
 
     private var skip = 0
@@ -30,6 +31,7 @@ final class VenueEventsVC: UIViewController,
         super.viewDidLoad()
 
         setupCollectionView()
+        setupEmptyStateView()
         getEvents(reset: true)
     }
 
@@ -96,6 +98,20 @@ extension VenueEventsVC {
         layout.delegate = self
 
         collectionView.collectionViewLayout = layout
+    }
+
+    private func setupEmptyStateView() {
+        emptyView.subviews.forEach { $0.removeFromSuperview() }
+        emptyStateView.configure(style: .venueEvents)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.addSubview(emptyStateView)
+
+        NSLayoutConstraint.activate([
+            emptyStateView.topAnchor.constraint(equalTo: emptyView.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: emptyView.bottomAnchor)
+        ])
     }
 
     private func reloadUI() {

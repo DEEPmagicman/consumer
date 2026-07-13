@@ -242,6 +242,7 @@ final class DiscoverDateFilterVC: UIViewController {
             guard !indexPaths.isEmpty else {
                 self.isPaginating = false
                 self.invalidateFooter()
+                self.updateEmptyState()
                 return
             }
 
@@ -269,6 +270,8 @@ final class DiscoverDateFilterVC: UIViewController {
             collectionView.reloadData()
             collectionView.layoutIfNeeded()
         }
+
+        updateEmptyState()
     }
 
     private func insertEventItems(_ indexPaths: [IndexPath]) {
@@ -279,8 +282,33 @@ final class DiscoverDateFilterVC: UIViewController {
                 guard let self else { return }
                 self.isPaginating = false
                 self.invalidateFooter()
+                self.updateEmptyState()
             }
         }
+    }
+
+    private func updateEmptyState() {
+        collectionView.backgroundView = !isInitialLoading && eventList.isEmpty
+            ? makeEmptyStateView()
+            : nil
+    }
+
+    private func makeEmptyStateView() -> UIView {
+        let container = UIView(frame: collectionView.bounds)
+        container.backgroundColor = .clear
+
+        let emptyView = V3EmptyStateView(style: .events)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(emptyView)
+
+        NSLayoutConstraint.activate([
+            emptyView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -24),
+            emptyView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 24),
+            emptyView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -24)
+        ])
+
+        return container
     }
 
     private func invalidateFooter() {

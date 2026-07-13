@@ -53,13 +53,13 @@ final class ArtistsTableViewCell: UITableViewCell {
                   let url = URL(string: imageURL) {
             artistImageView.sd_setImage(
                 with: url,
-                placeholderImage: Constant.Icon.uploadImage
+                placeholderImage: UIImage(named: "artistEmptyIcon")
             ) { [weak self] image, _, _, _ in
                 guard image == nil else { return }
-                self?.artistImageView.image = Constant.Icon.uploadImage
+                self?.artistImageView.image = UIImage(named: "artistEmptyIcon")
             }
         } else {
-            artistImageView.image = Constant.Icon.uploadImage
+            artistImageView.image = UIImage(named: "artistEmptyIcon")
         }
     }
 

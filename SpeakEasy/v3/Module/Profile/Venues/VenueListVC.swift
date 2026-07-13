@@ -15,10 +15,7 @@ final class VenueListVC: UIViewController {
 
     private let collectionView: UICollectionView
 
-    private let emptyView = UIView()
-    private let emptyImageView = UIImageView()
-    private let emptyTitleLabel = UILabel()
-    private let emptySubTitleLabel = UILabel()
+    private let emptyView = V3EmptyStateView(style: .venues)
     
     private let venueService = VenueService()
     
@@ -184,8 +181,16 @@ extension VenueListVC {
             return
         }
 
+        let shouldShowEmptyAfterDelete = venues.count == 1
         venues.remove(at: index)
         skip = venues.count
+
+        guard !shouldShowEmptyAfterDelete else {
+            hasMany = false
+            collectionView.reloadData()
+            updateEmptyState()
+            return
+        }
 
         collectionView.performBatchUpdates {
             collectionView.deleteItems(
@@ -295,50 +300,16 @@ extension VenueListVC {
     private func setupEmptyView() {
         
         emptyView.isHidden = true
+        emptyView.configure(style: .venues)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
-        
-        emptyImageView.image = UIImage(named: "ic_empty_venue")
-        emptyImageView.contentMode = .scaleAspectFit
-        emptyImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        emptyTitleLabel.text = "No Followed Venues"
-        emptyTitleLabel.textColor = .white
-        emptyTitleLabel.font = Constant.Font.geistMedium(size: 18)
-        emptyTitleLabel.textAlignment = .center
-        
-        emptySubTitleLabel.text = "Venues you follow will appear here."
-        emptySubTitleLabel.textColor = UIColor.white.withAlphaComponent(0.6)
-        emptySubTitleLabel.font = Constant.Font.geistRegular(size: 15)
-        emptySubTitleLabel.textAlignment = .center
-        
-        let stack = UIStackView(
-            arrangedSubviews: [
-                emptyImageView,
-                emptyTitleLabel,
-                emptySubTitleLabel
-            ]
-        )
-        
-        stack.axis = .vertical
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        
-        emptyView.addSubview(stack)
         
         NSLayoutConstraint.activate([
             
             emptyView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            stack.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor, constant: -70),
-            
-            emptyImageView.widthAnchor.constraint(equalToConstant: 120),
-            emptyImageView.heightAnchor.constraint(equalToConstant: 120)
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     

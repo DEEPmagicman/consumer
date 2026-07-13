@@ -62,6 +62,7 @@ final class NewLandingVC: UIViewController {
         setupUserData()
         observeProfileUpdate()
         observePremiumTabRequests()
+        observeDiscoverTabRequests()
         locationManager.delegate = self
     }
 
@@ -287,6 +288,15 @@ final class NewLandingVC: UIViewController {
         )
     }
 
+    private func observeDiscoverTabRequests() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onOpenDiscoverTabRequest),
+            name: .openDiscoverTab,
+            object: nil
+        )
+    }
+
     @objc private func onProfileUpdated() {
         setupUserData()
     }
@@ -299,6 +309,18 @@ final class NewLandingVC: UIViewController {
             systemTabVC.selectedIndex = 1
         } else {
             selectTab(index: 1)
+        }
+    }
+
+    @objc private func onOpenDiscoverTabRequest() {
+        showDiscoverTab()
+    }
+
+    func showDiscoverTab() {
+        if let systemTabVC {
+            systemTabVC.selectedIndex = 0
+        } else {
+            selectTab(index: 0)
         }
     }
 

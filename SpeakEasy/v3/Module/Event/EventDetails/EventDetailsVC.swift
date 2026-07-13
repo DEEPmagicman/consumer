@@ -245,6 +245,7 @@ class EventDetailsVC: UIViewController {
         
         checkOutBtnView.delegate = self
         checkOutBtnView.setButtonTitle("Continue to Checkout")
+        configureCheckoutBarInitialState()
         registerSocketDelegate()
 
         updateCheckoutSummaryView()
@@ -360,17 +361,8 @@ class EventDetailsVC: UIViewController {
         unLockBtn.isUserInteractionEnabled = isEnabled
         lockIcon.alpha = isEnabled ? 1 : 0.65
 
-        if #available(iOS 13.0, *) {
-            if isEnabled {
-                lockIcon.image = UIImage(systemName: "lock.open.fill")?.withRenderingMode(.alwaysTemplate)
-                lockIcon.tintColor = .white
-            } else {
-                lockIcon.image = UIImage(named: "lockIcon")
-                lockIcon.tintColor = nil
-            }
-        } else if !isEnabled {
-            lockIcon.image = UIImage(named: "lockIcon")
-        }
+        lockIcon.image = UIImage(named: isEnabled ? "unLockIcon" : "lockIcon")
+        lockIcon.tintColor = nil
     }
     
     private func startAdditionalButtonsTableObserver() {
@@ -1008,7 +1000,7 @@ class EventDetailsVC: UIViewController {
             currency: currency,
             currencyPosition: currencyPosition,
             count: totalCount,
-            subtotal: subtotal + fees,
+            subtotal: subtotal ,
             fees: fees
         )
 
@@ -1046,10 +1038,11 @@ class EventDetailsVC: UIViewController {
     
     private func showCheckoutBar() {
 
-        guard checkOutBtnView.isHidden else {
+        guard checkOutBtnView.isHidden || checkOutBtnView.alpha < 1 else {
             return
         }
 
+        checkOutBtnView.layer.removeAllAnimations()
         checkOutBtnView.isHidden = false
 
         UIView.animate(
@@ -1068,9 +1061,11 @@ class EventDetailsVC: UIViewController {
     private func hideCheckoutBar() {
 
         guard !checkOutBtnView.isHidden else {
+            configureCheckoutBarInitialState()
             return
         }
 
+        checkOutBtnView.layer.removeAllAnimations()
         UIView.animate(
             withDuration: 0.25,
             animations: {
@@ -1087,6 +1082,17 @@ class EventDetailsVC: UIViewController {
 
                 self.checkOutBtnView.isHidden = true
             }
+    }
+
+    private func configureCheckoutBarInitialState() {
+        checkOutBtnView.layer.removeAllAnimations()
+        checkOutBtnView.hideLoader()
+        checkOutBtnView.alpha = 0
+        checkOutBtnView.transform = CGAffineTransform(
+            translationX: 0,
+            y: 120
+        )
+        checkOutBtnView.isHidden = true
     }
 
     private func clearInlineRSVPSelectionIfNeeded() {
@@ -1168,14 +1174,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func hideCheckoutBarImmediately() {
-        checkOutBtnView.layer.removeAllAnimations()
-        checkOutBtnView.hideLoader()
-        checkOutBtnView.alpha = 0
-        checkOutBtnView.transform = CGAffineTransform(
-            translationX: 0,
-            y: 120
-        )
-        checkOutBtnView.isHidden = true
+        configureCheckoutBarInitialState()
     }
 
     private func clearingSelectedCounts(in tickets: [EventTicket]?) -> [EventTicket]? {
@@ -2729,7 +2728,7 @@ class EventDetailsVC: UIViewController {
         }
 
         if alreadyUnlocked {
-            Alert.showToast("Tickets already unlocked")
+            Alert.showToast("Tickets already unlocked", vc: self)
             return
         }
 
@@ -2746,7 +2745,7 @@ class EventDetailsVC: UIViewController {
         }
 
         guard !matchedTickets.isEmpty else {
-            Alert.showToast("Invalid password please try again")
+            Alert.showToast("Invalid password. Please try again.", vc: self)
             return
         }
 

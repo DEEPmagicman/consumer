@@ -16,13 +16,13 @@ class BaseOrdersGridVC: UIViewController {
 
     // MARK: - UI
     let collectionView: UICollectionView
-    private let emptyView = UILabel()
 
     // MARK: - Data
 
     var upcomingTitle: String { "" }
     var pastTitle: String { "" }
     var emptyTitle: String { "No orders found" }
+    var emptyStateStyle: V3EmptyStateStyle { .tickets }
 
     var upcomingItems: [Booking] = []
     var pastItems: [Booking] = []
@@ -128,6 +128,14 @@ class BaseOrdersGridVC: UIViewController {
             withReuseIdentifier:
                 PaginationShimmerFooterView.identifier
         )
+
+        collectionView.register(
+            OrdersEmptyFooterView.self,
+            forSupplementaryViewOfKind:
+                UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier:
+                OrdersEmptyFooterView.reuseIdentifier
+        )
         
         collectionView.register(
             OrderCardShimmerCell.self,
@@ -136,22 +144,6 @@ class BaseOrdersGridVC: UIViewController {
         )
 
         view.addSubview(collectionView)
-
-        emptyView.textColor =
-            UIColor.white.withAlphaComponent(0.55)
-
-        emptyView.font =
-            Constant.Font.geistMedium(size: 16)
-
-        emptyView.textAlignment = .center
-
-        emptyView.numberOfLines = 0
-
-        emptyView.isHidden = true
-
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(emptyView)
 
         NSLayoutConstraint.activate([
 
@@ -169,25 +161,6 @@ class BaseOrdersGridVC: UIViewController {
 
             collectionView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor
-            ),
-
-            emptyView.centerXAnchor.constraint(
-                equalTo: view.centerXAnchor
-            ),
-
-            emptyView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor,
-                constant: -40
-            ),
-
-            emptyView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 40
-            ),
-
-            emptyView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -40
             )
         ])
     }
@@ -219,18 +192,6 @@ class BaseOrdersGridVC: UIViewController {
 
     // MARK: - UI Refresh
     func reloadUI() {
-
-        let hasNoData =
-            didLoadUpcoming &&
-            didLoadPast &&
-            upcomingItems.isEmpty &&
-            pastItems.isEmpty
-
-        emptyView.isHidden = !hasNoData
-
-        collectionView.isHidden = hasNoData
-
-        emptyView.text = emptyTitle
 
         UIView.performWithoutAnimation {
 
@@ -368,6 +329,25 @@ UICollectionViewDelegate {
         if kind ==
             UICollectionView.elementKindSectionFooter {
 
+            let sectionHasNoData =
+                !isInitialLoading &&
+                sectionIsLoaded(indexPath.section) &&
+                sectionItems(indexPath.section).isEmpty
+
+            if sectionHasNoData {
+                let footer =
+                    collectionView.dequeueReusableSupplementaryView(
+                        ofKind: kind,
+                        withReuseIdentifier:
+                            OrdersEmptyFooterView.reuseIdentifier,
+                        for: indexPath
+                    ) as! OrdersEmptyFooterView
+
+                footer.configure(style: emptyStateStyle)
+
+                return footer
+            }
+
             let footer =
                 collectionView.dequeueReusableSupplementaryView(
                     ofKind: kind,
@@ -397,20 +377,14 @@ UICollectionViewDelegate {
 
         if isUpcoming {
 
-            title =
-                upcomingItems.isEmpty
-                ? "No Upcoming Orders"
-                : upcomingTitle
+            title = upcomingTitle
 
         } else {
 
-            title =
-                pastItems.isEmpty
-                ? "No Past Orders"
-                : pastTitle
+            title = pastTitle
         }
         
-        header.configure( text: title, isEmpty: isUpcoming ? upcomingItems.isEmpty : pastItems.isEmpty )
+        header.configure(text: title)
 
         return header
     }
@@ -543,10 +517,15 @@ PinterestLayoutDelegate {
         referenceHeightForFooterIn section: Int
     ) -> CGFloat {
 
-        guard isPaginating else { return 0 }
-        guard paginatingSection == section else { return 0 }
-        
-        return isPaginating ? 300 : 0
+        if isPaginating && paginatingSection == section {
+            return 260
+        }
+
+        guard !isInitialLoading else { return 0 }
+        guard sectionIsLoaded(section) else { return 0 }
+        guard sectionItems(section).isEmpty else { return 0 }
+
+        return 238
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -597,5 +576,50 @@ PinterestLayoutDelegate {
 
             loadPast(reset: false)
         }
+    }
+}
+
+private extension BaseOrdersGridVC {
+
+    func sectionItems(_ section: Int) -> [Booking] {
+        section == SectionType.upcoming.rawValue ? upcomingItems : pastItems
+    }
+
+    func sectionIsLoaded(_ section: Int) -> Bool {
+        section == SectionType.upcoming.rawValue ? didLoadUpcoming : didLoadPast
+    }
+}
+
+private final class OrdersEmptyFooterView: UICollectionReusableView {
+
+    static let reuseIdentifier = "OrdersEmptyFooterView"
+
+    private let emptyStateView = V3EmptyStateView(style: .tickets)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    func configure(style: V3EmptyStateStyle) {
+        emptyStateView.configure(style: style)
+    }
+
+    private func setupUI() {
+        backgroundColor = .clear
+
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(emptyStateView)
+
+        NSLayoutConstraint.activate([
+            emptyStateView.topAnchor.constraint(equalTo: topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
 }
