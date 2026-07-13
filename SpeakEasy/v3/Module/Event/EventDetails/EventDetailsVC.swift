@@ -27,6 +27,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var venueAddressLbl: UILabel!
     @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
+    @IBOutlet weak var venueFooterBackgroundView: UIView!
     @IBOutlet weak var viewGuestListBtn: UIButton!
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var viewMoreBtn: UIButton!
@@ -427,6 +428,13 @@ class EventDetailsVC: UIViewController {
         event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
+        setupVenueInfoPanel()
+    }
+
+    private func setupVenueInfoPanel() {
+        venueFooterBackgroundView.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        venueFooterBackgroundView.layer.cornerRadius = 20
+        venueFooterBackgroundView.clipsToBounds = true
     }
     
     private func updateSaveUI() {
@@ -443,6 +451,7 @@ class EventDetailsVC: UIViewController {
         eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 18)
         venueTitleLbl.font = Constant.Font.geistMedium(size: 12)
         venueName.font = Constant.Font.geistMedium(size: 14)
+        venueName.textAlignment = .center
         venueNameLbl.font = Constant.Font.geistMedium(size: 18)
         updateVenueLogoCornerRadius()
     }
@@ -1630,13 +1639,11 @@ class EventDetailsVC: UIViewController {
         fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
-        venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")".uppercased()
-            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")".uppercased()
+        venueName.text = venueFooterTitle(for: event)
         
         venueNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")".uppercased()
-        : "\(venueDetails?.name ?? "")".uppercased()
+        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")"
+        : "\(venueDetails?.name ?? "")"
         eventAddressView.isHidden = !(event.showAddress ?? true)
         pageTitleName.text = event.title
         let addressComponents: [String]
@@ -1757,7 +1764,7 @@ class EventDetailsVC: UIViewController {
             )
             
             title = venueDetails?.name ?? "Venue"
-            let mapImageKey = venueDetails?.logo?.key ?? venueDetails?.venueAttachment?.first?.key ?? event.flyer?.key ?? ""
+            let mapImageKey = venueDetails?.venueAttachment?.first?.key ?? venueDetails?.logo?.key ?? event.flyer?.key ?? ""
             mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
         }
 
@@ -1870,6 +1877,30 @@ class EventDetailsVC: UIViewController {
 //                }
 //            }
 //        }
+    }
+
+    private func venueFooterTitle(for event: Event) -> String {
+        if event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true {
+            let customVenueName = event.customVenue?.name?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let organizerName = venueDetails?.name
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+            if !customVenueName.isEmpty && !organizerName.isEmpty {
+                return "\(customVenueName) by \(organizerName)"
+            }
+
+            return customVenueName.isEmpty ? organizerName : customVenueName
+        }
+
+        let name = venueDetails?.name
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let city = venueDetails?.city
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        return [name, city]
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
     }
     
     
@@ -3132,16 +3163,26 @@ class EventDetailsVC: UIViewController {
         mapView.isHidden = false
         let googleMapView = configuredGoogleMapView(center: coordinate)
         googleMapView.clear()
+        
+        let imageUrl =  "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        
 
         let point = EventDetailsMapAnnotation(
             coordinate: coordinate,
             title: title,
             imageURL: imageURL
         )
+        
+     
+        let venueLogoKey = venueDetails?.logo?.key ?? ""
+        let venueLogoURL = venueLogoKey.isEmpty ? nil : venueLogoKey.imageURL
         let marker = GMSMarker(position: point.coordinate)
         marker.title = point.title
-        marker.iconView = EventDetailsLocationMarkerView()
-        marker.groundAnchor = CGPoint(x: 0.5, y: 1)
+        marker.iconView = EventDetailsLocationMarkerView(
+            backgroundImageURL: imageUrl,
+            logoImageURL: venueLogoURL
+        )
+        marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
         marker.userData = point
         marker.map = googleMapView
 
@@ -3870,11 +3911,33 @@ private final class EventDetailsMapAnnotation: NSObject {
 
 private final class EventDetailsLocationMarkerView: UIView {
 
-    private let iconView = UIImageView()
+    private enum Layout {
+        static let markerSize: CGFloat = 40
+        static let logoSize: CGFloat = 30
+    }
 
-    init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 44, height: 54))
+    private let backgroundImageView = UIImageView()
+    private let dimView = UIView()
+    private let logoContainerView = UIView()
+    private let logoImageView = UIImageView()
+
+    init(
+        backgroundImageURL: String?,
+        logoImageURL: String?
+    ) {
+        super.init(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: Layout.markerSize,
+                height: Layout.markerSize
+            )
+        )
         setup()
+        configure(
+            backgroundImageURL: backgroundImageURL,
+            logoImageURL: logoImageURL
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -3884,16 +3947,54 @@ private final class EventDetailsLocationMarkerView: UIView {
 
     private func setup() {
         backgroundColor = .clear
-        iconView.frame = bounds.insetBy(dx: 5, dy: 3)
-        iconView.contentMode = .scaleAspectFit
-        iconView.tintColor = UIColor(hex: "#F4F5F7")
-        iconView.image = UIImage(named: "locationIcon2")?
-            .withRenderingMode(.alwaysTemplate)
-        iconView.layer.shadowColor = UIColor.black.cgColor
-        iconView.layer.shadowOpacity = 0.42
-        iconView.layer.shadowRadius = 8
-        iconView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        addSubview(iconView)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.35
+        layer.shadowRadius = 8
+        layer.shadowOffset = CGSize(width: 0, height: 4)
+
+        backgroundImageView.frame = bounds
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.layer.cornerRadius = Layout.markerSize / 2
+        backgroundImageView.image = UIImage(named: "newSpeakeasy")
+        addSubview(backgroundImageView)
+
+        dimView.frame = bounds
+        dimView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        dimView.clipsToBounds = true
+        dimView.layer.cornerRadius = Layout.markerSize / 2
+        addSubview(dimView)
+
+        logoContainerView.frame = CGRect(
+            x: (Layout.markerSize - Layout.logoSize) / 2,
+            y: (Layout.markerSize - Layout.logoSize) / 2,
+            width: Layout.logoSize,
+            height: Layout.logoSize
+        )
+//        logoContainerView.backgroundColor = UIColor.black.withAlphaComponent(0.34)
+//        logoContainerView.layer.cornerRadius = Layout.logoSize / 2
+//        logoContainerView.clipsToBounds = true
+        addSubview(logoContainerView)
+
+        logoImageView.frame = logoContainerView.bounds.insetBy(dx: 3, dy: 3)
+        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.image = UIImage(named: "newSpeakeasy")
+        logoContainerView.addSubview(logoImageView)
+    }
+
+    private func configure(
+        backgroundImageURL: String?,
+        logoImageURL: String?
+    ) {
+        backgroundImageView.sd_setImage(
+            with: URL(string: backgroundImageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
+
+        logoImageView.sd_setImage(
+            with: URL(string: logoImageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
     }
 }
 

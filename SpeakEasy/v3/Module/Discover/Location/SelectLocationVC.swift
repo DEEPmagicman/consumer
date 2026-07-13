@@ -48,6 +48,8 @@ final class SelectLocationVC: UIViewController {
 
     private var fullCityList = [MVPCity]()
     private var displayList = [MVPCity]()
+    private var isLoadingCityList = false
+    private let cityShimmerRowCount = 8
 
     private var primaryCity = ""
      var selectedFilterCity: String? {
@@ -150,9 +152,15 @@ private extension SelectLocationVC {
             SelectLocationTVC.nib,
             forCellReuseIdentifier: SelectLocationTVC.identifier
         )
+        tableView.register(
+            SelectLocationShimmerCell.self,
+            forCellReuseIdentifier: SelectLocationShimmerCell.identifier
+        )
 
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
+        tableView.rowHeight = 77
+        tableView.estimatedRowHeight = 77
     }
 
     func setupSearch() {
@@ -370,6 +378,33 @@ private extension SelectLocationVC {
 
         tableView.reloadData()
     }
+
+    func applyCurrentSearch() {
+        let searchText = currentSearchText()
+
+        if searchText.isEmpty {
+            displayList = fullCityList
+        } else {
+            displayList = fullCityList.filter {
+                $0.value.lowercased()
+                    .contains(searchText.lowercased())
+            }
+        }
+    }
+
+    func currentSearchText() -> String {
+        let text: String?
+
+        switch mode {
+        case .selectCity:
+            text = searchTextfeild.text
+        case .updatePrimaryLocation:
+            text = editSearchTextFeild.text
+        }
+
+        return text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
 }
 
 // MARK: - API
@@ -377,6 +412,19 @@ private extension SelectLocationVC {
 private extension SelectLocationVC {
 
     func fetchCityList() {
+        let cachedCityList = UserDefault.shared.cachedCityList
+        guard cachedCityList.isEmpty else {
+            fullCityList = cachedCityList
+            applyCurrentSearch()
+            isLoadingCityList = false
+            tableView.reloadData()
+            return
+        }
+
+        guard !isLoadingCityList else { return }
+
+        isLoadingCityList = true
+        tableView.reloadData()
 
         venueService.fetchCityList { [weak self] cityList, isSuccess, errMsg in
 
@@ -384,21 +432,23 @@ private extension SelectLocationVC {
                 return
             }
 
-            if isSuccess {
-                
-                self.fullCityList = cityList
+            DispatchQueue.main.async {
+                if isSuccess {
+                    self.isLoadingCityList = false
+                    self.fullCityList = cityList
+                    UserDefault.shared.cachedCityList = cityList
+                    self.applyCurrentSearch()
+                    self.tableView.reloadData()
+                } else {
+                    self.isLoadingCityList = false
+                    self.tableView.reloadData()
 
-                self.displayList = self.fullCityList
-
-                self.tableView.reloadData()
-
-            } else {
-
-                Alert.showAlertSheet(
-                    style: .alert,
-                    title: errMsg ?? Constant.String.somethingWrong,
-                    message: ""
-                )
+                    Alert.showAlertSheet(
+                        style: .alert,
+                        title: errMsg ?? Constant.String.somethingWrong,
+                        message: ""
+                    )
+                }
             }
         }
     }
@@ -415,6 +465,10 @@ UITableViewDataSource {
         numberOfRowsInSection section: Int
     ) -> Int {
 
+        if isLoadingCityList {
+            return cityShimmerRowCount
+        }
+
         return displayList.count
     }
 
@@ -422,6 +476,16 @@ UITableViewDataSource {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
+
+        if isLoadingCityList {
+            let cell: SelectLocationShimmerCell = tableView.dequeue(
+                withIdentifier: SelectLocationShimmerCell.identifier,
+                for: indexPath
+            )
+            cell.selectionStyle = .none
+            cell.startShimmer()
+            return cell
+        }
 
         let cell: SelectLocationTVC = tableView.dequeue(
             withIdentifier: SelectLocationTVC.identifier,
@@ -458,6 +522,9 @@ UITableViewDataSource {
         didSelectRowAt indexPath: IndexPath
     ) {
 
+        guard !isLoadingCityList else { return }
+        guard displayList.indices.contains(indexPath.row) else { return }
+
         let city = displayList[indexPath.row].value
 
         switch mode {
@@ -482,5 +549,96 @@ UITableViewDataSource {
         }
 
         tableView.reloadData()
+    }
+}
+
+private final class SelectLocationShimmerCell: UITableViewCell {
+
+    private let iconContainer = UIView()
+    private let iconView = ShimmerViewV3(frame: .zero, lighter: true)
+    private let titleView = ShimmerViewV3()
+    private let checkView = ShimmerViewV3(frame: .zero, lighter: true)
+    private let dividerView = UIView()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        startShimmer()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconContainer.backgroundColor = .clear
+        iconContainer.layer.cornerRadius = 9
+        iconContainer.layer.cornerCurve = .continuous
+        iconContainer.layer.borderWidth = 1
+        iconContainer.layer.borderColor = UIColor.white.withAlphaComponent(0.04).cgColor
+        contentView.addSubview(iconContainer)
+
+        [iconView, titleView, checkView, dividerView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        [iconView, titleView, checkView].forEach {
+            $0.layer.cornerCurve = .continuous
+        }
+
+        iconContainer.addSubview(iconView)
+        contentView.addSubview(titleView)
+        contentView.addSubview(checkView)
+        contentView.addSubview(dividerView)
+
+        iconView.layer.cornerRadius = 5
+        titleView.layer.cornerRadius = 5
+        checkView.layer.cornerRadius = 8
+        dividerView.backgroundColor = UIColor.white.withAlphaComponent(0.07)
+
+        NSLayoutConstraint.activate([
+            iconContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            iconContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 23),
+            iconContainer.widthAnchor.constraint(equalToConstant: 40),
+            iconContainer.heightAnchor.constraint(equalToConstant: 40),
+
+            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 18),
+            iconView.heightAnchor.constraint(equalToConstant: 18),
+
+            titleView.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 20),
+            titleView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            titleView.widthAnchor.constraint(equalToConstant: 132),
+            titleView.heightAnchor.constraint(equalToConstant: 18),
+
+            checkView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -6),
+            checkView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+            checkView.widthAnchor.constraint(equalToConstant: 16),
+            checkView.heightAnchor.constraint(equalToConstant: 16),
+
+            dividerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            dividerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            dividerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),
+            dividerView.heightAnchor.constraint(equalToConstant: 1),
+
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 77)
+        ])
+
+        startShimmer()
+    }
+
+    func startShimmer() {
+        iconView.startShimmer()
+        titleView.startShimmer()
+        checkView.startShimmer()
     }
 }

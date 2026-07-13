@@ -42,7 +42,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cfi-li-7zg">
-                            <rect key="frame" x="348" y="4" width="34" height="34"/>
+                            <rect key="frame" x="347" y="4" width="34" height="34"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRm-m0-YU9" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="34" height="34"/>
@@ -51,7 +51,7 @@
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="seeAll"/>
                                         <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                            <real key="value" value="12"/>
+                                            <real key="value" value="13"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
@@ -95,7 +95,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="cfi-li-7zg" secondAttribute="trailing" constant="11" id="AgU-vD-7nZ"/>
+                        <constraint firstAttribute="trailing" secondItem="cfi-li-7zg" secondAttribute="trailing" constant="12" id="AgU-vD-7nZ"/>
                         <constraint firstAttribute="trailing" secondItem="1Lt-ac-7xw" secondAttribute="trailing" id="G0e-vO-7Gj"/>
                         <constraint firstItem="Pbo-pP-FyB" firstAttribute="leading" secondItem="X6o-bU-gzF" secondAttribute="leading" constant="16" id="Qt6-nD-dAB"/>
                         <constraint firstItem="Pbo-pP-FyB" firstAttribute="top" secondItem="X6o-bU-gzF" secondAttribute="top" constant="10" id="UAH-vy-l5T"/>

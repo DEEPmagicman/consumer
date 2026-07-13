@@ -33,6 +33,9 @@ final class PremiumInquiryCardView: UIView {
     private let checkboxView      = PremiumCheckboxView()
     private let emailCheckboxView = PremiumCheckboxView()
     private let sendButton        = PrimaryButton()
+    private var questionSectionCollapsedHeightConstraint: NSLayoutConstraint?
+    private var policyStackCollapsedHeightConstraint: NSLayoutConstraint?
+    private var sendButtonTopConstraint: NSLayoutConstraint?
 
     // MARK: Picker
 
@@ -185,17 +188,23 @@ private extension PremiumInquiryCardView {
     func setupQuestionSection() {
         questionSectionView.translatesAutoresizingMaskIntoConstraints = false
         questionSectionView.isHidden = true
+        questionSectionCollapsedHeightConstraint = questionSectionView.heightAnchor.constraint(equalToConstant: 0)
+        questionSectionCollapsedHeightConstraint?.priority = .required
+        questionSectionCollapsedHeightConstraint?.isActive = true
 
         questionStackView.axis = .vertical
         questionStackView.spacing = 10
         questionStackView.translatesAutoresizingMaskIntoConstraints = false
         questionSectionView.addSubview(questionStackView)
 
+        let bottomConstraint = questionStackView.bottomAnchor.constraint(equalTo: questionSectionView.bottomAnchor)
+        bottomConstraint.priority = .defaultHigh
+
         NSLayoutConstraint.activate([
             questionStackView.topAnchor.constraint(equalTo: questionSectionView.topAnchor),
             questionStackView.leadingAnchor.constraint(equalTo: questionSectionView.leadingAnchor),
             questionStackView.trailingAnchor.constraint(equalTo: questionSectionView.trailingAnchor),
-            questionStackView.bottomAnchor.constraint(equalTo: questionSectionView.bottomAnchor)
+            bottomConstraint
         ])
     }
 }
@@ -209,6 +218,8 @@ private extension PremiumInquiryCardView {
         policyStackView.spacing = 14
         policyStackView.translatesAutoresizingMaskIntoConstraints = false
         cardView.addSubview(policyStackView)
+        policyStackCollapsedHeightConstraint = policyStackView.heightAnchor.constraint(equalToConstant: 0)
+        policyStackCollapsedHeightConstraint?.priority = .required
 
         checkboxView.labelText =
             "I agree to receive marketing related text messages from E11EVEN. Msg & data rates may apply. Reply STOP to opt out or HELP for support."
@@ -218,15 +229,7 @@ private extension PremiumInquiryCardView {
             self?.updateButtonState()
         }
         checkboxView.onExpansionChanged = { [weak self] in
-            self?.setNeedsLayout()
-            UIView.animate(
-                withDuration: 0.22,
-                delay: 0,
-                options: [.curveEaseInOut, .allowUserInteraction],
-                animations: {
-                    self?.layoutIfNeeded()
-                }
-            )
+            self?.updatePolicySectionLayout()
         }
 
         emailCheckboxView.supportsExpansion = true
@@ -235,15 +238,7 @@ private extension PremiumInquiryCardView {
             self?.updateButtonState()
         }
         emailCheckboxView.onExpansionChanged = { [weak self] in
-            self?.setNeedsLayout()
-            UIView.animate(
-                withDuration: 0.22,
-                delay: 0,
-                options: [.curveEaseInOut, .allowUserInteraction],
-                animations: {
-                    self?.layoutIfNeeded()
-                }
-            )
+            self?.updatePolicySectionLayout()
         }
 
         policyStackView.addArrangedSubview(emailCheckboxView)
@@ -269,6 +264,8 @@ private extension PremiumInquiryCardView {
 private extension PremiumInquiryCardView {
 
     func setupConstraints() {
+        sendButtonTopConstraint = sendButton.topAnchor.constraint(equalTo: policyStackView.bottomAnchor, constant: 24)
+
         NSLayoutConstraint.activate([
 
             descriptionLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
@@ -291,7 +288,7 @@ private extension PremiumInquiryCardView {
             policyStackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             policyStackView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
-            sendButton.topAnchor.constraint(equalTo: policyStackView.bottomAnchor, constant: 24),
+            sendButtonTopConstraint!,
             sendButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             sendButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             sendButton.heightAnchor.constraint(equalToConstant: 52),
@@ -419,7 +416,7 @@ private extension PremiumInquiryCardView {
         emailCheckboxView.labelText = emailPolicy
         emailCheckboxView.isChecked = true
         emailCheckboxView.isHidden = emailPolicy.isEmpty
-        policyStackView.isHidden = checkboxView.isHidden && emailCheckboxView.isHidden
+        updatePolicySectionVisibility()
     }
 
     func configureDefaultDateTime() {
@@ -649,9 +646,28 @@ private extension PremiumInquiryCardView {
     }
 
     func updateQuestionSectionVisibility() {
-        questionSectionView.isHidden = reservationQuestions.isEmpty
+        let hasQuestions = !reservationQuestions.isEmpty
+        questionSectionView.isHidden = !hasQuestions
+        questionSectionCollapsedHeightConstraint?.isActive = !hasQuestions
         questionStackView.layoutIfNeeded()
+        stackView.layoutIfNeeded()
         layoutIfNeeded()
+    }
+
+    func updatePolicySectionVisibility() {
+        let hasPolicies = !(checkboxView.isHidden && emailCheckboxView.isHidden)
+        policyStackView.isHidden = !hasPolicies
+        policyStackCollapsedHeightConstraint?.isActive = !hasPolicies
+        sendButtonTopConstraint?.constant = hasPolicies ? 24 : 0
+        updatePolicySectionLayout()
+    }
+
+    func updatePolicySectionLayout() {
+        policyStackView.layoutIfNeeded()
+        stackView.layoutIfNeeded()
+        UIView.performWithoutAnimation {
+            layoutIfNeeded()
+        }
     }
 
     func validateQuestionAnswers() -> Bool {

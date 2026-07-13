@@ -22,7 +22,11 @@ enum DiscoverSectionData {
 final class DiscoverSectionView: UIView {
 
     private enum DiscoverSectionLayout {
-        static let itemWidth: CGFloat = 143
+        static let visibleItemCount: CGFloat = 2.5
+        static let horizontalInset: CGFloat = 16
+        static let itemSpacing: CGFloat = 10
+        static let minItemWidth: CGFloat = 132
+        static let maxItemWidth: CGFloat = 148
         static let titleTopPadding: CGFloat = 10
         static let headerHeight: CGFloat = 28
         static let headerToCollectionSpacing: CGFloat = 10
@@ -32,6 +36,25 @@ final class DiscoverSectionView: UIView {
         headerHeight +
         headerToCollectionSpacing +
         itemHeight
+
+        static func itemWidth(for availableWidth: CGFloat) -> CGFloat {
+            let resolvedWidth = availableWidth > 0
+            ? availableWidth
+            : UIScreen.main.bounds.width
+
+            let visibleWidth = resolvedWidth
+            - horizontalInset
+            - (itemSpacing * 2)
+
+            return min(
+                maxItemWidth,
+                max(
+                    minItemWidth,
+                    floor(visibleWidth / visibleItemCount)
+                )
+            )
+        }
+
     }
 
     @IBOutlet weak var titleLabel: UILabel!
@@ -46,6 +69,7 @@ final class DiscoverSectionView: UIView {
     private var sectionType: DiscoverSectionType = .tonightEvents
     private var sectionData: DiscoverSectionData?
     private var currentHeight: CGFloat = DiscoverSectionLayout.sectionHeight
+    private var lastAppliedCollectionWidth: CGFloat = 0
 
     override var intrinsicContentSize: CGSize {
         CGSize(
@@ -62,6 +86,19 @@ final class DiscoverSectionView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let width = collectionView.bounds.width
+        guard abs(width - lastAppliedCollectionWidth) > 0.5 else {
+            return
+        }
+
+        lastAppliedCollectionWidth = width
+        applyCollectionLayout()
+        updateSectionHeight(animated: false)
     }
 
     func configure(
@@ -138,17 +175,14 @@ private extension DiscoverSectionView {
         
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
-            layout.itemSize = CGSize(
-                width: DiscoverSectionLayout.itemWidth,
-                height: DiscoverSectionLayout.itemHeight
-            )
-            layout.minimumLineSpacing = 10
-            layout.minimumInteritemSpacing = 10
+            layout.itemSize = currentItemSize()
+            layout.minimumLineSpacing = DiscoverSectionLayout.itemSpacing
+            layout.minimumInteritemSpacing = DiscoverSectionLayout.itemSpacing
             layout.sectionInset = UIEdgeInsets(
                 top: 0,
-                left: 16,
+                left: DiscoverSectionLayout.horizontalInset,
                 bottom: 0,
-                right: 16
+                right: DiscoverSectionLayout.horizontalInset
             )
         }
 
@@ -159,6 +193,8 @@ private extension DiscoverSectionView {
     }
 
     func updateSectionHeight(animated: Bool) {
+        let itemSize = currentItemSize()
+        applyCollectionLayout(itemSize: itemSize)
 
         updateHeightConstraint(
             in: collectionView.constraints,
@@ -208,6 +244,35 @@ private extension DiscoverSectionView {
                 $0.secondItem == nil
             }?
             .constant = ceil(height)
+    }
+
+    func currentItemSize() -> CGSize {
+        let itemWidth = DiscoverSectionLayout.itemWidth(
+            for: collectionView.bounds.width
+        )
+
+        return CGSize(
+            width: itemWidth,
+            height: DiscoverSectionLayout.itemHeight
+        )
+    }
+
+    func applyCollectionLayout(itemSize: CGSize? = nil) {
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+
+        layout.estimatedItemSize = .zero
+        layout.itemSize = itemSize ?? currentItemSize()
+        layout.minimumLineSpacing = DiscoverSectionLayout.itemSpacing
+        layout.minimumInteritemSpacing = DiscoverSectionLayout.itemSpacing
+        layout.sectionInset = UIEdgeInsets(
+            top: 0,
+            left: DiscoverSectionLayout.horizontalInset,
+            bottom: 0,
+            right: DiscoverSectionLayout.horizontalInset
+        )
+        layout.invalidateLayout()
     }
 
     @IBAction func onClickSeeAllButton(_ sender: UIButton) {
@@ -341,9 +406,6 @@ UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
 
-        return CGSize(
-            width: DiscoverSectionLayout.itemWidth,
-            height: DiscoverSectionLayout.itemHeight
-        )
+        return currentItemSize()
     }
 }

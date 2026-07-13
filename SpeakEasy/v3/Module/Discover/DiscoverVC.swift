@@ -453,10 +453,12 @@ extension DiscoverVC: SelectedDateDelegate {
         let inputFormatter        = DateFormatter()
         inputFormatter.dateFormat = "yyyy-MM-dd"
         inputFormatter.locale     = Locale(identifier: "en_US_POSIX")
+        inputFormatter.timeZone   = Constant.venueTimeZone ?? .current
 
         let outputFormatter        = DateFormatter()
         outputFormatter.dateFormat = outputFormat
         outputFormatter.locale     = Locale(identifier: "en_US_POSIX")
+        outputFormatter.timeZone   = Constant.venueTimeZone ?? .current
 
         guard
             let start = inputFormatter.date(from: startDate),
@@ -464,10 +466,13 @@ extension DiscoverVC: SelectedDateDelegate {
         else { return [] }
 
         var dates: [String] = []
-        var current          = start
-        let calendar         = Calendar.current
+        var calendar         = Calendar(identifier: .gregorian)
+        calendar.timeZone    = Constant.venueTimeZone ?? .current
+        let today            = calendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        var current          = max(calendar.startOfDay(for: start), today)
+        let rangeEnd         = calendar.startOfDay(for: end)
 
-        while current <= end {
+        while current <= rangeEnd {
             dates.append(outputFormatter.string(from: current))
             current = calendar.date(byAdding: .day, value: 1, to: current)!
         }

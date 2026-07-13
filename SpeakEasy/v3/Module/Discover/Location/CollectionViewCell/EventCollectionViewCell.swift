@@ -40,6 +40,16 @@ final class EventCollectionViewCell: UICollectionViewCell {
         setupUI()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let imageSide = max(0, floor(contentView.bounds.width - 1))
+        if abs(imageViewWidthConstraint.constant - imageSide) > 0.5 {
+            imageViewWidthConstraint.constant = imageSide
+            imageViewHeightConstraint.constant = imageSide
+        }
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
 
@@ -78,17 +88,19 @@ private extension EventCollectionViewCell {
 
     func setupUI() {
 
+        image.layer.cornerRadius = 12
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill
         venueLogoImage.clipsToBounds = true
         venueLogoImage.contentMode = .scaleAspectFit
         venueLogoImage.isHidden = true
-        venueName.numberOfLines = 2
+        venueName.numberOfLines = 1
         venueName.lineBreakMode = .byTruncatingTail
         eventName.numberOfLines = 2
         eventName.lineBreakMode = .byTruncatingTail
         eventDate.numberOfLines = 1
         eventDate.lineBreakMode = .byTruncatingTail
+        eventDate.font = Constant.Font.geistMedium(size: 11)
     }
 
     func setupData(event: Event) {
@@ -102,7 +114,8 @@ private extension EventCollectionViewCell {
             placeholderImage: Constant.Icon.uploadImage
         )
 
-        venueName.text = event.venue?.name.uppercased()
+//        venueName.text = event.venue?.name.uppercased()
+        venueName.text = event.venue?.name
         eventName.text = event.title
 
         eventDate.text = formattedDate(
@@ -136,7 +149,7 @@ private extension EventCollectionViewCell {
     func setupVenue(_ venue: ClipVenue) {
         eventName.isHidden = true
         eventDate.isHidden = true
-        venueName.text = venue.name.uppercased()
+        venueName.text = venue.name
 
         let logoKey = venue.logo?.key ?? ""
         let logoUrl = URL(string: "\(SharedURL.amazonStorage)\(logoKey)")

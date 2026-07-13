@@ -1345,23 +1345,31 @@ private final class PremiumSearchVenueResultView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistRegular(size: 14)
+        titleLabel.isUserInteractionEnabled = true
         addSubview(titleLabel)
 
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.text = "Venue"
         subtitleLabel.textColor = .white.withAlphaComponent(0.55)
         subtitleLabel.font = Constant.Font.geistRegular(size: 10)
+        subtitleLabel.isUserInteractionEnabled = true
         addSubview(subtitleLabel)
 
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Book", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = Constant.Font.geistMedium(size: 10)
+        button.titleLabel?.font = Constant.Font.geistMedium(size: 12)
         button.backgroundColor = .white
         button.layer.cornerRadius = 14
         button.layer.cornerCurve = .continuous
         button.addTarget(self, action: #selector(onButton), for: .touchUpInside)
         addSubview(button)
+
+        let venueTap = UITapGestureRecognizer(target: self, action: #selector(onButton))
+        titleLabel.addGestureRecognizer(venueTap)
+
+        let subtitleTap = UITapGestureRecognizer(target: self, action: #selector(onButton))
+        subtitleLabel.addGestureRecognizer(subtitleTap)
 
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 54).withPriority(.defaultHigh),

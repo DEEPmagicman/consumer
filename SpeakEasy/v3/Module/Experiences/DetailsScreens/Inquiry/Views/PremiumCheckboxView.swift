@@ -240,7 +240,11 @@ final class PremiumCheckboxView: UIView {
 
     @objc private func handleExpansionTap() {
         isExpanded.toggle()
-        updateLabelText()
-        onExpansionChanged?()
+        UIView.performWithoutAnimation {
+            updateLabelText()
+            layoutIfNeeded()
+            superview?.layoutIfNeeded()
+            onExpansionChanged?()
+        }
     }
 }

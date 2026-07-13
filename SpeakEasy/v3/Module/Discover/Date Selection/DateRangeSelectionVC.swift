@@ -94,8 +94,18 @@ final class DateRangeSelectionVC: UIViewController {
     /// Sends the selected range to the delegate and dismisses the sheet.
     /// Called from both the Apply button and the plain dismiss/close button.
     private func applyAndDismiss() {
-        let finalStart = startDate
-        let finalEnd   = endDate ?? startDate   // single-day tap → start == end
+        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let selectedStart = startDate.map { venueCalendar.startOfDay(for: $0) }
+        let selectedEnd = (endDate ?? startDate).map { venueCalendar.startOfDay(for: $0) }
+
+        let finalStart = selectedStart.map { max($0, today) }
+        let normalizedEnd = selectedEnd.map { max($0, today) }
+        let finalEnd: Date?
+        if let finalStart, let normalizedEnd, normalizedEnd < finalStart {
+            finalEnd = finalStart
+        } else {
+            finalEnd = normalizedEnd
+        }
 
         let tz = Constant.venueTimeZone
 

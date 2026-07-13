@@ -583,12 +583,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         return (text as NSString).range(of: toggleText)
     }
 
-    private func animateAgreementLayout() {
-        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
     private func toggleAgreementIfNeeded(
         gesture: UITapGestureRecognizer,
         label: UILabel,
@@ -604,8 +598,11 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
 
         toggle()
-        updateAgreementLabels()
-        animateAgreementLayout()
+        UIView.performWithoutAnimation {
+            updateAgreementLabels()
+            label.superview?.layoutIfNeeded()
+            label.superview?.superview?.layoutIfNeeded()
+        }
     }
 
     private func applyFeeBreakdownState(animated: Bool) {

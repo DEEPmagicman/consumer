@@ -51,7 +51,7 @@ enum AppIconType: String {
         case .close, .share, .map, .search:
             return 40
         case .seeAll:
-            return 34
+            return 36
         case .questionMark:
             return 24
         }

@@ -128,7 +128,7 @@ final class LandingHeaderView: UIView {
             profileButton.topAnchor.constraint(equalTo: topAnchor),
             profileButton.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             mapButton.widthAnchor.constraint(equalToConstant: 32),
             mapButton.heightAnchor.constraint(equalToConstant: 32)

@@ -417,7 +417,7 @@ class MapViewController: UIViewController {
         googleMapView.settings.rotateGestures = false
         googleMapView.settings.tiltGestures = false
         googleMapView.mapStyle = try? GMSMapStyle(
-            jsonString: Self.googleDarkMapStyle(showPointsOfInterest: true)
+            jsonString: Self.googleDarkMapStyle(showPointsOfInterest: false)
         )
 
         mapView.addSubview(googleMapView)
@@ -667,33 +667,17 @@ class MapViewController: UIViewController {
         let container = UIView(frame: tableView.bounds)
         container.backgroundColor = .clear
 
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = selectedIndex == 0 ? "No venues found" : "No events found"
-        titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 18)
-        titleLabel.textAlignment = .center
-
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "Try another city."
-        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
-        subtitleLabel.textAlignment = .center
-
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        container.addSubview(stackView)
+        let emptyView = V3EmptyStateView(
+            style: selectedIndex == 0 ? .mapVenues : .events
+        )
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(emptyView)
 
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -32),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -24)
+            emptyView.topAnchor.constraint(equalTo: container.topAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         ])
 
         return container
@@ -1170,11 +1154,16 @@ private final class DiscoverMapAnnotation: NSObject {
 
 private final class DiscoverImageMarkerView: UIView {
 
+    private enum Layout {
+        static let markerSize: CGFloat = 46
+        static let imageInset: CGFloat = 3
+    }
+
     private let imageView = UIImageView()
     private let ringView = UIView()
 
     init(imageURL: String?) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        super.init(frame: CGRect(x: 0, y: 0, width: Layout.markerSize, height: Layout.markerSize))
         setup()
         configure(imageURL: imageURL)
     }
@@ -1190,7 +1179,7 @@ private final class DiscoverImageMarkerView: UIView {
         ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
         addSubview(ringView)
 
-        imageView.frame = bounds.insetBy(dx: 4, dy: 4)
+        imageView.frame = bounds.insetBy(dx: Layout.imageInset, dy: Layout.imageInset)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.bounds.width / 2

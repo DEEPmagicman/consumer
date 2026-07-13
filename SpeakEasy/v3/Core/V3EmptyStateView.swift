@@ -10,6 +10,7 @@ import UIKit
 enum V3EmptyStateStyle {
     case savedEvents
     case venues
+    case mapVenues
     case tickets
     case reservations
     case artists
@@ -23,6 +24,8 @@ enum V3EmptyStateStyle {
             return "No events saved"
         case .venues:
             return "No venues saved"
+        case .mapVenues:
+            return "No venues found"
         case .tickets:
             return "No tickets"
         case .reservations:
@@ -42,7 +45,7 @@ enum V3EmptyStateStyle {
         switch self {
         case .savedEvents:
             return "savedEmptyIcon"
-        case .venues:
+        case .venues, .mapVenues:
             return "venueEmptyIcon"
         case .tickets, .events, .venueEvents, .premiumEvents:
             return "ticketsEmptyIcon"
@@ -57,7 +60,7 @@ enum V3EmptyStateStyle {
         switch self {
         case .savedEvents:
             return CGSize(width: 100, height: 100)
-        case .venues:
+        case .venues, .mapVenues:
             return CGSize(width: 80, height: 80)
         case .tickets, .reservations, .events, .venueEvents, .premiumEvents:
             return CGSize(width: 60, height: 60)

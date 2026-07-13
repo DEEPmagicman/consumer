@@ -30,6 +30,7 @@ final class UserDefault {
         case isNotificationOn
         case isVersionV3Key
         case filterCity
+        case cachedCityList
         case hasSeenPremiumIntro
         case hasSeenDiscoverPremiumPrompt
         case selectedVenueId
@@ -127,6 +128,11 @@ final class UserDefault {
     var defaultCitySelected: Bool {
         get { getValue(for: .defaultCitySelected) ?? false }
         set { setValue(newValue, for: .defaultCitySelected) }
+    }
+
+    var cachedCityList: [MVPCity] {
+        get { getCodable(for: .cachedCityList) ?? [] }
+        set { setCodable(newValue.isEmpty ? nil : newValue, for: .cachedCityList) }
     }
     
     // MARK: - Notification

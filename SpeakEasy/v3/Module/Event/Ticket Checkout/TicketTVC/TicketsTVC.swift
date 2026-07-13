@@ -51,8 +51,21 @@ class TicketsTVC: UITableViewCell {
     private var isDescriptionExpanded = false
     private var isLinkDisabled = false
     private var isCoverTicketMode = false
+    private let ticketBackgroundGradientLayer = CAGradientLayer()
 
     // MARK: - Lifecycle
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        setupTicketBackgroundGradient()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        updateTicketBackgroundGradientFrame()
+    }
 
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -89,6 +102,8 @@ class TicketsTVC: UITableViewCell {
     // MARK: - Reset
 
     private func resetUI() {
+        setupTicketBackgroundGradient()
+
         titleLbl.attributedText = nil
         titleLbl.text = nil
         titleLbl.isHidden = false
@@ -118,8 +133,32 @@ class TicketsTVC: UITableViewCell {
         viewMoreBtn.setTitle("View More", for: .normal)
 
         bgView.layer.cornerRadius = 10
+        updateTicketBackgroundGradientFrame()
         topConstraint.constant = 12
         topSapraterView.isHidden = true
+    }
+
+    private func setupTicketBackgroundGradient() {
+        bgView.backgroundColor = .clear
+
+        ticketBackgroundGradientLayer.colors = [
+            UIColor(hex: "#282828", alpha: 0.37).cgColor,
+            UIColor(hex: "#000000", alpha: 0.25).cgColor
+        ]
+        ticketBackgroundGradientLayer.locations = [0, 1]
+        ticketBackgroundGradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        ticketBackgroundGradientLayer.endPoint = CGPoint(x: 1, y: 1)
+
+        if ticketBackgroundGradientLayer.superlayer == nil {
+            bgView.layer.insertSublayer(ticketBackgroundGradientLayer, at: 0)
+        }
+
+        updateTicketBackgroundGradientFrame()
+    }
+
+    private func updateTicketBackgroundGradientFrame() {
+        ticketBackgroundGradientLayer.frame = bgView.bounds
+        ticketBackgroundGradientLayer.cornerRadius = bgView.layer.cornerRadius
     }
 
     func applyGroupTicketSpacing(isFirst: Bool) {
@@ -237,7 +276,7 @@ class TicketsTVC: UITableViewCell {
         // Cover tickets never show sold out or tickets left
         soldOutView.isHidden = true
         ticketLeftLbl.isHidden = true
-        bgView.backgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.25)
+        setupTicketBackgroundGradient()
 
         // Description
         setupDescription(description)

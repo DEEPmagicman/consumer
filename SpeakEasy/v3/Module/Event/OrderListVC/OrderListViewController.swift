@@ -649,11 +649,10 @@ final class OrderListViewController: UIViewController {
         let tappedToggle = gesture.didTapAttributedTextInLabel(label: label, inRange: range)
         guard tappedToggle else { return }
         toggle()
-        updateAgreementLabels()
-        let contentStack = yourOrderView.superview
-        UIView.animate(withDuration: 0.25) {
+        UIView.performWithoutAnimation {
+            updateAgreementLabels()
             label.superview?.layoutIfNeeded()
-            contentStack?.layoutIfNeeded()
+            yourOrderView.superview?.layoutIfNeeded()
         }
     }
 

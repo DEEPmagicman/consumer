@@ -813,7 +813,6 @@ final class PremiumAgreementView: UIView {
     private let toggleButtonTopSpacing: CGFloat = 2
     private var isExpanded = false
     private var lastReportedHeight: CGFloat = 0
-    private var shouldAnimateNextHeightChange = false
     private var lastLaidOutBodyWidth: CGFloat = 0
     private var titleTopConstraint: NSLayoutConstraint?
     private var bodyTopToTitleConstraint: NSLayoutConstraint?
@@ -979,8 +978,7 @@ final class PremiumAgreementView: UIView {
         bodyLabel.attributedText = attributed
         updateToggleButton(isVisible: needsToggle, title: toggleText)
         invalidateIntrinsicContentSize()
-        reportHeightIfNeeded(animated: shouldAnimateNextHeightChange)
-        shouldAnimateNextHeightChange = false
+        reportHeightIfNeeded(animated: false)
         superview?.setNeedsLayout()
     }
 
@@ -1108,9 +1106,12 @@ final class PremiumAgreementView: UIView {
     }
 
     private func toggleExpansion() {
-        shouldAnimateNextHeightChange = true
         isExpanded.toggle()
-        updateText()
+        UIView.performWithoutAnimation {
+            updateText()
+            layoutIfNeeded()
+            superview?.layoutIfNeeded()
+        }
     }
 
     private func openLinkIfNeeded(from gesture: UITapGestureRecognizer) -> Bool {

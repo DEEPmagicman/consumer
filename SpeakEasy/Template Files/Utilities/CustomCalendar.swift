@@ -38,13 +38,13 @@ final class CustomCalendar: UIView {
     }()
 
     private var visibleStartDate: Date {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today = venueToday()
         let monthStart = startOfMonth(for: today)
-        return venueCalendar.date(byAdding: .month, value: -12, to: monthStart) ?? monthStart
+        return monthStart
     }
 
     private var visibleEndDate: Date {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today = venueToday()
         let monthStart = startOfMonth(for: today)
         let futureMonth = venueCalendar.date(byAdding: .month, value: 24, to: monthStart) ?? monthStart
         return endOfMonth(for: futureMonth)
@@ -124,15 +124,19 @@ final class CustomCalendar: UIView {
 
     func setSelectedRange(start: Date?, end: Date?) {
         if let start {
-            startDate = venueCalendar.startOfDay(for: start)
+            startDate = max(venueCalendar.startOfDay(for: start), venueToday())
         } else {
             startDate = nil
         }
 
         if let end {
-            endDate = venueCalendar.startOfDay(for: end)
+            endDate = max(venueCalendar.startOfDay(for: end), venueToday())
         } else {
             endDate = nil
+        }
+
+        if let startDate, let endDate, startDate > endDate {
+            self.endDate = startDate
         }
 
         onDateRangeChanged?(startDate, endDate)
@@ -140,7 +144,7 @@ final class CustomCalendar: UIView {
     }
 
     func scrollToVenueToday(animated: Bool = false) {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today = venueToday()
 
         DispatchQueue.main.async { [weak self] in
             self?.calendarView?.scroll(
@@ -152,7 +156,7 @@ final class CustomCalendar: UIView {
     }
 
     func scrollToSelectedOrToday(animated: Bool = false) {
-        let targetDate = startDate ?? Constant.venueTodayDate().dateFormatter() ?? Date()
+        let targetDate = startDate ?? venueToday()
 
         DispatchQueue.main.async { [weak self] in
             self?.calendarView?.scroll(
@@ -164,13 +168,13 @@ final class CustomCalendar: UIView {
     }
 
     func selectToday() {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today = venueToday()
         setSelectedRange(start: today, end: today)
         scrollToSelectedOrToday(animated: true)
     }
 
     func selectTomorrow() {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today = venueToday()
         let tomorrow = venueCalendar.date(byAdding: .day, value: 1, to: today) ?? today
 
         setSelectedRange(start: tomorrow, end: tomorrow)
@@ -178,10 +182,7 @@ final class CustomCalendar: UIView {
     }
 
     func selectThisWeek() {
-        let today = venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
-        let weekday = venueCalendar.component(.weekday, from: today)
-
-        let start = venueCalendar.date(byAdding: .day, value: -(weekday - 1), to: today) ?? today
+        let start = venueToday()
         let end = venueCalendar.date(byAdding: .day, value: 6, to: start) ?? start
 
         setSelectedRange(start: start, end: end)
@@ -242,11 +243,16 @@ final class CustomCalendar: UIView {
             guard let self else {
                 return CalendarDayViewRepresentable.calendarItemModel(
                     invariantViewProperties: .init(),
-                    content: .init(dayText: "\(day.day)", isSelected: false)
+                    content: .init(
+                        dayText: "\(day.day)",
+                        isSelected: false,
+                        isEnabled: false
+                    )
                 )
             }
 
             let date = self.venueCalendar.date(from: day.components)
+            let isPast = date.map { self.isPastDate($0) } ?? false
 
             let isStart = self.isSameDay(date, selectedStartDate)
             let isEnd = self.isSameDay(date, selectedEndDate)
@@ -257,7 +263,8 @@ final class CustomCalendar: UIView {
                 invariantViewProperties: .init(),
                 content: .init(
                     dayText: "\(day.day)",
-                    isSelected: isSelected
+                    isSelected: isSelected,
+                    isEnabled: !isPast
                 )
             )
         }
@@ -267,6 +274,7 @@ final class CustomCalendar: UIView {
 
     private func handleDateSelection(_ date: Date) {
         let selectedDate = venueCalendar.startOfDay(for: date)
+        guard !isPastDate(selectedDate) else { return }
 
         if startDate == nil {
             startDate = selectedDate
@@ -290,6 +298,14 @@ final class CustomCalendar: UIView {
     }
 
     // MARK: - Helpers
+
+    private func venueToday() -> Date {
+        venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+    }
+
+    private func isPastDate(_ date: Date) -> Bool {
+        venueCalendar.startOfDay(for: date) < venueToday()
+    }
 
     private func startOfMonth(for date: Date) -> Date {
         let components = venueCalendar.dateComponents([.year, .month], from: date)
@@ -464,6 +480,7 @@ struct CalendarDayViewRepresentable: CalendarItemViewRepresentable {
     struct Content: Equatable {
         let dayText: String
         let isSelected: Bool
+        let isEnabled: Bool
     }
 
     static func makeView(
@@ -476,7 +493,13 @@ struct CalendarDayViewRepresentable: CalendarItemViewRepresentable {
         view.dayLabel.text = content.dayText
         view.dayLabel.font = CalendarUI.dayFont
         view.circleView.isHidden = !content.isSelected
-        view.dayLabel.textColor = content.isSelected ? .black : .white
+        if content.isSelected {
+            view.dayLabel.textColor = .black
+        } else {
+            view.dayLabel.textColor = content.isEnabled
+                ? .white
+                : UIColor.white.withAlphaComponent(0.28)
+        }
     }
 }
 
