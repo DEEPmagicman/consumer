@@ -51,6 +51,8 @@ final class OrderListViewController: UIViewController {
     var bookingId: String?
     var selectedPaymentMethod: PaymentType?
     var cardDetails: CardDetails?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     // MARK: - Stripe state
     private var paymentSheet: PaymentSheet?
@@ -1326,7 +1328,9 @@ final class OrderListViewController: UIViewController {
             phone: UserDefault.shared.user?.phone ?? "",
             userId: UserDefault.shared.user?.id ?? "",
             tickets: tickets,
-            bookingId: bookingId
+            bookingId: bookingId,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, freeBookingId, message in
             DispatchQueue.main.async {
                 guard let self else { return }

@@ -220,6 +220,9 @@ final class EventService {
     func fetchV3EventDetail(
         eventId: String,
         venueTimeZone: String? = nil,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
+        micrositeSlug: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -228,9 +231,31 @@ final class EventService {
         ) -> Void
     ) {
 
+        var params: [String: Any] = [
+            "isDiscounted": false
+        ]
+
+        let trimmedPromotionLinkId =
+        promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+
+        let trimmedPromotionLinkUniqueCode =
+        promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
+
+        let trimmedMicrositeSlug =
+        micrositeSlug.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedMicrositeSlug.isEmpty {
+            params["micrositeSlug"] = trimmedMicrositeSlug
+        }
+
         AFWrapper.getRequest(
             APIBuilder.v3EventDetailURL(eventId),
-            params: nil,
+            params: params,
             headers: Header.header(timeZone: venueTimeZone)
         ) { [weak self] response in
 
@@ -595,6 +620,8 @@ final class EventService {
         eventId: String,
         venueTimeZone: String? = nil,
         promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
+        micrositeSlug: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -616,6 +643,18 @@ final class EventService {
 
             params["promotionLinkId"] =
             promotionLinkId
+        }
+
+        let trimmedPromotionLinkUniqueCode =
+        promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
+
+        let trimmedMicrositeSlug =
+        micrositeSlug.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedMicrositeSlug.isEmpty {
+            params["micrositeSlug"] = trimmedMicrositeSlug
         }
 
         AFWrapper.getRequest(

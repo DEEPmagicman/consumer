@@ -69,6 +69,7 @@ final class PaymentVC: UIViewController {
     var venueDetails: ClipVenue?
     var bookingId: String?
     var bookingType: TicketPriceType = .PAID
+    var doormanId = ""
     var selectedPaymentMethod: PaymentType = .card
     var onPaymentSelected: ((PaymentType, CardDetails?) -> Void)?
     private let posterHeaderView = EventPosterHeaderView()
@@ -425,7 +426,8 @@ final class PaymentVC: UIViewController {
                     totalPrice: 0,
                     bookingType: bookingType,
                     selectedPaymentMethod: selectedPaymentMethod,
-                    cardDetails: nil
+                    cardDetails: nil,
+                    doormanId: doormanId
                 )
                 return
             }
@@ -489,7 +491,8 @@ final class PaymentVC: UIViewController {
                 totalPrice: 0,
                 bookingType: bookingType,
                 selectedPaymentMethod: selectedPaymentMethod,
-                cardDetails: cardDetails
+                cardDetails: cardDetails,
+                doormanId: doormanId
             )
             return
         }

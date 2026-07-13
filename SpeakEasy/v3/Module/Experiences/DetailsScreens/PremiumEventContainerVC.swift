@@ -76,6 +76,8 @@ final class PremiumEventContainerVC: UIViewController {
     var event: Event?
     
     var providedSeatingAreas: [SeatingArea]?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     // MARK: Life Cycle
 
@@ -188,7 +190,11 @@ private extension PremiumEventContainerVC {
                     self.event?.venue = venue
                     self.configureHeader()
                     self.mapVC.event = self.event
+                    self.mapVC.promotionLinkId = self.promotionLinkId
+                    self.mapVC.promotionLinkUniqueCode = self.promotionLinkUniqueCode
                     self.listVC.event = self.event
+                    self.listVC.promotionLinkId = self.promotionLinkId
+                    self.listVC.promotionLinkUniqueCode = self.promotionLinkUniqueCode
                     self.inquiryVC.event = self.event
                 }
 
@@ -262,6 +268,8 @@ private extension PremiumEventContainerVC {
 //        mapVC.seatingAreas = bookableSeatingAreas
         
         mapVC.event = event
+        mapVC.promotionLinkId = promotionLinkId
+        mapVC.promotionLinkUniqueCode = promotionLinkUniqueCode
         mapVC.seatingAreas = bookableSeatingAreas
         mapVC.seatingAreasFilteredOut = visibleSeatingAreas
         if event?.isEnable3DMap == true {
@@ -269,6 +277,8 @@ private extension PremiumEventContainerVC {
         }
 
         listVC.event = event
+        listVC.promotionLinkId = promotionLinkId
+        listVC.promotionLinkUniqueCode = promotionLinkUniqueCode
         listVC.seatingAreas = bookableSeatingAreas
 
         inquiryVC.event = event

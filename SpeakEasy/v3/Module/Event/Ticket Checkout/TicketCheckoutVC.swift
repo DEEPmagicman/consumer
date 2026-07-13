@@ -58,6 +58,8 @@ final class TicketCheckoutVC: UIViewController {
     var event: Event?
     var booking: Booking?
     var bookingId: String?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
     var dummyQuestions: [DummyQuestionType] = [.text, .dropdown, .checkbox]
     
     var eventQuestions = [Questions]()
@@ -593,7 +595,9 @@ final class TicketCheckoutVC: UIViewController {
             phone: UserDefault.shared.user?.phone ?? "",
             gender: "UNASSIGNED",
             userId: UserDefault.shared.user?.id ?? "",
-            tickets: ticketsPayload
+            tickets: ticketsPayload,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, _, id, _ in
             guard let self = self else { return }
             if isSuccess, let id = id {

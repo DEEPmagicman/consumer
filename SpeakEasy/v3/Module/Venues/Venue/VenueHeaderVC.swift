@@ -14,6 +14,7 @@ import UIKit
 final class VenueHeaderVC: UIViewController {
     
     var venueDetails: ClipVenue?
+    var doormanId = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
     
     @IBOutlet weak var coverTicketView: UIView!
@@ -88,7 +89,7 @@ final class VenueHeaderVC: UIViewController {
     }
     
     @IBAction func onClickBuyTicket(_ sender: Any) {
-        Navigate.to.coverTicketListVC(self, venueDetails: venueDetails)
+        Navigate.to.coverTicketListVC(self, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     @IBAction func onClickFollowBtn(_ sender: Any) {

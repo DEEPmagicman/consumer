@@ -112,6 +112,7 @@ final class VenueService {
         uniqueId: String,
         userId: String? = UserDefault.shared.user?.id,
         venueTimeZone: String? = nil,
+        doormanId: String = "",
         completion: @escaping (
             Bool,
             String?,
@@ -126,7 +127,8 @@ final class VenueService {
             ),
             params: nil,
             headers: Header.header(
-                timeZone: venueTimeZone
+                timeZone: venueTimeZone,
+                doormanId: doormanId
             )
         ) { [weak self] response in
 
@@ -599,8 +601,7 @@ final class VenueService {
             
             guard
                 let responseDic = response as? [String: Any],
-                let venueId = responseDic["venueId"] as? String,
-                let doormanId = responseDic["doormanId"] as? String
+                let venueId = responseDic["venueId"] as? String
             else {
                 
                 completion(
@@ -612,6 +613,8 @@ final class VenueService {
                 
                 return
             }
+
+            let doormanId = responseDic["doormanId"] as? String
             
             completion(
                 true,
@@ -757,8 +760,7 @@ final class VenueService {
         ) { response in
             
             guard let responseDic = response as? [String: Any],
-                  let venueId = responseDic["venueId"] as? String,
-                  let doormanId = responseDic["doormanId"] as? String
+                  let venueId = responseDic["venueId"] as? String
             else {
                 
                 completion(
@@ -770,6 +772,8 @@ final class VenueService {
                 
                 return
             }
+
+            let doormanId = responseDic["doormanId"] as? String
             
             completion(
                 true,

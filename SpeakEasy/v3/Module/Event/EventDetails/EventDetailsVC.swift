@@ -107,6 +107,8 @@ class EventDetailsVC: UIViewController {
     var uniqueId: String? = ""
     var onSaveStateChanged: ((Event, Bool) -> Void)?
     var promoteId = ""
+    var promotionLinkUniqueCode = ""
+    var micrositeSlug = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
 
@@ -729,7 +731,10 @@ class EventDetailsVC: UIViewController {
 
         eventService.fetchV3EventDetail(
             eventId: eventId,
-            venueTimeZone: TimeZone.current.identifier
+            venueTimeZone: TimeZone.current.identifier,
+            promotionLinkId: promoteId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode,
+            micrositeSlug: micrositeSlug
         ) { [weak self] _, _, detail, errCode in
 
             guard let self = self else { return }
@@ -738,8 +743,9 @@ class EventDetailsVC: UIViewController {
             self.isEventDetailAPICalled = true
 
             guard let detail else {
-                if errCode == 404 && self.promoteId != "" {
+                if errCode == 404 && (self.promoteId != "" || self.promotionLinkUniqueCode != "") {
                     self.promoteId = ""
+                    self.promotionLinkUniqueCode = ""
                     self.isEventDetailAPICalled = false
                     self.getEventDetail()
                     return
@@ -1438,11 +1444,11 @@ class EventDetailsVC: UIViewController {
     }
 
     private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
-        let allTickets =
-            (event?.eventTicket ?? []) +
-            (event?.eventAddOnTicket ?? []) +
-            (event?.protectedEventTicket ?? []) +
-            (event?.protectedeventAddOnTicket ?? [])
+        var allTickets: [EventTicket] = []
+        allTickets.append(contentsOf: event?.eventTicket ?? [])
+        allTickets.append(contentsOf: event?.eventAddOnTicket ?? [])
+        allTickets.append(contentsOf: event?.protectedEventTicket ?? [])
+        allTickets.append(contentsOf: event?.protectedeventAddOnTicket ?? [])
 
         return list.filter { ticket in
             guard isTicketAvailableForDisplay(ticket) else { return false }
@@ -2316,7 +2322,9 @@ class EventDetailsVC: UIViewController {
                 self,
                 event: event,
                 mode: .addOn,
-                selectedNormalTickets: [selectedTicket]
+                selectedNormalTickets: [selectedTicket],
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
             )
             return
         }
@@ -2409,7 +2417,9 @@ class EventDetailsVC: UIViewController {
                 self,
                 event: event,
                 mode: .addOn,
-                selectedNormalTickets: [selectedTicket]
+                selectedNormalTickets: [selectedTicket],
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
             )
             return
         }
@@ -2475,7 +2485,9 @@ class EventDetailsVC: UIViewController {
                 self,
                 event: event,
                 mode: .addOn,
-                selectedNormalTickets: selected
+                selectedNormalTickets: selected,
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
             )
             return
         }
@@ -2510,7 +2522,9 @@ class EventDetailsVC: UIViewController {
             phone: user.phone,
             gender: user.gender,
             userId: user.id,
-            tickets: payload
+            tickets: payload,
+            promotionLinkId: promoteId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, bookingId, _ in
             guard let self else { return }
 
@@ -2523,7 +2537,9 @@ class EventDetailsVC: UIViewController {
                     selectedTickets: selectedTickets,
                     bookingId: bookingId,
                     paymentMethod: nil,
-                    venueDetails: self.venueDetails
+                    venueDetails: self.venueDetails,
+                    promotionLinkId: promoteId,
+                    promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")
@@ -2563,7 +2579,9 @@ class EventDetailsVC: UIViewController {
             phone: user.phone,
             gender: user.gender,
             userId: user.id,
-            tickets: ticketsPayload
+            tickets: ticketsPayload,
+            promotionLinkId: promoteId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             self.checkOutBtn.hideLoader()
@@ -2575,7 +2593,9 @@ class EventDetailsVC: UIViewController {
                     self,
                     event: event,
                     selectedTickets: selectedTickets,
-                    bookingId: id
+                    bookingId: id,
+                    promotionLinkId: promoteId,
+                    promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
                 Alert.showToast(errMsg ?? "Somthing went wrong")
@@ -2651,7 +2671,13 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickBuyNow(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.ticketSelectionVc(self, event: event, mode: .normal)
+            Navigate.to.ticketSelectionVc(
+                self,
+                event: event,
+                mode: .normal,
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
+            )
         }
     }
 
@@ -2676,7 +2702,9 @@ class EventDetailsVC: UIViewController {
         Navigate.to.premiumEventContainerVC(
             self,
             event: event,
-            seatingAreas: seatingAreas
+            seatingAreas: seatingAreas,
+            promotionLinkId: promoteId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         )
     }
     
@@ -2691,7 +2719,7 @@ class EventDetailsVC: UIViewController {
           
           let eventId = event?.uniqueId ?? event?.id ?? ""
           
-          let url = "https://dev-consumer.speakeasygo.com/\(venue)/\(eventName)?eid=\(eventId)"
+          let url = String(format: APIBuilder.eventWebURL, venue, eventName, eventId)
           
           Utility.main.shareSocialWith(text: url)
     }
@@ -4544,14 +4572,25 @@ extension EventDetailsVC: CheckoutBarDelegate {
             phone: user.phone,
             gender: user.gender,
             userId: user.id,
-            tickets: payload
+            tickets: payload,
+            promotionLinkId: promoteId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, bookingId, _ in
             guard let self else { return }
 
             self.checkOutBtnView.hideLoader()
             if isSuccess {
                 self.shouldClearInlineRSVPSelectionOnReturn = true
-                Navigate.orderListVC(self, event: event, selectedTickets: selectedTickets, bookingId: bookingId, paymentMethod: nil, venueDetails: venueDetails)
+                Navigate.orderListVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedTickets,
+                    bookingId: bookingId,
+                    paymentMethod: nil,
+                    venueDetails: venueDetails,
+                    promotionLinkId: promoteId,
+                    promotionLinkUniqueCode: promotionLinkUniqueCode
+                )
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")
             }

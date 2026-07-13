@@ -62,6 +62,8 @@ final class TablePresenter {
         venueId: String,
         guests: Int,
         queueId: String,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
         completion: @escaping (_ isSuccess: Bool,
                                _ errMsg: String?,
                                _ response: SeatingAreaBookingResponse?) -> Void
@@ -78,10 +80,18 @@ final class TablePresenter {
         if let timeSlotId = timeSlotId, !timeSlotId.isEmpty {
             item["timeSlotId"] = timeSlotId
         }
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "items": [item],
             "queueId": queueId
         ]
+        let trimmedPromotionLinkId = promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+        let trimmedPromotionLinkUniqueCode = promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
         AFWrapper.postRequest(
             url,
             params: params,

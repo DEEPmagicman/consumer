@@ -34,30 +34,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true),
                   let queryItems = components.queryItems else { return }
             
-            if let value = queryItems.first(where: { $0.name == "v" })?.value {
+            if let value = value(for: ["v"], in: queryItems) {
                 checkForDeepLink(value)
                 return
             }
-            if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+            if let venue = value(for: ["venueId"], in: queryItems) {
                 venueId = venue
                 UserDefaults.standard.setValue(venue, forKey: "venueId")
                 return
             }
-            if let venue = queryItems.first(where: { $0.name == "vid" })?.value {
+            if let venue = value(for: ["vid"], in: queryItems) {
                 checkForDeepLink(venue)
                 return
             }
         }
     }
+
+    private func value(for names: [String], in queryItems: [URLQueryItem]) -> String? {
+        let lowercasedNames = names.map { $0.lowercased() }
+        return queryItems.compactMap { item -> String? in
+            guard lowercasedNames.contains(item.name.lowercased()) else { return nil }
+            let value = item.value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            return value.isEmpty ? nil : value
+        }.first
+    }
     
     func checkForDeepLink(_ value: String) {
-        if value.contains("VN") {
-            venueId = value
-            UserDefaults.standard.setValue(value, forKey: "venueId")
-            
-        } else {
+        if value.uppercased().hasPrefix("DL") {
             deepLinkId = value
             UserDefaults.standard.setValue(deepLinkId, forKey: "deepLinkId")
+        } else {
+            venueId = value
+            UserDefaults.standard.setValue(value, forKey: "venueId")
         }
     }
 

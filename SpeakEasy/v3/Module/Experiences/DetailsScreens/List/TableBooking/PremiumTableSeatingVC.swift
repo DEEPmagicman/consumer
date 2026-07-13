@@ -13,6 +13,8 @@ final class PremiumTableSeatingVC: UIViewController {
 
     var seatingArea: SeatingArea?
     var event: Event?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     /// Called when user taps Checkout
     var onCheckout: ((_ guestCount: Int, _ seatingArea: SeatingArea, _ event: Event) -> Void)?
@@ -716,7 +718,9 @@ private extension PremiumTableSeatingVC {
             timeSlotId:   selectedTimeSlot?.id,
             venueId:      event.venue?.id ?? "",
             guests:       currentGuestCount,
-            queueId:      queueId
+            queueId:      queueId,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] success, message, response in
             guard let self else { return }
             DispatchQueue.main.async {
@@ -730,6 +734,8 @@ private extension PremiumTableSeatingVC {
                     vc.selectedTimeSlot = self.selectedTimeSlot
                     vc.selectedTimeText = self.selectedTimeSlot.map { self.formattedTime($0.startTime) }
                     vc.initialBooking = response
+                    vc.promotionLinkId = self.promotionLinkId
+                    vc.promotionLinkUniqueCode = self.promotionLinkUniqueCode
                     self.navigationController?.pushViewController(vc, animated: false)
                 } else {
                     Alert.showToast(message ?? Constant.String.somethingWrong)

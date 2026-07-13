@@ -27,6 +27,8 @@ final class PremiumReservationVC: UIViewController {
     // MARK: Data
 
     var event: Event?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     var seatingAreas: [SeatingArea] = [] {
         didSet {
@@ -900,7 +902,13 @@ private extension PremiumReservationVC {
             return
         }
         
-        Navigate.to.premiumTableSeatingVC(self, event: event, seatingArea: item)
+        Navigate.to.premiumTableSeatingVC(
+            self,
+            event: event,
+            seatingArea: item,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
+        )
 
 ///* ff */  Navigate.to.premiumTableSeatingVC(
 //            self,
@@ -962,7 +970,11 @@ private extension PremiumReservationVC {
 
             guests: guestCount,
 
-            queueId: queueId
+            queueId: queueId,
+
+            promotionLinkId: promotionLinkId,
+
+            promotionLinkUniqueCode: promotionLinkUniqueCode
 
         ) { [weak self]
             success,

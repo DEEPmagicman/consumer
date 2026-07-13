@@ -13,6 +13,7 @@ import GSImageViewerController
 enum NavigationDestination {
     case appLaunch
     case venue
+    case venueDeepLink
     case event
     case inviteLink
     case booking
@@ -249,7 +250,8 @@ final class Navigate {
                          totalPrice: Double,
                          bookingType: TicketPriceType = .PAID,
                          selectedPaymentMethod: PaymentType? = nil,
-                         cardDetails: CardDetails? = nil) {
+                         cardDetails: CardDetails? = nil,
+                         doormanId: String = "") {
         let vc = CoverTicketCheckOutVC(nibName: "CoverTicketCheckOutVC", bundle: nil)
         vc.selectedCoverTickets = selectedCoverTickets
         vc.selectedAddOnsItems = selectedAddOnsItem
@@ -258,6 +260,7 @@ final class Navigate {
         vc.bookingType = bookingType
         vc.initialPaymentMethod = selectedPaymentMethod
         vc.initialCardDetails = cardDetails
+        vc.doormanId = doormanId
 //        vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -619,20 +622,33 @@ final class Navigate {
         _ sender: UIViewController,
         event: Event,
         mode: TicketMode,
-        selectedNormalTickets: [EventTicket] = []
+        selectedNormalTickets: [EventTicket] = [],
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = ""
     ) {
         let vc = TicketSelectionViewController(nibName: "TicketSelectionViewController", bundle: nil)
         vc.event = event
         vc.mode = mode
         vc.preselectedNormalTickets = selectedNormalTickets
+        vc.promotionLinkId = promotionLinkId
+        vc.promotionLinkUniqueCode = promotionLinkUniqueCode
         sender.pushVC(vc)
     }
     
-    func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
+    func ticketCheckoutVC(
+        _ sender: UIViewController,
+        event: Event,
+        selectedTickets: [EventTicket] = [],
+        bookingId: String? = nil,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = ""
+    ) {
         let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
         vc.event = event
         vc.selectedTickets = selectedTickets
         vc.bookingId = bookingId
+        vc.promotionLinkId = promotionLinkId
+        vc.promotionLinkUniqueCode = promotionLinkUniqueCode
         sender.pushVC(vc)
     }
     
@@ -643,7 +659,9 @@ final class Navigate {
         bookingId: String?,
         paymentMethod: PaymentType?,
         cardDetails: CardDetails? = nil,
-        venueDetails: ClipVenue? = nil
+        venueDetails: ClipVenue? = nil,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = ""
     ) {
         let dest = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
         dest.event             = event
@@ -652,6 +670,8 @@ final class Navigate {
         dest.selectedPaymentMethod = paymentMethod
         dest.cardDetails       = cardDetails
         dest.venueDetails      = venueDetails
+        dest.promotionLinkId = promotionLinkId
+        dest.promotionLinkUniqueCode = promotionLinkUniqueCode
         vc.navigationController?.pushViewController(dest, animated: true)
     }
     
@@ -730,10 +750,12 @@ final class Navigate {
     func coverTicketListVC(
         _ sender: UIViewController,
         venueDetails: ClipVenue?,
+        doormanId: String = "",
         shouldShowDirectUpsell: Bool = false
     ) {
         let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)
         vc.venueDetails = venueDetails
+        vc.doormanId = doormanId
         vc.shouldShowDirectUpsell = shouldShowDirectUpsell
         vc.hidesBottomBarWhenPushed = true
         sender.pushVC(vc)
@@ -907,18 +929,24 @@ final class Navigate {
     func premiumEventContainerVC(
         _ sender: UIViewController,
         event: Event?,
-        seatingAreas: [SeatingArea]? = nil
+        seatingAreas: [SeatingArea]? = nil,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = ""
     ) {
         let vc = PremiumEventContainerVC()
         vc.event = event
         vc.providedSeatingAreas = seatingAreas
+        vc.promotionLinkId = promotionLinkId
+        vc.promotionLinkUniqueCode = promotionLinkUniqueCode
         sender.pushVC(vc)
     }
    
-    func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil) {
+    func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil, promotionLinkId: String = "", promotionLinkUniqueCode: String = "") {
         let vc = PremiumTableSeatingVC()
         vc.seatingArea = seatingArea
         vc.event       = event
+        vc.promotionLinkId = promotionLinkId
+        vc.promotionLinkUniqueCode = promotionLinkUniqueCode
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.isHidden = true
         sender.present(nav, animated: true)

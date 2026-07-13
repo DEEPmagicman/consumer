@@ -21,6 +21,8 @@ final class PremiumTableCheckoutVC: UIViewController {
     var selectedTimeSlot: TableTimeSlot?
     var selectedTimeText: String?
     var initialBooking: SeatingAreaBookingResponse?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     // MARK: - Private
 
@@ -1839,7 +1841,9 @@ private extension PremiumTableCheckoutVC {
             consumerUserId: UserDefault.shared.user?.id ?? "",
             optedPolicy:    venueMessageView.isHidden ? termsAgreementView.isChecked : venueMessageView.isChecked,
             notes:          notes,
-            venueId:        venueId
+            venueId:        venueId,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] success, message, response in
             DispatchQueue.main.async {
                 guard let self else { return }

@@ -99,6 +99,8 @@ final class TableService {
         venueId: String,
         guests: Int,
         queueId: String,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -122,10 +124,20 @@ final class TableService {
             item["timeSlotId"] = timeSlotId
         }
 
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "items": [item],
             "queueId": queueId
         ]
+        let trimmedPromotionLinkId =
+        promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+        let trimmedPromotionLinkUniqueCode =
+        promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
 
         AFWrapper.postRequest(
             url,
@@ -528,6 +540,8 @@ final class TableService {
         optedPolicy: Bool,
         notes: String?,
         venueId: String,
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
         completion: @escaping (
             _ success: Bool,
             _ message: String?,
@@ -535,7 +549,7 @@ final class TableService {
         ) -> Void
     ) {
 
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "queueId": queueId,
             "tableBookingId": tableBookingId,
             "guestInfo": [
@@ -544,6 +558,16 @@ final class TableService {
             "optedPolicy": optedPolicy,
             "notes": notes ?? ""
         ]
+        let trimmedPromotionLinkId =
+        promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+        let trimmedPromotionLinkUniqueCode =
+        promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
 
         AFWrapper.postRequest(
             APIBuilder.seatingAreaBookingConfirmURL(eventId: eventId),

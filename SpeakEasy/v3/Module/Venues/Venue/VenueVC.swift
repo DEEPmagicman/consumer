@@ -65,6 +65,7 @@ final class VenueVC: UIViewController {
 
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
+    var doormanId = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
     var isPresentedPremium = false
     private var isFollowing = false
@@ -133,7 +134,8 @@ final class VenueVC: UIViewController {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier
+            venueTimeZone: TimeZone.current.identifier,
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else { return }
 
@@ -356,6 +358,7 @@ final class VenueVC: UIViewController {
         Navigate.to.coverTicketListVC(
             self,
             venueDetails: venueDetails,
+            doormanId: doormanId,
             shouldShowDirectUpsell: !hasAvailableTickets && hasAvailableUpsellTickets
         )
     }
@@ -468,7 +471,8 @@ private extension VenueVC {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier
+            venueTimeZone: TimeZone.current.identifier,
+            doormanId: doormanId
         ) { [weak self] isSuccess, _, venueDetail in
             guard let self else { return }
 
@@ -535,7 +539,8 @@ private extension VenueVC {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier
+            venueTimeZone: TimeZone.current.identifier,
+            doormanId: doormanId
         ) { [weak self] isSuccess, _, venueDetail in
             guard let self,
                   isSuccess,

@@ -208,6 +208,8 @@ final class PaymentService {
         gender: String,
         userId: String,
         tickets: [[String: Any]],
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -216,7 +218,7 @@ final class PaymentService {
         ) -> Void
     ) {
 
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "code": code,
             "phone": phone,
             "gender": gender,
@@ -225,6 +227,18 @@ final class PaymentService {
             "isAppClipUser": false,
             "tickets": tickets
         ]
+
+        let trimmedPromotionLinkId =
+        promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+
+        let trimmedPromotionLinkUniqueCode =
+        promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
 
         AFWrapper.postRequest(
             APIBuilder.createEventBookingURL,

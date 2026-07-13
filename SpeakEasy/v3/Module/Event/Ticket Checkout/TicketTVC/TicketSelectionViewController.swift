@@ -37,6 +37,8 @@ class TicketSelectionViewController: UIViewController {
     var event: Event?
     var venueDetails: ClipVenue?
     var preselectedNormalTickets: [EventTicket] = []
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     private var tickets: [EventTicket] = []
     private var normalTickets: [EventTicket] = []
@@ -397,11 +399,11 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
-        let allTickets =
-            (event?.eventTicket ?? []) +
-            (event?.eventAddOnTicket ?? []) +
-            (event?.protectedEventTicket ?? []) +
-            (event?.protectedeventAddOnTicket ?? [])
+        var allTickets: [EventTicket] = []
+        allTickets.append(contentsOf: event?.eventTicket ?? [])
+        allTickets.append(contentsOf: event?.eventAddOnTicket ?? [])
+        allTickets.append(contentsOf: event?.protectedEventTicket ?? [])
+        allTickets.append(contentsOf: event?.protectedeventAddOnTicket ?? [])
 
         return list.filter { ticket in
             guard isTicketAvailableForDisplay(ticket) else { return false }
@@ -922,7 +924,9 @@ class TicketSelectionViewController: UIViewController {
             phone: user.phone,
             gender: user.gender,
             userId: user.id,
-            tickets: payload
+            tickets: payload,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             self.continueToCheckOutBtn.hideLoader()
@@ -934,7 +938,9 @@ class TicketSelectionViewController: UIViewController {
                     selectedTickets: tickets,
                     bookingId: id,
                     paymentMethod: nil,
-                    venueDetails: venueDetails
+                    venueDetails: venueDetails,
+                    promotionLinkId: promotionLinkId,
+                    promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
                 self.setCheckoutInProgress(false)
@@ -1637,7 +1643,9 @@ private extension TicketSelectionViewController {
 
         eventService.fetchV3EventDetail(
             eventId: eventId,
-            venueTimeZone: venueDetails?.useTimezone
+            venueTimeZone: venueDetails?.useTimezone,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, _, detail, _ in
             guard let self,
                   isSuccess,

@@ -15,11 +15,20 @@ import LGSideMenuController
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    typealias PendingDeepLink = (
+        destination: NavigationDestination,
+        id: String,
+        secondaryId: String?,
+        tertiaryId: String?,
+        micrositeSlug: String?,
+        sourceURL: String?
+    )
+
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
-    var pendingDeepLink: (NavigationDestination, String, String?, String?, String?)?
+    var pendingDeepLink: PendingDeepLink?
 
     func application(_ application: UIApplication,
                      continue userActivity: NSUserActivity,
@@ -149,13 +158,30 @@ extension AppDelegate {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
         let queryItems = components.queryItems ?? []
 
-        if let value = value(for: ["eid", "eventId"], in: queryItems) {
-            queueDeepLink(.event, id: value, sourceURL: url.absoluteString)
+        if let value = value(for: ["v"], in: queryItems) {
+            queueVenueIdentifier(value)
             return
         }
 
         if let value = value(for: ["vid"], in: queryItems) {
+            queueVenueIdentifier(value)
+            return
+        }
+
+        if let value = value(for: ["venueId"], in: queryItems) {
             queueDeepLink(.venue, id: value)
+            return
+        }
+
+        if let eventId = value(for: ["eid", "eventId"], in: queryItems) {
+            queueDeepLink(
+                .event,
+                id: eventId,
+                secondaryId: value(for: ["pid", "promotionLinkId", "promoteId"], in: queryItems),
+                tertiaryId: value(for: ["t", "ts", "promotionLinkUniqueCode"], in: queryItems),
+                micrositeSlug: value(for: ["micrositeSlug"], in: queryItems),
+                sourceURL: url.absoluteString
+            )
             return
         }
 
@@ -175,7 +201,14 @@ extension AppDelegate {
         }
 
         if let eventId = pathValue(after: "event", in: components) {
-            queueDeepLink(.event, id: eventId, sourceURL: url.absoluteString)
+            queueDeepLink(
+                .event,
+                id: eventId,
+                secondaryId: value(for: ["pid", "promotionLinkId", "promoteId"], in: queryItems),
+                tertiaryId: value(for: ["t", "ts", "promotionLinkUniqueCode"], in: queryItems),
+                micrositeSlug: value(for: ["micrositeSlug"], in: queryItems),
+                sourceURL: url.absoluteString
+            )
             return
         }
     }
@@ -219,37 +252,65 @@ extension AppDelegate {
         )
     }
     
-    private func handlePendingDeepLink() {
+    @discardableResult
+    private func handlePendingDeepLink() -> Bool {
         guard let deepLink = pendingDeepLink,
-              let rootNav = window?.rootViewController as? UINavigationController else { return }
+              let rootNav = window?.rootViewController as? UINavigationController else { return false }
 
         if rootNav.viewControllers.first is NewLandingVC {
             pendingDeepLink = nil
             handleV3DeepLink(deepLink, rootNav: rootNav)
-            return
+            return true
         }
 
         guard let sideMenu = rootNav.viewControllers.first as? LGSideMenuController,
-              let rootVC = sideMenu.rootViewController as? LandingVC else { return }
+              let rootVC = sideMenu.rootViewController as? LandingVC else { return false }
 
         pendingDeepLink = nil
         handleV2DeepLink(deepLink, rootVC: rootVC, rootNav: rootNav)
+        return true
     }
 
     private func value(for names: [String], in queryItems: [URLQueryItem]) -> String? {
         let lowercasedNames = names.map { $0.lowercased() }
-        return queryItems.first {
-            lowercasedNames.contains($0.name.lowercased()) && ($0.value?.isEmpty == false)
-        }?.value
+        return queryItems.compactMap { item -> String? in
+            guard lowercasedNames.contains(item.name.lowercased()) else { return nil }
+            let value = item.value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            return value.isEmpty ? nil : value
+        }.first
+    }
+
+    private func queueVenueIdentifier(_ value: String) {
+        if value.uppercased().hasPrefix("DL") {
+            queueDeepLink(.venueDeepLink, id: value)
+        } else {
+            queueDeepLink(.venue, id: value)
+        }
     }
 
     private func queueDeepLink(
         _ destination: NavigationDestination,
         id: String,
+        secondaryId: String? = nil,
+        tertiaryId: String? = nil,
+        micrositeSlug: String? = nil,
         sourceURL: String? = nil
     ) {
-        guard id.isEmpty == false else { return }
-        pendingDeepLink = (destination, id, nil, nil, sourceURL)
+        let trimmedId = id.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmedId.isEmpty == false else { return }
+        pendingDeepLink = (
+            destination: destination,
+            id: trimmedId,
+            secondaryId: secondaryId,
+            tertiaryId: tertiaryId,
+            micrositeSlug: micrositeSlug,
+            sourceURL: sourceURL
+        )
+
+        if handlePendingDeepLink() {
+            return
+        }
+
         changeRootViewController()
     }
 
@@ -261,12 +322,13 @@ extension AppDelegate {
         guard let index = pathComponents.firstIndex(where: { $0.lowercased() == marker.lowercased() }),
               pathComponents.indices.contains(index + 1) else { return nil }
 
-        let value = pathComponents[index + 1]
+        let rawValue = pathComponents[index + 1]
+        let value = rawValue.removingPercentEncoding ?? rawValue
         return value.isEmpty ? nil : value
     }
 
     private func handleV3DeepLink(
-        _ deepLink: (NavigationDestination, String, String?, String?, String?),
+        _ deepLink: PendingDeepLink,
         rootNav: UINavigationController
     ) {
         rootNav.dismiss(animated: false)
@@ -274,19 +336,25 @@ extension AppDelegate {
 
         guard let sender = rootNav.topViewController else { return }
 
-        switch deepLink.0 {
+        switch deepLink.destination {
         case .event:
             let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
-            vc.uniqueId = deepLink.1
+            vc.uniqueId = deepLink.id
+            vc.promoteId = deepLink.secondaryId ?? ""
+            vc.promotionLinkUniqueCode = deepLink.tertiaryId ?? ""
+            vc.micrositeSlug = deepLink.micrositeSlug ?? ""
             rootNav.pushViewController(vc, animated: true)
 
         case .venue:
             let vc = VenueVC(nibName: "VenueVC", bundle: nil)
-            vc.uniqueId = deepLink.1
+            vc.uniqueId = deepLink.id
             rootNav.pushViewController(vc, animated: true)
 
+        case .venueDeepLink:
+            resolveVenueDeepLink(deepLink.id, rootNav: rootNav)
+
         case .booking:
-            Navigate.to.scanQR(sender, bookingId: deepLink.1, addOnsBookingId: "")
+            Navigate.to.scanQR(sender, bookingId: deepLink.id, addOnsBookingId: "")
 
         case .addOns:
             Navigate.to.scanQR(
@@ -294,11 +362,11 @@ extension AppDelegate {
                 isAddOnsAvailable: true,
                 bookingId: "",
                 isOnlyAddOnAvailable: true,
-                addOnsBookingId: deepLink.1
+                addOnsBookingId: deepLink.id
             )
 
         case .inviteLink:
-            Navigate.to.inviteVC(sender, inviteId: deepLink.1)
+            Navigate.to.inviteVC(sender, inviteId: deepLink.id)
 
         default:
             break
@@ -306,26 +374,32 @@ extension AppDelegate {
     }
 
     private func handleV2DeepLink(
-        _ deepLink: (NavigationDestination, String, String?, String?, String?),
+        _ deepLink: PendingDeepLink,
         rootVC: LandingVC,
         rootNav: UINavigationController
     ) {
         let navigationController = rootVC.navigationController ?? rootNav
         let sender = navigationController.topViewController ?? rootVC
 
-        switch deepLink.0 {
+        switch deepLink.destination {
         case .event:
             let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
-            vc.uniqueId = deepLink.1
+            vc.uniqueId = deepLink.id
+            vc.promoteId = deepLink.secondaryId ?? ""
+            vc.promotionLinkUniqueCode = deepLink.tertiaryId ?? ""
+            vc.micrositeSlug = deepLink.micrositeSlug ?? ""
             navigationController.pushViewController(vc, animated: true)
 
         case .venue:
             let vc = VenueVC(nibName: "VenueVC", bundle: nil)
-            vc.uniqueId = deepLink.1
+            vc.uniqueId = deepLink.id
             navigationController.pushViewController(vc, animated: true)
 
+        case .venueDeepLink:
+            resolveVenueDeepLink(deepLink.id, rootNav: navigationController)
+
         case .booking:
-            Navigate.to.scanQR(sender, bookingId: deepLink.1, addOnsBookingId: "")
+            Navigate.to.scanQR(sender, bookingId: deepLink.id, addOnsBookingId: "")
 
         case .addOns:
             Navigate.to.scanQR(
@@ -333,14 +407,52 @@ extension AppDelegate {
                 isAddOnsAvailable: true,
                 bookingId: "",
                 isOnlyAddOnAvailable: true,
-                addOnsBookingId: deepLink.1
+                addOnsBookingId: deepLink.id
             )
 
         case .inviteLink:
-            Navigate.to.inviteVC(sender, inviteId: deepLink.1)
+            Navigate.to.inviteVC(sender, inviteId: deepLink.id)
 
         default:
             break
+        }
+    }
+
+    private func resolveVenueDeepLink(_ id: String, rootNav: UINavigationController) {
+        let service = VenueService()
+
+        service.fetchDeepLinkData(id: id) { [weak rootNav] isSuccess, errMsg, doormanId, venueId in
+            guard let rootNav else { return }
+
+            guard isSuccess,
+                  let venueId = venueId?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  venueId.isEmpty == false
+            else {
+                DispatchQueue.main.async {
+                    Alert.showAlertSheet(
+                        style: .alert,
+                        title: errMsg ?? "Unable to open this link",
+                        message: ""
+                    )
+                }
+                return
+            }
+
+            service.fetchVenueDetail(
+                venueId: venueId,
+                venueTimeZone: TimeZone.current.identifier,
+                doormanId: doormanId ?? ""
+            ) { [weak rootNav] isSuccess, _, venue in
+                DispatchQueue.main.async {
+                    guard let rootNav else { return }
+
+                    let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+                    vc.venueDetails = isSuccess ? venue : nil
+                    vc.uniqueId = venue?.uniqueId ?? venueId
+                    vc.doormanId = doormanId ?? ""
+                    rootNav.pushViewController(vc, animated: true)
+                }
+            }
         }
     }
 

@@ -55,6 +55,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     var bookingType: TicketPriceType = .FREE
     var initialPaymentMethod: PaymentType?
     var initialCardDetails: CardDetails?
+    var doormanId = ""
     weak var updateDelegate: UpdateDetailDelegate?
 
     // MARK: - Payment
@@ -1023,7 +1024,7 @@ extension CoverTicketCheckOutVC {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "") {
+        PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "", doormanId: doormanId) {
             [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             if isSuccess, let id {
@@ -1049,7 +1050,8 @@ extension CoverTicketCheckOutVC {
             bookingId: bookingId,
             selectedTickets: tickets,
             promoCode: promoCode,
-            type: .appClip
+            type: .appClip,
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
             guard let self else { return }
             if isSuccess, let clientSecret {
@@ -1082,7 +1084,8 @@ extension CoverTicketCheckOutVC {
         PaymentPresenter.addOnsPaymentIntent(
             bookingId: bookingId,
             venueId: venue?.id ?? "",
-            addOnsItems: addOnsItems
+            addOnsItems: addOnsItems,
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg, clientSecret, ephemeralKey, paymentDetail, bookingId in
             guard let self else { return }
             if isSuccess {
@@ -1423,7 +1426,8 @@ extension CoverTicketCheckOutVC {
         PaymentPresenter.successPayment(
             paymentHistoryId: paymentHistoryId,
             bookingId: bookingId,
-            optedPolicy: optedPolicy
+            optedPolicy: optedPolicy,
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg in
             if isSuccess {
                 completion()
@@ -1439,7 +1443,8 @@ extension CoverTicketCheckOutVC {
         let mainBookingId = bookingType == .FREE && !selectedCoverTickets.isEmpty ? bookingId : ""
         PaymentPresenter.successAddOnsPayment(
             bookingId: addOnsBookingId ?? "",
-            mainBookingId: mainBookingId
+            mainBookingId: mainBookingId,
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg in
             if isSuccess {
                 completion()
@@ -1455,7 +1460,7 @@ extension CoverTicketCheckOutVC {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venue?.id ?? "") {
+        PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venue?.id ?? "", doormanId: doormanId) {
             [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             if isSuccess, let id {

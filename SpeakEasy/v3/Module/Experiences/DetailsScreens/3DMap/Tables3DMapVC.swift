@@ -20,6 +20,8 @@ final class Tables3DMapVC: UIViewController {
     @IBOutlet weak var buyNowBtn: LoadingButton!
 
     var event: Event?
+    var promotionLinkId = ""
+    var promotionLinkUniqueCode = ""
 
     private let sceneView = SCNView()
 
@@ -406,7 +408,13 @@ extension Tables3DMapVC {
             return
         }
 
-        Navigate.to.premiumTableSeatingVC(self, event: event, seatingArea: item)
+        Navigate.to.premiumTableSeatingVC(
+            self,
+            event: event,
+            seatingArea: item,
+            promotionLinkId: promotionLinkId,
+            promotionLinkUniqueCode: promotionLinkUniqueCode
+        )
 //        Navigate.to.tableSeatingVC(self, seatingArea: item, event: event) { [weak self] time, guestCount, _, _ in
 //            guard let self = self else { return }
 //            let uuid    = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()

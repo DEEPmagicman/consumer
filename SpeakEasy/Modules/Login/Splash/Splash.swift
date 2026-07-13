@@ -39,7 +39,7 @@ final class Splash: UIViewController {
     
     private func loadGIF() {
         guard let path = Bundle.main.path(forResource: "SplashAnimation", ofType: "gif") else {
-            AppDelegate.shared.changeRootViewController()
+            finishSplashIfNeeded()
             return
         }
         
@@ -47,7 +47,12 @@ final class Splash: UIViewController {
         splashImageView.image = SDAnimatedImage(data: data!)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            AppDelegate.shared.changeRootViewController()
+            self.finishSplashIfNeeded()
         }
+    }
+
+    private func finishSplashIfNeeded() {
+        guard AppDelegate.shared.window?.rootViewController === self else { return }
+        AppDelegate.shared.changeRootViewController()
     }
 }

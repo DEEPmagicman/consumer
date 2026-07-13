@@ -907,7 +907,8 @@ private extension CoverTicketListVC {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier
+            venueTimeZone: TimeZone.current.identifier,
+            doormanId: doormanId
         ) { [weak self] isSuccess, _, venueDetail in
             guard let self else { return }
 
@@ -1081,7 +1082,8 @@ private extension CoverTicketListVC {
                 selectedCoverTickets: selectedCoverTickets,
                 selectedAddOnsItem: selectedAddOns,
                 totalPrice: 0,
-                bookingType: bookingType
+                bookingType: bookingType,
+                doormanId: doormanId
             )
         } else {
             createFreeBooking()
@@ -1175,7 +1177,8 @@ extension CoverTicketListVC {
 
         PaymentPresenter.createCoverFreeBooking(
             coverTickets: tickets,
-            venueId: venueDetails?.id ?? ""
+            venueId: venueDetails?.id ?? "",
+            doormanId: doormanId
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
 
