@@ -40,7 +40,7 @@ final class PremiumExpVC: UIViewController {
         layout.sectionInsets = UIEdgeInsets(
             top: 0,
             left: 24,
-            bottom: 44,
+            bottom: AppDesign.useModernIOS26Design ? 14 : 50,
             right: 24
         )
         layout.interItemSpacing = 20

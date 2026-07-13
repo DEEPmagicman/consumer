@@ -95,7 +95,7 @@ final class PremiumSearchVC: UIViewController {
     init() {
         let layout = PinterestLayout()
         layout.numberOfColumns = 2
-        layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: 34, right: 24)
+        layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: AppDesign.useModernIOS26Design ? 14 : 50, right: 24)
         layout.interItemSpacing = 14
         layout.lineSpacing = 22
         layout.showsHeaders = true
