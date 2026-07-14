@@ -14,12 +14,6 @@ struct APIBuilder {
             SharedURL.baseURL
         }
     }
-    static private var v3baseURL: String {
-        get {
-            SharedURL.v3baseURL
-        }
-    }
-    
     // MARK: - Base
 
     static private let route = "/consumer"
@@ -373,7 +367,7 @@ struct APIBuilder {
             withAllowedCharacters: .urlQueryAllowed
         ) ?? userId
 
-        return v3baseURL + route + cover + "/\(uniqueId)?userId=\(encodedUserId)"
+        return baseURL + route + cover + "/\(uniqueId)?userId=\(encodedUserId)"
     }
 
     static func venueTableSettingsURL(venueId: String) -> String {
@@ -386,11 +380,11 @@ struct APIBuilder {
     }
 
     static var v3FollowedVenuesURL: String {
-        v3baseURL + route + "/followed/venues"
+        baseURL + route + "/followed/venues"
     }
 
     static func v3FollowedVenueURL(_ id: String) -> String {
-        v3baseURL + route + "/followed/venues/\(id)"
+        baseURL + route + "/followed/venues/\(id)"
     }
     
     static var MVPVenueListURL: String {
@@ -538,11 +532,11 @@ struct APIBuilder {
     }
 
     static var v3SavedEventsURL: String {
-        v3baseURL + route + "/saved/events"
+        baseURL + route + "/saved/events"
     }
 
     static func v3SavedEventURL(_ id: String) -> String {
-        v3baseURL + route + "/saved/events/\(id)"
+        baseURL + route + "/saved/events/\(id)"
     }
 
     static func discoverURL(city: String) -> String {
@@ -551,19 +545,19 @@ struct APIBuilder {
             withAllowedCharacters: .urlQueryAllowed
         ) ?? city
 
-        return v3baseURL + route + discover + "?city=\(encodedCity)"
+        return baseURL + route + discover + "?city=\(encodedCity)"
     }
 
     static var discoverEventsURL: String {
-        v3baseURL + route + discover + "/events"
+        baseURL + route + discover + "/events"
     }
 
     static var discoverVenuesURL: String {
-        v3baseURL + route + discover + "/venues"
+        baseURL + route + discover + "/venues"
     }
 
     static var artistsURL: String {
-        v3baseURL + route + "/artists"
+        baseURL + route + "/artists"
     }
 
     static func artistEventsURL(artistId: String) -> String {
@@ -572,7 +566,7 @@ struct APIBuilder {
             withAllowedCharacters: .urlPathAllowed
         ) ?? artistId
 
-        return v3baseURL + route + "/artists/\(encodedArtistId)/events"
+        return baseURL + route + "/artists/\(encodedArtistId)/events"
     }
 
     static func artistVenueEventsURL(artistId: String) -> String {
@@ -581,7 +575,7 @@ struct APIBuilder {
             withAllowedCharacters: .urlPathAllowed
         ) ?? artistId
 
-        return v3baseURL + route + "/artists/\(encodedArtistId)/venue-events"
+        return baseURL + route + "/artists/\(encodedArtistId)/venue-events"
     }
     
     static var venueListURL: String {

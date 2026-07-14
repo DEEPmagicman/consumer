@@ -14,6 +14,7 @@ class EventGuestListCVC: UICollectionViewCell {
     @IBOutlet weak var bgView: UIView!
 
     private var gradientLayer: CAGradientLayer?
+    private let shimmerView = ShimmerViewV3(frame: .zero, lighter: true)
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,14 +28,35 @@ class EventGuestListCVC: UICollectionViewCell {
         attendeesName.textAlignment = .center
         attendeesName.textColor = .black
         attendeesName.font = UIFont.systemFont(ofSize: 14)
+
+        shimmerView.translatesAutoresizingMaskIntoConstraints = false
+        shimmerView.isHidden = true
+        bgView.addSubview(shimmerView)
+
+        NSLayoutConstraint.activate([
+            shimmerView.topAnchor.constraint(equalTo: bgView.topAnchor),
+            shimmerView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor),
+            shimmerView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor),
+            shimmerView.bottomAnchor.constraint(equalTo: bgView.bottomAnchor)
+        ])
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         gradientLayer?.removeFromSuperlayer()
+        shimmerView.stopShimmer()
+        shimmerView.isHidden = true
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
+        imageView.isHidden = true
+        attendeesName.isHidden = true
+        bgView.isHidden = false
     }
 
     func configure(with attendee: Attendee) {
+        shimmerView.stopShimmer()
+        shimmerView.isHidden = true
+        bgView.backgroundColor = .white
 
         if let imageKey = attendee.consumerUserImage?.key,
            !imageKey.isEmpty {
@@ -53,6 +75,19 @@ class EventGuestListCVC: UICollectionViewCell {
             attendeesName.text = getInitials(from: attendee)
             applyGradient(for: attendee.id ?? UUID().uuidString)
         }
+    }
+
+    func configureSkeleton() {
+        gradientLayer?.removeFromSuperlayer()
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
+        imageView.isHidden = true
+        attendeesName.isHidden = true
+        bgView.isHidden = false
+        bgView.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        shimmerView.layer.cornerRadius = bgView.bounds.height / 2
+        shimmerView.isHidden = false
+        shimmerView.startShimmer()
     }
 
     private func getInitials(from attendee: Attendee) -> String {
@@ -99,5 +134,6 @@ class EventGuestListCVC: UICollectionViewCell {
         super.layoutSubviews()
         gradientLayer?.frame = bgView.bounds
         gradientLayer?.cornerRadius = bgView.bounds.height / 2
+        shimmerView.layer.cornerRadius = bgView.bounds.height / 2
     }
 }

@@ -467,16 +467,8 @@ final class OrderListViewController: UIViewController {
     // MARK: - Terms & Conditions
 
     private func setupTermsText() {
-        termsAndConditionsLbl.font = Constant.Font.geistMedium(size: 12)
-        termsAndConditionsLbl.textColor = .white
-        termsAndConditionsLbl.isUserInteractionEnabled = true
-        termsAndConditionsLbl.numberOfLines = collapsedLines
-        termsAndConditionsLbl.lineBreakMode = .byWordWrapping
-        venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
-        venueMessageLbl.textColor = .white
-        venueMessageLbl.isUserInteractionEnabled = true
-        venueMessageLbl.numberOfLines = collapsedLines
-        venueMessageLbl.lineBreakMode = .byWordWrapping
+        AgreementTextFormatter.configure(termsAndConditionsLbl)
+        AgreementTextFormatter.configure(venueMessageLbl)
 
         let termsTap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
         termsAndConditionsLbl.addGestureRecognizer(termsTap)
@@ -502,9 +494,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private func cleanAgreementText(_ text: String) -> String {
-        text
-            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        AgreementTextFormatter.clean(text)
     }
 
     private func updateAgreementLabels() {
@@ -520,100 +510,12 @@ final class OrderListViewController: UIViewController {
             return
         }
 
-        let needsToggle = shouldShowAgreementToggle(for: text, label: label)
-        let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded || !needsToggle
-            ? text
-            : collapsedAgreementPreview(
-                from: text,
-                label: label,
-                font: Constant.Font.geistMedium(size: 12),
-                toggleText: toggleText
-            )
-        let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
-
-        let attributed = NSMutableAttributedString(
-            string: displayText,
-            attributes: [
-                .font: Constant.Font.geistMedium(size: 12),
-                .foregroundColor: UIColor.white
-            ]
+        _ = AgreementTextFormatter.apply(
+            to: label,
+            text: text,
+            isExpanded: isExpanded,
+            widthFallback: view.bounds.width - 64
         )
-        if needsToggle {
-            let toggleRange = (displayText as NSString).range(of: toggleText)
-            attributed.addAttributes([
-                .font: Constant.Font.geistMedium(size: 10),
-                .foregroundColor: UIColor.lightGray
-            ], range: toggleRange)
-        }
-
-        label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
-        label.lineBreakMode = .byWordWrapping
-        label.attributedText = attributed
-        label.invalidateIntrinsicContentSize()
-        label.superview?.invalidateIntrinsicContentSize()
-        label.superview?.setNeedsLayout()
-    }
-
-    private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
-        let width = label.bounds.width > 0 ? label.bounds.width : max(view.bounds.width - 64, 240)
-        let font = Constant.Font.geistMedium(size: 12)
-        let textHeight = (text as NSString).boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: font],
-            context: nil
-        ).height
-        return textHeight > collapsedAgreementHeight(for: font)
-    }
-
-    private func collapsedAgreementPreview(
-        from text: String,
-        label: UILabel,
-        font: UIFont,
-        toggleText: String
-    ) -> String {
-        let cleanText = cleanAgreementText(text)
-        let width = label.bounds.width > 0 ? label.bounds.width : max(view.bounds.width - 64, 240)
-        let maxHeight = collapsedAgreementHeight(for: font)
-
-        func height(for value: String) -> CGFloat {
-            (value as NSString).boundingRect(
-                with: CGSize(width: width, height: .greatestFiniteMagnitude),
-                options: [.usesLineFragmentOrigin, .usesFontLeading],
-                attributes: [.font: font],
-                context: nil
-            ).height
-        }
-
-        guard height(for: "\(cleanText) \(toggleText)") > maxHeight else {
-            return cleanText
-        }
-
-        var low = 0
-        var high = cleanText.count
-        var best = ""
-
-        while low <= high {
-            let mid = (low + high) / 2
-            let endIndex = cleanText.index(cleanText.startIndex, offsetBy: mid)
-            let candidate = String(cleanText[..<endIndex])
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            let display = "\(candidate)... \(toggleText)"
-
-            if height(for: display) <= maxHeight {
-                best = candidate
-                low = mid + 1
-            } else {
-                high = mid - 1
-            }
-        }
-
-        return best.isEmpty ? "..." : "\(best)..."
-    }
-
-    private func collapsedAgreementHeight(for font: UIFont) -> CGFloat {
-        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
     }
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
@@ -642,12 +544,10 @@ final class OrderListViewController: UIViewController {
         expanded: Bool,
         toggle: () -> Void
     ) {
-        guard let text = label.attributedText?.string else { return }
-        let toggleText = expanded ? "View Less" : "View More"
-        let range = (text as NSString).range(of: toggleText)
+        let range = AgreementTextFormatter.toggleRange(in: label, isExpanded: expanded)
         guard range.location != NSNotFound else { return }
         let tappedToggle = gesture.didTapAttributedTextInLabel(label: label, inRange: range)
-        guard tappedToggle else { return }
+        guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
         toggle()
         UIView.performWithoutAnimation {
             updateAgreementLabels()

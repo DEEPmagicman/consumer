@@ -78,7 +78,7 @@ final class OrdersSegmentView: UIControl {
         selectedGlassView.layer.addSublayer(selectedGradientLayer)
         
         configureLabel(ticketsLabel, text: "Tickets")
-        configureLabel(tablesLabel, text: "Tables")
+        configureLabel(tablesLabel, text: "Experiences")
 
         addSubview(ticketsLabel)
         addSubview(tablesLabel)

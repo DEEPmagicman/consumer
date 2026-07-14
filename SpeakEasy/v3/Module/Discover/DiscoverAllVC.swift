@@ -14,6 +14,7 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var allEventsView: DiscoverSectionView!
     @IBOutlet weak var premiumExperiencesView: UIView!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var scrollView: UIScrollView!
 
     private var todaysEvents = [Event]()
     private var allEvents = [Event]()
@@ -209,13 +210,12 @@ private extension DiscoverAllVC {
     }
 
     func setupPullToRefresh() {
-        guard refreshControl == nil,
-              let scrollView = view.firstSubview(of: UIScrollView.self)
-        else { return }
+        guard refreshControl == nil else { return }
 
         let control = UIRefreshControl()
         control.tintColor = .white
         control.addTarget(self, action: #selector(onPullToRefresh), for: .valueChanged)
+        scrollView.delegate = self
         scrollView.refreshControl = control
         refreshControl = control
     }
@@ -405,18 +405,15 @@ extension DiscoverAllVC: UIGestureRecognizerDelegate {
     }
 }
 
-private extension UIView {
-    func firstSubview<T: UIView>(of type: T.Type) -> T? {
-        for subview in subviews {
-            if let match = subview as? T {
-                return match
-            }
+extension DiscoverAllVC: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        (parent as? DiscoverVC)?
+            .discoverHeaderScrollViewDidScroll(scrollView)
+    }
+}
 
-            if let match = subview.firstSubview(of: type) {
-                return match
-            }
-        }
-
-        return nil
+extension DiscoverAllVC: DiscoverHeaderScrollable {
+    var discoverHeaderScrollView: UIScrollView? {
+        scrollView
     }
 }

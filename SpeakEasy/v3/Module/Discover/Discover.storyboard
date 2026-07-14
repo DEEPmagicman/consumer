@@ -243,6 +243,8 @@
                         <outlet property="cityClosebtn" destination="gcG-ep-aJo" id="wGE-CR-lyA"/>
                         <outlet property="dateLbl" destination="wMh-do-Wpc" id="VUo-ZE-CYa"/>
                         <outlet property="dateView" destination="Amk-RQ-jr6" id="XzO-bg-oR7"/>
+                        <outlet property="filtersScrollView" destination="FQ8-vB-RVu" id="hmb-sX-cWp"/>
+                        <outlet property="segmentTopConstraint" destination="e1l-Iv-MFo" id="aBT-Ij-5jq"/>
                         <outlet property="selectedLocationName" destination="8eQ-Ms-Z84" id="wNK-iK-HBd"/>
                         <outletCollection property="segmentViewContainer" destination="8ph-4q-J5c" collectionClass="NSMutableArray" id="LCk-ne-vnU"/>
                         <outletCollection property="segmentViewContainer" destination="uBv-mf-ewj" collectionClass="NSMutableArray" id="M3t-jh-ZeO"/>

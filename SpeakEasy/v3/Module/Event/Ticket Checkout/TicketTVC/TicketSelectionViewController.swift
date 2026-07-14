@@ -689,6 +689,40 @@ class TicketSelectionViewController: UIViewController {
         updateScrollBottomInset()
     }
 
+    private func refreshGroupTicketRow(
+        groupIndex: Int,
+        ticketIndex: Int
+    ) {
+        expandedGroupIds.insert(groupedNormalTickets[groupIndex].groupId)
+
+        let groupIndexPath = IndexPath(row: groupIndex, section: 0)
+
+        if let cell = groupTableView.cellForRow(at: groupIndexPath) as? GroupTicketTVC {
+            cell.updateTickets(
+                groupedNormalTickets[groupIndex].tickets,
+                reloadingTicketAt: ticketIndex
+            )
+
+            UIView.performWithoutAnimation {
+                groupTableView.beginUpdates()
+                groupTableView.endUpdates()
+            }
+
+            updateGroupTableHeightFromContent()
+            view.layoutIfNeeded()
+            updateScrollBottomInset()
+            return
+        }
+
+        UIView.performWithoutAnimation {
+            groupTableView.reloadRows(at: [groupIndexPath], with: .none)
+            groupTableView.layoutIfNeeded()
+        }
+        updateGroupTableHeightFromContent()
+        view.layoutIfNeeded()
+        updateScrollBottomInset()
+    }
+
     private func buildTicketsPayload(from selected: [EventTicket]) -> [[String: Any]] {
         selected.map {[
             "ticketId": $0.id ?? "",
@@ -1190,7 +1224,7 @@ class TicketSelectionViewController: UIViewController {
             updateContinueBtnState()
             updateContinueButtonForMode()
             updateCheckoutSummary()
-            updateGroupTableLayout()
+            refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
             return
         }
     }
@@ -1213,7 +1247,7 @@ class TicketSelectionViewController: UIViewController {
             updateContinueBtnState()
             updateContinueButtonForMode()
             updateCheckoutSummary()
-            updateGroupTableLayout()
+            refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
             return
         }
     }
@@ -1253,6 +1287,8 @@ class TicketSelectionViewController: UIViewController {
             groupedNormalTickets[groupIndex]
                 .tickets[ticketIndex]
                 .selectedTicketCount = 1
+
+            expandedGroupIds.insert(groupedNormalTickets[groupIndex].groupId)
 
             let selected =
             groupedNormalTickets[groupIndex]

@@ -32,7 +32,7 @@ final class BookingQueueSocketManager {
         currentQueueId = queueId
         currentVenueId = venueId
 
-        guard let socketURL = URL(string: SharedURL.v3baseURL) else { return }
+        guard let socketURL = URL(string: SharedURL.baseURL) else { return }
 
         var connectParams: [String: Any] = [
             "module": "consumer",

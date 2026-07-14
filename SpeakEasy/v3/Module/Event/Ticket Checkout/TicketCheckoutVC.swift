@@ -145,6 +145,8 @@ final class TicketCheckoutVC: UIViewController {
     private var shimmerBlocks: [ShimmerViewV3] = []
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
+    private var isPrivacyPolicyExpanded = false
+    private var fullPrivacyPolicyText = ""
     private let titleMarqueeLabel = PremiumMarqueeLabel()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
@@ -196,6 +198,7 @@ final class TicketCheckoutVC: UIViewController {
 
         calculateTotal()
         setupTitleMarqueeLabel()
+        setupPrivacyPolicyText()
         setupHeaderData()
         startCountdown()
         showCheckoutShimmer()
@@ -245,7 +248,48 @@ final class TicketCheckoutVC: UIViewController {
         venueName.text = venueDetails?.name
         venueName2.text = venueDetails?.name
         setHeaderTitle(event?.title)
-        privacyPolicyLbl.text = "I agree to receive marketing related text messages from \(venueDetails?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        fullPrivacyPolicyText = "I agree to receive marketing related text messages from \(venueDetails?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        updatePrivacyPolicyLabel()
+    }
+
+    private func setupPrivacyPolicyText() {
+        AgreementTextFormatter.configure(privacyPolicyLbl)
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(onTapPrivacyPolicyLabel)
+        )
+        privacyPolicyLbl.addGestureRecognizer(tap)
+        updatePrivacyPolicyLabel()
+    }
+
+    private func updatePrivacyPolicyLabel() {
+        _ = AgreementTextFormatter.apply(
+            to: privacyPolicyLbl,
+            text: fullPrivacyPolicyText,
+            isExpanded: isPrivacyPolicyExpanded,
+            widthFallback: view.bounds.width - 64
+        )
+    }
+
+    @objc private func onTapPrivacyPolicyLabel(_ gesture: UITapGestureRecognizer) {
+        let range = AgreementTextFormatter.toggleRange(
+            in: privacyPolicyLbl,
+            isExpanded: isPrivacyPolicyExpanded
+        )
+        guard range.location != NSNotFound else { return }
+
+        let tappedToggle = gesture.didTapAttributedTextInLabel(
+            label: privacyPolicyLbl,
+            inRange: range
+        )
+        guard tappedToggle || privacyPolicyLbl.bounds.contains(gesture.location(in: privacyPolicyLbl)) else { return }
+
+        isPrivacyPolicyExpanded.toggle()
+        UIView.performWithoutAnimation {
+            updatePrivacyPolicyLabel()
+            privacyPolicyLbl.superview?.layoutIfNeeded()
+            privacyPolicyLbl.superview?.superview?.layoutIfNeeded()
+        }
     }
 
     private func setupTitleMarqueeLabel() {

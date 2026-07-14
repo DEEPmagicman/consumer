@@ -24,9 +24,7 @@ final class PremiumCheckboxView: UIView {
     private let tick  = UIImageView()
     private let label = UILabel()
     private let toggleButton = UIButton(type: .system)
-    private let collapsedLines = 2
-    private let toggleButtonHeight: CGFloat = 18
-    private let toggleButtonTopSpacing: CGFloat = 2
+    private let collapsedLines = AgreementTextFormatter.collapsedLines
     private var isExpanded = false
     private var lastLaidOutLabelWidth: CGFloat = 0
     private var toggleTopConstraint: NSLayoutConstraint?
@@ -67,10 +65,7 @@ final class PremiumCheckboxView: UIView {
         tick.isUserInteractionEnabled = true
 
         // Label
-        label.numberOfLines     = collapsedLines
-        label.font              = Constant.Font.geistRegular(size: 10)
-        label.textColor         = UIColor.white.withAlphaComponent(0.9)
-        label.lineBreakMode     = .byWordWrapping
+        AgreementTextFormatter.configure(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isUserInteractionEnabled = true
 
@@ -78,6 +73,7 @@ final class PremiumCheckboxView: UIView {
         toggleButton.setTitleColor(.white, for: .normal)
         toggleButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 10)
         toggleButton.isHidden = true
+        toggleButton.isUserInteractionEnabled = false
         toggleButton.translatesAutoresizingMaskIntoConstraints = false
         toggleButton.addTarget(self, action: #selector(handleExpansionTap), for: .touchUpInside)
 
@@ -136,43 +132,30 @@ final class PremiumCheckboxView: UIView {
             return
         }
 
-        let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded ? labelText : collapsedPreview(from: labelText)
-        let displayText = bodyText
-        let attributed = NSMutableAttributedString(
-            string: displayText,
-            attributes: [
-                .font: Constant.Font.geistRegular(size: 10),
-                .foregroundColor: UIColor.white.withAlphaComponent(0.9)
-            ]
+        _ = AgreementTextFormatter.apply(
+            to: label,
+            text: labelText,
+            isExpanded: isExpanded,
+            widthFallback: UIScreen.main.bounds.width - 64
         )
-
-        label.numberOfLines = isExpanded ? 0 : collapsedLines
-        label.attributedText = attributed
-        updateToggleButton(isVisible: true, title: toggleText)
+        updateToggleButton(isVisible: false, title: nil)
         label.invalidateIntrinsicContentSize()
         invalidateIntrinsicContentSize()
     }
 
     private func updateToggleButton(isVisible: Bool, title: String?) {
-        toggleButton.isHidden = !isVisible
+        toggleButton.isHidden = true
         toggleButton.setTitle(title, for: .normal)
-        toggleTopConstraint?.constant = isVisible ? toggleButtonTopSpacing : 0
-        toggleHeightConstraint?.constant = isVisible ? toggleButtonHeight : 0
+        toggleTopConstraint?.constant = 0
+        toggleHeightConstraint?.constant = 0
     }
 
     private var shouldShowToggle: Bool {
-        let width = label.bounds.width > 0
-            ? label.bounds.width
-            : max(UIScreen.main.bounds.width - 64, 240)
-        let font = Constant.Font.geistRegular(size: 10)
-        let height = (labelText as NSString).boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: font],
-            context: nil
-        ).height
-        return height > collapsedHeight(for: font)
+        AgreementTextFormatter.shouldShowToggle(
+            for: labelText,
+            label: label,
+            widthFallback: UIScreen.main.bounds.width - 64
+        )
     }
 
     private func collapsedPreview(from text: String) -> String {
@@ -221,7 +204,7 @@ final class PremiumCheckboxView: UIView {
     }
 
     private func collapsedHeight(for font: UIFont) -> CGFloat {
-        ceil(font.lineHeight * CGFloat(collapsedLines)) + 10
+        AgreementTextFormatter.collapsedHeight()
     }
 
     @objc private func handleTap() {

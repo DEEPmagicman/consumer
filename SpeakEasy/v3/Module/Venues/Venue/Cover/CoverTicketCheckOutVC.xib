@@ -478,10 +478,12 @@
                                                         <constraint firstItem="2VL-0e-hFo" firstAttribute="leading" secondItem="2uW-t8-LyM" secondAttribute="leading" id="Fru-19-zUe"/>
                                                         <constraint firstItem="g9C-t7-vud" firstAttribute="top" secondItem="2uW-t8-LyM" secondAttribute="top" id="ga4-6E-qtl"/>
                                                         <constraint firstAttribute="trailing" secondItem="g9C-t7-vud" secondAttribute="trailing" id="tLw-aY-dUY"/>
-                                                        <constraint firstItem="g9C-t7-vud" firstAttribute="leading" secondItem="2VL-0e-hFo" secondAttribute="trailing" constant="8" id="vfc-3a-mYm"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="g9C-t7-vud" firstAttribute="leading" secondItem="5Fe-j6-HUG" secondAttribute="leading" id="zvr-7D-taG"/>
+                                            </constraints>
                                         </stackView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

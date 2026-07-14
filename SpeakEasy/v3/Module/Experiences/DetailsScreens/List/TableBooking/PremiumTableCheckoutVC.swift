@@ -32,6 +32,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var ephemeralKey         = ""
     private var paymentId            = ""
     private var paymentSheet: PaymentSheet?
+    private var savedPaymentMethods: [PaymentMethod] = []
     private var isPaymentInitiated   = false
     private var isCancellingBooking  = false
     private var didCancelBooking      = false
@@ -139,6 +140,7 @@ final class PremiumTableCheckoutVC: UIViewController {
         navigationItem.title = ""
         primeBooking(initialBooking)
         setupUI()
+        loadSavedPaymentMethods()
         setupSocket()
         startTimer()
     }
@@ -797,6 +799,28 @@ private extension PremiumTableCheckoutVC {
     func configurePaymentRow() {
         paymentRow.isHidden = true
         paymentHeightConstraint?.constant = 0
+    }
+
+    func loadSavedPaymentMethods() {
+        let customerId = UserDefault.shared.user?.stripeCusId ?? ""
+        guard !customerId.isEmpty else { return }
+
+        PaymentPresenter.getUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                if isSuccess {
+                    self.savedPaymentMethods = paymentMethods
+                }
+
+                if !self.paymentIntentSecret.isEmpty {
+                    self.setupStripe(
+                        secret: self.paymentIntentSecret,
+                        ephemeralKey: self.ephemeralKey
+                    )
+                }
+            }
+        }
     }
 
     func extractLast4() -> String {
@@ -1679,6 +1703,10 @@ private extension PremiumTableCheckoutVC {
         }
         config.savePaymentMethodOptInBehavior = .automatic
         config.allowsDelayedPaymentMethods = true
+        config.applePay = .init(
+            merchantId: "merchant.com.speakeasy",
+            merchantCountryCode: "US"
+        )
         paymentSheet = PaymentSheet(paymentIntentClientSecret: secret, configuration: config)
     }
 }

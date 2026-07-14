@@ -808,9 +808,7 @@ final class PremiumAgreementView: UIView {
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
     private let toggleButton = UIButton(type: .system)
-    private let collapsedLines = 2
-    private let toggleButtonHeight: CGFloat = 18
-    private let toggleButtonTopSpacing: CGFloat = 2
+    private let collapsedLines = AgreementTextFormatter.collapsedLines
     private var isExpanded = false
     private var lastReportedHeight: CGFloat = 0
     private var lastLaidOutBodyWidth: CGFloat = 0
@@ -850,10 +848,7 @@ final class PremiumAgreementView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
 
-        bodyLabel.font = Constant.Font.geistRegular(size: 10)
-        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.78)
-        bodyLabel.numberOfLines = collapsedLines
-        bodyLabel.lineBreakMode = .byWordWrapping
+        AgreementTextFormatter.configure(bodyLabel)
         bodyLabel.isUserInteractionEnabled = true
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bodyLabel)
@@ -865,6 +860,7 @@ final class PremiumAgreementView: UIView {
         toggleButton.setTitleColor(.white, for: .normal)
         toggleButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 10)
         toggleButton.isHidden = true
+        toggleButton.isUserInteractionEnabled = false
         toggleButton.translatesAutoresizingMaskIntoConstraints = false
         toggleButton.addTarget(self, action: #selector(onToggleTap), for: .touchUpInside)
         addSubview(toggleButton)
@@ -936,57 +932,24 @@ final class PremiumAgreementView: UIView {
             return
         }
 
-        let needsToggle = shouldShowToggle()
-        let toggleText = isExpanded ? "View\u{00A0}Less" : "View\u{00A0}More"
-        let body = isExpanded || !needsToggle
-            ? bodyText
-            : collapsedPreview()
-        let displayText = body
-
-        let attributed: NSMutableAttributedString
-        if (isExpanded || !needsToggle),
-           let bodyAttributedText {
-            attributed = NSMutableAttributedString(attributedString: bodyAttributedText)
-            attributed.addAttributes([
-                .font: Constant.Font.geistRegular(size: 10),
-                .foregroundColor: UIColor.white.withAlphaComponent(0.78)
-            ], range: NSRange(location: 0, length: attributed.length))
-            attributed.enumerateAttribute(
-                .link,
-                in: NSRange(location: 0, length: attributed.length),
-                options: []
-            ) { value, range, _ in
-                if value != nil {
-                    attributed.addAttributes([
-                        .font: Constant.Font.geistMedium(size: 10),
-                        .foregroundColor: UIColor.white,
-                        .underlineStyle: NSUnderlineStyle.single.rawValue
-                    ], range: range)
-                }
-            }
-        } else {
-            attributed = NSMutableAttributedString(
-                string: displayText,
-                attributes: [
-                    .font: Constant.Font.geistRegular(size: 10),
-                    .foregroundColor: UIColor.white.withAlphaComponent(0.78)
-                ]
-            )
-        }
-
-        bodyLabel.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
-        bodyLabel.attributedText = attributed
-        updateToggleButton(isVisible: needsToggle, title: toggleText)
+        _ = AgreementTextFormatter.apply(
+            to: bodyLabel,
+            text: bodyText,
+            isExpanded: isExpanded,
+            widthFallback: UIScreen.main.bounds.width - 68,
+            expandedAttributedText: bodyAttributedText
+        )
+        updateToggleButton(isVisible: false, title: nil)
         invalidateIntrinsicContentSize()
         reportHeightIfNeeded(animated: false)
         superview?.setNeedsLayout()
     }
 
     private func updateToggleButton(isVisible: Bool, title: String?) {
-        toggleButton.isHidden = !isVisible
+        toggleButton.isHidden = true
         toggleButton.setTitle(title, for: .normal)
-        toggleTopConstraint?.constant = isVisible ? toggleButtonTopSpacing : 0
-        toggleHeightConstraint?.constant = isVisible ? toggleButtonHeight : 0
+        toggleTopConstraint?.constant = 0
+        toggleHeightConstraint?.constant = 0
     }
 
     private func reportHeightIfNeeded(animated: Bool = false) {
@@ -1023,24 +986,17 @@ final class PremiumAgreementView: UIView {
             ).height
             let needsToggle = shouldShowToggle()
             height += (isExpanded || !needsToggle) ? ceil(bodyHeight) : collapsedHeight(for: bodyFont)
-            if needsToggle {
-                height += toggleButtonTopSpacing + toggleButtonHeight
-            }
         }
 
         return max(24, height)
     }
 
     private func shouldShowToggle() -> Bool {
-        let width = bodyLabel.bounds.width > 0 ? bodyLabel.bounds.width : max(UIScreen.main.bounds.width - 64, 240)
-        let font = Constant.Font.geistRegular(size: 10)
-        let height = (bodyText as NSString).boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: font],
-            context: nil
-        ).height
-        return height > collapsedHeight(for: font)
+        AgreementTextFormatter.shouldShowToggle(
+            for: bodyText,
+            label: bodyLabel,
+            widthFallback: UIScreen.main.bounds.width - 68
+        )
     }
 
     private func collapsedPreview() -> String {
@@ -1084,7 +1040,7 @@ final class PremiumAgreementView: UIView {
     }
 
     private func collapsedHeight(for font: UIFont) -> CGFloat {
-        ceil(font.lineHeight * CGFloat(collapsedLines)) + 2
+        AgreementTextFormatter.collapsedHeight()
     }
 
     @objc private func onCheckTap() {

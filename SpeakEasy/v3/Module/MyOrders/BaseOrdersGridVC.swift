@@ -16,6 +16,7 @@ class BaseOrdersGridVC: UIViewController {
 
     // MARK: - UI
     let collectionView: UICollectionView
+    private let refreshControl = UIRefreshControl()
 
     // MARK: - Data
 
@@ -47,6 +48,8 @@ class BaseOrdersGridVC: UIViewController {
     }
     
     var paginatingSection: Int?
+    var onOrdersScroll: ((UIScrollView) -> Void)?
+    private var isPullRefreshing = false
     
     // MARK: - Init
 
@@ -102,6 +105,7 @@ class BaseOrdersGridVC: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
 
         collectionView.alwaysBounceVertical = true
+        configurePullToRefresh()
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -174,6 +178,17 @@ class BaseOrdersGridVC: UIViewController {
     }
 
     func refreshOrders() {
+        guard !UserDefault.shared.isGuest else {
+            endPullRefreshIfNeeded()
+            return
+        }
+
+        guard !isLoadingUpcoming,
+              !isLoadingPast else {
+            endPullRefreshIfNeeded()
+            return
+        }
+
         upcomingSkip = 0
         pastSkip = 0
         upcomingHasMany = false
@@ -184,6 +199,7 @@ class BaseOrdersGridVC: UIViewController {
         isPaginating = false
         paginatingSection = nil
         loadInitialData()
+        finishPullRefreshIfReady()
     }
 
     func loadUpcoming(reset: Bool) { }
@@ -199,6 +215,8 @@ class BaseOrdersGridVC: UIViewController {
 
             collectionView.layoutIfNeeded()
         }
+
+        finishPullRefreshIfReady()
     }
 
     func configure(
@@ -239,6 +257,41 @@ class BaseOrdersGridVC: UIViewController {
                             self.collectionView.collectionViewLayout.invalidateLayout()
                         }
             }
+        }
+    }
+
+    private func configurePullToRefresh() {
+        refreshControl.tintColor = AppColor.primaryWhiteColor.withAlphaComponent(0.85)
+        refreshControl.addTarget(
+            self,
+            action: #selector(onPullToRefresh),
+            for: .valueChanged
+        )
+        collectionView.refreshControl = refreshControl
+    }
+
+    @objc private func onPullToRefresh() {
+        isPullRefreshing = true
+        refreshOrders()
+    }
+
+    private func finishPullRefreshIfReady() {
+        guard isPullRefreshing else { return }
+        guard !isLoadingUpcoming,
+              !isLoadingPast,
+              didLoadUpcoming,
+              didLoadPast else {
+            return
+        }
+
+        endPullRefreshIfNeeded()
+    }
+
+    private func endPullRefreshIfNeeded() {
+        DispatchQueue.main.async {
+            self.isPullRefreshing = false
+            guard self.refreshControl.isRefreshing else { return }
+            self.refreshControl.endRefreshing()
         }
     }
 }
@@ -529,6 +582,8 @@ PinterestLayoutDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        onOrdersScroll?(scrollView)
+
         guard !isInitialLoading else { return }
         guard !UserDefault.shared.isGuest else { return }
 

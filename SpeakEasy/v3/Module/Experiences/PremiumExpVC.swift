@@ -33,6 +33,9 @@ final class PremiumExpVC: UIViewController {
     private var lastCollectionLayoutWidth: CGFloat = 0
     private var hasPresentedIntro = false
     private var selectedCity: String = UserDefault.shared.activeCity
+    private var didApplyInitialHeaderInset = false
+    private var lastAppliedHeaderInset: CGFloat = 0
+    private weak var premiumIntroVC: PremiumExperienceIntroVC?
     
     init() {
         let layout = PinterestLayout()
@@ -71,11 +74,18 @@ final class PremiumExpVC: UIViewController {
         
         headerView.configure(city: selectedCity)
         headerView.reloadUser()
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        bringScrollableHeaderToFront()
+        bringIntroToFrontIfNeeded()
+        updateScrollableHeader()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        applyScrollableHeaderInsetIfNeeded()
+        updateScrollableHeader()
         refreshCollectionLayoutIfNeeded()
     }
 
@@ -216,11 +226,13 @@ final class PremiumExpVC: UIViewController {
             sectionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             sectionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
 
-            collectionView.topAnchor.constraint(equalTo: sectionTitleLabel.bottomAnchor, constant: 16),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        bringScrollableHeaderToFront()
     }
 
     private func makeTitleText() -> NSAttributedString {
@@ -277,14 +289,174 @@ final class PremiumExpVC: UIViewController {
         }
 
         addChild(intro)
-        intro.view.frame = view.bounds
+        intro.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(intro.view)
+        NSLayoutConstraint.activate([
+            intro.view.topAnchor.constraint(equalTo: view.topAnchor),
+            intro.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            intro.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            intro.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
         intro.didMove(toParent: self)
+        premiumIntroVC = intro
+        bringIntroToFrontIfNeeded()
     }
 
     @objc private func onRefresh() {
         loadPremiumExperiences(reset: true, showsInitialShimmer: false)
     }
+
+    private func bringScrollableHeaderToFront() {
+        view.bringSubviewToFront(headerView)
+        view.bringSubviewToFront(titleLabel)
+        view.bringSubviewToFront(separatorView)
+        view.bringSubviewToFront(sectionTitleLabel)
+    }
+
+    private func bringIntroToFrontIfNeeded() {
+        guard let introView = premiumIntroVC?.view else { return }
+        view.bringSubviewToFront(introView)
+    }
+
+    private func applyScrollableHeaderInsetIfNeeded() {
+        let safeTop = view.safeAreaInsets.top
+        let currentTransforms = currentHeaderTransforms()
+
+        setHeaderTransform(.identity)
+
+        let topInset = max(
+            0,
+            sectionTitleLabel.frame.maxY - safeTop + 16
+        )
+
+        restoreHeaderTransforms(currentTransforms)
+
+        guard abs(topInset - lastAppliedHeaderInset) > 0.5 ||
+                !didApplyInitialHeaderInset
+        else {
+            return
+        }
+
+        let oldAdjustedTop = collectionView.adjustedContentInset.top
+        let normalizedOffset = collectionView.contentOffset.y + oldAdjustedTop
+
+        lastAppliedHeaderInset = topInset
+        collectionView.contentInset.top = topInset
+        collectionView.scrollIndicatorInsets.top = topInset
+        collectionView.verticalScrollIndicatorInsets.top = topInset
+
+        let newAdjustedTop = collectionView.adjustedContentInset.top
+        if !didApplyInitialHeaderInset || normalizedOffset <= 0 {
+            collectionView.setContentOffset(
+                CGPoint(x: collectionView.contentOffset.x, y: -newAdjustedTop),
+                animated: false
+            )
+            didApplyInitialHeaderInset = true
+        } else {
+            collectionView.setContentOffset(
+                CGPoint(x: collectionView.contentOffset.x, y: normalizedOffset - newAdjustedTop),
+                animated: false
+            )
+        }
+    }
+
+    private func updateScrollableHeader() {
+        let crossingOffsets = headerCrossingOffsets()
+        let collapseOffset = min(
+            max(
+                0,
+                collectionView.contentOffset.y + collectionView.adjustedContentInset.top
+            ),
+            lastAppliedHeaderInset + view.safeAreaInsets.top
+        )
+        let transform = CGAffineTransform(
+            translationX: 0,
+            y: -collapseOffset
+        )
+
+        headerView.transform = transform
+        titleLabel.transform = transform
+        separatorView.transform = transform
+        sectionTitleLabel.transform = transform
+        updateScrollableHeaderAlpha(
+            offset: collapseOffset,
+            crossingOffsets: crossingOffsets
+        )
+    }
+
+    private func updateScrollableHeaderAlpha(
+        offset: CGFloat,
+        crossingOffsets: PremiumHeaderCrossingOffsets
+    ) {
+        let topAlpha: CGFloat = offset >= crossingOffsets.headerBottom ? 0 : 1
+        let titleAlpha: CGFloat = offset >= crossingOffsets.titleTop ? 0 : 1
+        let sectionAlpha: CGFloat = offset >= crossingOffsets.sectionTop ? 0 : 1
+
+        headerView.alpha = topAlpha
+        titleLabel.alpha = titleAlpha
+        separatorView.alpha = titleAlpha
+        sectionTitleLabel.alpha = sectionAlpha
+
+        headerView.isUserInteractionEnabled = topAlpha > 0.08
+    }
+
+    private func headerCrossingOffsets() -> PremiumHeaderCrossingOffsets {
+        let transforms = currentHeaderTransforms()
+        let safeTop = view.safeAreaInsets.top
+
+        setHeaderTransform(.identity)
+
+        let offsets = PremiumHeaderCrossingOffsets(
+            headerBottom: max(headerView.frame.maxY - safeTop, 0),
+            titleTop: max(titleLabel.frame.minY - safeTop, 0),
+            sectionTop: max(sectionTitleLabel.frame.minY - safeTop, 0)
+        )
+
+        restoreHeaderTransforms(transforms)
+        return offsets
+    }
+
+    private func currentHeaderTransforms() -> HeaderTransforms {
+        HeaderTransforms(
+            header: headerView.transform,
+            title: titleLabel.transform,
+            separator: separatorView.transform,
+            section: sectionTitleLabel.transform
+        )
+    }
+
+    private func restoreHeaderTransforms(_ transforms: HeaderTransforms) {
+        headerView.transform = transforms.header
+        titleLabel.transform = transforms.title
+        separatorView.transform = transforms.separator
+        sectionTitleLabel.transform = transforms.section
+    }
+
+    private func setHeaderTransform(_ transform: CGAffineTransform) {
+        headerView.transform = transform
+        titleLabel.transform = transform
+        separatorView.transform = transform
+        sectionTitleLabel.transform = transform
+    }
+
+    private func easeOut(_ value: CGFloat) -> CGFloat {
+        let value = min(max(value, 0), 1)
+        let remaining = 1 - value
+        return 1 - (remaining * remaining)
+    }
+}
+
+private struct HeaderTransforms {
+    let header: CGAffineTransform
+    let title: CGAffineTransform
+    let separator: CGAffineTransform
+    let section: CGAffineTransform
+}
+
+private struct PremiumHeaderCrossingOffsets {
+    let headerBottom: CGFloat
+    let titleTop: CGFloat
+    let sectionTop: CGFloat
 }
 
 private extension PremiumExpVC {
@@ -561,6 +733,8 @@ extension PremiumExpVC: UICollectionViewDataSource, UICollectionViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateScrollableHeader()
+
         guard !isInitialLoading else { return }
 
         let offsetY = scrollView.contentOffset.y

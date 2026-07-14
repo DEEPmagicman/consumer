@@ -114,6 +114,38 @@ class GroupTicketTVC: UITableViewCell {
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
     }
 
+    func updateTickets(
+        _ tickets: [EventTicket],
+        reloadingTicketAt ticketIndex: Int?
+    ) {
+        self.tickets = tickets
+
+        guard isExpanded else {
+            tableViewHeight.constant = 0
+            return
+        }
+
+        let reloadData = {
+            self.ticketListTableView.reloadData()
+        }
+
+        if let ticketIndex,
+           tickets.indices.contains(ticketIndex),
+           ticketListTableView.numberOfRows(inSection: 0) > ticketIndex {
+            UIView.performWithoutAnimation {
+                ticketListTableView.reloadRows(
+                    at: [IndexPath(row: ticketIndex, section: 0)],
+                    with: .none
+                )
+            }
+        } else {
+            UIView.performWithoutAnimation(reloadData)
+        }
+
+        ticketListTableView.layoutIfNeeded()
+        tableViewHeight.constant = ticketListTableView.contentSize.height
+    }
+
     @IBAction func onClickExpandBtn(_ sender: Any) {
         isExpanded.toggle()
         tableParentView.isHidden = !isExpanded

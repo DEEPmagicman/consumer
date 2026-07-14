@@ -697,7 +697,8 @@ class MapViewController: UIViewController {
                     subtitle: [venue.address, venue.city]
                         .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
                         .joined(separator: ", "),
-                    imageURL: venuePinImageURL(venue),
+                    imageURL: venuePinBackgroundImageURL(venue),
+                    logoImageURL: venueLogoImageURL(venue),
                     kind: .venue(venue)
                 )
             }
@@ -709,7 +710,10 @@ class MapViewController: UIViewController {
             let marker = GMSMarker(position: annotation.coordinate)
             marker.title = annotation.title
             marker.snippet = annotation.subtitle
-            marker.iconView = DiscoverImageMarkerView(imageURL: annotation.imageURL)
+            marker.iconView = DiscoverImageMarkerView(
+                imageURL: annotation.imageURL,
+                logoImageURL: annotation.logoImageURL
+            )
             marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
             marker.userData = annotation
             marker.map = googleMapView
@@ -781,7 +785,8 @@ class MapViewController: UIViewController {
                     ),
                     title: item.event.title,
                     subtitle: item.event.venue?.name ?? item.event.customVenue?.name,
-                    imageURL: eventPinImageURL(item.event),
+                    imageURL: eventPinBackgroundImageURL(item.event),
+                    logoImageURL: eventVenueLogoImageURL(item.event),
                     kind: .event(item.event)
                 )
             }
@@ -825,14 +830,24 @@ class MapViewController: UIViewController {
         return coordinate(for: venue)
     }
 
-    private func venuePinImageURL(_ venue: ClipVenue) -> String? {
+    private func venuePinBackgroundImageURL(_ venue: ClipVenue) -> String? {
         let imageKey = venue.venueAttachment?.first?.key ?? venue.logo?.key ?? ""
         return imageKey.isEmpty ? nil : imageKey.imageURL
     }
 
-    private func eventPinImageURL(_ event: Event) -> String? {
+    private func venueLogoImageURL(_ venue: ClipVenue) -> String? {
+        let logoKey = venue.logo?.key ?? ""
+        return logoKey.isEmpty ? nil : logoKey.imageURL
+    }
+
+    private func eventPinBackgroundImageURL(_ event: Event) -> String? {
         let key = event.flyer?.key ?? event.venue?.logo?.key ?? ""
         return key.isEmpty ? nil : key.imageURL
+    }
+
+    private func eventVenueLogoImageURL(_ event: Event) -> String? {
+        let logoKey = event.venue?.logo?.key ?? ""
+        return logoKey.isEmpty ? nil : logoKey.imageURL
     }
 
     private func navigate(to kind: DiscoverMapAnnotation.Kind) {
@@ -1134,6 +1149,7 @@ private final class DiscoverMapAnnotation: NSObject {
     let title: String?
     let subtitle: String?
     let imageURL: String?
+    let logoImageURL: String?
     let kind: Kind
 
     init(
@@ -1141,12 +1157,14 @@ private final class DiscoverMapAnnotation: NSObject {
         title: String?,
         subtitle: String?,
         imageURL: String?,
+        logoImageURL: String?,
         kind: Kind
     ) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
         self.imageURL = imageURL
+        self.logoImageURL = logoImageURL
         self.kind = kind
         super.init()
     }
@@ -1156,16 +1174,23 @@ private final class DiscoverImageMarkerView: UIView {
 
     private enum Layout {
         static let markerSize: CGFloat = 46
-        static let imageInset: CGFloat = 3
+        static let logoSize: CGFloat = 34
     }
 
     private let imageView = UIImageView()
-    private let ringView = UIView()
+    private let dimView = UIView()
+    private let logoImageView = UIImageView()
 
-    init(imageURL: String?) {
+    init(
+        imageURL: String?,
+        logoImageURL: String?
+    ) {
         super.init(frame: CGRect(x: 0, y: 0, width: Layout.markerSize, height: Layout.markerSize))
         setup()
-        configure(imageURL: imageURL)
+        configure(
+            imageURL: imageURL,
+            logoImageURL: logoImageURL
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -1174,23 +1199,36 @@ private final class DiscoverImageMarkerView: UIView {
     }
 
     private func setup() {
-        ringView.frame = bounds
-        ringView.layer.cornerRadius = bounds.width / 2
-        ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
-        addSubview(ringView)
 
-        imageView.frame = bounds.insetBy(dx: Layout.imageInset, dy: Layout.imageInset)
+        imageView.frame = bounds
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.bounds.width / 2
         imageView.image = UIImage(named: "newSpeakeasy")
         addSubview(imageView)
+
+        logoImageView.frame = CGRect(
+            x: (Layout.markerSize - Layout.logoSize) / 2,
+            y: (Layout.markerSize - Layout.logoSize) / 2,
+            width: Layout.logoSize,
+            height: Layout.logoSize
+        ).insetBy(dx: 3, dy: 3)
+        logoImageView.contentMode = .scaleAspectFit
+        addSubview(logoImageView)
     }
 
-    private func configure(imageURL: String?) {
+    private func configure(
+        imageURL: String?,
+        logoImageURL: String?
+    ) {
         imageView.sd_setImage(
             with: URL(string: imageURL ?? ""),
             placeholderImage: UIImage(named: "newSpeakeasy")
+        )
+
+        logoImageView.sd_setImage(
+            with: URL(string: logoImageURL ?? ""),
+            placeholderImage: UIImage(named: "")
         )
     }
 }

@@ -172,6 +172,7 @@
                         <outlet property="allEventsView" destination="hYZ-Jv-bge" id="vWf-JR-52n"/>
                         <outlet property="bottomConstraint" destination="mJ4-Sw-JbE" id="BSh-RS-bhe"/>
                         <outlet property="premiumExperiencesView" destination="k4U-Ul-kyS" id="koE-9x-egl"/>
+                        <outlet property="scrollView" destination="Nqk-Vz-yrG" id="fgD-tR-J5s"/>
                         <outlet property="todaysEventsView" destination="WXE-cQ-2Xm" id="Kaa-Tv-Xij"/>
                         <outlet property="venuesView" destination="Nud-H7-BbT" id="f36-LL-2bk"/>
                     </connections>

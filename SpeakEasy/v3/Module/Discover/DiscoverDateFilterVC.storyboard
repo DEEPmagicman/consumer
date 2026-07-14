@@ -83,6 +83,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="xjJ-Ft-B1I" id="970-21-nWr"/>
+                        <outlet property="collectionViewTopConstraint" destination="8hm-o0-iAO" id="OJh-Au-RTD"/>
                         <outlet property="dateCollectionView" destination="aUp-Hy-YEh" id="MOF-Og-Bi5"/>
                     </connections>
                 </viewController>

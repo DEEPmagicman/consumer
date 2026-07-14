@@ -98,6 +98,7 @@ class EventQRTicketVC: UIViewController {
         setupLegacyContentHidden()
         setupTicketPassLayout()
         configurePresentationMode()
+        hideShareButton()
         setupPagerView()
         setupTableView()
         setupActionSection()
@@ -207,6 +208,18 @@ class EventQRTicketVC: UIViewController {
         }
     }
 
+    private func hideShareButton() {
+        guard let shareButton = findAppIconButton(
+            in: view,
+            where: { $0.iconTypeValue == "share" }
+        ) else {
+            return
+        }
+
+        shareButton.isHidden = true
+        shareButton.isUserInteractionEnabled = false
+    }
+
     private func findAppIconButton(
         in view: UIView,
         where predicate: (AppIconButton) -> Bool
@@ -237,6 +250,10 @@ class EventQRTicketVC: UIViewController {
                 self.loadingShimmerView.hide(animated: true)
             }
         }
+    }
+
+    private func showTicketToast(_ message: String) {
+            Alert.showToast(message, vc: self)
     }
 
     private func refreshPosterBackground() {
@@ -1503,24 +1520,29 @@ class EventQRTicketVC: UIViewController {
     @objc private func onClickAddToCalendar() {
         guard let event = booking?.event,
               let startDate = eventStartDate() else {
-            Alert.showToast("Event date not available")
+            showTicketToast("Event date not available")
             return
         }
 
         let saveEvent: () -> Void = { [weak self] in
             guard let self else { return }
+            guard let calendar = self.eventStore.defaultCalendarForNewEvents else {
+                self.showTicketToast("No writable Calendar found")
+                return
+            }
+
             let calendarEvent = EKEvent(eventStore: self.eventStore)
             calendarEvent.title = event.title
             calendarEvent.startDate = startDate
             calendarEvent.endDate = self.eventEndDate() ?? Calendar.current.date(byAdding: .hour, value: 3, to: startDate) ?? startDate
             calendarEvent.location = self.eventLocationName()
-            calendarEvent.calendar = self.eventStore.defaultCalendarForNewEvents
+            calendarEvent.calendar = calendar
 
             do {
                 try self.eventStore.save(calendarEvent, span: .thisEvent)
-                Alert.showToast("Added to Calendar")
+                self.showTicketToast("Added to Calendar")
             } catch {
-                Alert.showToast("Unable to add event to Calendar")
+                self.showTicketToast("Unable to add event to Calendar")
             }
         }
 
@@ -1531,11 +1553,11 @@ class EventQRTicketVC: UIViewController {
             case .notDetermined:
                 eventStore.requestFullAccessToEvents { granted, _ in
                     DispatchQueue.main.async {
-                        granted ? saveEvent() : Alert.showToast("Calendar access denied")
+                        granted ? saveEvent() : self.showTicketToast("Calendar access denied")
                     }
                 }
             default:
-                Alert.showToast("Please allow Calendar access in Settings")
+                showTicketToast("Please allow Calendar access in Settings")
             }
         } else {
             switch EKEventStore.authorizationStatus(for: .event) {
@@ -1544,11 +1566,11 @@ class EventQRTicketVC: UIViewController {
             case .notDetermined:
                 eventStore.requestAccess(to: .event) { granted, _ in
                     DispatchQueue.main.async {
-                        granted ? saveEvent() : Alert.showToast("Calendar access denied")
+                        granted ? saveEvent() : self.showTicketToast("Calendar access denied")
                     }
                 }
             default:
-                Alert.showToast("Please allow Calendar access in Settings")
+                showTicketToast("Please allow Calendar access in Settings")
             }
         }
     }

@@ -115,7 +115,8 @@ class EventDetailsVC: UIViewController {
 
     private var tickets: [EventTicket] = []
     private var normalTickets: [EventTicket] = []
-    private var groupedNormalTickets: [(groupName: String, tickets: [EventTicket])] = []
+    private var groupedNormalTickets: [(groupId: String, groupName: String, tickets: [EventTicket])] = []
+    private var expandedGroupIds: Set<String> = []
     private var expandedTicketDescriptions: Set<String> = []
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
@@ -127,6 +128,7 @@ class EventDetailsVC: UIViewController {
     private var attendeeLeadName = "Someone"
     private var attendeesHasMore = false
     private var isFetchingMoreAttendees = false
+    private var isGuestListLoading = false
     private let attendeesPageSize = 10
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
@@ -142,6 +144,7 @@ class EventDetailsVC: UIViewController {
     private var savedEventId: String?
     private let posterHeaderView = EventPosterHeaderView()
     private let collapseThreshold: CGFloat = 20
+    private let navInitialTopSpacing: CGFloat = 16
     private var isCollapsed = false
     private var galleryImageURLs: [String] = []
     private var galleryImageViews: [UIImageView] = []
@@ -270,6 +273,7 @@ class EventDetailsVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.layoutIfNeeded()
+        updateNavPosition(for: scrollView.contentOffset.y)
         updateVenueLogoCornerRadius()
         clearInlineRSVPSelectionIfNeeded()
         refreshEventDetailOnReturnIfNeeded()
@@ -697,7 +701,7 @@ class EventDetailsVC: UIViewController {
     }
     
     func updateAttendeesView(animated: Bool = true) {
-        let shouldHide = attendees.isEmpty
+        let shouldHide = attendees.isEmpty && !isGuestListLoading
         
         if shouldHide {
             guard !attendeesView.isHidden else { return }
@@ -911,6 +915,7 @@ class EventDetailsVC: UIViewController {
         total: Int? = nil,
         totalTicketSold: Int? = nil
     ) {
+        isGuestListLoading = false
 
         guard event?.showEventAttendees == true,
               let list
@@ -936,6 +941,24 @@ class EventDetailsVC: UIViewController {
         guestListCollectionView.reloadData()
         updateAttendeesView()
         updateGuestListTitle()
+    }
+
+    private func setGuestListLoading(_ loading: Bool) {
+        guard isGuestListLoading != loading else { return }
+
+        isGuestListLoading = loading
+
+        if loading {
+            guestListTitleLbl.text = "Guest list"
+            attendeesView.isHidden = false
+            attendeesView.alpha = 1
+            attendeesView.transform = .identity
+        } else if attendees.isEmpty {
+            guestListTitleLbl.text = ""
+        }
+
+        guestListCollectionView.reloadData()
+        updateAttendeesView(animated: !loading)
     }
 
     private func updateGuestListTitle() {
@@ -1266,6 +1289,7 @@ class EventDetailsVC: UIViewController {
 
         guard !isFetchingMoreAttendees else { return }
         isFetchingMoreAttendees = true
+        setGuestListLoading(true)
 
         eventService.fetchEventAttendees(
             eventId: eventId,
@@ -1282,6 +1306,8 @@ class EventDetailsVC: UIViewController {
                     totalTicketSold: totalTicketSold
                 )
                 self.attendeesHasMore = hasMore || self.totalAttendees > self.attendees.count
+            } else {
+                self.setGuestListLoading(false)
             }
         }
     }
@@ -2035,6 +2061,14 @@ class EventDetailsVC: UIViewController {
     
     private let navBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
 
+    private func updateNavPosition(for offsetY: CGFloat) {
+        let navOffset = min(max(offsetY, 0), navInitialTopSpacing)
+        navBarView.transform = CGAffineTransform(
+            translationX: 0,
+            y: -navOffset
+        )
+    }
+
     func applyNavAppearance(collapsed: Bool) {
         if collapsed {
             navBarView.backgroundColor = .clear
@@ -2059,9 +2093,10 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupName: String, tickets: [EventTicket])]) {
+    private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupId: String, groupName: String, tickets: [EventTicket])]) {
         var nonGrouped: [EventTicket] = []
-        var groupedMap: [String: (groupName: String, tickets: [EventTicket])] = [:]
+        var groupOrder: [String] = []
+        var groupedMap: [String: (groupId: String, groupName: String, tickets: [EventTicket])] = [:]
 
         for ticket in list {
             if let group = ticket.eventTicketGroupHasTicket?.eventTicketGroup,
@@ -2073,14 +2108,15 @@ class EventDetailsVC: UIViewController {
                 if groupedMap[groupId] != nil {
                     groupedMap[groupId]?.tickets.append(ticket)
                 } else {
-                    groupedMap[groupId] = (groupName: groupName, tickets: [ticket])
+                    groupOrder.append(groupId)
+                    groupedMap[groupId] = (groupId: groupId, groupName: groupName, tickets: [ticket])
                 }
             } else {
                 nonGrouped.append(ticket)
             }
         }
 
-        return (nonGrouped, Array(groupedMap.values))
+        return (nonGrouped, groupOrder.compactMap { groupedMap[$0] })
     }
 
     private func setupInlineTicketData() {
@@ -2093,6 +2129,9 @@ class EventDetailsVC: UIViewController {
 
         normalTickets = normalSplit.nonGrouped
         groupedNormalTickets = normalSplit.grouped
+        expandedGroupIds = expandedGroupIds.intersection(
+            Set(groupedNormalTickets.map { $0.groupId })
+        )
         tickets = normalTickets
 
         let protectedVisibleCandidates = filterAvailableTickets(event.protectedEventTicket ?? [])
@@ -2126,6 +2165,36 @@ class EventDetailsVC: UIViewController {
         groupTableView.layoutIfNeeded()
         groupTableViewHeight.constant =
         groupTableView.isHidden ? 0 : groupTableView.contentSize.height
+    }
+
+    private func refreshGroupTicketRow(
+        groupIndex: Int,
+        ticketIndex: Int
+    ) {
+        expandedGroupIds.insert(groupedNormalTickets[groupIndex].groupId)
+
+        let groupIndexPath = IndexPath(row: groupIndex, section: 0)
+
+        if let cell = groupTableView.cellForRow(at: groupIndexPath) as? GroupTicketTVC {
+            cell.updateTickets(
+                groupedNormalTickets[groupIndex].tickets,
+                reloadingTicketAt: ticketIndex
+            )
+
+            UIView.performWithoutAnimation {
+                groupTableView.beginUpdates()
+                groupTableView.endUpdates()
+            }
+
+            updateGroupTableHeight()
+            return
+        }
+
+        UIView.performWithoutAnimation {
+            groupTableView.reloadRows(at: [groupIndexPath], with: .none)
+            groupTableView.layoutIfNeeded()
+        }
+        updateGroupTableHeight()
     }
 
     private func syncUpdatedTicketToEvent(_ updatedTicket: EventTicket) {
@@ -2394,8 +2463,7 @@ class EventDetailsVC: UIViewController {
                 syncUpdatedTicketToEvent(updatedTicket)
 
                 updateContinueBtnState()
-                updateGroupTableHeight()
-                groupTableView.reloadData()
+                refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
                 updateCheckoutSummaryView()
             } else {
                 Alert.showToast("Max tickets selected: create a separate order to purchase more.")
@@ -2430,8 +2498,7 @@ class EventDetailsVC: UIViewController {
             syncUpdatedTicketToEvent(updatedTicket)
 
             updateContinueBtnState()
-            updateGroupTableHeight()
-            groupTableView.reloadData()
+            refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
             updateCheckoutSummaryView()
             return
         }
@@ -3371,6 +3438,10 @@ extension EventDetailsVC: UICollectionViewDelegate,
                         numberOfItemsInSection section: Int) -> Int {
 
         if collectionView == guestListCollectionView {
+            if isGuestListLoading {
+                return 6
+            }
+
             return min(attendees.count, 6)
         } else {
             return artists.count
@@ -3382,6 +3453,12 @@ extension EventDetailsVC: UICollectionViewDelegate,
 
         if collectionView == guestListCollectionView {
             let cell: EventGuestListCVC = collectionView.dequeue(withIdentifier: EventGuestListCVC.identifier, for: indexPath)
+
+            if isGuestListLoading {
+                cell.configureSkeleton()
+                return cell
+            }
+
             let attendee = attendees[indexPath.item]
             cell.configure(with: attendee)
             return cell
@@ -3399,6 +3476,10 @@ extension EventDetailsVC: UICollectionViewDelegate,
                         didSelectItemAt indexPath: IndexPath) {
 
         if collectionView == guestListCollectionView {
+            guard !isGuestListLoading,
+                  attendees.indices.contains(indexPath.item)
+            else { return }
+
             _ = attendees[indexPath.item]
         } else if collectionView == lineUpCollectionView {
             let artistData = artists[indexPath.item]
@@ -3531,6 +3612,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 eventTicketSetting: event?.eventTicketSettings,
                 expandedTicketDescriptions: expandedTicketDescriptions,
                 disabledTicketIds: disabledTicketIds,
+                isExpanded: expandedGroupIds.contains(item.groupId),
                 topSpacing: indexPath.row == 0 ? 0 : 16
             )
 
@@ -3565,6 +3647,16 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 self.groupTableView.endUpdates()
                 self.groupTableView.layoutIfNeeded()
                 self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+            }
+
+            cell.onExpandChanged = { [weak self] isExpanded in
+                guard let self = self else { return }
+
+                if isExpanded {
+                    self.expandedGroupIds.insert(item.groupId)
+                } else {
+                    self.expandedGroupIds.remove(item.groupId)
+                }
             }
 
             cell.onHeightChanged = { [weak self] in
@@ -4324,6 +4416,8 @@ final class EventPosterHeaderView: UIView {
 extension EventDetailsVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self.scrollView else { return }
+
+        updateNavPosition(for: scrollView.contentOffset.y)
         
         let shouldCollapse = scrollView.contentOffset.y > collapseThreshold
         

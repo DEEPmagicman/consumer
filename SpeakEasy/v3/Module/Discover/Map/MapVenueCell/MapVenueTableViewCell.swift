@@ -16,6 +16,9 @@ class MapVenueTableViewCell: UITableViewCell {
     @IBOutlet weak var badgeLabel: UILabel!
     @IBOutlet weak var actionLabel: UILabel!
 
+    private let logoImageView = UIImageView()
+    private let imageDimView = UIView()
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
@@ -24,6 +27,7 @@ class MapVenueTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         venueImageView.sd_cancelCurrentImageLoad()
+        logoImageView.sd_cancelCurrentImageLoad()
         venueImageView.image = UIImage(named: "newSpeakeasy")
         nameLabel.text = nil
         addressLabel.text = nil
@@ -51,6 +55,12 @@ class MapVenueTableViewCell: UITableViewCell {
             with: URL(string: imageKey.imageURL),
             placeholderImage: UIImage(named: "newSpeakeasy")
         )
+
+        let logoKey = venue.logo?.key ?? ""
+        logoImageView.sd_setImage(
+            with: URL(string: logoKey.imageURL),
+            placeholderImage: UIImage(named: "")
+        )
     }
 
     private func setupUI() {
@@ -60,11 +70,34 @@ class MapVenueTableViewCell: UITableViewCell {
         venueImageView.contentMode = .scaleAspectFill
         venueImageView.clipsToBounds = true
         venueImageView.layer.cornerRadius = 6
+        setupLogoOverlay()
         nameLabel.numberOfLines = 2
         addressLabel.numberOfLines = 1
         badgeView.layer.cornerRadius = 7
         badgeView.clipsToBounds = true
         styleActionPill()
+    }
+
+    private func setupLogoOverlay() {
+        imageDimView.backgroundColor = .clear
+        imageDimView.translatesAutoresizingMaskIntoConstraints = false
+        venueImageView.addSubview(imageDimView)
+
+        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        venueImageView.addSubview(logoImageView)
+
+        NSLayoutConstraint.activate([
+            imageDimView.topAnchor.constraint(equalTo: venueImageView.topAnchor),
+            imageDimView.leadingAnchor.constraint(equalTo: venueImageView.leadingAnchor),
+            imageDimView.trailingAnchor.constraint(equalTo: venueImageView.trailingAnchor),
+            imageDimView.bottomAnchor.constraint(equalTo: venueImageView.bottomAnchor),
+
+            logoImageView.centerXAnchor.constraint(equalTo: venueImageView.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: venueImageView.centerYAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 42),
+            logoImageView.heightAnchor.constraint(equalToConstant: 42)
+        ])
     }
 
     private func styleActionPill() {

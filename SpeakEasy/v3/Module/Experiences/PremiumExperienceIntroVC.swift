@@ -78,7 +78,9 @@ final class PremiumExperienceIntroVC: UIViewController {
 
             cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 21),
             cardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -21),
-            cardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
+            cardView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            cardView.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            cardView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
 
             titleLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 50),
             titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 20),

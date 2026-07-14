@@ -13,6 +13,8 @@ final class DiscoverVC: UIViewController {
     @IBOutlet var segmentViewContainer: [UIView]!
     @IBOutlet var dateLbl: UILabel!
     @IBOutlet var dateView: LiquidGlassBackgroundView!
+    @IBOutlet private weak var filtersScrollView: UIScrollView!
+    @IBOutlet private weak var segmentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectedLocationName: UILabel!
     @IBOutlet var bgView: UIView!
     @IBOutlet weak var calendarIcon: UIImageView!
@@ -31,8 +33,12 @@ final class DiscoverVC: UIViewController {
     private var shimmerDidFinish = false
     private var filterCity: String?
     private var appliedGradientBounds: CGRect = .zero
+    private var didApplyInitialHeaderOffset = false
+    private var activeScrollableHeader: DiscoverHeaderScrollable?
+    private weak var activeHeaderScrollView: UIScrollView?
 
     private let shimmerView = HomeSkeletonView()
+    private let discoverHeaderContentInset: CGFloat = 100
 
     private var isDateSelected: Bool = false {
         didSet {
@@ -55,6 +61,7 @@ final class DiscoverVC: UIViewController {
             UserDefault.shared.filterCity = nil
         }
         setupLandingHeader()
+        setupScrollableHeader()
         setupCityChipLayout()
         setupDateChipLayout()
         setupSkeletonView()
@@ -76,6 +83,7 @@ final class DiscoverVC: UIViewController {
            !shimmerView.isHidden {
             shimmerView.startShimmer()
         }
+        configureActiveScrollableHeader()
     }
 
     private func setupLandingHeader() {
@@ -91,6 +99,12 @@ final class DiscoverVC: UIViewController {
             landingHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             landingHeaderView.heightAnchor.constraint(equalToConstant: 40)
         ])
+    }
+
+    private func setupScrollableHeader() {
+        filtersScrollView.clipsToBounds = false
+        filtersScrollView.showsVerticalScrollIndicator = false
+        segmentTopConstraint.constant -= discoverHeaderContentInset
     }
 
     private func setupCityChipLayout() {
@@ -147,6 +161,7 @@ final class DiscoverVC: UIViewController {
         shimmerView.stopShimmer()
         landingHeaderView.isHidden = false
         shimmerView.isHidden = true
+        bringScrollableHeaderToFront()
     }
 
     func showSkeletonScreen() {
@@ -257,6 +272,125 @@ final class DiscoverVC: UIViewController {
             segmentViewContainer[i].isHidden   = i != index
             segmentViewContainer[i].endEditing(i != index)
         }
+        configureActiveScrollableHeader()
+    }
+
+    private func bringScrollableHeaderToFront() {
+        view.bringSubviewToFront(filtersScrollView)
+        view.bringSubviewToFront(landingHeaderView)
+        if !shimmerView.isHidden {
+            view.bringSubviewToFront(shimmerView)
+        }
+    }
+
+    private func configureActiveScrollableHeader() {
+        guard isViewLoaded else { return }
+
+        let activeChild = children.first { child in
+            guard let childView = child.viewIfLoaded else {
+                return false
+            }
+
+            return segmentViewContainer.contains { container in
+                !container.isHidden && childView.isDescendant(of: container)
+            }
+        }
+
+        guard let scrollable = activeChild as? DiscoverHeaderScrollable,
+              let scrollView = scrollable.discoverHeaderScrollView
+        else {
+            return
+        }
+
+        activeScrollableHeader = scrollable
+        activeHeaderScrollView = scrollView
+
+        let totalTopInset = discoverHeaderContentInset + scrollable.discoverHeaderAdditionalTopInset
+        applyTopInset(totalTopInset, to: scrollView)
+        updateScrollableHeader(for: scrollView)
+        bringScrollableHeaderToFront()
+    }
+
+    private func applyTopInset(
+        _ topInset: CGFloat,
+        to scrollView: UIScrollView
+    ) {
+        let oldAdjustedTop = scrollView.adjustedContentInset.top
+        let normalizedOffset = scrollView.contentOffset.y + oldAdjustedTop
+
+        guard abs(scrollView.contentInset.top - topInset) > 0.5 ||
+                !didApplyInitialHeaderOffset
+        else {
+            return
+        }
+
+        scrollView.contentInset.top = topInset
+        scrollView.scrollIndicatorInsets.top = topInset
+        scrollView.verticalScrollIndicatorInsets.top = topInset
+
+        let newAdjustedTop = scrollView.adjustedContentInset.top
+        if !didApplyInitialHeaderOffset || normalizedOffset <= 0 {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: -newAdjustedTop),
+                animated: false
+            )
+            didApplyInitialHeaderOffset = true
+        } else {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: normalizedOffset - newAdjustedTop),
+                animated: false
+            )
+        }
+    }
+
+    private func updateScrollableHeader(for scrollView: UIScrollView) {
+        guard scrollView === activeHeaderScrollView else { return }
+
+        let offset = max(
+            0,
+            scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+        )
+        let collapseOffset = min(
+            offset,
+            discoverHeaderContentInset + view.safeAreaInsets.top
+        )
+
+        landingHeaderView.transform = CGAffineTransform(
+            translationX: 0,
+            y: -collapseOffset
+        )
+        filtersScrollView.transform = CGAffineTransform(
+            translationX: 0,
+            y: -collapseOffset
+        )
+        updateScrollableHeaderAlpha(offset: offset)
+        activeScrollableHeader?.discoverHeaderDidUpdate(
+            collapseOffset: offset,
+            baseTopInset: discoverHeaderContentInset
+        )
+    }
+
+    private func updateScrollableHeaderAlpha(offset: CGFloat) {
+        let profileFadeProgress = min(max((offset - 4) / 18, 0), 1)
+        let chipSafeAreaCrossingOffset: CGFloat = 60
+        let chipFadeProgress = min(
+            max((offset - (chipSafeAreaCrossingOffset - 14)) / 18, 0),
+            1
+        )
+
+        let profileAlpha = 1 - easeOut(profileFadeProgress)
+        let chipAlpha = 1 - easeOut(chipFadeProgress)
+
+        landingHeaderView.alpha = profileAlpha
+        filtersScrollView.alpha = chipAlpha
+        landingHeaderView.isUserInteractionEnabled = profileAlpha > 0.08
+        filtersScrollView.isUserInteractionEnabled = chipAlpha > 0.08
+    }
+
+    private func easeOut(_ value: CGFloat) -> CGFloat {
+        let value = min(max(value, 0), 1)
+        let remaining = 1 - value
+        return 1 - (remaining * remaining)
     }
 
     private func resolvedCity() -> String {
@@ -411,6 +545,30 @@ final class DiscoverVC: UIViewController {
             break
         }
     }
+}
+
+extension DiscoverVC {
+    func discoverHeaderScrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateScrollableHeader(for: scrollView)
+    }
+}
+
+protocol DiscoverHeaderScrollable: AnyObject {
+    var discoverHeaderScrollView: UIScrollView? { get }
+    var discoverHeaderAdditionalTopInset: CGFloat { get }
+    func discoverHeaderDidUpdate(
+        collapseOffset: CGFloat,
+        baseTopInset: CGFloat
+    )
+}
+
+extension DiscoverHeaderScrollable {
+    var discoverHeaderAdditionalTopInset: CGFloat { 0 }
+
+    func discoverHeaderDidUpdate(
+        collapseOffset: CGFloat,
+        baseTopInset: CGFloat
+    ) {}
 }
 
 // MARK: - SelectedDateDelegate

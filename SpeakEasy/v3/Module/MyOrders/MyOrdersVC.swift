@@ -45,12 +45,18 @@ final class MyOrdersVC: UIViewController {
 
     private let landingHeaderView = LandingHeaderView()
     private var segmentTopConstraint: NSLayoutConstraint!
+    private var segmentBaseTopConstant: CGFloat = 10
     private var ordersRefreshObserver: NSObjectProtocol?
+    private var activeOrdersScrollView: UIScrollView?
     
     var showsBackButtonHeader: Bool = false
     
     private var pages: [UIViewController] {
         [ticketsVC, tablesVC]
+    }
+
+    private var selectedOrdersVC: BaseOrdersGridVC {
+        selectedIndex == 0 ? ticketsVC : tablesVC
     }
 
     private var selectedIndex: Int = 0
@@ -59,6 +65,11 @@ final class MyOrdersVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         observeOrderRefreshRequests()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        applySelectedOrdersScrollState()
     }
 
     deinit {
@@ -70,6 +81,7 @@ final class MyOrdersVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.applyScreenBgGradient()
+        applySelectedOrdersScrollState()
     }
 
     private func setupUI() {
@@ -77,6 +89,7 @@ final class MyOrdersVC: UIViewController {
         setupNav()
         setupSegment()
         setupPageVC()
+        setupOrdersScrollHandlers()
         setupEmptyState()
         setupConstraints()
 
@@ -332,6 +345,17 @@ final class MyOrdersVC: UIViewController {
             direction: .forward,
             animated: false
         )
+        activeOrdersScrollView = ticketsVC.collectionView
+    }
+
+    private func setupOrdersScrollHandlers() {
+        ticketsVC.onOrdersScroll = { [weak self] scrollView in
+            self?.handleOrdersScroll(scrollView)
+        }
+
+        tablesVC.onOrdersScroll = { [weak self] scrollView in
+            self?.handleOrdersScroll(scrollView)
+        }
     }
 
     private func setupConstraints() {
@@ -340,6 +364,7 @@ final class MyOrdersVC: UIViewController {
             : landingHeaderView.bottomAnchor
         let headerTopConstant = showsBackButtonHeader ? 20 : 10
         let headerRightConstant = showsBackButtonHeader ? 22 : 16
+        segmentBaseTopConstant = CGFloat(headerTopConstant)
         
         NSLayoutConstraint.activate([
             backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -348,7 +373,14 @@ final class MyOrdersVC: UIViewController {
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
 
-            segmentView.topAnchor.constraint(equalTo: headerBottomAnchor, constant: CGFloat(headerTopConstant)),
+            {
+                let constraint = segmentView.topAnchor.constraint(
+                    equalTo: headerBottomAnchor,
+                    constant: CGFloat(headerTopConstant)
+                )
+                segmentTopConstraint = constraint
+                return constraint
+            }(),
             segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(headerRightConstant)),
             segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -CGFloat(headerRightConstant)),
             segmentView.heightAnchor.constraint(equalToConstant: 48),
@@ -364,19 +396,104 @@ final class MyOrdersVC: UIViewController {
         guard index != selectedIndex else { return }
 
         let direction: UIPageViewController.NavigationDirection = index > selectedIndex ? .forward : .reverse
+        let inheritedHeaderOffset = normalizedHeaderOffset(for: activeOrdersScrollView)
         selectedIndex = index
+        activeOrdersScrollView = selectedOrdersVC.collectionView
+        syncSelectedOrdersScrollView(minimumHeaderOffset: inheritedHeaderOffset)
+        applySelectedOrdersScrollState()
 
         pageVC.setViewControllers(
             [pages[index]],
             direction: direction,
             animated: true
-        )
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.applySelectedOrdersScrollState()
+        }
 
         segmentView.setSelectedIndex(index, animated: true)
     }
 
     @objc private func onClickBack() {
         navigationController?.popViewController(animated: true)
+    }
+
+    private func handleOrdersScroll(_ scrollView: UIScrollView) {
+        guard scrollView === selectedOrdersVC.collectionView else { return }
+        activeOrdersScrollView = scrollView
+        updateScrollableHeader(for: scrollView)
+    }
+
+    private var segmentStickyDistance: CGFloat {
+        max(
+            landingHeaderView.frame.height + segmentBaseTopConstant,
+            0
+        )
+    }
+
+    private func normalizedHeaderOffset(for scrollView: UIScrollView?) -> CGFloat {
+        guard let scrollView else { return 0 }
+        return max(
+            0,
+            scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+        )
+    }
+
+    private func syncSelectedOrdersScrollView(minimumHeaderOffset: CGFloat) {
+        let scrollView = selectedOrdersVC.collectionView
+        let targetHeaderOffset = min(
+            minimumHeaderOffset,
+            segmentStickyDistance
+        )
+        guard targetHeaderOffset > normalizedHeaderOffset(for: scrollView) else { return }
+
+        scrollView.setContentOffset(
+            CGPoint(
+                x: scrollView.contentOffset.x,
+                y: targetHeaderOffset - scrollView.adjustedContentInset.top
+            ),
+            animated: false
+        )
+        scrollView.layoutIfNeeded()
+    }
+
+    private func applySelectedOrdersScrollState() {
+        guard isViewLoaded else { return }
+        activeOrdersScrollView = selectedOrdersVC.collectionView
+        UIView.performWithoutAnimation {
+            self.updateScrollableHeader(for: self.activeOrdersScrollView)
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func updateScrollableHeader(for scrollView: UIScrollView?) {
+        guard isViewLoaded,
+              !showsBackButtonHeader,
+              let scrollView else {
+            landingHeaderView.transform = .identity
+            landingHeaderView.alpha = landingHeaderView.isHidden ? 0 : 1
+            landingHeaderView.isUserInteractionEnabled = !landingHeaderView.isHidden
+            segmentTopConstraint?.constant = segmentBaseTopConstant
+            return
+        }
+
+        let offset = normalizedHeaderOffset(for: scrollView)
+        let segmentOffset = min(offset, segmentStickyDistance)
+        let shouldHideHeader = offset > 0.5
+        let alpha: CGFloat = shouldHideHeader ? 0 : 1
+        let collapseOffset = shouldHideHeader
+            ? landingHeaderView.frame.height
+            : 0
+
+        landingHeaderView.transform = CGAffineTransform(
+            translationX: 0,
+            y: -collapseOffset
+        )
+        segmentTopConstraint.constant = segmentBaseTopConstant - segmentOffset
+        landingHeaderView.isHidden = shouldHideHeader
+        landingHeaderView.setMapHidden(shouldHideHeader)
+        landingHeaderView.alpha = alpha
+        landingHeaderView.isUserInteractionEnabled = alpha > 0.08
     }
 }
 
@@ -413,5 +530,7 @@ extension MyOrdersVC: UIPageViewControllerDataSource, UIPageViewControllerDelega
 
         selectedIndex = index
         segmentView.setSelectedIndex(index, animated: true)
+        activeOrdersScrollView = (currentVC as? BaseOrdersGridVC)?.collectionView
+        applySelectedOrdersScrollState()
     }
 }

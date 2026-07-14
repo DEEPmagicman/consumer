@@ -9,6 +9,7 @@ final class DiscoverDateFilterVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var dateCollectionView: UICollectionView!
+    @IBOutlet private weak var collectionViewTopConstraint: NSLayoutConstraint!
 
     var selectedDates = [String]()
     private var selectedAPIDates = [String]()
@@ -35,6 +36,7 @@ final class DiscoverDateFilterVC: UIViewController {
         setupDateCollectionView()
         setupEventCollectionView()
         setupPullToRefresh()
+        prepareScrollableHeaderLayout()
 
         fetchEvents(reset: true)
     }
@@ -140,6 +142,11 @@ final class DiscoverDateFilterVC: UIViewController {
         layout.delegate = self
 
         collectionView.collectionViewLayout = layout
+    }
+
+    private func prepareScrollableHeaderLayout() {
+        collectionViewTopConstraint.constant = -30
+        dateCollectionView.layer.zPosition = 1
     }
 
     // MARK: - Fetch Events
@@ -502,6 +509,9 @@ UICollectionViewDelegateFlowLayout {
             return
         }
 
+        (parent as? DiscoverVC)?
+            .discoverHeaderScrollViewDidScroll(scrollView)
+
         guard !isInitialLoading else {
             return
         }
@@ -563,6 +573,37 @@ UICollectionViewDelegateFlowLayout {
         }
 
         return 14
+    }
+}
+
+extension DiscoverDateFilterVC: DiscoverHeaderScrollable {
+    var discoverHeaderScrollView: UIScrollView? {
+        collectionView
+    }
+
+    var discoverHeaderAdditionalTopInset: CGFloat {
+        40
+    }
+
+    func discoverHeaderDidUpdate(
+        collapseOffset: CGFloat,
+        baseTopInset: CGFloat
+    ) {
+        dateCollectionView.transform = CGAffineTransform(
+            translationX: 0,
+            y: baseTopInset - collapseOffset
+        )
+
+        let parentSafeTop = parent?.view.safeAreaInsets.top ?? view.safeAreaInsets.top
+        let transformedFrame = dateCollectionView.convert(
+            dateCollectionView.bounds,
+            to: parent?.view ?? view
+        )
+        let shouldHideDateStrip = transformedFrame.minY <= parentSafeTop + 1
+
+        dateCollectionView.alpha = shouldHideDateStrip ? 0 : 1
+        dateCollectionView.isHidden = shouldHideDateStrip
+        dateCollectionView.isUserInteractionEnabled = !shouldHideDateStrip
     }
 }
 
