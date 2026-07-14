@@ -94,7 +94,7 @@ extension VenueEventsVC {
         )
 
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
         layout.delegate = self
 
         collectionView.collectionViewLayout = layout
@@ -438,61 +438,19 @@ extension VenueEventsVC: PinterestLayoutDelegate {
         let venueFont = Constant.Font.geistMedium(size: 14)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
-        let titleHeight = title.boundingRect(
-            with: CGSize(
-                width: width,
-                height: .greatestFiniteMagnitude
-            ),
-            options: [
-                .usesLineFragmentOrigin,
-                .usesFontLeading
-            ],
-            attributes: [
-                .font: titleFont
-            ],
-            context: nil
-        ).height
+        let titleHeight = ceil(titleFont.lineHeight * 2)
+        let venueHeight = ceil(venueFont.lineHeight)
+        let dateHeight = ceil(dateFont.lineHeight)
 
-        let venueHeight = venue.boundingRect(
-            with: CGSize(
-                width: width,
-                height: .greatestFiniteMagnitude
-            ),
-            options: [
-                .usesLineFragmentOrigin,
-                .usesFontLeading
-            ],
-            attributes: [
-                .font: venueFont
-            ],
-            context: nil
-        ).height
-
-        let dateHeight = dateText.boundingRect(
-            with: CGSize(
-                width: width,
-                height: .greatestFiniteMagnitude
-            ),
-            options: [
-                .usesLineFragmentOrigin,
-                .usesFontLeading
-            ],
-            attributes: [
-                .font: dateFont
-            ],
-            context: nil
-        ).height
-
-        let totalHeight =
-            imageHeight +
-            16 +
-            titleHeight +
-            3 +
-            venueHeight +
-            10 +
-            dateHeight
-
-        return ceil(totalHeight)
+        let height = imageHeight
+            + 16
+            + titleHeight
+            + 3
+            + venueHeight
+            + 10
+            + dateHeight
+        
+        return height
     }
 
     func collectionView(

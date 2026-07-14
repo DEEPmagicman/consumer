@@ -161,7 +161,7 @@ final class ArtistDetailsVC: UIViewController {
             right: 24
         )
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
         layout.delegate = self
         collectionView.collectionViewLayout = layout
 
@@ -537,31 +537,23 @@ extension ArtistDetailsVC: PinterestLayoutDelegate {
             customTimeZone: event.venue?.useTimezone ?? ""
         )
 
-        let titleHeight = textHeight(
-            title,
-            width: width,
-            font: Constant.Font.geistMedium(size: 15)
-        )
-        let venueHeight = textHeight(
-            venue,
-            width: width,
-            font: Constant.Font.geistMedium(size: 14)
-        )
-        let dateHeight = textHeight(
-            dateText,
-            width: width,
-            font: Constant.Font.geistMedium(size: 14)
-        )
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let venueFont = Constant.Font.geistMedium(size: 14)
+        let dateFont = Constant.Font.geistMedium(size: 14)
 
-        return ceil(
-            imageHeight +
-            16 +
-            titleHeight +
-            3 +
-            venueHeight +
-            10 +
-            dateHeight
-        )
+        let titleHeight = ceil(titleFont.lineHeight * 2)
+        let venueHeight = ceil(venueFont.lineHeight)
+        let dateHeight = ceil(dateFont.lineHeight)
+
+        let height = imageHeight
+            + 16
+            + titleHeight
+            + 3
+            + venueHeight
+            + 10
+            + dateHeight
+        
+        return height
     }
 
     func collectionView(
