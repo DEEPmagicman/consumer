@@ -30,7 +30,7 @@ class BaseSingleGridVC: UIViewController {
         layout.numberOfColumns = 2
         layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: 34, right: 24)
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 
@@ -283,23 +283,24 @@ extension BaseSingleGridVC: PinterestLayoutDelegate {
                 to: .MMMDDATHMMA
             )
         }()
+        
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let venueFont = Constant.Font.geistMedium(size: 14)
+        let dateFont = Constant.Font.geistMedium(size: 14)
 
-        let titleHeight = title.height(
-            width: width,
-            font: Constant.Font.geistMedium(size: 15)
-        )
+        let titleHeight = ceil(titleFont.lineHeight * 2)
+        let venueHeight = ceil(venueFont.lineHeight)
+        let dateHeight = ceil(dateFont.lineHeight)
 
-        let venueHeight = venue.height(
-            width: width,
-            font: Constant.Font.geistMedium(size: 14)
-        )
-
-        let dateHeight = dateText.height(
-            width: width,
-            font: Constant.Font.geistMedium(size: 14)
-        )
-
-        return ceil(imageHeight + 16 + titleHeight + 4 + venueHeight + 10 + dateHeight)
+        let height = imageHeight
+            + 16
+            + titleHeight
+            + 3
+            + venueHeight
+            + 10
+            + dateHeight
+        
+        return height
     }
 
     func collectionView(

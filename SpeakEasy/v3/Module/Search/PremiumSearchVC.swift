@@ -97,7 +97,7 @@ final class PremiumSearchVC: UIViewController {
         layout.numberOfColumns = 2
         layout.sectionInsets = UIEdgeInsets(top: 0, left: 24, bottom: AppDesign.useModernIOS26Design ? 14 : 50, right: 24)
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
         layout.showsHeaders = true
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -110,7 +110,7 @@ final class PremiumSearchVC: UIViewController {
         layout.numberOfColumns = 2
 //        layout.sectionInsets = UIEdgeInsets(top: 0, left: 16, bottom: 34, right: 24)
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
         layout.showsHeaders = true
         layout.headerToItemsSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -721,28 +721,17 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
         let venueFont = Constant.Font.geistMedium(size: 14)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
-        let titleHeight = event.title.boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: titleFont],
-            context: nil
-        ).height
+        let titleHeight = ceil(titleFont.lineHeight * 2)
+        let venueHeight = ceil(venueFont.lineHeight)
+        let dateHeight = ceil(dateFont.lineHeight)
 
-        let venueHeight = (event.venueName ?? "").boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: venueFont],
-            context: nil
-        ).height
-
-        let dateHeight = (event.dateText ?? "").boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: dateFont],
-            context: nil
-        ).height
-
-        let height = ceil(imageHeight + 16 + titleHeight + 3 + venueHeight + 10 + dateHeight)
+        let height = imageHeight
+            + 16
+            + titleHeight
+            + 3
+            + venueHeight
+            + 10
+            + dateHeight
         heightCache[cacheKey] = height
         return height
     }

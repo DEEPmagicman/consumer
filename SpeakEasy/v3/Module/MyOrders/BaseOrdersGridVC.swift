@@ -64,7 +64,7 @@ class BaseOrdersGridVC: UIViewController {
         )
 
         layout.interItemSpacing = 14
-        layout.lineSpacing = 22
+        layout.lineSpacing = 16
 
         collectionView = UICollectionView(
             frame: .zero,
@@ -439,77 +439,23 @@ PinterestLayoutDelegate {
             )
         }()
 
-        let titleFont =
-            Constant.Font.geistMedium(size: 15)
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let venueFont = Constant.Font.geistMedium(size: 14)
+        let dateFont = Constant.Font.geistMedium(size: 14)
 
-        let venueFont =
-            Constant.Font.geistMedium(size: 14)
+        let titleHeight = ceil(titleFont.lineHeight * 2)
+        let venueHeight = ceil(venueFont.lineHeight)
+        let dateHeight = ceil(dateFont.lineHeight)
 
-        let dateFont =
-            Constant.Font.geistMedium(size: 14)
-
-        let textWidth = width
-
-        let titleHeight =
-            title.boundingRect(
-                with: CGSize(
-                    width: textWidth,
-                    height: .greatestFiniteMagnitude
-                ),
-                options: [
-                    .usesLineFragmentOrigin,
-                    .usesFontLeading
-                ],
-                attributes: [
-                    .font: titleFont
-                ],
-                context: nil
-            ).height
-
-        let venueHeight =
-            venue.boundingRect(
-                with: CGSize(
-                    width: textWidth,
-                    height: .greatestFiniteMagnitude
-                ),
-                options: [
-                    .usesLineFragmentOrigin,
-                    .usesFontLeading
-                ],
-                attributes: [
-                    .font: venueFont
-                ],
-                context: nil
-            ).height
-
-        let dateHeight =
-            dateText.boundingRect(
-                with: CGSize(
-                    width: textWidth,
-                    height: .greatestFiniteMagnitude
-                ),
-                options: [
-                    .usesLineFragmentOrigin,
-                    .usesFontLeading
-                ],
-                attributes: [
-                    .font: dateFont
-                ],
-                context: nil
-            ).height
-
-        // MARK: Final Height
-
-        let totalHeight =
-            imageHeight +
-            16 +
-            titleHeight +
-            4 +
-            venueHeight +
-            10 +
-            dateHeight
-
-        return ceil(totalHeight)
+        let height = imageHeight
+            + 16
+            + titleHeight
+            + 3
+            + venueHeight
+            + 10
+            + dateHeight
+        
+        return height
     }
     
     func collectionView(

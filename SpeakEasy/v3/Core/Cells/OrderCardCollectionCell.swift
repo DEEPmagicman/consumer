@@ -87,6 +87,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistMedium(size: 15)
         titleLabel.numberOfLines = 2
+        titleLabel.textAlignment = .left
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleLabel)
 
