@@ -414,6 +414,10 @@ struct APIBuilder {
     static var createEventBookingURL: String {
         baseURL + route + event + ticketBooking
     }
+
+    static var checkEventTicketStockURL: String {
+        baseURL + route + event + "/check/stock"
+    }
     
     static var upcomingTicketsURL: String {
           baseURL + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment&include=venue.logo"

@@ -41,6 +41,7 @@ final class SavedGridVC: BaseSingleGridVC {
             self.isInitialLoading = false
 
             if isSuccess {
+                self.setNoInternetVisible(false)
                 let oldCount = self.items.count
 
                 self.items = reset ? bookings : self.items + bookings
@@ -59,14 +60,19 @@ final class SavedGridVC: BaseSingleGridVC {
                 }
             } else {
                 if reset { self.items.removeAll() }
+                self.setNoInternetVisible(
+                    V3NoInternetView.isNoInternet(errMsg)
+                )
 
                 self.reloadUI()
 
-                Alert.showAlertSheet(
-                    style: .alert,
-                    title: errMsg ?? Constant.String.somethingWrong,
-                    message: ""
-                )
+                if !V3NoInternetView.isNoInternet(errMsg) {
+                    Alert.showAlertSheet(
+                        style: .alert,
+                        title: errMsg ?? Constant.String.somethingWrong,
+                        message: ""
+                    )
+                }
             }
         }
     }

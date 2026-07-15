@@ -200,6 +200,138 @@ final class PaymentService {
     }
 
     // MARK: - Booking
+
+    func checkEventTicketStock(
+        eventId: String,
+        code: String,
+        phone: String,
+        gender: String,
+        userId: String,
+        tickets: [[String: Any]],
+        completion: @escaping (
+            _ isAvailable: Bool,
+            _ errMsg: String?
+        ) -> Void
+    ) {
+
+        let stockTickets = tickets.map {
+            [
+                "ticketId": $0["ticketId"] ?? "",
+                "ticketQuantity": $0["ticketQuantity"] ?? 0
+            ] as [String: Any]
+        }
+
+        let params: [String: Any] = [
+            "code": code,
+            "phone": phone,
+            "gender": gender,
+            "eventId": eventId,
+            "consumerUserId": userId,
+            "isAppClipUser": false,
+            "tickets": stockTickets
+        ]
+
+        AFWrapper.postRequest(
+            APIBuilder.checkEventTicketStockURL,
+            params: params,
+            headers: Header.header()
+        ) { response in
+
+            guard let isAvailable = response as? Bool else {
+                completion(false, "internal error")
+                return
+            }
+
+            completion(isAvailable, isAvailable ? nil : Constant.String.somethingWrong)
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain)
+                return
+            }
+
+            completion(false, nil)
+        }
+    }
+
+    func createEventFreeBooking(
+        eventId: String,
+        phone: String,
+        userId: String,
+        tickets: [[String: Any]],
+        bookingId: String? = "",
+        promotionLinkId: String = "",
+        promotionLinkUniqueCode: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ bookingId: String?,
+            _ message: String?
+        ) -> Void
+    ) {
+
+        var params: [String: Any] = [
+            "isAppClipUser": false,
+            "phone": phone,
+            "tickets": tickets,
+            "consumerUserId": userId,
+            "eventId": eventId
+        ]
+
+        if let bookingId,
+           !bookingId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+
+            params["bookingId"] = bookingId
+        }
+
+        let trimmedPromotionLinkId =
+            promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkId.isEmpty {
+            params["promotionLinkId"] = trimmedPromotionLinkId
+        }
+
+        let trimmedPromotionLinkUniqueCode =
+            promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedPromotionLinkUniqueCode.isEmpty {
+            params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
+
+        AFWrapper.postRequest(
+            APIBuilder.freeEventTicketURL,
+            params: params,
+            headers: Header.header()
+        ) { response in
+
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "")
+                return
+            }
+
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id, "")
+            } else if let error = responseDic["error"] as? String,
+                      let message = responseDic["message"] as? String {
+
+                completion(false, error, "", message)
+            } else {
+                completion(false, "Alert", "", "Booking failed")
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain, "", "")
+                return
+            }
+
+            completion(false, nil, "", "")
+        }
+    }
     
     func createEventBooking(
         eventId: String,

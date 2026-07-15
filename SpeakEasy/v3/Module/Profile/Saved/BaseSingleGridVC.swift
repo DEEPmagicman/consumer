@@ -12,6 +12,7 @@ class BaseSingleGridVC: UIViewController {
 
     let collectionView: UICollectionView
     private let emptyView = V3EmptyStateView(style: .savedEvents)
+    private let noInternetView = V3NoInternetView()
 
     var emptyTitle: String { "No data found" }
     var emptyStateStyle: V3EmptyStateStyle { .savedEvents }
@@ -24,6 +25,7 @@ class BaseSingleGridVC: UIViewController {
     var isInitialLoading = true
     var isLoading = false
     var isPaginating = false
+    private var showsNoInternetView = false
 
     init() {
         let layout = PinterestLayout()
@@ -84,6 +86,13 @@ class BaseSingleGridVC: UIViewController {
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
 
+        noInternetView.isHidden = true
+        noInternetView.onTryAgain = { [weak self] in
+            self?.loadData(reset: true)
+        }
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(noInternetView)
+
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -93,11 +102,20 @@ class BaseSingleGridVC: UIViewController {
             emptyView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            noInternetView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
     func loadData(reset: Bool) {}
+
+    func setNoInternetVisible(_ isVisible: Bool) {
+        showsNoInternetView = isVisible
+    }
 
     func configure(_ cell: OrderCardCollectionCell, booking: Booking) {}
 
@@ -106,7 +124,8 @@ class BaseSingleGridVC: UIViewController {
     func reloadUI() {
         let isEmpty = !isInitialLoading && items.isEmpty
 
-        emptyView.isHidden = !isEmpty
+        noInternetView.isHidden = !(isEmpty && showsNoInternetView)
+        emptyView.isHidden = !isEmpty || showsNoInternetView
         collectionView.isHidden = isEmpty
         emptyView.configure(style: emptyStateStyle)
 

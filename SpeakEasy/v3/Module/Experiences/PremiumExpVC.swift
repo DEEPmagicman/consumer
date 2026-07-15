@@ -21,6 +21,7 @@ final class PremiumExpVC: UIViewController {
     private let refreshControl = UIRefreshControl()
     
     private let emptyView = V3EmptyStateView(style: .premiumEvents)
+    private let noInternetView = V3NoInternetView()
     
     private let service = PremiumExperienceService()
     private var items: [PremiumExperienceItem] = []
@@ -36,6 +37,7 @@ final class PremiumExpVC: UIViewController {
     private var didApplyInitialHeaderInset = false
     private var lastAppliedHeaderInset: CGFloat = 0
     private weak var premiumIntroVC: PremiumExperienceIntroVC?
+    private var showsNoInternetView = false
     
     init() {
         let layout = PinterestLayout()
@@ -183,11 +185,23 @@ final class PremiumExpVC: UIViewController {
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
 
+        noInternetView.isHidden = true
+        noInternetView.onTryAgain = { [weak self] in
+            self?.loadPremiumExperiences(reset: true)
+        }
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(noInternetView)
+
         NSLayoutConstraint.activate([
             emptyView.topAnchor.constraint(equalTo: view.topAnchor),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            noInternetView.topAnchor.constraint(equalTo: view.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -508,11 +522,15 @@ private extension PremiumExpVC {
                 if reset {
                     self.items.removeAll()
                 }
+                self.showsNoInternetView = V3NoInternetView.isNoInternet(errMsg)
                 self.reloadUI()
-                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                if !self.showsNoInternetView {
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
                 return
             }
 
+            self.showsNoInternetView = false
             let oldCount = self.items.count
             let uniqueItems = newItems.filter { item in
                 !self.items.contains(where: { $0.id == item.id })
@@ -568,9 +586,14 @@ private extension PremiumExpVC {
 
     func updateEmptyState() {
         let shouldShowEmpty = !isInitialLoading && items.isEmpty
-        emptyView.isHidden = !shouldShowEmpty
+        noInternetView.isHidden = !(shouldShowEmpty && showsNoInternetView)
+        emptyView.isHidden = !shouldShowEmpty || showsNoInternetView
         collectionView.isHidden = shouldShowEmpty
         sectionTitleLabel.isHidden = shouldShowEmpty
+
+        if !noInternetView.isHidden {
+            view.bringSubviewToFront(noInternetView)
+        }
     }
 
     func invalidateFooter() {

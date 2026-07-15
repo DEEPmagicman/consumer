@@ -254,12 +254,12 @@ class Alert {
     }
     
     static func showToast(_ message: String, vc: UIViewController? = nil) {
-        if let vc = vc {
-            vc.view.makeToast(message)
-            return
-        }
-        if let vcc = UIApplication.shared.keyWindow?.rootViewController {
-            vcc.view.makeToast(message)
+        DispatchQueue.main.async {
+            if let vc = vc {
+                vc.view.makeToast(message)
+                return
+            }
+            UIApplication.getTopMostViewController()?.view.makeToast(message)
         }
     }
 }

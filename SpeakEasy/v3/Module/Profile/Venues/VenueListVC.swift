@@ -16,6 +16,7 @@ final class VenueListVC: UIViewController {
     private let collectionView: UICollectionView
 
     private let emptyView = V3EmptyStateView(style: .venues)
+    private let noInternetView = V3NoInternetView()
     
     private let venueService = VenueService()
     
@@ -27,6 +28,7 @@ final class VenueListVC: UIViewController {
     var isLoading = false
     var isInitialLoading = true
     var isPaginating = false
+    private var showsNoInternetView = false
 
     init() {
 
@@ -222,6 +224,7 @@ extension VenueListVC {
             self.isPaginating = false
             
             if isSuccess {
+                self.showsNoInternetView = false
                 let oldCount = self.venues.count
                 
                 self.venues = reset ? venues : self.venues + venues
@@ -240,10 +243,13 @@ extension VenueListVC {
                 }
             } else {
                 if reset { self.venues.removeAll() }
+                self.showsNoInternetView = V3NoInternetView.isNoInternet(errMsg)
                 
                 self.collectionView.reloadData()
                 
-                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                if !self.showsNoInternetView {
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
                 
 //                Alert.showAlertSheet(
 //                    style: .alert,
@@ -303,13 +309,25 @@ extension VenueListVC {
         emptyView.configure(style: .venues)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyView)
+
+        noInternetView.isHidden = true
+        noInternetView.onTryAgain = { [weak self] in
+            self?.getVenues(reset: true)
+        }
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(noInternetView)
         
         NSLayoutConstraint.activate([
             
             emptyView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            noInternetView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -319,7 +337,8 @@ extension VenueListVC {
             !isInitialLoading &&
             venues.isEmpty
 
-        emptyView.isHidden = !isEmpty
+        noInternetView.isHidden = !(isEmpty && showsNoInternetView)
+        emptyView.isHidden = !isEmpty || showsNoInternetView
         collectionView.isHidden = isEmpty
     }
 }

@@ -173,3 +173,131 @@ final class V3EmptyStateView: UIView {
         onBrowseEvents?()
     }
 }
+
+final class V3NoInternetView: UIView {
+
+    var onTryAgain: (() -> Void)?
+
+    private let stackView = UIStackView()
+    private let imageView = UIImageView()
+    private let titleLabel = UILabel()
+    private let tryAgainButton = UIButton(type: .system)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    static func isNoInternet(_ message: String?) -> Bool {
+        if !Connectivity.isConnectedToInternet {
+            return true
+        }
+
+        guard let message else {
+            return false
+        }
+
+        let normalizedMessage =
+        message
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        guard !normalizedMessage.isEmpty else {
+            return false
+        }
+
+        let noInternetMessage =
+        Constant.String.internetNotConnect.lowercased()
+
+        return normalizedMessage == noInternetMessage
+            || normalizedMessage.contains("no internet")
+            || normalizedMessage.contains("connection lost")
+            || normalizedMessage.contains("request timed out")
+            || normalizedMessage.contains("timed out")
+            || normalizedMessage.contains("not connected to the internet")
+            || normalizedMessage.contains("internet connection appears to be offline")
+            || normalizedMessage.contains("network connection was lost")
+    }
+
+    static func backgroundView(
+        frame: CGRect,
+        onTryAgain: @escaping () -> Void
+    ) -> UIView {
+        let container = UIView(frame: frame)
+        container.backgroundColor = .clear
+
+        let noInternetView = V3NoInternetView()
+        noInternetView.onTryAgain = onTryAgain
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(noInternetView)
+
+        NSLayoutConstraint.activate([
+            noInternetView.topAnchor.constraint(equalTo: container.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        return container
+    }
+
+    private func setupUI() {
+        backgroundColor = .clear
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 0
+        addSubview(stackView)
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "noInternetIcon")
+        imageView.contentMode = .scaleAspectFit
+        stackView.addArrangedSubview(imageView)
+
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No Internet Connection"
+        titleLabel.textColor = AppColor.primaryWhiteColor
+        titleLabel.font = Constant.Font.geistMedium(size: 16)
+        titleLabel.textAlignment = .center
+        stackView.addArrangedSubview(titleLabel)
+        stackView.setCustomSpacing(24, after: imageView)
+
+        tryAgainButton.translatesAutoresizingMaskIntoConstraints = false
+        tryAgainButton.backgroundColor = UIColor(hex: "#FFFFFF")
+        tryAgainButton.setTitle("Try again", for: .normal)
+        tryAgainButton.setTitleColor(UIColor(hex: "#121212"), for: .normal)
+        tryAgainButton.titleLabel?.font = Constant.Font.geistMedium(size: 16)
+        tryAgainButton.layer.cornerRadius = 21
+        tryAgainButton.layer.masksToBounds = true
+        tryAgainButton.addTarget(
+            self,
+            action: #selector(onClickTryAgain),
+            for: .touchUpInside
+        )
+        stackView.addArrangedSubview(tryAgainButton)
+        stackView.setCustomSpacing(24, after: titleLabel)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 24),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -24),
+
+            imageView.widthAnchor.constraint(equalToConstant: 85),
+            imageView.heightAnchor.constraint(equalToConstant: 85),
+
+            tryAgainButton.widthAnchor.constraint(equalToConstant: 177),
+            tryAgainButton.heightAnchor.constraint(equalToConstant: 42)
+        ])
+    }
+
+    @objc private func onClickTryAgain() {
+        onTryAgain?()
+    }
+}

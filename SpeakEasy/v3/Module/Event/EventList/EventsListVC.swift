@@ -50,6 +50,7 @@ final class EventsListVC: UIViewController {
     private var screenFilterCity: String?
     private var loadID = 0
     private var topTitleWidthConstraint: NSLayoutConstraint?
+    private var showsNoInternetView = false
 
     var venue: SearchVenueItem? = nil
     var listMode: EventsListMode = .cityEvents
@@ -210,11 +211,15 @@ final class EventsListVC: UIViewController {
                 self.isLoading = false
                 self.isInitialLoading = false
                 self.isPaginating = false
-                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                self.showsNoInternetView = V3NoInternetView.isNoInternet(errMsg)
+                if !self.showsNoInternetView {
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
                 self.reloadUI()
                 return
             }
 
+            self.showsNoInternetView = false
             let oldCount = self.eventList.count
 
             self.eventList = reset
@@ -392,6 +397,14 @@ final class EventsListVC: UIViewController {
     private func makeEmptyStateView() -> UIView {
         let container = UIView(frame: collectionView.bounds)
         container.backgroundColor = .clear
+
+        if showsNoInternetView {
+            return V3NoInternetView.backgroundView(
+                frame: collectionView.bounds
+            ) { [weak self] in
+                self?.fetchEvents(reset: true)
+            }
+        }
 
         let emptyView = V3EmptyStateView(style: .events)
         emptyView.translatesAutoresizingMaskIntoConstraints = false

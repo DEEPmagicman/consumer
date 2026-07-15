@@ -27,6 +27,7 @@ final class DiscoverDateFilterVC: UIViewController {
     private var loadID = 0
     private var isNavigatingToEvent = false
     private let refreshControl = UIRefreshControl()
+    private var showsNoInternetView = false
 
     private let discoverService = DiscoverService()
     
@@ -145,8 +146,14 @@ final class DiscoverDateFilterVC: UIViewController {
     }
 
     private func prepareScrollableHeaderLayout() {
+        if let heightConstraint = dateCollectionView.constraints.first(where: {
+            $0.firstAttribute == .height
+        }) {
+            heightConstraint.constant = 40
+        }
         collectionViewTopConstraint.constant = -30
         dateCollectionView.layer.zPosition = 1
+        view.bringSubviewToFront(dateCollectionView)
     }
 
     // MARK: - Fetch Events
@@ -215,11 +222,15 @@ final class DiscoverDateFilterVC: UIViewController {
                 self.isInitialLoading = false
                 self.isPaginating = false
                 self.refreshControl.endRefreshing()
-                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                self.showsNoInternetView = V3NoInternetView.isNoInternet(errMsg)
+                if !self.showsNoInternetView {
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
                 self.reloadUI()
                 return
             }
 
+            self.showsNoInternetView = false
             let oldCount = self.eventList.count
 
             self.eventList = reset
@@ -303,6 +314,14 @@ final class DiscoverDateFilterVC: UIViewController {
     private func makeEmptyStateView() -> UIView {
         let container = UIView(frame: collectionView.bounds)
         container.backgroundColor = .clear
+
+        if showsNoInternetView {
+            return V3NoInternetView.backgroundView(
+                frame: collectionView.bounds
+            ) { [weak self] in
+                self?.fetchEvents(reset: true)
+            }
+        }
 
         let emptyView = V3EmptyStateView(style: .events)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
@@ -604,6 +623,10 @@ extension DiscoverDateFilterVC: DiscoverHeaderScrollable {
         dateCollectionView.alpha = shouldHideDateStrip ? 0 : 1
         dateCollectionView.isHidden = shouldHideDateStrip
         dateCollectionView.isUserInteractionEnabled = !shouldHideDateStrip
+
+        if !shouldHideDateStrip {
+            view.bringSubviewToFront(dateCollectionView)
+        }
     }
 }
 

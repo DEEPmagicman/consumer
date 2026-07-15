@@ -21,11 +21,76 @@ struct Connectivity {
 final class AFWrapper: NSObject {
     
     private override init() {}
+
+    private static var noInternetError: NSError {
+        NSError(
+            domain: Constant.String.internetNotConnect,
+            code: 0,
+            userInfo: [NSLocalizedDescriptionKey: Constant.String.internetNotConnect]
+        )
+    }
+
+    private static func networkFailureError(_ error: Error?) -> Error? {
+        if let message = networkFailureMessage(from: error) {
+            return NSError(
+                domain: message,
+                code: 0,
+                userInfo: [NSLocalizedDescriptionKey: message]
+            )
+        }
+
+        if error == nil,
+           !Connectivity.isConnectedToInternet {
+            return noInternetError
+        }
+
+        return error
+    }
+
+    private static func networkFailureMessage(from error: Error?) -> String? {
+        guard let error else {
+            return nil
+        }
+
+        let nsError = error as NSError
+
+        if nsError.domain == NSURLErrorDomain {
+            return networkFailureMessage(for: nsError.code)
+        }
+
+        if let underlyingError =
+            nsError.userInfo[NSUnderlyingErrorKey] as? Error {
+            return networkFailureMessage(from: underlyingError)
+        }
+
+        return nil
+    }
+
+    private static func networkFailureMessage(for code: Int) -> String? {
+        switch code {
+        case NSURLErrorNotConnectedToInternet:
+            return Constant.String.internetNotConnect
+
+        case NSURLErrorNetworkConnectionLost:
+            return "Connection Lost"
+
+        case NSURLErrorTimedOut:
+            return "Request Timed Out"
+
+        case NSURLErrorCannotFindHost,
+            NSURLErrorCannotConnectToHost,
+            NSURLErrorDNSLookupFailed:
+            return "Connection Lost"
+
+        default:
+            return nil
+        }
+    }
     
     static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, shouldForceLogout: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
-            failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
+            failure(noInternetError)
             return
         }
         
@@ -48,10 +113,10 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else {
-                        failure(responseObject.result.error)
+                        failure(networkFailureError(responseObject.result.error))
                     }
                 } else {
-                    failure(responseObject.result.error)
+                    failure(networkFailureError(responseObject.result.error))
                 }
             }
             debugPrint(req)
@@ -84,10 +149,10 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(response.result.value)
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else {
-                        failure(response.result.error)
+                        failure(networkFailureError(response.result.error))
                     }
                 } else {
-                    failure(response.result.error)
+                    failure(networkFailureError(response.result.error))
                 }
             }
             debugPrint(req)
@@ -97,7 +162,7 @@ final class AFWrapper: NSObject {
     static func postRequestRefreshToken(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
-            failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
+            failure(noInternetError)
             return
         }
         
@@ -108,11 +173,11 @@ final class AFWrapper: NSObject {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
                     } else {
-                        failure(responseObject.result.error)
+                        failure(networkFailureError(responseObject.result.error))
                     }
                 } else {
                     forceLogout()
-                    failure(responseObject.result.error)
+                    failure(networkFailureError(responseObject.result.error))
                 }
             }
             debugPrint(req)
@@ -134,11 +199,11 @@ final class AFWrapper: NSObject {
                         success(decryptedResponse)
                     } else {
                         forceLogout()
-                        failure(response.result.error)
+                        failure(networkFailureError(response.result.error))
                     }
                 } else {
                     forceLogout()
-                    failure(response.result.error)
+                    failure(networkFailureError(response.result.error))
                 }
             }
             debugPrint(req)
@@ -149,7 +214,7 @@ final class AFWrapper: NSObject {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
-            failure(nil)
+            failure(noInternetError)
             return
         }
         
@@ -171,10 +236,10 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else {
-                        failure(responseObject.result.error)
+                        failure(networkFailureError(responseObject.result.error))
                     }
                 } else {
-                    failure(responseObject.result.error)
+                    failure(networkFailureError(responseObject.result.error))
                 }
             }
             debugPrint(req)
@@ -214,10 +279,10 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(response.result.value)
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else {
-                        failure(response.result.error)
+                        failure(networkFailureError(response.result.error))
                     }
                 } else {
-                    failure(response.result.error)
+                    failure(networkFailureError(response.result.error))
                 }
             }
             debugPrint(req)
@@ -228,7 +293,7 @@ final class AFWrapper: NSObject {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
-            failure(nil)
+            failure(noInternetError)
             return
         }
         if !SharedURL.isEncryptionEnabled {
@@ -259,15 +324,15 @@ final class AFWrapper: NSObject {
                                     }
                                 }
                             } else {
-                                failure(response.result.error)
+                                failure(networkFailureError(response.result.error))
                             }
                         } else {
-                            failure(response.result.error)
+                            failure(networkFailureError(response.result.error))
                         }
                     }
                     debugPrint(req)
                 case .failure(let error):
-                    failure(error)
+                    failure(networkFailureError(error))
                 }
             }
         } else {
@@ -306,15 +371,15 @@ final class AFWrapper: NSObject {
                                     }
                                 }
                             } else {
-                                failure(response.result.error)
+                                failure(networkFailureError(response.result.error))
                             }
                         } else {
-                            failure(response.result.error)
+                            failure(networkFailureError(response.result.error))
                         }
                     }
                     debugPrint(req)
                 case .failure(let error):
-                    failure(error)
+                    failure(networkFailureError(error))
                 }
             }
         }
@@ -322,7 +387,7 @@ final class AFWrapper: NSObject {
     
     static func getRequest(_ strURL: String, isForCard: Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         if !Connectivity.isConnectedToInternet {
-            failure(nil)
+            failure(noInternetError)
             return
         }
         if !SharedURL.isEncryptionEnabled {
@@ -343,10 +408,10 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else {
-                        failure(responseObject.result.error)
+                        failure(networkFailureError(responseObject.result.error))
                     }
                 } else {
-                    failure(responseObject.result.error)
+                    failure(networkFailureError(responseObject.result.error))
                 }
             }
             debugPrint(req)
@@ -384,10 +449,10 @@ final class AFWrapper: NSObject {
                             failure(NSError(domain: errorMessage, code: responseCode, userInfo: [:]))
                         }
                     } else {
-                        failure(nil)
+                        failure(networkFailureError(nil))
                     }
                 case .failure(let error):
-                    failure(error)
+                    failure(networkFailureError(error))
                 }
             }
             debugPrint(req)
@@ -398,7 +463,7 @@ final class AFWrapper: NSObject {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
-            failure(nil)
+            failure(noInternetError)
             return
         }
         //        #if DEBUG
@@ -424,10 +489,10 @@ final class AFWrapper: NSObject {
                             }
                         }
                     } else {
-                        failure(response.result.error)
+                        failure(networkFailureError(response.result.error))
                     }
                 } else {
-                    failure(response.result.error)
+                    failure(networkFailureError(response.result.error))
                 }
             }
             debugPrint(req)
@@ -439,7 +504,7 @@ final class AFWrapper: NSObject {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
-            failure(nil)
+            failure(noInternetError)
             return
         }
         if !SharedURL.isEncryptionEnabled {
@@ -462,10 +527,10 @@ final class AFWrapper: NSObject {
                     } else if responseCode >= 500 {
                         failure(NSError(domain: "", code: 500, userInfo: [:]))
                     } else {
-                        failure(responseObject.result.error)
+                        failure(networkFailureError(responseObject.result.error))
                     }
                 } else {
-                    failure(responseObject.result.error)
+                    failure(networkFailureError(responseObject.result.error))
                 }
             }
             debugPrint(req)
@@ -499,10 +564,10 @@ final class AFWrapper: NSObject {
                     } else if responseCode >= 500 {
                         failure(NSError(domain: "", code: 500, userInfo: [:]))
                     } else {
-                        failure(response.result.error)
+                        failure(networkFailureError(response.result.error))
                     }
                 } else {
-                    failure(response.result.error)
+                    failure(networkFailureError(response.result.error))
                 }
             }
             debugPrint(req)

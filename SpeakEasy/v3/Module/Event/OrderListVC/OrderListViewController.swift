@@ -1211,6 +1211,13 @@ final class OrderListViewController: UIViewController {
             return
         }
 
+        guard let user = UserDefault.shared.user else {
+            isPaymentInitiated = false
+            hidePurchaseLoading()
+            Alert.showToast("Missing user information.")
+            return
+        }
+
         guard !isFreeBookingInProgress else { return }
         isFreeBookingInProgress = true
 
@@ -1222,10 +1229,44 @@ final class OrderListViewController: UIViewController {
             ] as [String: Any]
         }
 
-        PaymentPresenter.createEventFreeBooking(
+        paymentService.checkEventTicketStock(
             eventId: eventId,
-            phone: UserDefault.shared.user?.phone ?? "",
-            userId: UserDefault.shared.user?.id ?? "",
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: tickets
+        ) { [weak self] isAvailable, errMsg in
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                guard isAvailable else {
+                    self.hidePurchaseLoading()
+                    self.isPaymentInitiated = false
+                    self.isFreeBookingInProgress = false
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                    return
+                }
+
+                self.createCheckedFreeEventBooking(
+                    eventId: eventId,
+                    user: user,
+                    tickets: tickets
+                )
+            }
+        }
+    }
+
+    private func createCheckedFreeEventBooking(
+        eventId: String,
+        user: User,
+        tickets: [[String: Any]]
+    ) {
+
+        paymentService.createEventFreeBooking(
+            eventId: eventId,
+            phone: user.phone,
+            userId: user.id,
             tickets: tickets,
             bookingId: bookingId,
             promotionLinkId: promotionLinkId,
