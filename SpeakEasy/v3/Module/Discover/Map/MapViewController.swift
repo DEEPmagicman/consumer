@@ -8,9 +8,9 @@
 import UIKit
 import CoreLocation
 import GoogleMaps
+import SDWebImage
 
 final class SegmentedTabView: UIView {
-
 
     var onSelectionChanged: ((Int) -> Void)?
 
@@ -29,17 +29,17 @@ final class SegmentedTabView: UIView {
     }()
 
     private let indicatorView: UIView = {
-        let v = UIView()
-        v.backgroundColor = .white
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     private let separatorLine: UIView = {
-        let v = UIView()
-        v.backgroundColor = UIColor.white.withAlphaComponent(0.12)
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+        let view = UIView()
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     private var buttons: [UIButton] = []
@@ -61,6 +61,13 @@ final class SegmentedTabView: UIView {
         setup()
     }
 
+    deinit {
+        onSelectionChanged = nil
+        buttons.forEach {
+            $0.removeTarget(nil, action: nil, for: .allEvents)
+        }
+    }
+
     // MARK: - Setup
     private func setup() {
         addSubview(stackView)
@@ -79,7 +86,7 @@ final class SegmentedTabView: UIView {
             separatorLine.heightAnchor.constraint(equalToConstant: 1),
 
             indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            indicatorView.heightAnchor.constraint(equalToConstant: 2),
+            indicatorView.heightAnchor.constraint(equalToConstant: 2)
         ])
 
         // Placeholder constraints — updated in layoutSubviews once width is known
@@ -88,8 +95,8 @@ final class SegmentedTabView: UIView {
         indicatorLeading.isActive = true
         indicatorWidth.isActive = true
 
-        for (i, title) in items.enumerated() {
-            let btn = makeButton(title: title, index: i)
+        for (index, title) in items.enumerated() {
+            let btn = makeButton(title: title, index: index)
             buttons.append(btn)
             stackView.addArrangedSubview(btn)
         }
@@ -197,6 +204,8 @@ class MapViewController: UIViewController {
     private var isInitialLoadingEvents = false
     private var isPaginatingVenues = false
     private var isPaginatingEvents = false
+    private var didReleaseOffscreenHeavyResources = false
+    private var hasReleasedResources = false
     private var venueLoadID = 0
     private var eventLoadID = 0
     private let bottomPanelCollapsedHeight: CGFloat = 400
@@ -225,6 +234,25 @@ class MapViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         updateBrowsingTitle()
         resetDataAndFetchCurrentTab()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        restoreOffscreenHeavyResourcesIfNeeded()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isLeavingScreenPermanently {
+            releaseResources()
+        } else {
+            releaseOffscreenHeavyResources()
+        }
+    }
+
+    deinit {
+        releaseResources()
     }
 
     override func viewDidLayoutSubviews() {
@@ -398,6 +426,8 @@ class MapViewController: UIViewController {
     }
 
     private func setupMapView() {
+        guard googleMapView == nil else { return }
+
         let camera = GMSCameraPosition(
             latitude: 41.8781,
             longitude: -87.6298,
@@ -422,6 +452,109 @@ class MapViewController: UIViewController {
 
         mapView.addSubview(googleMapView)
         self.googleMapView = googleMapView
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            presentingViewController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseOffscreenHeavyResources() {
+        guard isViewLoaded, !didReleaseOffscreenHeavyResources else { return }
+        didReleaseOffscreenHeavyResources = true
+
+        tearDownGoogleMapView()
+        cancelVisibleImageLoads()
+        tableView.tableFooterView = UIView(frame: .zero)
+    }
+
+    private func restoreOffscreenHeavyResourcesIfNeeded() {
+        guard didReleaseOffscreenHeavyResources else { return }
+        didReleaseOffscreenHeavyResources = false
+
+        setupMapView()
+        refreshMapAnnotations(animated: false)
+        tableView.reloadData()
+        updatePaginationFooter()
+        updateEmptyState()
+    }
+
+    private func releaseResources() {
+        guard isViewLoaded, !hasReleasedResources else { return }
+        hasReleasedResources = true
+        didReleaseOffscreenHeavyResources = false
+
+        venueLoadID += 1
+        eventLoadID += 1
+        isLoadingVenues = false
+        isLoadingEvents = false
+        isInitialLoadingVenues = false
+        isInitialLoadingEvents = false
+        isPaginatingVenues = false
+        isPaginatingEvents = false
+
+        segmentedTab.onSelectionChanged = nil
+        tearDownGoogleMapView()
+        cancelVisibleImageLoads()
+        tableView.delegate = nil
+        tableView.dataSource = nil
+        tableView.prefetchDataSource = nil
+        tableView.tableFooterView = nil
+        tableView.backgroundView = nil
+        tableView.panGestureRecognizer.removeTarget(
+            self,
+            action: #selector(handleTablePan(_:))
+        )
+
+        bottomPanelView.gestureRecognizers?.forEach {
+            bottomPanelView.removeGestureRecognizer($0)
+        }
+
+        tableView.gestureRecognizers?
+            .filter { $0 is UISwipeGestureRecognizer }
+            .forEach { tableView.removeGestureRecognizer($0) }
+
+        venueList.removeAll()
+        eventList.removeAll()
+        SDImageCache.shared.clearMemory()
+    }
+
+    private func tearDownGoogleMapView() {
+        guard let googleMapView else { return }
+
+        googleMapView.delegate = nil
+        googleMapView.clear()
+        googleMapView.removeFromSuperview()
+        self.googleMapView = nil
+    }
+
+    private func cancelVisibleImageLoads() {
+        tableView.visibleCells.forEach { cell in
+            if let cell = cell as? MapVenueTableViewCell {
+                cell.releaseImageResources()
+            } else if let cell = cell as? MapEventsTableViewCell {
+                cell.releaseImageResources()
+            }
+        }
+        cancelImageLoads(in: tableView.tableFooterView)
+        cancelImageLoads(in: tableView.backgroundView)
+    }
+
+    private func cancelImageLoads(in view: UIView?) {
+        guard let view else { return }
+
+        if let imageView = view as? UIImageView {
+            imageView.sd_cancelCurrentImageLoad()
+            imageView.image = nil
+        }
+
+        view.subviews.forEach { cancelImageLoads(in: $0) }
     }
 
     private func resetDataAndFetchCurrentTab() {
@@ -1198,6 +1331,11 @@ private final class DiscoverImageMarkerView: UIView {
         setup()
     }
 
+    deinit {
+        imageView.sd_cancelCurrentImageLoad()
+        logoImageView.sd_cancelCurrentImageLoad()
+    }
+
     private func setup() {
 
         imageView.frame = bounds
@@ -1221,14 +1359,28 @@ private final class DiscoverImageMarkerView: UIView {
         imageURL: String?,
         logoImageURL: String?
     ) {
+        let scale = UIScreen.main.scale
+
         imageView.sd_setImage(
             with: URL(string: imageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
+            placeholderImage: UIImage(named: "newSpeakeasy"),
+            options: [.scaleDownLargeImages],
+            context: [
+                .imageThumbnailPixelSize: NSValue(
+                    cgSize: CGSize(width: 46 * scale, height: 46 * scale)
+                )
+            ]
         )
 
         logoImageView.sd_setImage(
             with: URL(string: logoImageURL ?? ""),
-            placeholderImage: UIImage(named: "")
+            placeholderImage: nil,
+            options: [.scaleDownLargeImages],
+            context: [
+                .imageThumbnailPixelSize: NSValue(
+                    cgSize: CGSize(width: 34 * scale, height: 34 * scale)
+                )
+            ]
         )
     }
 }
@@ -1245,6 +1397,10 @@ private final class MapTableShimmerCell: UITableViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
+    }
+
+    deinit {
+        shimmerContent.releaseResources()
     }
 
     private func setup() {
@@ -1278,6 +1434,11 @@ private final class MapPaginationShimmerFooterView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
+    }
+
+    deinit {
+        firstRow.releaseResources()
+        secondRow.releaseResources()
     }
 
     private func setup() {
@@ -1335,6 +1496,19 @@ private final class MapRowShimmerContentView: UIView {
             shimmerViews.forEach { $0.stopShimmer() }
         } else {
             shimmerViews.forEach { $0.startShimmer() }
+        }
+    }
+
+    func releaseResources() {
+        [
+            imageShimmer,
+            titleShimmer,
+            subtitleShimmer,
+            badgeShimmer,
+            actionShimmer
+        ].forEach {
+            $0.stopShimmer()
+            $0.removeFromSuperview()
         }
     }
 

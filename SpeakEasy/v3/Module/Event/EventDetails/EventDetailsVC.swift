@@ -89,7 +89,7 @@ class EventDetailsVC: UIViewController {
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
-    private var playerView: YTPlayerView!
+    private var playerView: YTPlayerView?
     private var isExpanded = false
     private var isPolicyLblExpanded = false
     private let collapsedLines = 5
@@ -135,6 +135,8 @@ class EventDetailsVC: UIViewController {
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
     private var autoScrollTimer: Timer?
+    private var hasReleasedHeavyResources = false
+    private var isBackNavigationInProgress = false
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
@@ -142,6 +144,8 @@ class EventDetailsVC: UIViewController {
     private var hasLoadedSeatingAreas = false
     private var didLoadSeatingAreasSuccessfully = false
     private var savedEventId: String?
+    private var representedMainImageURLString: String?
+    private var isLoadingMainImage = false
     private let posterHeaderView = EventPosterHeaderView()
     private let collapseThreshold: CGFloat = 20
     private let navInitialTopSpacing: CGFloat = 16
@@ -150,15 +154,7 @@ class EventDetailsVC: UIViewController {
     private var galleryImageViews: [UIImageView] = []
     private var galleryOverlayView: UIView?
     private var galleryMoreLabel: UILabel?
-    private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
-        let gesture = UIScreenEdgePanGestureRecognizer(
-            target: self,
-            action: #selector(handleLeftEdgeBackGesture(_:))
-        )
-        gesture.edges = .left
-        gesture.delegate = self
-        return gesture
-    }()
+    private var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer?
     
     private var eventService = EventService()
     private var paymentService = PaymentService()
@@ -208,11 +204,8 @@ class EventDetailsVC: UIViewController {
         super.viewDidLoad()
         setupPosterHeaderView()
         let imageURLString = (event?.flyer?.key ?? "").imageURL
-        mainImg.sd_setImage(
-            with: URL(string: imageURLString),
-            placeholderImage: Constant.Icon.uploadImage
-        )
 
+        loadMainImageIfNeeded(from: imageURLString)
         posterHeaderView.loadImage(from: imageURLString)
         setupMainImageStyle()
         scrollView.contentInsetAdjustmentBehavior = .never
@@ -253,7 +246,6 @@ class EventDetailsVC: UIViewController {
         checkOutBtnView.setButtonTitle("Continue to Checkout")
         configureCheckoutBarInitialState()
         registerSocketDelegate()
-
         updateCheckoutSummaryView()
 
     }
@@ -265,6 +257,8 @@ class EventDetailsVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        isBackNavigationInProgress = false
+        leftEdgeBackGesture?.isEnabled = true
         startAutoScrollIfNeeded()
         enableInteractiveSwipeBack()
         setupLeftEdgeBackGestureIfNeeded()
@@ -275,6 +269,7 @@ class EventDetailsVC: UIViewController {
         view.layoutIfNeeded()
         updateNavPosition(for: scrollView.contentOffset.y)
         updateVenueLogoCornerRadius()
+
         clearInlineRSVPSelectionIfNeeded()
         refreshEventDetailOnReturnIfNeeded()
     }
@@ -283,18 +278,257 @@ class EventDetailsVC: UIViewController {
         super.viewDidDisappear(animated)
         view.layoutIfNeeded()
         stopAutoScroll()
-//        unregisterSocketDelegate()
-    }
 
+        if isLeavingScreenPermanently {
+            releaseHeavyResources()
+        }
+    }
+    
     deinit {
+        releaseHeavyResources()
         unregisterSocketDelegate()
         ticketTableObserver?.invalidate()
         groupTableObserver?.invalidate()
         faqsTableObserver?.invalidate()
         additionalButtonsTableObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
+
+        if isViewLoaded {
+            scrollView.delegate = nil
+            guestListCollectionView.delegate = nil
+            guestListCollectionView.dataSource = nil
+            lineUpCollectionView.delegate = nil
+            lineUpCollectionView.dataSource = nil
+            faqsTableView.delegate = nil
+            faqsTableView.dataSource = nil
+            ticketTableView.delegate = nil
+            ticketTableView.dataSource = nil
+            groupTableView.delegate = nil
+            groupTableView.dataSource = nil
+            additionalButtonsTableView.delegate = nil
+            additionalButtonsTableView.dataSource = nil
+            checkOutBtnView.delegate = nil
+        }
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            presentingViewController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseHeavyResources() {
+        guard isViewLoaded, !hasReleasedHeavyResources else { return }
+        hasReleasedHeavyResources = true
+        unregisterSocketDelegate()
         stopAutoScroll()
-        autoScrollTimer?.invalidate()
+        eventDetailsSkeletonView.releaseResources()
+        youTubeShimmerView.stopShimmer()
+        youTubeShimmerView.layer.removeAllAnimations()
+        tearDownYouTubePlayer()
+        tearDownGoogleMapView()
+        tearDownImagePager()
+        posterHeaderView.cancelImageLoad()
+        cancelImageLoads()
+        imageListView.subviews.forEach { $0.removeFromSuperview() }
+        galleryImageURLs.removeAll()
+        galleryImageViews.removeAll()
+        galleryOverlayView?.removeFromSuperview()
+        galleryOverlayView = nil
+        galleryMoreLabel = nil
+        detachDelegatesAndTargets()
+        clearEventDetailState()
+        SDImageCache.shared.clearMemory()
+    }
+
+    private func cancelImageLoads() {
+        representedMainImageURLString = nil
+        isLoadingMainImage = false
+        mainImg.sd_cancelCurrentImageLoad()
+        mainImg.image = nil
+        venueLogo.sd_cancelCurrentImageLoad()
+        venueLogo.image = nil
+        venueLogoImg.sd_cancelCurrentImageLoad()
+        venueLogoImg.image = nil
+        cancelImageLoads(in: imageListView)
+    }
+
+    private func cancelImageLoads(in view: UIView) {
+        if let imageView = view as? UIImageView {
+            imageView.sd_cancelCurrentImageLoad()
+            imageView.image = nil
+        }
+
+        view.subviews.forEach { cancelImageLoads(in: $0) }
+    }
+
+    private func loadMainImageIfNeeded(from imageURLString: String) {
+        let normalizedURLString = imageURLString.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if representedMainImageURLString == normalizedURLString,
+           isLoadingMainImage || mainImg.image != nil {
+            return
+        }
+
+        mainImg.sd_cancelCurrentImageLoad()
+        representedMainImageURLString = normalizedURLString
+
+        guard !normalizedURLString.isEmpty, let url = URL(string: normalizedURLString) else {
+            isLoadingMainImage = false
+            mainImg.image = Constant.Icon.uploadImage
+            return
+        }
+
+        isLoadingMainImage = true
+        let requestedURLString = normalizedURLString
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: max(mainImg.bounds.width, UIScreen.main.bounds.width) * scale,
+            height: max(mainImg.bounds.height, 260) * scale
+        )
+
+        mainImg.sd_setImage(
+            with: url,
+            placeholderImage: mainImg.image ?? Constant.Icon.uploadImage,
+            options: [
+                .continueInBackground,
+                .scaleDownLargeImages
+            ],
+            context: [
+                .imageThumbnailPixelSize: NSValue(cgSize: targetSize)
+            ],
+            progress: nil,
+            completed: { [weak self] image, _, _, _ in
+                guard let self,
+                      self.representedMainImageURLString == requestedURLString else {
+                    return
+                }
+
+                self.isLoadingMainImage = false
+
+                if image == nil {
+                    self.representedMainImageURLString = nil
+                }
+            }
+        )
+    }
+
+    private func tearDownImagePager() {
+        guard let imagePagerVC else { return }
+
+        imagePagerVC.releaseResources()
+        imagePagerVC.willMove(toParent: nil)
+        imagePagerVC.view.removeFromSuperview()
+        imagePagerVC.removeFromParent()
+        self.imagePagerVC = nil
+    }
+
+    private func tearDownYouTubePlayer() {
+        guard let playerView else { return }
+
+        playerView.stopVideo()
+        playerView.delegate = nil
+        playerView.removeFromSuperview()
+        self.playerView = nil
+        isYouTubePlayerReady = false
+    }
+
+    private func tearDownGoogleMapView() {
+        guard let googleMapView else { return }
+
+        googleMapView.delegate = nil
+        googleMapView.clear()
+        googleMapView.removeFromSuperview()
+        self.googleMapView = nil
+    }
+
+    private func detachDelegatesAndTargets() {
+        scrollView.delegate = nil
+        guestListCollectionView.delegate = nil
+        guestListCollectionView.dataSource = nil
+        lineUpCollectionView.delegate = nil
+        lineUpCollectionView.dataSource = nil
+        faqsTableView.delegate = nil
+        faqsTableView.dataSource = nil
+        ticketTableView.delegate = nil
+        ticketTableView.dataSource = nil
+        groupTableView.delegate = nil
+        groupTableView.dataSource = nil
+        additionalButtonsTableView.delegate = nil
+        additionalButtonsTableView.dataSource = nil
+        checkOutBtnView.delegate = nil
+
+        if navigationController?.interactivePopGestureRecognizer?.delegate === self {
+            navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        }
+
+        detachLeftEdgeBackGesture()
+        unLockTF.removeTarget(
+            self,
+            action: #selector(unLockPasswordDidChange),
+            for: .editingChanged
+        )
+
+        unLockBtn.gestureRecognizers?.forEach {
+            unLockBtn.removeGestureRecognizer($0)
+        }
+
+        [
+            instaImageView,
+            tikTokImageView,
+            faceBookImageView,
+            xImageView,
+            youTubeImageView,
+            websiteImageView
+        ].forEach { imageView in
+            imageView?.gestureRecognizers?.forEach {
+                imageView?.removeGestureRecognizer($0)
+            }
+        }
+    }
+
+    private func detachLeftEdgeBackGesture() {
+        guard let leftEdgeBackGesture else { return }
+
+        leftEdgeBackGesture.isEnabled = false
+        leftEdgeBackGesture.delegate = nil
+        leftEdgeBackGesture.removeTarget(
+            self,
+            action: #selector(handleLeftEdgeBackGesture(_:))
+        )
+        leftEdgeBackGesture.view?.removeGestureRecognizer(leftEdgeBackGesture)
+        self.leftEdgeBackGesture = nil
+    }
+
+    private func clearEventDetailState() {
+        onSaveStateChanged = nil
+        event = nil
+        venueDetails = nil
+        eventTicketId.removeAll()
+        artists.removeAll()
+        tickets.removeAll()
+        normalTickets.removeAll()
+        groupedNormalTickets.removeAll()
+        expandedGroupIds.removeAll()
+        expandedTicketDescriptions.removeAll()
+        ticketLinks.removeAll()
+        disabledTicketIds.removeAll()
+        attendees.removeAll()
+        totalAttendees = 0
+        totalTicketSold = nil
+        attendeesHasMore = false
+        faqs.removeAll()
+        expandedFAQIndex = nil
+        seatingAreas.removeAll()
+        seatingAreasFilteredOut.removeAll()
+        galleryImageURLs.removeAll()
+        galleryImageViews.removeAll()
+        savedEventId = nil
     }
 
     private func startFAQsTableObserver() {
@@ -475,12 +709,21 @@ class EventDetailsVC: UIViewController {
 
     private func setupLeftEdgeBackGestureIfNeeded() {
         guard isPresentedAsRootNavigationScreen,
-              leftEdgeBackGesture.view == nil
+              leftEdgeBackGesture?.view == nil
         else {
             return
         }
 
-        view.addGestureRecognizer(leftEdgeBackGesture)
+        let gesture = leftEdgeBackGesture ?? UIScreenEdgePanGestureRecognizer(
+            target: self,
+            action: #selector(handleLeftEdgeBackGesture(_:))
+        )
+        gesture.edges = .left
+        gesture.delegate = self
+        gesture.isEnabled = true
+        leftEdgeBackGesture = gesture
+
+        view.addGestureRecognizer(gesture)
     }
 
     private var isPresentedAsRootNavigationScreen: Bool {
@@ -490,6 +733,14 @@ class EventDetailsVC: UIViewController {
     }
 
     private func handleBackNavigation() {
+        guard !isBackNavigationInProgress,
+              !hasReleasedHeavyResources else {
+            return
+        }
+
+        isBackNavigationInProgress = true
+        leftEdgeBackGesture?.isEnabled = false
+
         if (navigationController?.viewControllers.count ?? 0) > 1 {
             Navigate.to.back(self)
         } else {
@@ -1598,9 +1849,18 @@ class EventDetailsVC: UIViewController {
         eventTitleMarqueeLabel.setText(event.title)
         if let imageUrlString = event.venue?.logo?.key.imageURL,
            let url = URL(string: imageUrlString) {
-            venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
-                guard let self = self else { return }
-            }
+            let scale = UIScreen.main.scale
+            let targetSize = CGSize(
+                width: max(venueLogo.bounds.width, 72) * scale,
+                height: max(venueLogo.bounds.height, 72) * scale
+            )
+
+            venueLogo.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                options: [.continueInBackground, .scaleDownLargeImages],
+                context: [.imageThumbnailPixelSize: NSValue(cgSize: targetSize)]
+            )
             
         } else {
             venueLogo.isHidden = true
@@ -1659,7 +1919,11 @@ class EventDetailsVC: UIViewController {
 
         disabledTicketIds.removeAll()
 
-        mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        titleLbl.text = event.title
+        let flyerImageURLString = (event.flyer?.key ?? "").imageURL
+        loadMainImageIfNeeded(from: flyerImageURLString)
+        posterHeaderView.loadImage(from: flyerImageURLString)
+        
         titleLbl.text = event.title
         eventTitleMarqueeLabel.setText(event.title)
         fullText = event.description
@@ -1730,7 +1994,7 @@ class EventDetailsVC: UIViewController {
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
                 showYouTubeShimmer()
-                playerView.load(
+                playerView?.load(
                     withVideoId: id,
                     playerVars: youtubePlayerVars()
                 )
@@ -1739,28 +2003,60 @@ class EventDetailsVC: UIViewController {
             }
         } else {
             hideYouTubeShimmer()
+            tearDownYouTubePlayer()
             youTubeSuperView.isHidden = true
         }
 
-        venueLogoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
-        
+        let logoScale = UIScreen.main.scale
+        let compactLogoSize = CGSize(
+            width: max(venueLogoImg.bounds.width, 80) * logoScale,
+            height: max(venueLogoImg.bounds.height, 80) * logoScale
+        )
+
+        venueLogoImg.sd_setImage(
+            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+            placeholderImage: nil,
+            options: [.continueInBackground, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: compactLogoSize)]
+        )
         
         if let imageUrlString = venueDetails?.logo?.key.imageURL,
            let url = URL(string: imageUrlString) {
-            
-            venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
-                guard let self else { return }
-                self.venueLogo.alpha = 0
-                self.venueLogo.transform = CGAffineTransform(translationX: -50, y: 0)
-                UIView.animate(
-                    withDuration: 0.4, delay: 0,
-                    options: [.curveEaseOut]
-                ) { [weak self] in
-                    self?.venueLogo.isHidden = false
-                    self?.venueLogo.alpha = 1
-                    self?.venueLogo.transform = .identity
+
+            let shouldAnimate = (venueLogo.image == nil)
+            let navLogoSize = CGSize(
+                width: max(venueLogo.bounds.width, 72) * logoScale,
+                height: max(venueLogo.bounds.height, 72) * logoScale
+            )
+
+            venueLogo.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                options: [.continueInBackground, .scaleDownLargeImages],
+                context: [.imageThumbnailPixelSize: NSValue(cgSize: navLogoSize)], progress: nil,
+                completed: { [weak self] _, _, _, _ in
+                    guard let self = self else { return }
+
+                    if shouldAnimate {
+                        self.venueLogo.alpha = 0
+                        self.venueLogo.transform = CGAffineTransform(translationX: -50, y: 0)
+
+                        UIView.animate(
+                            withDuration: 0.4,
+                            delay: 0,
+                            options: [.curveEaseOut]
+                        ) {
+                            self.venueLogo.isHidden = false
+                            self.venueLogo.alpha = 1
+                            self.venueLogo.transform = .identity
+                        }
+                    } else {
+                        self.venueLogo.isHidden = false
+                        self.venueLogo.alpha = 1
+                        self.venueLogo.transform = .identity
+                    }
                 }
-            }
+            )
         } else {
             venueLogo.isHidden = true
         }
@@ -3361,6 +3657,10 @@ class ImagePageVC: UIViewController {
     var imageURL: String = ""
     private let imageView = UIImageView()
 
+    deinit {
+        imageView.sd_cancelCurrentImageLoad()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -3370,7 +3670,18 @@ class ImagePageVC: UIViewController {
         imageView.clipsToBounds = true
         view.addSubview(imageView)
 
-        imageView.sd_setImage(with: URL(string: imageURL))
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: max(view.bounds.width, UIScreen.main.bounds.width) * scale,
+            height: max(view.bounds.height, UIScreen.main.bounds.height) * scale
+        )
+
+        imageView.sd_setImage(
+            with: URL(string: imageURL),
+            placeholderImage: Constant.Icon.uploadImage,
+            options: [.continueInBackground, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: targetSize)]
+        )
     }
 }
 
@@ -3895,16 +4206,17 @@ extension EventDetailsVC {
 extension EventDetailsVC: YTPlayerViewDelegate {
 
     func setupYouTubePlayer() {
-        if playerView != nil {
+        if let playerView {
             playerView.delegate = self
             return
         }
 
-        playerView = YTPlayerView()
+        let playerView = YTPlayerView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         playerView.delegate = self
 
         youTubePlayerView.addSubview(playerView)
+        self.playerView = playerView
 
         NSLayoutConstraint.activate([
             playerView.topAnchor.constraint(equalTo: youTubePlayerView.topAnchor),
@@ -3975,8 +4287,11 @@ extension EventDetailsVC: UIGestureRecognizerDelegate {
             return (navigationController?.viewControllers.count ?? 0) > 1
         }
 
-        if gestureRecognizer === leftEdgeBackGesture {
-            return isPresentedAsRootNavigationScreen
+        if let leftEdgeBackGesture,
+           gestureRecognizer === leftEdgeBackGesture {
+            return isPresentedAsRootNavigationScreen &&
+                !isBackNavigationInProgress &&
+                !hasReleasedHeavyResources
         }
 
         return true
@@ -4078,15 +4393,34 @@ private final class EventDetailsLocationMarkerView: UIView {
         backgroundImageURL: String?,
         logoImageURL: String?
     ) {
+        let scale = UIScreen.main.scale
+        let backgroundSize = CGSize(
+            width: Layout.markerSize * scale,
+            height: Layout.markerSize * scale
+        )
+        let logoSize = CGSize(
+            width: Layout.logoSize * scale,
+            height: Layout.logoSize * scale
+        )
+
         backgroundImageView.sd_setImage(
             with: URL(string: backgroundImageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
+            placeholderImage: UIImage(named: "newSpeakeasy"),
+            options: [.continueInBackground, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: backgroundSize)]
         )
 
         logoImageView.sd_setImage(
             with: URL(string: logoImageURL ?? ""),
-            placeholderImage: UIImage(named: "newSpeakeasy")
+            placeholderImage: UIImage(named: "newSpeakeasy"),
+            options: [.continueInBackground, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: logoSize)]
         )
+    }
+
+    deinit {
+        backgroundImageView.sd_cancelCurrentImageLoad()
+        logoImageView.sd_cancelCurrentImageLoad()
     }
 }
 
@@ -4278,6 +4612,13 @@ final class EventDetailsSkeletonView: UIView {
         allShimmerViews.forEach { $0.stopShimmer() }
         isHidden = true
     }
+
+    func releaseResources() {
+        stopShimmer()
+        allShimmerViews.forEach { $0.removeFromSuperview() }
+        allShimmerViews.removeAll()
+        lastLayoutWidth = 0
+    }
 }
 
 final class EventPosterHeaderView: UIView {
@@ -4287,6 +4628,8 @@ final class EventPosterHeaderView: UIView {
     private let backgroundImageView = UIImageView()
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let darkOverlayView = UIView()
+    private var representedImageURLString: String?
+    private var isLoadingImage = false
     
     private let bottomGradientView = UIView()
     private let bottomGradientLayer = CAGradientLayer()
@@ -4382,24 +4725,56 @@ final class EventPosterHeaderView: UIView {
     }
     
     func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else {
+        let normalizedURLString = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if representedImageURLString == normalizedURLString,
+           isLoadingImage || backgroundImageView.image != nil {
+            return
+        }
+
+        backgroundImageView.sd_cancelCurrentImageLoad()
+        representedImageURLString = normalizedURLString
+
+        guard !normalizedURLString.isEmpty, let url = URL(string: normalizedURLString) else {
+            isLoadingImage = false
             setBackgroundImage(nil)
             return
         }
 
-        SDWebImageManager.shared.loadImage(
+        isLoadingImage = true
+        let requestedURLString = normalizedURLString
+        let shouldAnimate = backgroundImageView.image == nil
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: max(bounds.width, UIScreen.main.bounds.width) * scale,
+            height: max(bounds.height, 360) * scale
+        )
+
+        backgroundImageView.alpha = shouldAnimate ? 0 : 0.75
+
+        backgroundImageView.sd_setImage(
             with: url,
-            options: [.retryFailed, .continueInBackground, .highPriority],
-            progress: nil
-        ) { [weak self] image, _, _, _, _, _ in
-            guard let self, let image else { return }
+            placeholderImage: backgroundImageView.image,
+            options: [.continueInBackground, .highPriority, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: targetSize)], progress: nil,
+            completed: { [weak self] image, _, _, _ in
+                guard let self,
+                      self.representedImageURLString == requestedURLString else {
+                    return
+                }
 
-            DispatchQueue.main.async {
-                let shouldAnimate = self.backgroundImageView.image == nil
-                self.backgroundImageView.alpha = shouldAnimate ? 0 : 0.75
-                self.setBackgroundImage(image)
+                self.isLoadingImage = false
 
-                guard shouldAnimate else { return }
+                guard image != nil else {
+                    self.representedImageURLString = nil
+                    self.backgroundImageView.alpha = 0.75
+                    return
+                }
+
+                guard shouldAnimate else {
+                    self.backgroundImageView.alpha = 0.75
+                    return
+                }
 
                 UIView.animate(
                     withDuration: 0.22,
@@ -4409,7 +4784,19 @@ final class EventPosterHeaderView: UIView {
                     self.backgroundImageView.alpha = 0.75
                 }
             }
-        }
+        )
+    }
+
+    func cancelImageLoad() {
+        representedImageURLString = nil
+        isLoadingImage = false
+        backgroundImageView.sd_cancelCurrentImageLoad()
+        backgroundImageView.layer.removeAllAnimations()
+        backgroundImageView.image = nil
+    }
+
+    deinit {
+        cancelImageLoad()
     }
 }
 
@@ -4431,6 +4818,7 @@ extension EventDetailsVC: UIScrollViewDelegate {
 private extension EventDetailsVC {
 
     func setupGalleryGrid() {
+        cancelImageLoads(in: imageListView)
         imageListView.subviews.forEach { $0.removeFromSuperview() }
 
         let gallery = (event?.eventGallery ?? [])
@@ -4483,9 +4871,17 @@ private extension EventDetailsVC {
             imageView.clipsToBounds = true
             imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
+            let scale = UIScreen.main.scale
+            let targetSize = CGSize(
+                width: itemWidth * scale,
+                height: itemHeight * scale
+            )
+
             imageView.sd_setImage(
                 with: URL(string: galleryImageURLs[index]),
-                placeholderImage: Constant.Icon.uploadImage
+                placeholderImage: Constant.Icon.uploadImage,
+                options: [.continueInBackground, .scaleDownLargeImages],
+                context: [.imageThumbnailPixelSize: NSValue(cgSize: targetSize)]
             )
 
             imageContainer.addSubview(imageView)
@@ -4601,15 +4997,28 @@ final class EventGalleryImageCell: UICollectionViewCell {
     }
 
     func configure(urlString: String) {
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: max(bounds.width, 160) * scale,
+            height: max(bounds.height, 160) * scale
+        )
+
         imageView.sd_setImage(
             with: URL(string: urlString),
-            placeholderImage: Constant.Icon.uploadImage
+            placeholderImage: Constant.Icon.uploadImage,
+            options: [.continueInBackground, .scaleDownLargeImages],
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: targetSize)]
         )
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
+    }
+
+    deinit {
+        imageView.sd_cancelCurrentImageLoad()
     }
 }
 
@@ -4635,6 +5044,15 @@ final class EventGalleryVC: UIViewController {
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
+
+    deinit {
+        imageURLs.removeAll()
+
+        if isViewLoaded {
+            collectionView.delegate = nil
+            collectionView.dataSource = nil
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -4821,9 +5239,12 @@ private extension EventDetailsVC {
     }
 
     func registerSocketDelegate() {
-        WebSocketWrapper.shared.updateSocketContext(venueId: venueDetails?.id ?? event?.venue?.id)
+        if let venueId = venueDetails?.id ?? event?.venue?.id {
+            WebSocketWrapper.shared.updateSocketContext(venueId: venueId)
+        }
+
         WebSocketWrapper.shared.removeDelegate(self)
-        WebSocketWrapper.shared.addDelegate(self) 
+        WebSocketWrapper.shared.addDelegate(self)
     }
 
     func unregisterSocketDelegate() {

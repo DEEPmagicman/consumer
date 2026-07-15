@@ -53,6 +53,12 @@ class EventGuestListCVC: UICollectionViewCell {
         bgView.isHidden = false
     }
 
+    deinit {
+        gradientLayer?.removeFromSuperlayer()
+        shimmerView.stopShimmer()
+        imageView.sd_cancelCurrentImageLoad()
+    }
+
     func configure(with attendee: Attendee) {
         shimmerView.stopShimmer()
         shimmerView.isHidden = true
@@ -64,7 +70,18 @@ class EventGuestListCVC: UICollectionViewCell {
             imageView.isHidden = false
             attendeesName.isHidden = true
 
-            imageView.sd_setImage(with: URL(string: imageKey))
+            let scale = UIScreen.main.scale
+
+            imageView.sd_setImage(
+                with: URL(string: imageKey),
+                placeholderImage: nil,
+                options: [.scaleDownLargeImages],
+                context: [
+                    .imageThumbnailPixelSize: NSValue(
+                        cgSize: CGSize(width: 80 * scale, height: 80 * scale)
+                    )
+                ]
+            )
 
         } else {
 

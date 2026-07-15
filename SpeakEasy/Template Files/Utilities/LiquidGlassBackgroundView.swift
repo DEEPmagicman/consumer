@@ -130,11 +130,7 @@ final class LiquidGlassBackgroundView: UIView {
     }
     
     deinit {
-        if AppDesign.useModernIOS26Design {
-            if #available(iOS 26.0, *) {
-                hostingController.view.removeFromSuperview()
-            }
-        }
+        releaseResources()
     }
     
     convenience init(
@@ -193,6 +189,12 @@ final class LiquidGlassBackgroundView: UIView {
             hostingController.view.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
+    }
+
+    func releaseResources() {
+        hostingController.rootView = AnyView(EmptyView())
+        hostingController.view.removeFromSuperview()
+        hostingInstalled = false
     }
 }
 

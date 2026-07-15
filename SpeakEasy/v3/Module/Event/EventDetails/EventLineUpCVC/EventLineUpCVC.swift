@@ -14,14 +14,31 @@ class EventLineUpCVC: UICollectionViewCell {
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var imageShimmerView: UIView!
     @IBOutlet weak var textSimmerView: UIView!
-
+    
+    let artistEmptyIcon = UIImage(named: "artistEmptyIcon")
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        imageView.layer.cornerRadius = imageView.frame.height / 2
         imageView.clipsToBounds = true
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.layer.cornerRadius = imageView.bounds.height / 2
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = artistEmptyIcon
+        nameLbl.text = nil
+    }
+
+    deinit {
+        imageView.sd_cancelCurrentImageLoad()
+    }
+    
     func configure(with artistData: ArtistData) {
 
         let artist = artistData.artist
@@ -36,21 +53,44 @@ class EventLineUpCVC: UICollectionViewCell {
 
         var finalURLString = imageKey
 
-        // ✅ Handle relative URL
+        // Handle relative URL
         if !imageKey.isEmpty && !imageKey.lowercased().hasPrefix("http") {
             finalURLString = "\(SharedURL.amazonStorage)\(imageKey)"
         }
 
         if let url = URL(string: finalURLString), !finalURLString.isEmpty {
 
-            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "artistEmptyIcon")) { [weak self] image, _, _, _ in
+            let scale = UIScreen.main.scale
+            let targetSize = CGSize(
+                width: imageView.bounds.width * scale,
+                height: imageView.bounds.height * scale
+            )
+
+            imageView.sd_setImage(
+                with: url,
+                placeholderImage: artistEmptyIcon,
+                options: [
+                    
+                    .continueInBackground,
+                    .scaleDownLargeImages
+                ],
+                context: [
+                    .imageThumbnailPixelSize: NSValue(cgSize: targetSize)
+                ],
+                progress: nil
+            ) { [weak self] image, error, _, imageURL in
+
+                guard let self = self else { return }
+
                 if image == nil {
-                    self?.imageView.image = UIImage(named: "artistEmptyIcon")
+                    self.imageView.image = artistEmptyIcon
                 }
-                self?.imageShimmerView.isHidden = true
+
+                self.imageShimmerView.isHidden = true
             }
+
         } else {
-            imageView.image = UIImage(named: "artistEmptyIcon")
+            imageView.image = artistEmptyIcon
             imageShimmerView.isHidden = true
         }
     }

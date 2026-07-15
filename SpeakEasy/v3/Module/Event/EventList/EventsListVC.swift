@@ -50,6 +50,7 @@ final class EventsListVC: UIViewController {
     private var screenFilterCity: String?
     private var loadID = 0
     private var topTitleWidthConstraint: NSLayoutConstraint?
+    private var hasReleasedResources = false
 
     var venue: SearchVenueItem? = nil
     var listMode: EventsListMode = .cityEvents
@@ -68,6 +69,53 @@ final class EventsListVC: UIViewController {
         super.viewDidLayoutSubviews()
         view.applyScreenBgGradient()
         refreshCollectionLayoutIfNeeded()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isLeavingScreenPermanently {
+            releaseResources()
+        }
+    }
+
+    deinit {
+        releaseResources()
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseResources() {
+        guard isViewLoaded, !hasReleasedResources else { return }
+        hasReleasedResources = true
+        loadID += 1
+        isLoading = false
+        isPaginating = false
+
+        collectionView.visibleCells.forEach {
+            ($0 as? OrderCardShimmerCell)?.releaseResources()
+            ($0 as? OrderCardCollectionCell)?.releaseResources()
+        }
+        collectionView
+            .visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
+            .forEach {
+                ($0 as? PaginationShimmerFooterView)?.releaseResources()
+            }
+        collectionView.delegate = nil
+        collectionView.dataSource = nil
+        collectionView.prefetchDataSource = nil
+        collectionView.backgroundView = nil
+        topRightSideBtn?.releaseResources()
+        topTitleView?.releaseResources()
+        eventList.removeAll()
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
@@ -202,7 +250,8 @@ final class EventsListVC: UIViewController {
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
 
-            guard let self else { return }
+            guard let self,
+                  !self.hasReleasedResources else { return }
             guard self.loadID == requestID else { return }
 
             guard isSuccess,
@@ -589,7 +638,7 @@ extension EventsListVC: PinterestLayoutDelegate {
         )
 
         let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 14)
+        let venueFont = Constant.Font.geistMedium(size: 13)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
         let titleHeight = ceil(titleFont.lineHeight * 2)

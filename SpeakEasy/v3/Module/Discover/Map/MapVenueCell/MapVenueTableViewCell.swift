@@ -26,12 +26,14 @@ class MapVenueTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        venueImageView.sd_cancelCurrentImageLoad()
-        logoImageView.sd_cancelCurrentImageLoad()
-        venueImageView.image = UIImage(named: "newSpeakeasy")
+        releaseImageResources()
         nameLabel.text = nil
         addressLabel.text = nil
         badgeView.isHidden = true
+    }
+
+    deinit {
+        releaseImageResources()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -51,16 +53,42 @@ class MapVenueTableViewCell: UITableViewCell {
         badgeView.isHidden = venue.isPremium != true
 
         let imageKey = venue.venueAttachment?.first?.key ?? venue.logo?.key ?? ""
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: 160 * scale,
+            height: 120 * scale
+        )
+
         venueImageView.sd_setImage(
             with: URL(string: imageKey.imageURL),
-            placeholderImage: UIImage(named: "newSpeakeasy")
+            placeholderImage: UIImage(named: "newSpeakeasy"),
+            options: [.scaleDownLargeImages],
+            context: [
+                .imageThumbnailPixelSize: NSValue(cgSize: targetSize)
+            ]
         )
 
         let logoKey = venue.logo?.key ?? ""
+        let logoSize = CGSize(
+            width: 50 * scale,
+            height: 50 * scale
+        )
+
         logoImageView.sd_setImage(
             with: URL(string: logoKey.imageURL),
-            placeholderImage: UIImage(named: "")
+            placeholderImage: nil,
+            options: [.scaleDownLargeImages],
+            context: [
+                .imageThumbnailPixelSize: NSValue(cgSize: logoSize)
+            ]
         )
+    }
+
+    func releaseImageResources() {
+        venueImageView.sd_cancelCurrentImageLoad()
+        logoImageView.sd_cancelCurrentImageLoad()
+        venueImageView.image = UIImage(named: "newSpeakeasy")
+        logoImageView.image = nil
     }
 
     private func setupUI() {

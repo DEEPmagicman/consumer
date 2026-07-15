@@ -45,12 +45,14 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         setupUI()
     }
 
+    deinit {
+        releaseResources()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        imageView.sd_cancelCurrentImageLoad()
-        imageView.image = nil
-        representedImageURL = nil
+        releaseResources()
 
         countBadge.text = nil
         countBadge.isHidden = true
@@ -61,6 +63,12 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         dateLabel.isHidden = false
         statusBadge.text = nil
         statusBadge.isHidden = true
+    }
+
+    func releaseResources() {
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
+        representedImageURL = nil
     }
 
     private func setupUI() {
@@ -92,7 +100,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         contentView.addSubview(titleLabel)
 
         subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.9)
-        subtitleLabel.font = Constant.Font.geistMedium(size: 14)
+        subtitleLabel.font = Constant.Font.geistMedium(size: 13)
         subtitleLabel.numberOfLines = 1
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(subtitleLabel)
@@ -205,7 +213,6 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             with: url,
             placeholderImage: Constant.Icon.uploadImage,
             options: [
-                .retryFailed,
                 .continueInBackground,
                 .scaleDownLargeImages
             ],

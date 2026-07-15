@@ -11,6 +11,7 @@ final class ShimmerViewV3: UIView {
 
     private let gradientLayer = CAGradientLayer()
     private var isAnimating = false
+    private var wantsShimmer = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,7 +24,7 @@ final class ShimmerViewV3: UIView {
     }
     
     deinit {
-        stopShimmer()
+        releaseResources()
     }
     
     required init?(coder: NSCoder) {
@@ -45,29 +46,64 @@ final class ShimmerViewV3: UIView {
     // MARK: - Start
 
     func startShimmer() {
-        guard !isAnimating else { return }
-        isAnimating = true
-        addShimmerAnimation()
+        wantsShimmer = true
+        startAnimationIfPossible()
     }
 
     // MARK: - Stop
 
     func stopShimmer() {
+        wantsShimmer = false
+        stopLayerAnimations()
+    }
+
+    func releaseResources() {
+        wantsShimmer = false
+        stopLayerAnimations()
+        layer.removeAllAnimations()
+        gradientLayer.removeAllAnimations()
+    }
+
+    private func stopLayerAnimations() {
         isAnimating = false
         gradientLayer.removeAnimation(forKey: "shimmer")
         layer.removeAnimation(forKey: "pulse")
     }
-    
-    override func willMove(toWindow newWindow: UIWindow?) {
-        super.willMove(toWindow: newWindow)
 
-        if newWindow == nil {
-            stopShimmer()
+    override var isHidden: Bool {
+        didSet {
+            if isHidden {
+                stopLayerAnimations()
+            } else if wantsShimmer {
+                startAnimationIfPossible()
+            }
+        }
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        if window == nil {
+            stopLayerAnimations()
+        } else if wantsShimmer {
+            startAnimationIfPossible()
         }
     }
 
     // MARK: - Private
-//    
+
+    private func startAnimationIfPossible() {
+        guard window != nil,
+              !isHidden,
+              alpha > 0.01,
+              !isAnimating else {
+            return
+        }
+
+        isAnimating = true
+        addShimmerAnimation()
+    }
+
     private func addShimmerAnimation() {
 
         let animation = CABasicAnimation(keyPath: "opacity")

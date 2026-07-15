@@ -69,6 +69,16 @@ class TicketsTVC: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        releaseResourcesForReuse()
+        resetUI()
+    }
+
+    deinit {
+        releaseResourcesForReuse()
+        ticketBackgroundGradientLayer.removeFromSuperlayer()
+    }
+
+    private func releaseResourcesForReuse() {
 
         currentTicket = nil
 
@@ -87,8 +97,6 @@ class TicketsTVC: UITableViewCell {
 
         shimmerView.stopAnimating()
         shimmerView.isHidden = true
-
-        resetUI()
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

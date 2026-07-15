@@ -21,6 +21,15 @@ final class OrderCardShimmerContentView:
     
     private let dateView =
     ShimmerViewV3()
+
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            imageView,
+            titleView,
+            venueView,
+            dateView
+        ]
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,17 +40,16 @@ final class OrderCardShimmerContentView:
     required init?(coder: NSCoder) {
         fatalError()
     }
+
+    deinit {
+        releaseResources()
+    }
     
     private func setupUI() {
         
         backgroundColor = .clear
         
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView
-        ].forEach {
+        shimmerViews.forEach {
             
             $0.translatesAutoresizingMaskIntoConstraints =
             false
@@ -130,29 +138,35 @@ final class OrderCardShimmerContentView:
     }
     
     private func startShimmering() {
-        
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView
-        ].forEach {
-            
-            $0.startShimmer()
-        }
+        shimmerViews.forEach { $0.startShimmer() }
     }
     
     private func stopShimmering() {
-        
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView
-        ].forEach {
-            
-            $0.stopShimmer()
+        shimmerViews.forEach { $0.stopShimmer() }
+    }
+
+    func setShimmeringEnabled(_ isEnabled: Bool) {
+        if isEnabled {
+            startShimmering()
+        } else {
+            stopShimmering()
         }
+    }
+
+    func releaseResources() {
+        shimmerViews.forEach { $0.releaseResources() }
+        layer.removeAllAnimations()
+    }
+
+    override var isHidden: Bool {
+        didSet {
+            setShimmeringEnabled(!isHidden && window != nil)
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        setShimmeringEnabled(window != nil && !isHidden)
     }
     
     override func willMove(
@@ -165,7 +179,7 @@ final class OrderCardShimmerContentView:
         
         if newWindow == nil {
             
-            stopShimmering()
+            releaseResources()
             
         } else {
             

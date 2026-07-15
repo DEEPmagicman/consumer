@@ -36,6 +36,7 @@ final class PremiumExpVC: UIViewController {
     private var didApplyInitialHeaderInset = false
     private var lastAppliedHeaderInset: CGFloat = 0
     private weak var premiumIntroVC: PremiumExperienceIntroVC?
+    private var hasReleasedResources = false
     
     init() {
         let layout = PinterestLayout()
@@ -87,6 +88,67 @@ final class PremiumExpVC: UIViewController {
         applyScrollableHeaderInsetIfNeeded()
         updateScrollableHeader()
         refreshCollectionLayoutIfNeeded()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isLeavingScreenPermanently {
+            releaseResources()
+        }
+    }
+
+    deinit {
+        releaseResources()
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseResources() {
+        guard isViewLoaded, !hasReleasedResources else { return }
+        hasReleasedResources = true
+        isLoading = false
+        isPaginating = false
+        isInitialLoading = false
+
+        refreshControl.removeTarget(
+            self,
+            action: #selector(onRefresh),
+            for: .valueChanged
+        )
+        refreshControl.endRefreshing()
+        collectionView.refreshControl = nil
+        collectionView.visibleCells.forEach {
+            ($0 as? PremiumExperienceShimmerCell)?.releaseResources()
+            ($0 as? PremiumExperienceCell)?.releaseResources()
+        }
+        collectionView
+            .visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
+            .forEach {
+                ($0 as? PremiumExperiencePaginationFooterView)?.releaseResources()
+            }
+        collectionView.delegate = nil
+        collectionView.dataSource = nil
+        collectionView.prefetchDataSource = nil
+        collectionView.backgroundView = nil
+        headerView.delegate = nil
+        bgImageView.image = nil
+        items.removeAll()
+
+        if let premiumIntroVC {
+            premiumIntroVC.willMove(toParent: nil)
+            premiumIntroVC.view.removeFromSuperview()
+            premiumIntroVC.removeFromParent()
+        }
+        premiumIntroVC = nil
     }
 
     private func setupUI() {
@@ -495,7 +557,8 @@ private extension PremiumExpVC {
             skip: skip,
             city: selectedCity
         ) { [weak self] isSuccess, errMsg, newItems, hasMore in
-            guard let self else { return }
+            guard let self,
+                  !self.hasReleasedResources else { return }
 
             self.refreshControl.endRefreshing()
             self.isLoading = false
@@ -778,17 +841,13 @@ extension PremiumExpVC: PinterestLayoutDelegate {
             return 0.1
         }
 
-        let item = items[indexPath.item]
+//        let item = items[indexPath.item]
         let imageHeight = width * 1.08
 
-        let titleHeight = item.title.boundingRect(
-            with: CGSize(width: width - 4, height: .greatestFiniteMagnitude),
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
-            attributes: [.font: Constant.Font.geistMedium(size: 15)],
-            context: nil
-        ).height
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let titleHeight = (titleFont.lineHeight * 2)
 
-        return ceil(imageHeight + 10 + titleHeight + 3 + 12 + 3 + 15 + 16 + 32)
+        return ceil(imageHeight + 10 + titleHeight + 3 + 12 + 3 + 15 + 16 + 22)
     }
 
     func collectionView(

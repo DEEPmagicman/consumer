@@ -610,12 +610,8 @@ final class Navigate {
         vc.event        = event
         vc.venueDetails = event?.venue
         vc.onSaveStateChanged = onSaveStateChanged
-        let nav = UINavigationController(rootViewController: vc)
-        nav.view.backgroundColor = .clear
-        nav.navigationBar.isHidden = true
-        nav.isModalInPresentation = true
-        sender.presentPremium(nav)
-//        sender.pushVC(vc, animated: false)
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func ticketSelectionVc(
@@ -740,11 +736,9 @@ final class Navigate {
         let vc = VenueVC(nibName: "VenueVC", bundle: nil)
         vc.venueDetails = venueDetails
         vc.onFollowStateChanged = onFollowStateChanged
-        vc.isPresentedPremium = true
-
-        let nav = UINavigationController(rootViewController: vc)
-        nav.navigationBar.isHidden = true
-        sender.presentPremium(nav)
+        vc.isPresentedPremium = false
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func coverTicketListVC(

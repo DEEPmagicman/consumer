@@ -91,6 +91,7 @@ final class PremiumSearchVC: UIViewController {
     private var appliedGradientBounds: CGRect = .zero
     private var emptyStateVisible = false
     private var heightCache: [String: CGFloat] = [:]
+    private var hasReleasedResources = false
 
     init() {
         let layout = PinterestLayout()
@@ -119,8 +120,7 @@ final class PremiumSearchVC: UIViewController {
     }
 
     deinit {
-        searchWorkItem?.cancel()
-        NotificationCenter.default.removeObserver(self)
+        releaseResources()
     }
 
     override func viewDidLoad() {
@@ -146,6 +146,57 @@ final class PremiumSearchVC: UIViewController {
             view.applyScreenBgGradient()
         }
         refreshCollectionLayoutIfNeeded()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isLeavingScreenPermanently {
+            releaseResources()
+        }
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseResources() {
+        searchWorkItem?.cancel()
+        searchWorkItem = nil
+        NotificationCenter.default.removeObserver(self)
+
+        guard isViewLoaded, !hasReleasedResources else { return }
+        hasReleasedResources = true
+        searchRequestId = UUID()
+        isInitialLoading = false
+        isLoadingMoreEvents = false
+        paginatingSection = nil
+
+        headerView.delegate = nil
+        headerView.searchView.onTextChanged = nil
+        collectionView.visibleCells.forEach {
+            ($0 as? OrderCardShimmerCell)?.releaseResources()
+            ($0 as? OrderCardCollectionCell)?.releaseResources()
+        }
+        collectionView
+            .visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
+            .forEach {
+                ($0 as? PaginationShimmerFooterView)?.releaseResources()
+            }
+        collectionView.delegate = nil
+        collectionView.dataSource = nil
+        collectionView.prefetchDataSource = nil
+        collectionView.backgroundView = nil
+        venues.removeAll()
+        events.removeAll()
+        artists.removeAll()
+        heightCache.removeAll()
     }
 
     private func setupUI() {
@@ -255,6 +306,7 @@ final class PremiumSearchVC: UIViewController {
         let isFirstLoad = events.isEmpty && venues.isEmpty && artists.isEmpty
         let workItem = DispatchWorkItem { [weak self] in
             guard let self,
+                  !self.hasReleasedResources,
                   self.searchRequestId == requestId,
                   self.currentQuery == query else { return }
 
@@ -288,6 +340,7 @@ final class PremiumSearchVC: UIViewController {
         ) { [weak self] isSuccess, _, result in
             DispatchQueue.main.async {
                 guard let self,
+                      !self.hasReleasedResources,
                       self.searchRequestId == requestId,
                       self.currentQuery == query else { return }
 
@@ -718,7 +771,7 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
 
         let imageHeight = width * 1.2
         let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 14)
+        let venueFont = Constant.Font.geistMedium(size: 13)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
         let titleHeight = ceil(titleFont.lineHeight * 2)
@@ -1130,7 +1183,7 @@ private final class PremiumSearchArtistResultView: UIControl {
             imageView.sd_setImage(
                 with: url,
                 placeholderImage: UIImage(named: "artistEmptyIcon"),
-                options: [.retryFailed, .continueInBackground, .scaleDownLargeImages],
+                options: [.continueInBackground, .scaleDownLargeImages],
                 context: [.imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)]
             )
         } else {
@@ -1398,7 +1451,7 @@ private final class PremiumSearchVenueResultView: UIView {
             imageView.sd_setImage(
                 with: url,
                 placeholderImage: UIImage(named: "newSpeakeasy"),
-                options: [.retryFailed, .continueInBackground, .scaleDownLargeImages],
+                options: [.continueInBackground, .scaleDownLargeImages],
                 context: [.imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)]
             )
         } else {

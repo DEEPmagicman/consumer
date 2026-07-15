@@ -157,13 +157,7 @@ final class AppIconButton: UIButton {
     private var heightConstraintRef: NSLayoutConstraint?
 
     private lazy var hostingController = UIHostingController(
-        rootView: GlassButtonView(
-            iconType: .back,
-            iconSize: 12,
-            buttonSize: 50,
-            tintColor: .label,
-            action: {}
-        )
+        rootView: AnyView(EmptyView())
     )
 
     private var hostingInstalled = false
@@ -186,8 +180,7 @@ final class AppIconButton: UIButton {
     }
     
     deinit {
-        hostingController.view.removeFromSuperview()
-        print("🔥 AppIconButton deinit")
+        releaseResources()
     }
 
     // MARK: Setup
@@ -227,15 +220,22 @@ final class AppIconButton: UIButton {
     }
 
     private func updateHostingView() {
+        installHostingIfNeeded()
 
-        hostingController.rootView = GlassButtonView(
+        hostingController.rootView = AnyView(GlassButtonView(
             iconType: iconType,
             iconSize: iconSize,
             buttonSize: resolvedButtonSize,
             tintColor: iconTintColor
         ) { [weak self] in
             self?.sendActions(for: .touchUpInside)
-        }
+        })
+    }
+
+    func releaseResources() {
+        hostingController.rootView = AnyView(EmptyView())
+        hostingController.view.removeFromSuperview()
+        hostingInstalled = false
     }
 
     // MARK: - Layout

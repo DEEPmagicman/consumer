@@ -73,19 +73,20 @@ final class PaymentService {
 
                 return
             }
-
+            
+           
+            let clientSecret =
+                responseDic["clientSecret"] as? String
+            
             guard
-                let clientSecret =
-                    responseDic["clientSecret"] as? String,
-
+                let isFreeTicket =
+                    responseDic["isFreeTicket"] as? Bool,
+                
                 let paymentHistoryId =
                     responseDic["paymentHistoryId"] as? String,
 
                 let ephemeralKey =
-                    responseDic["ephemeralKey"] as? String,
-
-                let isFreeTicket =
-                    responseDic["isFreeTicket"] as? Bool
+                    responseDic["ephemeralKey"] as? String
             else {
 
                 completion(

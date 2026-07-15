@@ -50,6 +50,18 @@ final class GuestListPopupVC: UIViewController {
         
     }
 
+    deinit {
+        attendees.removeAll()
+        tableView.delegate = nil
+        tableView.dataSource = nil
+        tableView.tableFooterView = nil
+        footerSpinner.stopAnimating()
+        dimmedView.gestureRecognizers?.forEach {
+            dimmedView.removeGestureRecognizer($0)
+        }
+        closeButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+
     private func setupUI() {
         view.backgroundColor = .clear
 

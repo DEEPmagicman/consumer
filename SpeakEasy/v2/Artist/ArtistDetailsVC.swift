@@ -538,7 +538,7 @@ extension ArtistDetailsVC: PinterestLayoutDelegate {
         )
 
         let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 14)
+        let venueFont = Constant.Font.geistMedium(size: 13)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
         let titleHeight = ceil(titleFont.lineHeight * 2)

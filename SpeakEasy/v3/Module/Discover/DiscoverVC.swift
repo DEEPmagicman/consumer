@@ -264,7 +264,6 @@ final class DiscoverVC: UIViewController {
         applyCityFilter(nil)
     }
 
-
     // MARK: - Helpers
 
     private func showSegmentView(_ index: Int) {

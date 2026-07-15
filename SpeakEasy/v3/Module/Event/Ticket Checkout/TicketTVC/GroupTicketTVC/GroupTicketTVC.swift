@@ -57,6 +57,17 @@ class GroupTicketTVC: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        releaseResourcesForReuse()
+    }
+
+    deinit {
+        ticketTableObserver?.invalidate()
+        ticketListTableView.delegate = nil
+        ticketListTableView.dataSource = nil
+        releaseResourcesForReuse()
+    }
+
+    private func releaseResourcesForReuse() {
         onPlusTap = nil
         onMinusTap = nil
         onRSVPTap = nil
@@ -64,10 +75,9 @@ class GroupTicketTVC: UITableViewCell {
         onDescriptionToggle = nil
         onExpandChanged = nil
         onHeightChanged = nil
-    }
-
-    deinit {
-        ticketTableObserver?.invalidate()
+        tickets.removeAll()
+        expandedTicketDescriptions.removeAll()
+        disabledTicketIds.removeAll()
     }
 
     private func startTicketTableObserver() {

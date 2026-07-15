@@ -16,14 +16,11 @@ class ImagePagerVC: UIPageViewController {
     private var isTransitioning = false
 
     deinit {
-        print("-1-1-1deinit imagepagervc")
-        pages.removeAll()
-        imageURLs.removeAll()
+        releaseResources()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("-1-1-1add imagepagervc")
         dataSource = self
         delegate = self
     }
@@ -36,6 +33,16 @@ class ImagePagerVC: UIPageViewController {
         if let firstVC = pages.first {
             setViewControllers([firstVC], direction: .forward, animated: false)
         }
+    }
+
+    func releaseResources() {
+        dataSource = nil
+        delegate = nil
+        setViewControllers(nil, direction: .forward, animated: false)
+        pages.removeAll()
+        imageURLs.removeAll()
+        currentIndex = 0
+        isTransitioning = false
     }
 
     private func syncCurrentIndexFromVisible() {

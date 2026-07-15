@@ -10,6 +10,7 @@ import UIKit
 final class ShimmerView: UIView {
 
     private let gradientLayer = CAGradientLayer()
+    private var wantsAnimation = false
 
     init(frame: CGRect = .zero, lighter: Bool = false) {
         super.init(frame: frame)
@@ -19,6 +20,10 @@ final class ShimmerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup(lighter: false)
+    }
+
+    deinit {
+        releaseResources()
     }
 
     private func setup(lighter: Bool) {
@@ -38,7 +43,49 @@ final class ShimmerView: UIView {
     }
 
     func startAnimating() {
-        guard gradientLayer.animation(forKey: "shimmer") == nil else { return }
+        wantsAnimation = true
+        startAnimationIfPossible()
+    }
+
+    func stopAnimating() {
+        wantsAnimation = false
+        stopLayerAnimations()
+    }
+
+    func releaseResources() {
+        wantsAnimation = false
+        stopLayerAnimations()
+        gradientLayer.removeAllAnimations()
+    }
+
+    override var isHidden: Bool {
+        didSet {
+            if isHidden {
+                stopLayerAnimations()
+            } else if wantsAnimation {
+                startAnimationIfPossible()
+            }
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        if window == nil {
+            stopLayerAnimations()
+        } else if wantsAnimation {
+            startAnimationIfPossible()
+        }
+    }
+
+    private func startAnimationIfPossible() {
+        guard window != nil,
+              !isHidden,
+              alpha > 0.01,
+              gradientLayer.animation(forKey: "shimmer") == nil else {
+            return
+        }
+
         let anim            = CABasicAnimation(keyPath: "locations")
         anim.fromValue      = [-0.8, -0.4, 0.0]
         anim.toValue        = [1.0,  1.4,  1.8]
@@ -48,7 +95,7 @@ final class ShimmerView: UIView {
         gradientLayer.add(anim, forKey: "shimmer")
     }
 
-    func stopAnimating() {
+    private func stopLayerAnimations() {
         gradientLayer.removeAnimation(forKey: "shimmer")
     }
 }

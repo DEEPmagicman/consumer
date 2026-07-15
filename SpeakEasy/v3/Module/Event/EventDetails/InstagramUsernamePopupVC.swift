@@ -31,6 +31,19 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         animateIn()
     }
 
+    deinit {
+        onSkipTap = nil
+        onSubmitUsername = nil
+        usernameTextField.delegate = nil
+        usernameTextField.removeTarget(nil, action: nil, for: .allEvents)
+        skipButton.removeTarget(nil, action: nil, for: .allEvents)
+        continueButton.removeTarget(nil, action: nil, for: .allEvents)
+        closeButton.removeTarget(nil, action: nil, for: .allEvents)
+        dimmedView.gestureRecognizers?.forEach {
+            dimmedView.removeGestureRecognizer($0)
+        }
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 

@@ -35,6 +35,7 @@ final class GuestListPopupCell: UITableViewCell {
         super.prepareForReuse()
         gradientLayer?.removeFromSuperlayer()
         gradientLayer = nil
+        avatarImageView.sd_cancelCurrentImageLoad()
         avatarImageView.image = nil
         avatarImageView.isHidden = false
         avatarFallbackView.isHidden = true
@@ -42,6 +43,13 @@ final class GuestListPopupCell: UITableViewCell {
         nameLabel.text = nil
         instagramButton.isHidden = true
         onInstagramTap = nil
+    }
+
+    deinit {
+        gradientLayer?.removeFromSuperlayer()
+        avatarImageView.sd_cancelCurrentImageLoad()
+        onInstagramTap = nil
+        instagramButton.removeTarget(nil, action: nil, for: .allEvents)
     }
 
     override func layoutSubviews() {

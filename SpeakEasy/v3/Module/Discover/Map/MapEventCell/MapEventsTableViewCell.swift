@@ -24,12 +24,15 @@ class MapEventsTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        eventImageView.sd_cancelCurrentImageLoad()
-        eventImageView.image = Constant.Icon.uploadImage
+        releaseImageResources()
         venueLabel.text = nil
         titleLabel.text = nil
         dateLabel.text = nil
         badgeView.isHidden = true
+    }
+
+    deinit {
+        releaseImageResources()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -39,9 +42,19 @@ class MapEventsTableViewCell: UITableViewCell {
     }
 
     func configure(with event: Event) {
+        let scale = UIScreen.main.scale
+        let targetSize = CGSize(
+            width: 160 * scale,
+            height: 120 * scale
+        )
+
         eventImageView.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
+            placeholderImage: Constant.Icon.uploadImage,
+            options: [.scaleDownLargeImages],
+            context: [
+                .imageThumbnailPixelSize: NSValue(cgSize: targetSize)
+            ]
         )
 
         venueLabel.text = (event.venue?.name ?? event.customVenue?.name ?? "").uppercased()
@@ -54,6 +67,11 @@ class MapEventsTableViewCell: UITableViewCell {
         actionLabel.text = "View event"
         badgeLabel.text = "PREMIUM AVAILABLE"
         badgeView.isHidden = event.isPremium != true
+    }
+
+    func releaseImageResources() {
+        eventImageView.sd_cancelCurrentImageLoad()
+        eventImageView.image = Constant.Icon.uploadImage
     }
 
     private func setupUI() {

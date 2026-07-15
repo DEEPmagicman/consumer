@@ -12,6 +12,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 final class EventCollectionViewCell: UICollectionViewCell {
 
@@ -109,11 +110,24 @@ private extension EventCollectionViewCell {
         venueLogoImage.isHidden = true
         venueLogoImage.image = nil
 
-        image.sd_setImage(
-            with: URL(string: (event.flyer?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
+//        image.sd_setImage(
+//            with: URL(string: (event.flyer?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
+
+        let transformer = SDImageResizingTransformer(
+            size: CGSize(width: 300, height: 300),
+            scaleMode: .aspectFill
         )
 
+        image.sd_setImage(
+            with:  URL(string: (event.flyer?.key ?? "").imageURL),
+            placeholderImage: Constant.Icon.uploadImage,
+            context: [
+                .imageTransformer: transformer
+            ]
+        )
+        
 //        venueName.text = event.venue?.name.uppercased()
         venueName.text = event.venue?.name
         eventName.text = event.title
@@ -131,9 +145,22 @@ private extension EventCollectionViewCell {
         venueLogoImage.isHidden = true
         venueLogoImage.image = nil
 
+//        image.sd_setImage(
+//            with: URL(string: (event.flyer?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
+        
+        let transformer = SDImageResizingTransformer(
+            size: CGSize(width: 300, height: 300),
+            scaleMode: .aspectFill
+        )
+
         image.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
+            placeholderImage: Constant.Icon.uploadImage,
+            context: [
+                .imageTransformer: transformer
+            ]
         )
 
         venueName.text = "PREMIUM EXPERIENCE"
@@ -160,17 +187,37 @@ private extension EventCollectionViewCell {
             string: "\(SharedURL.amazonStorage)\(venue.venueAttachment?.first?.key ?? "")"
         )
 
+        let transformer = SDImageResizingTransformer(
+            size: CGSize(width: 300, height: 300),
+            scaleMode: .aspectFill
+        )
+
         image.sd_setImage(
             with: imageUrl,
-            placeholderImage: UIImage(named: "appLogo")
+            placeholderImage: UIImage(named: "appLogo"),
+            context: [
+                .imageTransformer: transformer
+            ]
         )
+        
+//        image.sd_setImage(
+//            with: imageUrl,
+//            placeholderImage: UIImage(named: "appLogo")
+//        )
 
         if logoKey.isEmpty {
             venueLogoImage.sd_cancelCurrentImageLoad()
         } else {
+//            venueLogoImage.sd_setImage(
+//                with: logoUrl,
+//                placeholderImage: nil
+//            )
             venueLogoImage.sd_setImage(
                 with: logoUrl,
-                placeholderImage: nil
+                placeholderImage: nil,
+                context: [
+                    .imageTransformer: transformer
+                ]
             )
         }
     }

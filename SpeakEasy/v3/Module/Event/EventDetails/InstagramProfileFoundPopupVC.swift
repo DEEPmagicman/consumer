@@ -35,6 +35,20 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         animateIn()
     }
 
+    deinit {
+        profileImageView.sd_cancelCurrentImageLoad()
+        profileImageView.image = nil
+        instaProfileData = nil
+        onUploadOwnTap = nil
+        onUseThisPictureTap = nil
+        uploadOwnButton.removeTarget(nil, action: nil, for: .allEvents)
+        useThisPictureButton.removeTarget(nil, action: nil, for: .allEvents)
+        closeButton.removeTarget(nil, action: nil, for: .allEvents)
+        dimmedView.gestureRecognizers?.forEach {
+            dimmedView.removeGestureRecognizer($0)
+        }
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 

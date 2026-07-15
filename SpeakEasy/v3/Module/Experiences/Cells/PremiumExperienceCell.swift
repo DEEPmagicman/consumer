@@ -36,16 +36,25 @@ final class PremiumExperienceCell: UICollectionViewCell {
         setup()
     }
 
+    deinit {
+        releaseResources()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        imageView.sd_cancelCurrentImageLoad()
-        imageView.image = nil
+        releaseResources()
         titleLabel.text = nil
         venueLabel.text = nil
         dateLabel.text = nil
         guestLabel.text = nil
         priceLabel.text = nil
+    }
+
+    func releaseResources() {
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
+        pricePillView.releaseResources()
     }
 
     override func layoutSubviews() {
@@ -192,10 +201,25 @@ final class PremiumExperienceCell: UICollectionViewCell {
             priceWidthConstraint.constant = 70
         }
 
+        
         if let url = URL(string: item.imageUrl), !item.imageUrl.isEmpty {
+            let screenScale = UIScreen.main.scale
+            let targetPixelSize = CGSize(
+                width: max(bounds.width, 180) * screenScale,
+                height: max(bounds.width * 1.08, 200) * screenScale
+            )
+
             imageView.sd_setImage(
                 with: url,
-                placeholderImage: Constant.Icon.uploadImage
+                placeholderImage: Constant.Icon.uploadImage,
+                options: [
+                    
+                    .continueInBackground,
+                    .scaleDownLargeImages
+                ],
+                context: [
+                    .imageThumbnailPixelSize: NSValue(cgSize: targetPixelSize)
+                ]
             )
         } else {
             imageView.image = Constant.Icon.uploadImage
@@ -205,7 +229,8 @@ final class PremiumExperienceCell: UICollectionViewCell {
 
 final class PremiumExperienceShimmerCell: UICollectionViewCell {
 
-    private let shimmerContentView = PremiumExperienceShimmerContentView()
+    private var shimmerContentView: PremiumExperienceShimmerContentView?
+    private var shimmerConstraints: [NSLayoutConstraint] = []
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -214,28 +239,79 @@ final class PremiumExperienceShimmerCell: UICollectionViewCell {
 
     required init?(coder: NSCoder) {
         fatalError()
+    }
+
+    deinit {
+        releaseResources()
+    }
+
+    override var isHidden: Bool {
+        didSet {
+            updateShimmerState()
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        updateShimmerState()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        releaseResources()
+        updateShimmerState()
     }
 
     private func setupUI() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+    }
 
+    private func updateShimmerState() {
+        guard window != nil,
+              !isHidden else {
+            releaseResources()
+            return
+        }
+
+        ensureShimmerContentView().setShimmeringEnabled(true)
+    }
+
+    private func ensureShimmerContentView() -> PremiumExperienceShimmerContentView {
+        if let shimmerContentView {
+            return shimmerContentView
+        }
+
+        let shimmerContentView = PremiumExperienceShimmerContentView()
         shimmerContentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(shimmerContentView)
 
-        NSLayoutConstraint.activate([
+        shimmerConstraints = [
             shimmerContentView.topAnchor.constraint(equalTo: contentView.topAnchor),
             shimmerContentView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             shimmerContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             shimmerContentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        ]
+        NSLayoutConstraint.activate(shimmerConstraints)
+
+        self.shimmerContentView = shimmerContentView
+        return shimmerContentView
+    }
+
+    func releaseResources() {
+        shimmerContentView?.releaseResources()
+        NSLayoutConstraint.deactivate(shimmerConstraints)
+        shimmerConstraints.removeAll()
+        shimmerContentView?.removeFromSuperview()
+        shimmerContentView = nil
     }
 }
 
 final class PremiumExperiencePaginationFooterView: UICollectionReusableView {
 
-    private let leftCard = PremiumExperienceShimmerContentView()
-    private let rightCard = PremiumExperienceShimmerContentView()
+    private var leftCard: PremiumExperienceShimmerContentView?
+    private var rightCard: PremiumExperienceShimmerContentView?
+    private var shimmerConstraints: [NSLayoutConstraint] = []
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -246,24 +322,87 @@ final class PremiumExperiencePaginationFooterView: UICollectionReusableView {
         fatalError()
     }
 
+    deinit {
+        releaseResources()
+    }
+
+    override var isHidden: Bool {
+        didSet {
+            updateShimmerState()
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        updateShimmerState()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        releaseResources()
+        updateShimmerState()
+    }
+
     private func setupUI() {
         backgroundColor = .clear
+    }
+
+    func releaseResources() {
+        leftCard?.releaseResources()
+        rightCard?.releaseResources()
+        NSLayoutConstraint.deactivate(shimmerConstraints)
+        shimmerConstraints.removeAll()
+        leftCard?.removeFromSuperview()
+        rightCard?.removeFromSuperview()
+        leftCard = nil
+        rightCard = nil
+    }
+
+    private func updateShimmerState() {
+        guard window != nil,
+              !isHidden else {
+            releaseResources()
+            return
+        }
+
+        let cards = ensureCards()
+        cards.left.setShimmeringEnabled(true)
+        cards.right.setShimmeringEnabled(true)
+    }
+
+    private func ensureCards() -> (
+        left: PremiumExperienceShimmerContentView,
+        right: PremiumExperienceShimmerContentView
+    ) {
+        if let leftCard,
+           let rightCard {
+            return (leftCard, rightCard)
+        }
+
+        releaseResources()
+
+        let leftCard = PremiumExperienceShimmerContentView()
+        let rightCard = PremiumExperienceShimmerContentView()
 
         [leftCard, rightCard].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
 
-        NSLayoutConstraint.activate([
+        shimmerConstraints = [
             leftCard.topAnchor.constraint(equalTo: topAnchor),
             leftCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-
             rightCard.topAnchor.constraint(equalTo: topAnchor, constant: 36),
             rightCard.leadingAnchor.constraint(equalTo: leftCard.trailingAnchor, constant: 14),
             rightCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             rightCard.widthAnchor.constraint(equalTo: leftCard.widthAnchor),
             rightCard.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor)
-        ])
+        ]
+        NSLayoutConstraint.activate(shimmerConstraints)
+
+        self.leftCard = leftCard
+        self.rightCard = rightCard
+        return (leftCard, rightCard)
     }
 }
 
@@ -276,6 +415,17 @@ private final class PremiumExperienceShimmerContentView: UIView {
     private let guestView = ShimmerViewV3(frame: .zero, lighter: true)
     private let priceView = ShimmerViewV3(frame: .zero, lighter: true)
 
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            imageView,
+            titleView,
+            venueView,
+            dateView,
+            guestView,
+            priceView
+        ]
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -285,20 +435,17 @@ private final class PremiumExperienceShimmerContentView: UIView {
         fatalError()
     }
 
+    deinit {
+        releaseResources()
+    }
+
     private func setupUI() {
         backgroundColor = .clear
 
         imageView.cornerRadius = 10
         priceView.cornerRadius = 16
 
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView,
-            guestView,
-            priceView
-        ].forEach {
+        shimmerViews.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
@@ -340,36 +487,42 @@ private final class PremiumExperienceShimmerContentView: UIView {
     }
 
     private func startShimmering() {
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView,
-            guestView,
-            priceView
-        ].forEach {
-            $0.startShimmer()
-        }
+        shimmerViews.forEach { $0.startShimmer() }
     }
 
     private func stopShimmering() {
-        [
-            imageView,
-            titleView,
-            venueView,
-            dateView,
-            guestView,
-            priceView
-        ].forEach {
-            $0.stopShimmer()
+        shimmerViews.forEach { $0.stopShimmer() }
+    }
+
+    func setShimmeringEnabled(_ isEnabled: Bool) {
+        if isEnabled {
+            startShimmering()
+        } else {
+            stopShimmering()
         }
+    }
+
+    func releaseResources() {
+        shimmerViews.forEach { $0.releaseResources() }
+        layer.removeAllAnimations()
+    }
+
+    override var isHidden: Bool {
+        didSet {
+            setShimmeringEnabled(!isHidden && window != nil)
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        setShimmeringEnabled(window != nil && !isHidden)
     }
 
     override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
 
         if newWindow == nil {
-            stopShimmering()
+            releaseResources()
         } else {
             startShimmering()
         }

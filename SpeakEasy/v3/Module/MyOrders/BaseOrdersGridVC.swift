@@ -50,6 +50,7 @@ class BaseOrdersGridVC: UIViewController {
     var paginatingSection: Int?
     var onOrdersScroll: ((UIScrollView) -> Void)?
     private var isPullRefreshing = false
+    private var hasReleasedResources = false
     
     // MARK: - Init
 
@@ -93,6 +94,57 @@ class BaseOrdersGridVC: UIViewController {
 
         setupUI()
         loadInitialData()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isLeavingScreenPermanently {
+            releaseResources()
+        }
+    }
+
+    deinit {
+        releaseResources()
+    }
+
+    private var isLeavingScreenPermanently: Bool {
+        if transitionCoordinator?.isCancelled == true {
+            return false
+        }
+
+        return isBeingDismissed ||
+            navigationController?.isBeingDismissed == true ||
+            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+    }
+
+    private func releaseResources() {
+        guard isViewLoaded, !hasReleasedResources else { return }
+        hasReleasedResources = true
+
+        refreshControl.removeTarget(
+            self,
+            action: #selector(onPullToRefresh),
+            for: .valueChanged
+        )
+        refreshControl.endRefreshing()
+        collectionView.refreshControl = nil
+        collectionView.visibleCells.forEach {
+            ($0 as? OrderCardShimmerCell)?.releaseResources()
+            ($0 as? OrderCardCollectionCell)?.releaseResources()
+        }
+        collectionView
+            .visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionFooter)
+            .forEach {
+                ($0 as? PaginationShimmerFooterView)?.releaseResources()
+            }
+        collectionView.dataSource = nil
+        collectionView.delegate = nil
+        collectionView.prefetchDataSource = nil
+        collectionView.backgroundView = nil
+        onOrdersScroll = nil
+        upcomingItems.removeAll()
+        pastItems.removeAll()
     }
 
     // MARK: - Setup
@@ -493,7 +545,7 @@ PinterestLayoutDelegate {
         }()
 
         let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 14)
+        let venueFont = Constant.Font.geistMedium(size: 13)
         let dateFont = Constant.Font.geistMedium(size: 14)
 
         let titleHeight = ceil(titleFont.lineHeight * 2)
