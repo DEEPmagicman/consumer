@@ -6,15 +6,22 @@
 //
 
 import UIKit
-import SDWebImage
+import Lottie
 
 final class Splash: UIViewController {
     
-    private let splashImageView: SDAnimatedImageView = {
-        let imageView = SDAnimatedImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        return imageView
+    private enum Animation {
+        static let endFrame: AnimationFrameTime = 176
+        static let speed: CGFloat = 1.35
+    }
+    
+    private let animationView: LottieAnimationView = {
+        let animationView = LottieAnimationView(name: "Splash")
+        animationView.contentMode = .scaleAspectFit
+        animationView.loopMode = .playOnce
+        animationView.animationSpeed = Animation.speed
+        animationView.backgroundBehavior = .pauseAndRestore
+        return animationView
     }()
     
     override func viewDidLoad() {
@@ -22,32 +29,29 @@ final class Splash: UIViewController {
         
         view.backgroundColor = AppColor.background
         setupUI()
-        loadGIF()
+        playSplashAnimation()
     }
     
     private func setupUI() {
-        view.addSubview(splashImageView)
-        splashImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(animationView)
+        animationView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            splashImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            splashImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            splashImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            splashImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            animationView.topAnchor.constraint(equalTo: view.topAnchor),
+            animationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            animationView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
-    private func loadGIF() {
-        guard let path = Bundle.main.path(forResource: "SplashAnimation", ofType: "gif") else {
+    private func playSplashAnimation() {
+        guard animationView.animation != nil else {
             finishSplashIfNeeded()
             return
         }
         
-        let data = try? Data(contentsOf: URL(fileURLWithPath: path))
-        splashImageView.image = SDAnimatedImage(data: data!)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.finishSplashIfNeeded()
+        animationView.play(fromFrame: 0, toFrame: Animation.endFrame, loopMode: .playOnce) { [weak self] _ in
+            self?.finishSplashIfNeeded()
         }
     }
 
