@@ -200,7 +200,6 @@
 		6A79E2912FCEDCEB00B7F1F4 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A79E2902FCEDCEB00B7F1F4 /* PaymentService.swift */; };
 		6A79E2932FCEE97900B7F1F4 /* TableService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A79E2922FCEE97900B7F1F4 /* TableService.swift */; };
 		6A83A5912FC6F7E8002AA775 /* BaseOrdersGridVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */; };
-		6AEE00012FF0000000000001 /* V3EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE00002FF0000000000001 /* V3EmptyStateView.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
 		6A91E2C02FC96F3C000319C4 /* VenueGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A91E2BF2FC96F3C000319C4 /* VenueGridCell.swift */; };
@@ -229,6 +228,7 @@
 		6AE9FDA52FF3A15900990CF9 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA42FF3A15900990CF9 /* Utilities.swift */; };
 		6AE9FDA72FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
 		6AE9FDA82FF3ED1400990CF9 /* SalesTaxTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */; };
+		6AEE00012FF0000000000001 /* V3EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE00002FF0000000000001 /* V3EmptyStateView.swift */; };
 		6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */; };
 		6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */; };
 		6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9CE2F09477300069A90 /* TableCheckOutVC.xib */; };
@@ -811,7 +811,6 @@
 		6A79E2902FCEDCEB00B7F1F4 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		6A79E2922FCEE97900B7F1F4 /* TableService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableService.swift; sourceTree = "<group>"; };
 		6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOrdersGridVC.swift; sourceTree = "<group>"; };
-		6AEE00002FF0000000000001 /* V3EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V3EmptyStateView.swift; sourceTree = "<group>"; };
 		6A8A84492FB1E00700AC87BB /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		6A8A844B2FB1E01000AC87BB /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		6A91E2BF2FC96F3C000319C4 /* VenueGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueGridCell.swift; sourceTree = "<group>"; };
@@ -838,6 +837,7 @@
 		6AE9FDA12FF3861E00990CF9 /* ZoneSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneSelectorView.swift; sourceTree = "<group>"; };
 		6AE9FDA42FF3A15900990CF9 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		6AE9FDA62FF3ED1400990CF9 /* SalesTaxTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesTaxTVC.swift; sourceTree = "<group>"; };
+		6AEE00002FF0000000000001 /* V3EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V3EmptyStateView.swift; sourceTree = "<group>"; };
 		6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tables3DMapVC.swift; sourceTree = "<group>"; };
 		6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Tables3DMapVC.xib; sourceTree = "<group>"; };
 		6AF2B9CD2F09477300069A90 /* TableCheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCheckOutVC.swift; sourceTree = "<group>"; };
@@ -4111,7 +4111,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 256;
+				CURRENT_PROJECT_VERSION = 257;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -4129,7 +4129,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.7;
+				MARKETING_VERSION = 5.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4149,7 +4149,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 256;
+				CURRENT_PROJECT_VERSION = 257;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -4166,7 +4166,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.7;
+				MARKETING_VERSION = 5.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4313,7 +4313,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 256;
+				CURRENT_PROJECT_VERSION = 257;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4342,7 +4342,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.7;
+				MARKETING_VERSION = 5.5.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -4410,7 +4410,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 256;
+				CURRENT_PROJECT_VERSION = 257;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4437,7 +4437,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.7;
+				MARKETING_VERSION = 5.5.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
