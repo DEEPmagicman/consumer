@@ -85,6 +85,12 @@ final class Tables3DMapVC: UIViewController {
         static let djGold = UIColor(red: 0.85, green: 0.60, blue: 0.21, alpha: 1.0)
     }
 
+    private enum PinMetrics {
+        static let minScale: CGFloat = 0.85
+        static let maxScale: CGFloat = 3.6
+        static let djBaseSize: CGFloat = 0.38
+    }
+
     let resetViewBtn: UIButton = {
         var config = UIButton.Configuration.plain()
         config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10)
@@ -1002,7 +1008,9 @@ private extension Tables3DMapVC {
         resetPinColor(seatingAreaId: previousId, in: sceneView.scene)
         selectedSeatingId = nil
         buyNowBtnView.isHidden = true
-        zoneSelector.isHidden = false
+        if self.roomItems.count > 1 {
+            self.zoneSelector.isHidden = false
+        }
     }
 
     private func applySelection(meta: SeatingMeta) {
@@ -1023,15 +1031,13 @@ private extension Tables3DMapVC {
 private extension Tables3DMapVC {
 
     private func uiScale(for position: simd_float3) -> CGFloat {
-        let raw = CGFloat(sceneScaleFactor) * 0.07
-        return raw
+        let raw = CGFloat(sceneScaleFactor) * 0.045
+        return Swift.min(Swift.max(raw, PinMetrics.minScale), PinMetrics.maxScale)
     }
 
     private func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
-        let oldScale = uiScale(for: position)
-        let scale = CGFloat(min(oldScale, 12.0))
-        let rawBase = CGFloat(sceneScaleFactor) * 0.018
-        let base = CGFloat(min(rawBase, 1.8))
+        let scale = uiScale(for: position)
+        let base = PinMetrics.djBaseSize
 
         let root = SCNNode()
         root.simdPosition = position + simd_float3(0, Float(0.5 * scale), 0)
@@ -1135,7 +1141,7 @@ private extension Tables3DMapVC {
     private func addDJWaveAnimation(to node: SCNNode) {
         node.removeAllActions()
         node.runAction(.repeatForever(.sequence([
-            .group([.scale(to: 4.0, duration: 1.2), .fadeOut(duration: 1.2)]),
+            .group([.scale(to: 2.2, duration: 1.2), .fadeOut(duration: 1.2)]),
             .run { $0.opacity = 1; $0.scale = SCNVector3(1, 1, 1) },
             .wait(duration: 0.5)
         ])))
