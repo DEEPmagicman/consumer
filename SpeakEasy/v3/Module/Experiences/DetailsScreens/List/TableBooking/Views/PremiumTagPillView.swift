@@ -217,6 +217,7 @@ final class PremiumStepperRow: UIView {
     @objc private func onMinus() {
         guard count > minValue else { return }
         count -= 1
+        AppHaptic.stepperChanged()
         countLabel.text = "\(count)"
         updateButtons()
         onValueChanged?(count)
@@ -225,6 +226,7 @@ final class PremiumStepperRow: UIView {
     @objc private func onPlus() {
         guard count < maxValue else { return }
         count += 1
+        AppHaptic.stepperChanged()
         countLabel.text = "\(count)"
         updateButtons()
         onValueChanged?(count)
@@ -479,6 +481,7 @@ final class PremiumArrivalTimeView: UIView {
 
     @objc private func onChipTap(_ sender: UIButton) {
         guard options.indices.contains(sender.tag) else { return }
+        AppHaptic.selectionChanged()
         selectedIndex = sender.tag
         selectedTimeLabel.text = options[selectedIndex].title
         rebuildChips(maxContentWidth: max(0, bounds.width - 32))
@@ -1045,6 +1048,7 @@ final class PremiumAgreementView: UIView {
 
     @objc private func onCheckTap() {
         isChecked.toggle()
+        AppHaptic.selectionChanged()
         onToggle?(isChecked)
     }
 
@@ -1063,6 +1067,7 @@ final class PremiumAgreementView: UIView {
 
     private func toggleExpansion() {
         isExpanded.toggle()
+        AppHaptic.selectionChanged()
         UIView.performWithoutAnimation {
             updateText()
             layoutIfNeeded()
@@ -1301,6 +1306,7 @@ final class PremiumSpendAgreementView: UIView {
     }
 
     @objc private func toggleExpand() {
+        AppHaptic.selectionChanged()
         setExpanded(!isExpanded, animated: true)
     }
 
@@ -1589,17 +1595,20 @@ final class PremiumPromoRow: UIView {
         guard !isSubmitting else { return }
         guard !isApplied else { return }
 
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
         updateState(animated: false)
     }
 
     @objc private func onApplyTap() {
         guard !isSubmitting else { return }
+        AppHaptic.primaryAction()
         submitCurrentCode()
     }
 
     @objc private func onRemoveTap() {
         guard !isSubmitting else { return }
+        AppHaptic.destructive()
         isRemoving = true
         onRemove?()
     }

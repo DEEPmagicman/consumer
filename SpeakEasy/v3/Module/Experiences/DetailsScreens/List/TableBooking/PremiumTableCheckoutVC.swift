@@ -1801,20 +1801,24 @@ private extension PremiumTableCheckoutVC {
         guard !isPaymentInitiated else { return }
 
         guard termsAgreementView.isChecked || termsAgreementView.isHidden else {
+            AppHaptic.error()
             Alert.showToast("Please accept the terms and conditions")
             return
         }
 
         if !venueMessageView.isHidden && !venueMessageView.isChecked {
+            AppHaptic.error()
             Alert.showToast("Please accept the venue message")
             return
         }
 
         if !emailMessageView.isHidden && !emailMessageView.isChecked {
+            AppHaptic.error()
             Alert.showToast("Please accept the email policy")
             return
         }
 
+        AppHaptic.primaryAction()
         isPaymentInitiated = true
         setBuyLoading(true)
 
@@ -1826,6 +1830,7 @@ private extension PremiumTableCheckoutVC {
         guard let ps = paymentSheet else {
             isPaymentInitiated = false
             setBuyLoading(false)
+            AppHaptic.warning()
             Alert.showToast("Payment not ready")
             return
         }
@@ -1838,11 +1843,13 @@ private extension PremiumTableCheckoutVC {
             case .canceled:
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
+                AppHaptic.warning()
                 Alert.showToast("Payment canceled.")
                 self.cancelCurrentBooking(returnToPrevious: true)
             case .failed:
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
+                AppHaptic.error()
                 Alert.showToast("Payment failed.")
             }
         }
@@ -1855,6 +1862,7 @@ private extension PremiumTableCheckoutVC {
               !currentBookingId.isEmpty else {
             isPaymentInitiated = false
             setBuyLoading(false)
+            AppHaptic.error()
             Alert.showToast("Booking details not found")
             return
         }
@@ -1877,11 +1885,13 @@ private extension PremiumTableCheckoutVC {
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
                 if success {
+                    AppHaptic.success()
                     self.didFinishBooking = true
                     self.timer?.invalidate()
                     NotificationCenter.default.postOrdersRefresh(.tables)
                     self.showReservationConfirmation(response?.reservations.first)
                 } else {
+                    AppHaptic.error()
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }
             }

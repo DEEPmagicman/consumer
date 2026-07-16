@@ -170,6 +170,7 @@ final class V3EmptyStateView: UIView {
     }
 
     @objc private func onClickBrowseEvents() {
+        AppHaptic.primaryAction()
         onBrowseEvents?()
     }
 }
@@ -298,6 +299,7 @@ final class V3NoInternetView: UIView {
     }
 
     @objc private func onClickTryAgain() {
+        AppHaptic.primaryAction()
         onTryAgain?()
     }
 }

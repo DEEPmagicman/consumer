@@ -137,7 +137,7 @@ final class FloatingCustomTabBar: UIView {
     @objc private func onTap(_ sender: UIControl) {
         guard sender.tag != selectedIndex else { return }
 
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.selectionChanged()
         delegate?.floatingCustomTabBar(self, didSelect: sender.tag)
     }
 }

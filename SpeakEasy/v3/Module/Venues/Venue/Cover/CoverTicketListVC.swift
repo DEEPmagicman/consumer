@@ -1115,6 +1115,7 @@ extension CoverTicketListVC {
 
     @IBAction func onClickBackBtn(_ sender: Any) {
         if currentStep == .addOns && !shouldShowDirectUpsell {
+            AppHaptic.navigation()
             currentStep = .coverTickets
             expandedIndexSet.removeAll()
             updateTicketsTitle()
@@ -1128,6 +1129,7 @@ extension CoverTicketListVC {
     }
 
     @IBAction func onClickShare(_ sender: Any) {
+        AppHaptic.navigation()
         let venueName = venueDetails?.name ?? "Venue"
         let slug = venueName
             .lowercased()
@@ -1144,6 +1146,7 @@ extension CoverTicketListVC {
     private func onClickContinueBtn() {
         guard !isCheckoutNavigationInProgress else { return }
 
+        AppHaptic.primaryAction()
         LoginRequiredCoordinator.perform(from: self) { [weak self] in
             self?.continueFlow()
         }
@@ -1151,11 +1154,15 @@ extension CoverTicketListVC {
 
     @objc private func onClickDirectUpsellButton() {
         guard hasAnyUpsell else { return }
+        AppHaptic.selectionChanged()
         moveToAddOnStep()
     }
 
     private func continueFlow() {
-        guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else { return }
+        guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else {
+            AppHaptic.warning()
+            return
+        }
 
         switch currentStep {
         case .coverTickets:
@@ -1231,6 +1238,7 @@ extension CoverTicketListVC {
         guard canSelectMoreTickets() else { return }
 
         coverTicketCount[indexPath.row] = (coverTicketCount[indexPath.row] ?? 0) + 1
+        AppHaptic.stepperChanged()
         updateCheckoutState()
         tableView.reloadData()
         refreshScrollLayoutAfterUpdates()
@@ -1247,6 +1255,7 @@ extension CoverTicketListVC {
             guard canSelectMoreTickets() else { return }
             guard indexPath.row < upSellTickets.count else { return }
             upSellTicketCount[indexPath.row] = (upSellTicketCount[indexPath.row] ?? 0) + 1
+            AppHaptic.stepperChanged()
         }
 
         updateCheckoutState()
@@ -1265,6 +1274,7 @@ extension CoverTicketListVC {
             } else {
                 coverTicketCount.removeValue(forKey: indexPath.row)
             }
+            AppHaptic.stepperChanged()
 
         case .addOns:
             guard indexPath.row < upSellTickets.count else { return }
@@ -1275,6 +1285,7 @@ extension CoverTicketListVC {
             } else {
                 upSellTicketCount.removeValue(forKey: indexPath.row)
             }
+            AppHaptic.stepperChanged()
         }
 
         updateCheckoutState()
@@ -1400,6 +1411,7 @@ extension CoverTicketListVC: UITableViewDelegate {
             guard canSelectMoreTickets() else { return }
             guard indexPath.row < upSellTickets.count else { return }
             upSellTicketCount[indexPath.row] = (upSellTicketCount[indexPath.row] ?? 0) + 1
+            AppHaptic.stepperChanged()
         }
 
         updateCheckoutState()

@@ -653,11 +653,13 @@ final class OrderListViewController: UIViewController {
 
     @IBAction func onClickTermsBtn(_ sender: UIButton) {
         isTermsAccepted.toggle()
+        AppHaptic.selectionChanged()
         updateTermsCheckboxUI()
     }
 
     @IBAction func onClickVenueMessageBtn(_ sender: UIButton) {
         isVenueMessageAccepted.toggle()
+        AppHaptic.selectionChanged()
         updateVenueCheckboxUI()
     }
 
@@ -668,13 +670,18 @@ final class OrderListViewController: UIViewController {
     @IBAction func onClickApplyBtn(_ sender: Any) {
         guard !isFreeTicket else { return }
         let promo = (addCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !promo.isEmpty else { return }
+        guard !promo.isEmpty else {
+            AppHaptic.warning()
+            return
+        }
+        AppHaptic.primaryAction()
         applyPromoBtn.showLoader(userInteraction: false)
         fetchPaymentIntentAndSetup(promoCode: promo)
     }
 
     @IBAction func onClickPluseBtn(_ sender: Any) {
         guard !isFreeTicket else { return }
+        AppHaptic.selectionChanged()
         let shouldShow = addPromoCodeView.isHidden
         UIView.animate(withDuration: 0.2) {
             self.pluseBtn.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -710,6 +717,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickRemovePromoCodeBtn(_ sender: Any) {
+        AppHaptic.destructive()
         isPromoCodeApplied = false
         appliedPromoCode = ""
         addCodeTextFeild.text = ""
@@ -722,6 +730,7 @@ final class OrderListViewController: UIViewController {
     @IBAction func onClickFeesAndTaxesView(_ sender: Any) {
         guard !feesAndTaxes.isEmpty else { return }
 
+        AppHaptic.selectionChanged()
         let shouldShow = feesAndTaxesHiddenView.isHidden
         UIView.animate(withDuration: 0.2) {
             self.feesDropDowenIc.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -758,6 +767,7 @@ final class OrderListViewController: UIViewController {
 
     @IBAction func onClickCardBtn(_ sender: Any) {
         guard !isFreeTicket else { return }
+        AppHaptic.primaryAction()
         startPaymentFlow()
     }
 
@@ -782,6 +792,7 @@ final class OrderListViewController: UIViewController {
 
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
+        AppHaptic.warning()
         Alert.showToast("Payment canceled.")
     }
 
@@ -861,8 +872,13 @@ final class OrderListViewController: UIViewController {
                 self.applyPromoBtn.hideLoader()
 
                 guard isSuccess else {
+                    AppHaptic.error()
                     Alert.showToast(errMsg ?? "Something went wrong")
                     return
+                }
+
+                if !promoCode.isEmpty {
+                    AppHaptic.success()
                 }
 
                 self.isFreeTicket              = isFreeTicket || (paymentDetail?.total ?? 0) <= 0
@@ -1180,6 +1196,7 @@ final class OrderListViewController: UIViewController {
         guard let paymentSheet else {
             isPaymentInitiated = false
             hidePurchaseLoading()
+            AppHaptic.warning()
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
@@ -1196,6 +1213,7 @@ final class OrderListViewController: UIViewController {
             case .failed:
                 self.isPaymentInitiated = false
                 self.hidePurchaseLoading()
+                AppHaptic.error()
                 Alert.showToast("Payment failed. Please try again.")
             }
         }
@@ -1279,10 +1297,12 @@ final class OrderListViewController: UIViewController {
                 self.isFreeBookingInProgress = false
 
                 guard isSuccess else {
+                    AppHaptic.error()
                     Alert.showToast(message ?? errMsg ?? "Unable to redeem tickets")
                     return
                 }
 
+                AppHaptic.success()
                 self.countdownTimer?.invalidate()
                 NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.showQRCode(
@@ -1301,6 +1321,7 @@ final class OrderListViewController: UIViewController {
         guard let bookingId else {
             isPaymentInitiated = false
             hidePurchaseLoading()
+            AppHaptic.error()
             Alert.showToast("Missing booking information.")
             return
         }
@@ -1319,6 +1340,7 @@ final class OrderListViewController: UIViewController {
                 self.isPaymentInitiated = false
 
                 if isSuccess {
+                    AppHaptic.success()
                     self.countdownTimer?.invalidate()
                     NotificationCenter.default.postOrdersRefresh(.tickets)
                     Navigate.to.showQRCode(
@@ -1330,6 +1352,7 @@ final class OrderListViewController: UIViewController {
                         presentationMode: .pushedFromPurchase
                     )
                 } else {
+                    AppHaptic.error()
                     Alert.showToast(errMsg ?? "Payment confirmation failed")
                 }
             }
@@ -1434,6 +1457,7 @@ extension OrderListViewController: OrderQuestionTableViewCellDelegate {
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
+        AppHaptic.primaryAction()
         startPaymentFlow()
     }
 }
@@ -1691,6 +1715,7 @@ final class OrderQuestionTableViewCell: UITableViewCell, UITextFieldDelegate {
     @objc private func onTapOption(_ sender: UIButton) {
         guard let question, let selectedOption = sender.title(for: .normal) else { return }
 
+        AppHaptic.selectionChanged()
         if question.questionType == "MULTI_SELECT" {
             var answers = currentAnswer as? [String] ?? []
             if let index = answers.firstIndex(of: selectedOption) {
@@ -1711,6 +1736,7 @@ final class OrderQuestionTableViewCell: UITableViewCell, UITextFieldDelegate {
     @objc private func onTapCheckbox() {
         guard let question else { return }
         let answer = !(currentAnswer as? Bool ?? false)
+        AppHaptic.selectionChanged()
         currentAnswer = answer
         updateCheckboxState()
         delegate?.orderQuestionCell(self, didUpdate: answer, for: question)

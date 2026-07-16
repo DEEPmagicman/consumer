@@ -509,6 +509,7 @@ final class TicketCheckoutVC: UIViewController {
             }
 
             guard isSuccess, let clientSecret else {
+                AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
                 return
             }
@@ -595,11 +596,13 @@ final class TicketCheckoutVC: UIViewController {
         guard let bookingId = bookingId else {
             isPaymentInitiated = false
             setScreenInteractionBlocked(false)
+            AppHaptic.error()
             return
         }
         paymentService.confirmPaymentSuccess(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: nil) { [weak self] isSuccess, _ in
             guard let self = self else { return }
             if isSuccess {
+                AppHaptic.success()
                 countdownTimer?.invalidate()
                 NotificationCenter.default.postOrdersRefresh(.tickets)
                 Navigate.to.showQRCode(
@@ -613,6 +616,7 @@ final class TicketCheckoutVC: UIViewController {
             } else {
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)
+                AppHaptic.error()
                 Alert.showToast(Constant.String.somethingWrong)
             }
         }
@@ -664,6 +668,7 @@ final class TicketCheckoutVC: UIViewController {
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }
                 if isSuccess, let id = id {
+                    AppHaptic.success()
                     self.countdownTimer?.invalidate()
                     NotificationCenter.default.postOrdersRefresh(.tickets)
                     Navigate.to.showQRCode(
@@ -677,6 +682,7 @@ final class TicketCheckoutVC: UIViewController {
                 } else {
                     self.isPaymentInitiated = false
                     self.setScreenInteractionBlocked(false)
+                    AppHaptic.error()
                     Alert.showToast(message ?? errMsg ?? Constant.String.somethingWrong)
                 }
             }
@@ -709,6 +715,7 @@ final class TicketCheckoutVC: UIViewController {
 
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
+        AppHaptic.warning()
         Alert.showToast("Payment canceled.")
         cancelBookingAndReturnToEventDetails()
     }
@@ -797,6 +804,7 @@ final class TicketCheckoutVC: UIViewController {
         addPromoCodeBtn.showLoader(userInteraction: false)
 
         if isPromoCodeApplied {
+            AppHaptic.primaryAction()
             fetchPaymentIntentAndSetup(promoCode: "", completion: { [weak self] isSuccess in
                 guard let self else { return }
                 self.addPromoCodeBtn.hideLoader()
@@ -817,9 +825,11 @@ final class TicketCheckoutVC: UIViewController {
                 addPromoCodeBtn.hideLoader()
                 isPromoRequestInProgress = false
                 setScreenInteractionBlocked(false)
+                AppHaptic.warning()
                 return
             }
 
+            AppHaptic.primaryAction()
             fetchPaymentIntentAndSetup(promoCode: promo, completion: { [weak self] isSuccess in
                 guard let self else { return }
                 self.addPromoCodeBtn.hideLoader()
@@ -841,6 +851,7 @@ final class TicketCheckoutVC: UIViewController {
         guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
 
         sender.isSelected.toggle()
+        AppHaptic.selectionChanged()
         
         let image = sender.isSelected
             ? UIImage(named: "checkBox")
@@ -864,6 +875,7 @@ final class TicketCheckoutVC: UIViewController {
         if event?.venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false,
            checkBox.isSelected == false {
 
+            AppHaptic.error()
             Alert.showAlertSheet(
                 style: .alert,
                 title: "You must accept the terms and conditions by clicking the checkbox.",
@@ -883,6 +895,7 @@ final class TicketCheckoutVC: UIViewController {
             return
         }
 
+        AppHaptic.primaryAction()
         if isFreeTicket {
             createFreeEventBookingAndNavigate()
             return
@@ -891,6 +904,7 @@ final class TicketCheckoutVC: UIViewController {
         guard let paymentSheet else {
             isPaymentInitiated = false
             setScreenInteractionBlocked(false)
+            AppHaptic.warning()
             return
         }
 
@@ -907,6 +921,7 @@ final class TicketCheckoutVC: UIViewController {
             case .failed:
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)
+                AppHaptic.error()
             }
         }
     }
@@ -923,6 +938,7 @@ final class TicketCheckoutVC: UIViewController {
            !isEventQueAnsCollected {
 
             guard setAnswerData else {
+                AppHaptic.error()
                 Alert.showAlertSheet(style: .alert, title: "Please fill required answers", message: "")
                 return false
             }
@@ -944,6 +960,7 @@ final class TicketCheckoutVC: UIViewController {
     @IBAction func onClickFeesAndTaxes(_ sender: Any) {
         guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
 
+        AppHaptic.selectionChanged()
         let isHidden = feesAndTaxesContainerView.isHidden
         feesAndTaxesContainerView.isHidden.toggle()
         UIView.animate(withDuration: 0.25) {
@@ -955,6 +972,7 @@ final class TicketCheckoutVC: UIViewController {
     
     @IBAction func onClickAddPromoCode(_ sender: Any) {
         guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
+        AppHaptic.selectionChanged()
         promoCodeView.isHidden.toggle()
     }
 

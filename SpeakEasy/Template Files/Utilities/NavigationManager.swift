@@ -400,6 +400,7 @@ final class Navigate {
         vc.addOnsBookingId = addOnsBookingId
         vc.venueNameText = venueName
         vc.shouldReturnToVenueAfterClose = shouldPushFromVenueFlow
+        vc.shouldPlayPurchaseSuccessHaptic = shouldPushFromVenueFlow
         vc.modalPresentationStyle = .fullScreen
         vc.isModalInPresentation = true
 

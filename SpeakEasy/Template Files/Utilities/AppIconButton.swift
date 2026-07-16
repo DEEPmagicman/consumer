@@ -228,6 +228,7 @@ final class AppIconButton: UIButton {
             buttonSize: resolvedButtonSize,
             tintColor: iconTintColor
         ) { [weak self] in
+            AppHaptic.navigation()
             self?.sendActions(for: .touchUpInside)
         })
     }

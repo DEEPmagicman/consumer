@@ -618,12 +618,14 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBAction func onClickTermsBtn(_ sender: UIButton) {
         guard !isPaymentInitiated else { return }
         isTermsAccepted.toggle()
+        AppHaptic.selectionChanged()
         updateTermsCheckboxUI()
     }
 
     @IBAction func onClickVenueMessageBtn(_ sender: UIButton) {
         guard !isPaymentInitiated else { return }
         isVenueMessageAccepted.toggle()
+        AppHaptic.selectionChanged()
         updateVenueCheckboxUI()
     }
 
@@ -638,14 +640,17 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     func onClickContinueToCheckout() {
         guard !isPaymentInitiated, !isCancellingTransaction else { return }
         if termsAndConditions.isHidden == false && !isTermsAccepted {
+            AppHaptic.error()
             Alert.showToast("Please accept Terms & Conditions")
             return
         }
 
         if venueMessageView.isHidden == false && !isVenueMessageAccepted {
+            AppHaptic.error()
             Alert.showToast("Please accept Venue Message")
             return
         }
+        AppHaptic.primaryAction()
         isPaymentInitiated = true
         setScreenInteractionBlocked(true)
         updateCheckoutButtonState()
@@ -658,6 +663,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
         guard let paymentSheet else {
             resetPaymentInteractionAfterFailure()
+            AppHaptic.warning()
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
@@ -673,6 +679,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.handlePaymentCanceled()
             case .failed:
                 self.resetPaymentInteractionAfterFailure()
+                AppHaptic.error()
                 Alert.showToast("Payment failed. Please try again.")
             }
         }
@@ -1029,6 +1036,7 @@ extension CoverTicketCheckOutVC {
 
     private func handlePaymentCanceled() {
         resetPaymentInteractionAfterFailure()
+        AppHaptic.warning()
         Alert.showToast("Payment canceled.")
     }
 
@@ -1300,6 +1308,7 @@ extension CoverTicketCheckOutVC {
         checkOutBtnView.hideLoader()
         countdownTimer?.invalidate()
         NotificationCenter.default.postOrdersRefresh(.tickets)
+        AppHaptic.success()
         Navigate.to.scanQR(
             self,
             isAddOnsAvailable: isAddOnsAvailable,
@@ -1324,6 +1333,7 @@ extension CoverTicketCheckOutVC {
             } else {
                 self?.checkOutBtnView.hideLoader()
                 self?.resetPaymentInteractionAfterFailure()
+                AppHaptic.error()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1341,6 +1351,7 @@ extension CoverTicketCheckOutVC {
             } else {
                 self?.checkOutBtnView.hideLoader()
                 self?.resetPaymentInteractionAfterFailure()
+                AppHaptic.error()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1359,6 +1370,7 @@ extension CoverTicketCheckOutVC {
             } else {
                 self.checkOutBtnView.hideLoader()
                 self.resetPaymentInteractionAfterFailure()
+                AppHaptic.error()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }

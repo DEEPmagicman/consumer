@@ -445,39 +445,46 @@ class TicketsTVC: UITableViewCell {
 
     @IBAction func onClickMinusBtn(_ sender: Any) {
         if isCoverTicketMode {
+            AppHaptic.stepperChanged()
             onCoverMinusTap?()
             return
         }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
+        AppHaptic.stepperChanged()
         onMinusTap?(ticket)
     }
 
     @IBAction func onClickPlusBtn(_ sender: Any) {
         if isCoverTicketMode {
+            AppHaptic.stepperChanged()
             onCoverPlusTap?()
             return
         }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
+        AppHaptic.stepperChanged()
         onPlusTap?(ticket)
     }
 
     @IBAction func onClickRSVPBtn(_ sender: Any) {
         if isCoverTicketMode {
             // FREE cover ticket — treat as plus tap
+            AppHaptic.primaryAction()
             onCoverPlusTap?()
             return
         }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
+        AppHaptic.primaryAction()
         onRSVPTap?(ticket)
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        AppHaptic.selectionChanged()
         isDescriptionExpanded.toggle()
         discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
         viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)

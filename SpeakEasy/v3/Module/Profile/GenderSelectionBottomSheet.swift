@@ -211,6 +211,7 @@ final class GenderSelectionBottomSheetVC: UIViewController {
     }
 
     @objc private func onGenderTap(_ sender: UIControl) {
+        AppHaptic.selectionChanged()
         selectedGender = genders[sender.tag]
         buildOptions()
         dismissSheet { [weak self] in

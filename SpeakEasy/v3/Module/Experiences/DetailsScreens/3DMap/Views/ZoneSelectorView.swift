@@ -328,6 +328,7 @@ private extension ZoneSelectorView {
 
     @objc func didTapLeft() {
         guard windowStart > 0 else { return }
+        AppHaptic.selectionChanged()
         windowStart -= 1
         renderVisible(slideDir: .prev)
         onPrevPage?()
@@ -335,6 +336,7 @@ private extension ZoneSelectorView {
 
     @objc func didTapRight() {
         guard windowStart + maxVisible < allItems.count else { return }
+        AppHaptic.selectionChanged()
         windowStart += 1
         renderVisible(slideDir: .next)
         onNextPage?()
@@ -344,6 +346,7 @@ private extension ZoneSelectorView {
         let newGlobal = windowStart + sender.tag
         guard allItems.indices.contains(newGlobal) else { return }
 
+        AppHaptic.selectionChanged()
         selectedGlobalIndex = newGlobal
         updateSelection(animated: true)
         emitSelection()

@@ -213,6 +213,7 @@ final class LandingHeaderView: UIView {
     }
 
     @objc private func onProfile() {
+        AppHaptic.navigation()
         LoginRequiredCoordinator.perform(from: currentVC) { [weak self] in
             guard let self else { return }
             Navigate.to.profileMenuVC(self.currentVC)
@@ -221,6 +222,7 @@ final class LandingHeaderView: UIView {
     }
 
     @objc private func onClickMap() {
+        AppHaptic.navigation()
         Navigate.to.gotoMapVC(currentVC)
 //        delegate?.landingHeaderDidTapMap(self)
     }

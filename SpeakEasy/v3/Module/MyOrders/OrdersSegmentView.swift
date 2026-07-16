@@ -157,6 +157,7 @@ final class OrdersSegmentView: UIControl {
 
         guard index != selectedIndex else { return }
 
+        AppHaptic.selectionChanged()
         setSelectedIndex(index, animated: true)
         onIndexChanged?(index)
     }

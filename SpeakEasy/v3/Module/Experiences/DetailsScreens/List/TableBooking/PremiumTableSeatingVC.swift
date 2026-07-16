@@ -692,6 +692,7 @@ private extension PremiumTableSeatingVC {
 private extension PremiumTableSeatingVC {
 
     @objc func toggleDesc() {
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
         descLabel.numberOfLines = 0
         UIView.animate(withDuration: 0.22) { self.view.layoutIfNeeded() }
@@ -701,12 +702,14 @@ private extension PremiumTableSeatingVC {
         guard let area = seatingArea, let event else { return }
 
         guard LoginRequiredCoordinator.isAuthenticated else {
+            AppHaptic.warning()
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.onCheckoutTapped()
             }
             return
         }
 
+        AppHaptic.primaryAction()
         let uuid    = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
         let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
 
@@ -726,6 +729,7 @@ private extension PremiumTableSeatingVC {
             DispatchQueue.main.async {
                 self.setCheckoutLoading(false)
                 if success {
+                    AppHaptic.success()
                     let vc = PremiumTableCheckoutVC()
                     vc.queueId       = queueId
                     vc.event         = event
@@ -738,6 +742,7 @@ private extension PremiumTableSeatingVC {
                     vc.promotionLinkUniqueCode = self.promotionLinkUniqueCode
                     self.navigationController?.pushViewController(vc, animated: false)
                 } else {
+                    AppHaptic.error()
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }
             }

@@ -749,6 +749,7 @@ extension PremiumSearchVC: UICollectionViewDelegate {
               events.indices.contains(indexPath.item),
               let event = events[indexPath.item].event else { return }
 
+        AppHaptic.cardOpen()
         Navigate.eventDetailsVC(self, event: event)
     }
 
@@ -1131,6 +1132,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     }
 
     @objc private func onViewMoreVenuesPressed() {
+        AppHaptic.selectionChanged()
         onViewMoreVenues?()
     }
 }
@@ -1227,6 +1229,7 @@ private final class PremiumSearchArtistResultView: UIControl {
 
     @objc private func onTap() {
         guard let artist else { return }
+        AppHaptic.cardOpen()
         onViewArtist?(artist)
     }
 }
@@ -1487,6 +1490,7 @@ private final class PremiumSearchVenueResultView: UIView {
 
     @objc private func onButton() {
         guard let venue else { return }
+        AppHaptic.cardOpen()
         onViewVenue?(venue)
     }
 }

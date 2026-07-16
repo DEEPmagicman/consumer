@@ -155,6 +155,7 @@ final class PremiumSearchBarView: UIControl {
     @objc
     private func beginSearch() {
 
+        AppHaptic.tap()
         textField.becomeFirstResponder()
         onTap?()
     }
@@ -165,6 +166,7 @@ final class PremiumSearchBarView: UIControl {
         textField.text = ""
         clearButton.isHidden = true
 
+        AppHaptic.tap()
         onClear?()
     }
 
@@ -183,6 +185,7 @@ extension PremiumSearchBarView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 
         textField.resignFirstResponder()
+        AppHaptic.selectionChanged()
         onTap?()
 
         return true

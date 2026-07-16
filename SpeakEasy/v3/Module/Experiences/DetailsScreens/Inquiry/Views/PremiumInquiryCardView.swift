@@ -1052,6 +1052,7 @@ final class PremiumRequestQuestionView: UIView, UITextFieldDelegate {
 
     @objc private func onTapSelectField() {
         guard !optionButtons.isEmpty else { return }
+        AppHaptic.selectionChanged()
         isOptionsExpanded.toggle()
         optionStack.isHidden = !isOptionsExpanded
         updateSelectFieldHeight()
@@ -1062,6 +1063,7 @@ final class PremiumRequestQuestionView: UIView, UITextFieldDelegate {
     @objc private func onTapOption(_ sender: UIButton) {
         guard let question, let selectedOption = sender.title(for: .normal) else { return }
 
+        AppHaptic.selectionChanged()
         if question.questionType == "MULTI_SELECT" {
             var answers = currentAnswer as? [String] ?? []
             if let index = answers.firstIndex(of: selectedOption) {
@@ -1083,6 +1085,7 @@ final class PremiumRequestQuestionView: UIView, UITextFieldDelegate {
     @objc private func onTapCheckbox() {
         guard let question else { return }
         let answer = !(currentAnswer as? Bool ?? false)
+        AppHaptic.selectionChanged()
         currentAnswer = answer
         updateCheckboxState()
         onAnswerChanged?(answer, question)

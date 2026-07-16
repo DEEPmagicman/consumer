@@ -394,16 +394,19 @@ final class PaymentVC: UIViewController {
     }
 
     @objc private func onApplePayTapped() {
+        AppHaptic.selectionChanged()
         selectedPaymentMethod = .applePay
         updateCheckboxStates()
     }
 
     @objc private func onSaveCardTapped() {
         isSaveCard.toggle()
+        AppHaptic.selectionChanged()
         saveCardCheckbox.isSelected = isSaveCard
     }
 
     @objc private func onCardTapped() {
+        AppHaptic.selectionChanged()
         selectedPaymentMethod = .card
         updateCheckboxStates()
     }
@@ -411,6 +414,7 @@ final class PaymentVC: UIViewController {
     @objc private func onClickDone() {
         // Apple Pay — no card fields needed, pass nil
         if selectedPaymentMethod == .applePay {
+            AppHaptic.primaryAction()
             if let onPaymentSelected {
                 onPaymentSelected(selectedPaymentMethod, nil)
                 navigationController?.popViewController(animated: true)
@@ -452,10 +456,10 @@ final class PaymentVC: UIViewController {
         let expiry     = expiryField.text ?? ""       // expects "MM/YY"
         let cvv        = cvvField.text ?? ""
 
-        guard !firstName.isEmpty else { Alert.showToast("Enter first name"); return }
-        guard !lastName.isEmpty  else { Alert.showToast("Enter last name"); return }
-        guard cardNumber.count >= 15 else { Alert.showToast("Enter valid card number"); return }
-        guard !cvv.isEmpty       else { Alert.showToast("Enter CVV"); return }
+        guard !firstName.isEmpty else { AppHaptic.error(); Alert.showToast("Enter first name"); return }
+        guard !lastName.isEmpty  else { AppHaptic.error(); Alert.showToast("Enter last name"); return }
+        guard cardNumber.count >= 15 else { AppHaptic.error(); Alert.showToast("Enter valid card number"); return }
+        guard !cvv.isEmpty       else { AppHaptic.error(); Alert.showToast("Enter CVV"); return }
 
         // Parse MM/YY
         let parts = expiry.split(separator: "/")
@@ -463,6 +467,7 @@ final class PaymentVC: UIViewController {
               let month = UInt(parts[0]),
               let year  = UInt(parts[1]),
               month >= 1, month <= 12 else {
+            AppHaptic.error()
             Alert.showToast("Enter expiry as MM/YY")
             return
         }
@@ -476,6 +481,7 @@ final class PaymentVC: UIViewController {
             cvv:         cvv
         )
 
+        AppHaptic.primaryAction()
         if let onPaymentSelected {
             onPaymentSelected(selectedPaymentMethod, cardDetails)
             navigationController?.popViewController(animated: true)

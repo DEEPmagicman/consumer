@@ -398,7 +398,7 @@ extension ProfileInfoVC {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.systemRed.cgColor
         
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.error()
         
         textField.shake()
         scrollToView(textField)
@@ -414,7 +414,7 @@ extension ProfileInfoVC {
         genderControl.layer.borderWidth = 1
         genderControl.layer.borderColor = UIColor.systemRed.cgColor
         
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.error()
         
         genderControl.shake()
         scrollToView(genderControl)

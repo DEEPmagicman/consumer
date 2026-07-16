@@ -136,6 +136,7 @@ final class SegmentedTabView: UIView {
     // MARK: - Actions
     @objc private func tabTapped(_ sender: UIButton) {
         guard sender.tag != selectedIndex else { return }
+        AppHaptic.selectionChanged()
         selectedIndex = sender.tag
         onSelectionChanged?(selectedIndex)
     }
@@ -1209,9 +1210,11 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
 
         if selectedIndex == 0 {
             guard venueList.indices.contains(indexPath.row) else { return }
+            AppHaptic.cardOpen()
             Navigate.to.venueVC(self, venueDetails: venueList[indexPath.row])
         } else {
             guard eventList.indices.contains(indexPath.row) else { return }
+            AppHaptic.cardOpen()
             Navigate.eventDetailsVC(self, event: eventList[indexPath.row])
         }
     }
@@ -1290,6 +1293,7 @@ extension MapViewController: GMSMapViewDelegate {
         didTap marker: GMSMarker
     ) -> Bool {
         guard let annotation = marker.userData as? DiscoverMapAnnotation else { return false }
+        AppHaptic.cardOpen()
         navigate(to: annotation.kind)
         return true
     }

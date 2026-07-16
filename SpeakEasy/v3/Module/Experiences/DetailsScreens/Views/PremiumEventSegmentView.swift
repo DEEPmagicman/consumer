@@ -289,6 +289,7 @@ private extension PremiumEventSegmentView {
             return
         }
 
+        AppHaptic.selectionChanged()
         selectedIndex = sender.tag
 
         updateSelection(animated: true)

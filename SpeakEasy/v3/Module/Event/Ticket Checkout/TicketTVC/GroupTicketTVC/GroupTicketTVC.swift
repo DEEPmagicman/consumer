@@ -157,6 +157,7 @@ class GroupTicketTVC: UITableViewCell {
     }
 
     @IBAction func onClickExpandBtn(_ sender: Any) {
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
         tableParentView.isHidden = !isExpanded
         ticketListTableView.layoutIfNeeded()
@@ -233,6 +234,7 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
         guard currentCount == 0 else { return }
         let price = ticket.price ?? 0
         if price != 0 {
+            AppHaptic.stepperChanged()
             onRowTap?(ticket)
         }
     }

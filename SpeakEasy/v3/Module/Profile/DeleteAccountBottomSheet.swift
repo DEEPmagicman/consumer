@@ -151,24 +151,29 @@ final class DeleteAccountBottomSheetVC: UIViewController {
     }
 
     @objc private func onClickContactUs() {
+        AppHaptic.navigation()
         Navigate.externalURL(APIBuilder.supportURL)
     }
     
     @objc private func onClickCancel() {
+        AppHaptic.navigation()
         dismissSheet()
     }
     
     @objc private func onClickDelete() {
+        AppHaptic.destructive()
         deleteBtn.startLoading()
         authService.deleteAccount { isSuccess, errorMsg in
             self.deleteBtn.stopLoading()
             if isSuccess {
+                AppHaptic.success()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.dismissSheet()
                     UserDefault.shared.emptyData()
                     AppDelegate.shared.changeRootViewController()
                 }
             } else {
+                AppHaptic.error()
                 Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
             }
         }

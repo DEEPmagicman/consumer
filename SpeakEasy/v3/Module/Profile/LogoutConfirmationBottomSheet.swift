@@ -129,10 +129,12 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
     }
 
     @objc private func onClickCancel() {
+        AppHaptic.navigation()
         dismissSheet()
     }
 
     @objc private func onClickLogout() {
+        AppHaptic.destructive()
         logoutBtn.startLoading()
         UserDefault.shared.emptyData()
         AppDelegate.shared.changeRootViewController()

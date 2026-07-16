@@ -791,6 +791,7 @@ class TicketSelectionViewController: UIViewController {
 
         guard !code.isEmpty,
               var event = event else {
+            AppHaptic.warning()
             return
         }
 
@@ -819,6 +820,7 @@ class TicketSelectionViewController: UIViewController {
 
         guard !matched.isEmpty else {
 
+            AppHaptic.error()
             Alert.showToast(
                 "Invalid password. Please try again."
             )
@@ -903,9 +905,11 @@ class TicketSelectionViewController: UIViewController {
 
         ticketTableView.reloadData()
         updateTicketTableHeight()
+        AppHaptic.success()
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        AppHaptic.navigation()
         Navigate.to.back(self)
     }
 
@@ -915,6 +919,7 @@ class TicketSelectionViewController: UIViewController {
         guard !isCheckoutInProgress else { return }
 
         guard LoginRequiredCoordinator.isAuthenticated else {
+            AppHaptic.warning()
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.onClickContinueBtn(sender)
             }
@@ -929,7 +934,12 @@ class TicketSelectionViewController: UIViewController {
             let selectedNormal = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let selectedGrouped = groupedNormalTickets.flatMap { $0.tickets }.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let selected = selectedNormal + selectedGrouped
-            guard !selected.isEmpty else { return }
+            guard !selected.isEmpty else {
+                AppHaptic.warning()
+                return
+            }
+
+            AppHaptic.primaryAction()
 
             selectedNormalTickets = selected
 
@@ -944,6 +954,7 @@ class TicketSelectionViewController: UIViewController {
         case .addOn:
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let finalSelected = selectedNormalTickets + selectedAddOns
+            AppHaptic.primaryAction()
             continueToCheckOutBtn.showLoader(userInteraction: false)
             setCheckoutInProgress(true)
             createBooking(event: event, user: user, tickets: finalSelected)
@@ -1028,6 +1039,7 @@ class TicketSelectionViewController: UIViewController {
             guard let self else { return }
             self.continueToCheckOutBtn.hideLoader()
             if isSuccess {
+                AppHaptic.success()
 //                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
                 Navigate.orderListVC(
                     self,
@@ -1041,6 +1053,7 @@ class TicketSelectionViewController: UIViewController {
                 )
             } else {
                 self.setCheckoutInProgress(false)
+                AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
         }
@@ -1595,8 +1608,10 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         if isRSVPTicket(ticket),
            let cell = tableView.cellForRow(at: indexPath) as? TicketsTVC {
+            AppHaptic.primaryAction()
             handleRSVP(ticket: ticket, cell: cell)
         } else {
+            AppHaptic.stepperChanged()
             handlePlus(ticket: ticket)
         }
     }

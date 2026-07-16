@@ -261,10 +261,12 @@ private extension SelectLocationVC {
 extension SelectLocationVC {
 
     @IBAction func onClickBack(_ sender: Any) {
+        AppHaptic.navigation()
         dismiss(animated: true)
     }
 
     @IBAction func onClickSearchClosebtn(_ sender: Any) {
+        AppHaptic.tap()
 
         searchTextfeild.text = ""
 
@@ -276,6 +278,7 @@ extension SelectLocationVC {
     }
     
     @IBAction func onClickEditSearchClosebtn(_ sender: Any) {
+        AppHaptic.tap()
 
         editSearchTextFeild.text = ""
 
@@ -287,6 +290,7 @@ extension SelectLocationVC {
     }
 
     @IBAction func onClickApply(_ sender: Any) {
+        AppHaptic.success()
 
         let selectedCity = selectedFilterCity?
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -306,7 +310,12 @@ extension SelectLocationVC {
     
     @IBAction func onClickUpdateLocation(_ sender: Any) {
 
-        guard !selectedCity.isEmpty else { return }
+        guard !selectedCity.isEmpty else {
+            AppHaptic.error()
+            return
+        }
+
+        AppHaptic.primaryAction()
 
         if isInitialPrimarySelection {
             UserDefault.shared.setPrimaryCity(selectedCity)
@@ -526,6 +535,7 @@ UITableViewDataSource {
         guard displayList.indices.contains(indexPath.row) else { return }
 
         let city = displayList[indexPath.row].value
+        AppHaptic.selectionChanged()
 
         switch mode {
 

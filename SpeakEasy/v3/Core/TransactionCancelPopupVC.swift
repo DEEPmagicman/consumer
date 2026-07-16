@@ -162,10 +162,12 @@ final class TransactionCancelPopupVC: UIViewController {
     }
 
     @objc private func onClickKeepCheckout() {
+        AppHaptic.navigation()
         dismissSheet()
     }
 
     @objc private func onClickCancelTransaction() {
+        AppHaptic.destructive()
         keepCheckoutBtn.isUserInteractionEnabled = false
         cancelTransactionBtn.showLoader(userInteraction: false)
         let completion = onCancelTransaction

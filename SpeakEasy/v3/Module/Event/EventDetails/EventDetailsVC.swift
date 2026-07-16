@@ -2640,12 +2640,14 @@ class EventDetailsVC: UIViewController {
             var updatedTicket = currentTicket
             updatedTicket.selectedTicketCount = nextCount
             syncUpdatedTicketToEvent(updatedTicket)
+            AppHaptic.stepperChanged()
 
             ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
             updateContinueBtnState()
             updateTicketTableHeight()
             updateCheckoutSummaryView()
         } else {
+            AppHaptic.warning()
             Alert.showToast("Max tickets selected: create a separate order to purchase more.")
         }
     }
@@ -2671,6 +2673,7 @@ class EventDetailsVC: UIViewController {
         var updatedTicket = currentTicket
         updatedTicket.selectedTicketCount = nextCount > 0 ? nextCount : nil
         syncUpdatedTicketToEvent(updatedTicket)
+        AppHaptic.stepperChanged()
 
         ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
         updateContinueBtnState()
@@ -2771,11 +2774,13 @@ class EventDetailsVC: UIViewController {
                 var updatedTicket = currentTicket
                 updatedTicket.selectedTicketCount = nextCount
                 syncUpdatedTicketToEvent(updatedTicket)
+                AppHaptic.stepperChanged()
 
                 updateContinueBtnState()
                 refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
                 updateCheckoutSummaryView()
             } else {
+                AppHaptic.warning()
                 Alert.showToast("Max tickets selected: create a separate order to purchase more.")
             }
             return
@@ -2806,6 +2811,7 @@ class EventDetailsVC: UIViewController {
             var updatedTicket = currentTicket
             updatedTicket.selectedTicketCount = nextCount > 0 ? nextCount : nil
             syncUpdatedTicketToEvent(updatedTicket)
+            AppHaptic.stepperChanged()
 
             updateContinueBtnState()
             refreshGroupTicketRow(groupIndex: groupIndex, ticketIndex: ticketIndex)
@@ -2946,7 +2952,12 @@ class EventDetailsVC: UIViewController {
             .filter { ($0.selectedTicketCount ?? 0) > 0 }
 
         let selected = selectedNormal + selectedGrouped
-        guard !selected.isEmpty else { return }
+        guard !selected.isEmpty else {
+            AppHaptic.warning()
+            return
+        }
+
+        AppHaptic.primaryAction()
 
         if hasVisibleAddOnOptions(for: event) {
             shouldClearInlineRSVPSelectionOnReturn = true
@@ -2999,6 +3010,7 @@ class EventDetailsVC: UIViewController {
 
             self.checkOutBtnView.hideLoader()
             if isSuccess {
+                AppHaptic.success()
                 self.shouldClearInlineRSVPSelectionOnReturn = true
                 Navigate.orderListVC(
                     self,
@@ -3011,12 +3023,14 @@ class EventDetailsVC: UIViewController {
                     promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
+                AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
         }
     }
     
     @IBAction func onClickVenueTitle(_ sender: Any) {
+        AppHaptic.cardOpen()
         Navigate.to.venueVC(self, venueDetails: self.venueDetails)
     }
 
@@ -3057,6 +3071,7 @@ class EventDetailsVC: UIViewController {
 
 
             if isSuccess {
+                AppHaptic.success()
                 self.shouldClearInlineRSVPSelectionOnReturn = true
                 Navigate.to.ticketCheckoutVC(
                     self,
@@ -3067,6 +3082,7 @@ class EventDetailsVC: UIViewController {
                     promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
+                AppHaptic.error()
                 Alert.showToast(errMsg ?? "Somthing went wrong")
             }
         }
@@ -3107,6 +3123,7 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
 
         if isExpanded {
@@ -3123,6 +3140,7 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickPolicyViewMoreBtn(_ sender: Any) {
+        AppHaptic.selectionChanged()
         isPolicyLblExpanded.toggle()
 
         if isPolicyLblExpanded {
@@ -3140,6 +3158,7 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickBuyNow(_ sender: Any) {
         if let event = self.event {
+            AppHaptic.primaryAction()
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -3159,9 +3178,11 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickVIPtable(_ sender: Any) {
         guard didLoadSeatingAreasSuccessfully,
               !seatingAreas.isEmpty else {
+            AppHaptic.warning()
             return
         }
 
+        AppHaptic.cardOpen()
         openPremiumEventContainer(with: seatingAreas)
     }
 
@@ -3178,6 +3199,7 @@ class EventDetailsVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
+        AppHaptic.navigation()
         let venue = venueDetails?.name
               .lowercased()
               .replacingOccurrences(of: " ", with: "-") ?? ""
@@ -3195,10 +3217,12 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickWebSiteLinkView(_ sender: Any) {
         guard let button = enabledAdditionalButtons.first else { return }
+        AppHaptic.navigation()
         openAdditionalButton(button)
     }
         
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
+        AppHaptic.cardOpen()
         LoginRequiredCoordinator.perform(from: self) { [weak self] in
             self?.showGuestListForAuthenticatedUser()
         }
@@ -3214,7 +3238,10 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {
         let code = unlockCode
-        guard !code.isEmpty else { return }
+        guard !code.isEmpty else {
+            AppHaptic.warning()
+            return
+        }
         guard var event = event else { return }
 
         let protectedList = event.protectedEventTicket ?? []
@@ -3225,6 +3252,7 @@ class EventDetailsVC: UIViewController {
         }
 
         if alreadyUnlocked {
+            AppHaptic.warning()
             Alert.showToast("Tickets already unlocked", vc: self)
             return
         }
@@ -3242,6 +3270,7 @@ class EventDetailsVC: UIViewController {
         }
 
         guard !matchedTickets.isEmpty else {
+            AppHaptic.error()
             Alert.showToast("Invalid password. Please try again.", vc: self)
             return
         }
@@ -3267,6 +3296,7 @@ class EventDetailsVC: UIViewController {
         updateUnlockButtonState()
 
         setupData()
+        AppHaptic.success()
     }
     
     
@@ -3274,6 +3304,7 @@ class EventDetailsVC: UIViewController {
         guard !isSaveLoading else { return }
 
         guard LoginRequiredCoordinator.isAuthenticated else {
+            AppHaptic.warning()
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.onClickSaveBtn(sender)
             }
@@ -3293,6 +3324,7 @@ class EventDetailsVC: UIViewController {
         isSaveLoading = true
         isSaved.toggle()
         updateSaveUI()
+        AppHaptic.selectionChanged()
         
         if isSaved {
             saveEventAPI(
@@ -3350,6 +3382,7 @@ class EventDetailsVC: UIViewController {
             self.event?.hasSavedEvent = true
             self.isSaved = true
             self.updateSaveUI()
+            AppHaptic.success()
             if let event = self.event {
                 self.onSaveStateChanged?(event, true)
             }
@@ -3383,6 +3416,7 @@ class EventDetailsVC: UIViewController {
             self.event?.hasSavedEvent = false
             self.isSaved = false
             self.updateSaveUI()
+            AppHaptic.success()
             if let event = self.event {
                 self.onSaveStateChanged?(event, false)
             }
@@ -3415,10 +3449,12 @@ class EventDetailsVC: UIViewController {
         event?.hasSavedEvent = previousState
         event?.savedEventId = previousSavedEventId
         updateSaveUI()
+        AppHaptic.error()
     }
     
     
     @IBAction func onClickVenueImage(_ sender: Any) {
+        AppHaptic.cardOpen()
         Navigate.to.venueVC(self, venueDetails: self.venueDetails)
     }
     
@@ -3447,6 +3483,7 @@ class EventDetailsVC: UIViewController {
 //    }
     
     @objc private func toggleDescription() {
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
 
         if isExpanded {
@@ -3491,6 +3528,7 @@ class EventDetailsVC: UIViewController {
 
         if let link = selectedURL,
            let url = URL(string: link) {
+            AppHaptic.navigation()
             UIApplication.shared.open(url)
         }
     }
@@ -3676,6 +3714,7 @@ class EventDetailsVC: UIViewController {
         ]
 
         guard let url = components?.url else { return }
+        AppHaptic.navigation()
         UIApplication.shared.open(url)
     }
 
@@ -3871,6 +3910,7 @@ extension EventDetailsVC: UICollectionViewDelegate,
             let artistData = artists[indexPath.item]
             let webUrl = artistData.artist.instagramUsername
             if !webUrl.isEmpty, let url = URL(string: webUrl) {
+                AppHaptic.navigation()
                 UIApplication.shared.open(url)
             }
         }
@@ -4154,11 +4194,13 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         if tableView == additionalButtonsTableView {
             let buttons = enabledAdditionalButtons
             guard buttons.indices.contains(indexPath.row) else { return }
+            AppHaptic.navigation()
             openAdditionalButton(buttons[indexPath.row])
             return
         }
 
         if tableView == faqsTableView {
+            AppHaptic.selectionChanged()
             if expandedFAQIndex == indexPath.row {
                 expandedFAQIndex = nil
             } else {
@@ -4198,10 +4240,12 @@ private extension EventDetailsVC {
         let link = button.link.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard let url = normalizedAdditionalButtonURL(from: link) else {
+            AppHaptic.error()
             Alert.showToast("Invalid link")
             return
         }
 
+        AppHaptic.navigation()
         UIApplication.shared.open(url)
     }
 
@@ -5015,6 +5059,7 @@ private extension EventDetailsVC {
     @objc func onGalleryImageTap(_ sender: UITapGestureRecognizer) {
         guard let index = sender.view?.tag else { return }
 
+        AppHaptic.cardOpen()
         if index == 3 && galleryImageURLs.count > 4 {
             openGalleryScreen(selectedIndex: index)
         } else {
@@ -5228,6 +5273,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
     func checkoutBarDidTapButton() {
 
         guard LoginRequiredCoordinator.isAuthenticated else {
+            AppHaptic.warning()
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.checkoutBarDidTapButton()
             }
@@ -5244,10 +5290,12 @@ extension EventDetailsVC: CheckoutBarDelegate {
         let selectedTickets = selectedNormalTickets + selectedGroupedTickets
 
         guard !selectedTickets.isEmpty else {
+            AppHaptic.warning()
             Alert.showToast("Please select at least one ticket")
             return
         }
 
+        AppHaptic.primaryAction()
         checkOutBtnView.showLoader()
 
         let payload: [[String: Any]] = selectedTickets.map {
@@ -5268,6 +5316,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
 
             self.checkOutBtnView.hideLoader()
             if isSuccess {
+                AppHaptic.success()
                 self.shouldClearInlineRSVPSelectionOnReturn = true
                 Navigate.orderListVC(
                     self,
@@ -5280,6 +5329,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
                     promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
+                AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
         }

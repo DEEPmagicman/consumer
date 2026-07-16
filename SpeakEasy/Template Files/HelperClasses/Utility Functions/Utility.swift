@@ -177,6 +177,11 @@ final class PrimaryButton: LoadingButton {
     private func commonInit() {
 
         translatesAutoresizingMaskIntoConstraints = false
+        addTarget(
+            self,
+            action: #selector(playPrimaryButtonHaptic),
+            for: .touchUpInside
+        )
 
         setTitleColor(
             AppColor.primaryBlackColor,
@@ -233,6 +238,11 @@ final class PrimaryButton: LoadingButton {
 
     func stopLoading() {
         hideLoader()
+    }
+
+    @objc private func playPrimaryButtonHaptic() {
+        guard isEnabled, isUserInteractionEnabled else { return }
+        AppHaptic.primaryAction()
     }
 }
 

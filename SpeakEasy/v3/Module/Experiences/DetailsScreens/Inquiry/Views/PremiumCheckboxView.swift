@@ -209,6 +209,7 @@ final class PremiumCheckboxView: UIView {
 
     @objc private func handleTap() {
         isChecked.toggle()
+        AppHaptic.selectionChanged()
         onToggle?(isChecked)
     }
 
@@ -223,6 +224,7 @@ final class PremiumCheckboxView: UIView {
 
     @objc private func handleExpansionTap() {
         isExpanded.toggle()
+        AppHaptic.selectionChanged()
         UIView.performWithoutAnimation {
             updateLabelText()
             layoutIfNeeded()

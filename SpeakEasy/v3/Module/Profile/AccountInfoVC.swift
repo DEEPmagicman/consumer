@@ -303,7 +303,7 @@ final class AccountInfoVC: UIViewController {
 
     private func showError(_ view: FloatingInputView, message: String) {
         view.showError()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.error()
 
         Alert.showAlertSheet(
             style: .alert,

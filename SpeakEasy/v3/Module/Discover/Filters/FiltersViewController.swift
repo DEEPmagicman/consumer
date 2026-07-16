@@ -47,15 +47,18 @@ class FiltersViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func closeTapped(_ sender: UIButton) {
+        AppHaptic.navigation()
         dismiss(animated: true)
     }
 
     @IBAction func resetTapped(_ sender: UIButton) {
+        AppHaptic.destructive()
         selectedIndexes.removeAll()
         collectionView.reloadData()
     }
 
     @IBAction func applyFiltersTapped(_ sender: UIButton) {
+        AppHaptic.success()
         let selected = selectedIndexes.map { filters[$0] }
         print("Applied filters: \(selected)")
         dismiss(animated: true)
@@ -91,6 +94,7 @@ extension FiltersViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
+        AppHaptic.selectionChanged()
         if selectedIndexes.contains(indexPath.item) {
             selectedIndexes.remove(indexPath.item)
         } else {

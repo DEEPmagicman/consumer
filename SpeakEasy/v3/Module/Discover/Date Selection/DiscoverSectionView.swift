@@ -374,6 +374,7 @@ UICollectionViewDelegateFlowLayout {
                 return
             }
 
+            AppHaptic.cardOpen()
             onTapEvent?(
                 events[indexPath.item],
                 indexPath
@@ -384,6 +385,7 @@ UICollectionViewDelegateFlowLayout {
                 return
             }
 
+            AppHaptic.cardOpen()
             onTapVenue?(
                 venues[indexPath.item]
             )

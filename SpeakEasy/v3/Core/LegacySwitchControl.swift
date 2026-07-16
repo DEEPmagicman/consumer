@@ -77,6 +77,7 @@ final class LegacySwitchControl: UIControl {
 
     @objc private func onTap() {
         isOn.toggle()
+        AppHaptic.selectionChanged()
         sendActions(for: .valueChanged)
     }
 

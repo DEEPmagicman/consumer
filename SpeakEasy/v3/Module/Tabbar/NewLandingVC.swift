@@ -360,6 +360,7 @@ final class NewLandingVC: UIViewController {
     }
     
     @objc private func onClickProfile() {
+        AppHaptic.navigation()
         LoginRequiredCoordinator.perform(from: self) { [weak self] in
             guard let self else { return }
             Navigate.to.profileMenuVC(self)
@@ -367,6 +368,7 @@ final class NewLandingVC: UIViewController {
     }
 
     @objc private func onClickMap() {
+        AppHaptic.navigation()
         Navigate.to.gotoMapVC(self)
     }
 }
@@ -759,10 +761,12 @@ private final class LocationPermissionPromptVC: UIViewController {
     }
 
     @objc private func onClickEnable() {
+        AppHaptic.primaryAction()
         onEnable?()
     }
 
     @objc private func onClickDismiss() {
+        AppHaptic.navigation()
         onDismiss?()
     }
 }

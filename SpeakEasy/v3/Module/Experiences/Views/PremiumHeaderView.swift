@@ -251,19 +251,19 @@ final class PremiumHeaderView: UIView {
     
     @objc
     private func onProfile() {
-        
+        AppHaptic.navigation()
         delegate?.premiumHeaderDidTapProfile(self)
     }
     
     @objc
     private func onLocation() {
-        
+        AppHaptic.selectionChanged()
         delegate?.premiumHeaderDidTapLocation(self)
     }
     
     @objc
     private func onHelp() {
-        
+        AppHaptic.navigation()
         delegate?.premiumHeaderDidTapHelp(self)
     }
     

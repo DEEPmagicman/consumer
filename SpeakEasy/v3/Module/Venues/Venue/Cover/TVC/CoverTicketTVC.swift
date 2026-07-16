@@ -162,6 +162,7 @@ final class CoverTicketTVC: UITableViewCell {
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        AppHaptic.selectionChanged()
         isExpanded.toggle()
         descLbl.numberOfLines = isExpanded ? 0 : collapsedLines
         viewMoreBtn.setTitle(isExpanded ? "View Less" : "View More", for: .normal)

@@ -39,6 +39,7 @@ final class CoverQRCodeVC: UIViewController {
     var venueId = String()
     var venueNameText: String? = ""
     var shouldReturnToVenueAfterClose = false
+    var shouldPlayPurchaseSuccessHaptic = false
 
     private let paymentService = PaymentService()
     private let posterHeaderView = VenuePosterHeaderView()
@@ -56,6 +57,7 @@ final class CoverQRCodeVC: UIViewController {
     private var wasInteractivePopGestureEnabled: Bool?
     private weak var interactivePopNavigationController: UINavigationController?
     private var isInitialLoadingVisible = false
+    private var hasPlayedPurchaseSuccessHaptic = false
 
     private var showsAddOnsPage: Bool {
         isAddOnsAvailable && !isOnlyAddOnAvailable
@@ -115,8 +117,17 @@ final class CoverQRCodeVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        playPurchaseSuccessHapticIfNeeded()
         disableInteractiveBackNavigation()
         WebSocketWrapper.shared.addDelegate(self) 
+    }
+
+    private func playPurchaseSuccessHapticIfNeeded() {
+        guard shouldPlayPurchaseSuccessHaptic,
+              !hasPlayedPurchaseSuccessHaptic else { return }
+
+        hasPlayedPurchaseSuccessHaptic = true
+        AppHaptic.success()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -630,6 +641,7 @@ final class CoverQRCodeVC: UIViewController {
 
     // MARK: - Actions
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
+        AppHaptic.primaryAction()
         let uniqueId = booking?.venueObject?.uniqueId ?? addOnsBooking?.venue?.uniqueId ?? ""
         let timeZone = booking?.venueObject?.timezone ?? addOnsBooking?.venue?.timezone ?? ""
         delegate?.navigateToVenueDetail(
@@ -645,6 +657,7 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        AppHaptic.navigation()
         if shouldReturnToVenueAfterClose {
             returnToVenueScreen(animated: true)
             return
@@ -706,13 +719,16 @@ final class CoverQRCodeVC: UIViewController {
         let bookingID = coverWalletBookingID
 
         guard !bookingID.isEmpty else {
+            AppHaptic.error()
             Alert.showAlertSheet(style: .alert, title: "Booking not found", message: "")
             return
         }
 
+        AppHaptic.primaryAction()
         let pkl = PKPassLibrary()
         if let pass = pass {
             if pkl.containsPass(pass) {
+                AppHaptic.warning()
                 Alert.showToast("Ticket already added to Wallet", vc: self)
             } else {
                 presentAddPKPass(pass)
@@ -732,6 +748,7 @@ final class CoverQRCodeVC: UIViewController {
             }
             guard let data else {
                 DispatchQueue.main.async {
+                    AppHaptic.error()
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
                 return
@@ -744,6 +761,7 @@ final class CoverQRCodeVC: UIViewController {
                 }
             } catch {
                 DispatchQueue.main.async {
+                    AppHaptic.error()
                     Alert.showAlertSheet(style: .alert, title: "Invalid ticket data", message: "")
                 }
             }
@@ -791,6 +809,10 @@ extension CoverQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
 
     func pagerViewDidScroll(_ pagerView: FSPagerView) {
         let page = pagerView.currentIndex
+        if page != currentPage {
+            currentPage = page
+            AppHaptic.selectionChanged()
+        }
         updateProgressDots(activePage: page)
     }
 
@@ -809,6 +831,7 @@ extension CoverQRCodeVC: PKAddPassesViewControllerDelegate {
         controller.dismiss(animated: true)
         let pkl = PKPassLibrary()
         if let pass = pass, pkl.containsPass(pass) {
+            AppHaptic.success()
             Alert.showToast("Ticket added to Wallet", vc: self)
         }
     }

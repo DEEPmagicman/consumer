@@ -211,11 +211,13 @@ final class PremiumSearchHeaderView: UIView {
 
     @objc
     private func onProfile() {
+        AppHaptic.navigation()
         delegate?.premiumSearchHeaderDidTapProfile(self)
     }
 
     @objc
     private func onMap() {
+        AppHaptic.navigation()
         delegate?.premiumSearchHeaderDidTapMap(self)
     }
 

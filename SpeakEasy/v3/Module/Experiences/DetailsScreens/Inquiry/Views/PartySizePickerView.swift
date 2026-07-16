@@ -99,6 +99,7 @@ final class PartySizePickerView: UIView {
     @objc private func minusTapped() {
         guard count > 0 else { return }
         count -= 1
+        AppHaptic.stepperChanged()
         countLabel.text = "\(count)"
         updateButtons()
         onValueChanged?(count)
@@ -107,6 +108,7 @@ final class PartySizePickerView: UIView {
     @objc private func plusTapped() {
         guard count < maxCount else { return }
         count += 1
+        AppHaptic.stepperChanged()
         countLabel.text = "\(count)"
         updateButtons()
         onValueChanged?(count)

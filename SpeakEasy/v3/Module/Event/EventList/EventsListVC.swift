@@ -149,6 +149,7 @@ final class EventsListVC: UIViewController {
 
     @IBAction func onClickTopRightSideBtn(_ sender: Any) {
         if let venue = venue {
+            AppHaptic.navigation()
             Navigate.to.searchEventVC(self, venueID: venue.venueUniqueId)
         } else {
             return
@@ -157,6 +158,7 @@ final class EventsListVC: UIViewController {
 
     @IBAction func onClickCityBtn(_ sender: Any) {
         guard venue == nil else { return }
+        AppHaptic.selectionChanged()
         presentCityFilter()
     }
 
@@ -618,6 +620,7 @@ extension EventsListVC: UICollectionViewDelegate {
         guard !isInitialLoading else { return }
         guard eventList.indices.contains(indexPath.item) else { return }
 
+        AppHaptic.cardOpen()
         Navigate.eventDetailsVC(
             self,
             event: eventList[indexPath.item]

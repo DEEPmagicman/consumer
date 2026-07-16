@@ -446,6 +446,7 @@ UICollectionViewDelegate {
     ) {
 
         guard !isInitialLoading, let booking = item(at: indexPath) else { return }
+        AppHaptic.cardOpen()
         didSelect(booking)
     }
     

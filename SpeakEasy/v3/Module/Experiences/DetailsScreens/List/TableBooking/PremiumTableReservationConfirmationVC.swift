@@ -859,8 +859,12 @@ private extension PremiumTableReservationConfirmationVC {
 
     @objc func onCopyTap() {
         let text = confirmationNumberLabel.text ?? ""
-        guard !text.isEmpty, text != "-" else { return }
+        guard !text.isEmpty, text != "-" else {
+            AppHaptic.warning()
+            return
+        }
         UIPasteboard.general.string = text
+        AppHaptic.success()
         copyButton.setTitle("Copied", for: .normal)
         Alert.showToast("Copied")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) { [weak self] in
@@ -870,6 +874,7 @@ private extension PremiumTableReservationConfirmationVC {
 
     @objc func onFeesTap() {
         isFeesExpanded.toggle()
+        AppHaptic.selectionChanged()
         feeDetailRows.forEach { $0.isHidden = !isFeesExpanded }
         if let feesRow = orderStack.arrangedSubviews.compactMap({ $0 as? ReservationOrderRow }).first(where: { $0.rowTitle == "Fees" }) {
             feesRow.setChevronExpanded(isFeesExpanded)
@@ -881,15 +886,18 @@ private extension PremiumTableReservationConfirmationVC {
     }
 
     @objc func onOrderHeaderTap() {
+        AppHaptic.selectionChanged()
         applyOrderExpanded(!isOrderExpanded, animated: true)
     }
 
     @objc func onEventDetailsTap() {
         guard let event = displayEvent else { return }
+        AppHaptic.cardOpen()
         Navigate.eventDetailsVC(self, event: event)
     }
 
     @objc func onSupportTap() {
+        AppHaptic.navigation()
         Navigate.externalURL(APIBuilder.supportURL)
     }
 

@@ -585,7 +585,7 @@ final class EditProfileVC: UIViewController {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.systemRed.cgColor
         textField.shake()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.error()
         Alert.showAlertSheet(style: .alert, title: message, message: "")
     }
 
@@ -593,7 +593,7 @@ final class EditProfileVC: UIViewController {
         genderControl.layer.borderWidth = 1
         genderControl.layer.borderColor = UIColor.systemRed.cgColor
         genderControl.shake()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        AppHaptic.error()
         Alert.showAlertSheet(style: .alert, title: message, message: "")
     }
 }

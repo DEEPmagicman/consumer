@@ -124,26 +124,32 @@ final class DateRangeSelectionVC: UIViewController {
     }
 
     @IBAction func onClickApplyBtn(_ sender: Any) {
+        AppHaptic.success()
         applyAndDismiss()
     }
 
     @IBAction func onClickClose(_ sender: Any) {
+        AppHaptic.navigation()
         dismiss(animated: true)
     }
 
     @IBAction func onClickDismiss(_ sender: Any) {
+        AppHaptic.success()
         applyAndDismiss()
     }
 
     @IBAction func onTapToday(_ sender: Any) {
+        AppHaptic.selectionChanged()
         calendarView.selectToday()
     }
 
     @IBAction func onTapTomorrow(_ sender: Any) {
+        AppHaptic.selectionChanged()
         calendarView.selectTomorrow()
     }
 
     @IBAction func onTapThisWeek(_ sender: Any) {
+        AppHaptic.selectionChanged()
         calendarView.selectThisWeek()
     }
 }

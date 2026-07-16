@@ -239,7 +239,7 @@ final class PremiumReservationCell: UITableViewCell {
     
     @objc
     func bookPressed() {
-        
+        AppHaptic.primaryAction()
         onBookTap?()
     }
     

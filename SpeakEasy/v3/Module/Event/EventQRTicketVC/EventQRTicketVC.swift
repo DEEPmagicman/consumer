@@ -52,6 +52,7 @@ class EventQRTicketVC: UIViewController {
     private let actionStackView = UIStackView()
     private var hasSetupActionSection = false
     private var hasPlayedIntro = false
+    private var hasPlayedPurchaseSuccessHaptic = false
     private var introOverlayView: UIView?
     private var introTicketCardView: TicketCardView?
     private var introHideWorkItem: DispatchWorkItem?
@@ -119,9 +120,18 @@ class EventQRTicketVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        playPurchaseSuccessHapticIfNeeded()
         WebSocketWrapper.shared.updateSocketContext(venueId: currentVenueIdForSocket())
         WebSocketWrapper.shared.removeDelegate(self)
         WebSocketWrapper.shared.addDelegate(self) 
+    }
+
+    private func playPurchaseSuccessHapticIfNeeded() {
+        guard presentationMode == .pushedFromPurchase,
+              !hasPlayedPurchaseSuccessHaptic else { return }
+
+        hasPlayedPurchaseSuccessHaptic = true
+        AppHaptic.success()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1450,12 +1460,14 @@ class EventQRTicketVC: UIViewController {
     }
 
     @objc private func onClickViewEvent() {
+        AppHaptic.cardOpen()
         openEventDetails()
     }
 
     @objc private func onClickAddToCalendar() {
         guard let event = booking?.event,
               let startDate = eventStartDate() else {
+            AppHaptic.warning()
             showTicketToast("Event date not available")
             return
         }
@@ -1463,6 +1475,7 @@ class EventQRTicketVC: UIViewController {
         let saveEvent: () -> Void = { [weak self] in
             guard let self else { return }
             guard let calendar = self.eventStore.defaultCalendarForNewEvents else {
+                AppHaptic.error()
                 self.showTicketToast("No writable Calendar found")
                 return
             }
@@ -1476,8 +1489,10 @@ class EventQRTicketVC: UIViewController {
 
             do {
                 try self.eventStore.save(calendarEvent, span: .thisEvent)
+                AppHaptic.success()
                 self.showTicketToast("Added to Calendar")
             } catch {
+                AppHaptic.error()
                 self.showTicketToast("Unable to add event to Calendar")
             }
         }
@@ -1489,10 +1504,16 @@ class EventQRTicketVC: UIViewController {
             case .notDetermined:
                 eventStore.requestFullAccessToEvents { granted, _ in
                     DispatchQueue.main.async {
-                        granted ? saveEvent() : self.showTicketToast("Calendar access denied")
+                        if granted {
+                            saveEvent()
+                        } else {
+                            AppHaptic.error()
+                            self.showTicketToast("Calendar access denied")
+                        }
                     }
                 }
             default:
+                AppHaptic.error()
                 showTicketToast("Please allow Calendar access in Settings")
             }
         } else {
@@ -1502,10 +1523,16 @@ class EventQRTicketVC: UIViewController {
             case .notDetermined:
                 eventStore.requestAccess(to: .event) { granted, _ in
                     DispatchQueue.main.async {
-                        granted ? saveEvent() : self.showTicketToast("Calendar access denied")
+                        if granted {
+                            saveEvent()
+                        } else {
+                            AppHaptic.error()
+                            self.showTicketToast("Calendar access denied")
+                        }
                     }
                 }
             default:
+                AppHaptic.error()
                 showTicketToast("Please allow Calendar access in Settings")
             }
         }
@@ -1514,13 +1541,16 @@ class EventQRTicketVC: UIViewController {
     @objc private func onClickAddToWallet() {
         guard let bookingId = booking?.id, !bookingId.isEmpty,
               let url = URL(string: APIBuilder.eventAppleWallet(bookingId)) else {
+            AppHaptic.error()
             Alert.showAlertSheet(style: .alert, title: "Booking not found", message: "")
             return
         }
 
+        AppHaptic.primaryAction()
         let passLibrary = PKPassLibrary()
         if let pass {
             if passLibrary.containsPass(pass) {
+                AppHaptic.warning()
                 Alert.showToast("Ticket already added to Wallet", vc: self)
             } else {
                 presentAddPKPass(pass)
@@ -1532,6 +1562,7 @@ class EventQRTicketVC: UIViewController {
             guard let self else { return }
             DispatchQueue.main.async {
                 guard let data else {
+                    AppHaptic.error()
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                     return
                 }
@@ -1541,6 +1572,7 @@ class EventQRTicketVC: UIViewController {
                     self.pass = pass
                     self.presentAddPKPass(pass)
                 } catch {
+                    AppHaptic.error()
                     Alert.showAlertSheet(style: .alert, title: "Invalid ticket data", message: "")
                 }
             }
@@ -1549,10 +1581,12 @@ class EventQRTicketVC: UIViewController {
 
     @objc private func onClickGetDirections() {
         guard let coordinate = eventCoordinate() else {
+            AppHaptic.warning()
             Alert.showToast("Venue location not available")
             return
         }
 
+        AppHaptic.navigation()
         let mapItem = MKMapItem(
             placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil)
         )
@@ -1565,6 +1599,7 @@ class EventQRTicketVC: UIViewController {
     @objc private func onTapQRCodeView() {
         guard !isShowingBackupCode else { return }
 
+        AppHaptic.selectionChanged()
         isShowingBackupCode = true
         qrFlipWorkItem?.cancel()
         flipQRCode(showCode: true)
@@ -1595,11 +1630,13 @@ class EventQRTicketVC: UIViewController {
 
     @IBAction func onClickFAndQBtn(_ sender: Any) {
         guard !fandQItems.isEmpty else { return }
+        AppHaptic.selectionChanged()
         isFAndQExpanded.toggle()
         updateFAndQSection(animated: true)
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        AppHaptic.navigation()
         switch presentationMode {
         case .modal:
             dismiss(animated: true)
@@ -1670,9 +1707,11 @@ extension EventQRTicketVC: FSPagerViewDataSource, FSPagerViewDelegate {
     func pagerViewDidScroll(_ pagerView: FSPagerView) {
         guard currentPage != pagerView.currentIndex else { return }
         currentPage = pagerView.currentIndex
+        AppHaptic.selectionChanged()
     }
 
     func pagerView(_ pagerView: FSPagerView, didSelectItemAt index: Int) {
+        AppHaptic.selectionChanged()
         pagerView.deselectItem(at: index, animated: true)
         pagerView.scrollToItem(at: index, animated: true)
     }
@@ -1760,14 +1799,17 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
      
         if indexPath.row == 0 {
+            AppHaptic.cardOpen()
             openEventDetails()
             return
         }
         
         if tableView === fandQtableView {
+            AppHaptic.selectionChanged()
             expandedFandQIndex = expandedFandQIndex == indexPath.row ? nil : indexPath.row
             fandQtableView.reloadData()
         } else {
+            AppHaptic.selectionChanged()
             expandedFAQIndex = expandedFAQIndex == indexPath.row ? nil : indexPath.row
             self.tableView.reloadData()
         }
@@ -1782,6 +1824,7 @@ extension EventQRTicketVC: PKAddPassesViewControllerDelegate {
                   PKPassLibrary().containsPass(pass) else {
                 return
             }
+            AppHaptic.success()
             Alert.showToast("Ticket added to Wallet", vc: self)
         }
     }
