@@ -55,6 +55,10 @@ final class PremiumTableCheckoutVC: UIViewController {
         event?.venue?.venueSettings?.currencyPosition
     }
 
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
+
     // MARK: - UI
 
     private let scrollView       = UIScrollView()
@@ -415,15 +419,14 @@ private extension PremiumTableCheckoutVC {
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         buyBtn.setTitle("Buy now", for: .normal)
-        buyBtn.setTitleColor(UIColor(hex: "#121212"), for: .normal)
         buyBtn.titleLabel?.font        = Constant.Font.geistMedium(size: 16)
-        buyBtn.backgroundColor         = UIColor(hex: "#D99935")
+        applyBuyButtonTheme()
         buyBtn.translatesAutoresizingMaskIntoConstraints = false
         buyBtn.addTarget(self, action: #selector(onBuyTapped), for: .touchUpInside)
         buyBtn.isUserInteractionEnabled = false
         buyBtn.alpha = 0.5
 
-        buyLoader.color = UIColor(hex: "#121212")
+        buyLoader.color = whiteLabelAccentColor.suitableTextColor()
         buyLoader.hidesWhenStopped = true
         buyLoader.translatesAutoresizingMaskIntoConstraints = false
 
@@ -455,6 +458,14 @@ private extension PremiumTableCheckoutVC {
             buyLoader.centerXAnchor.constraint(equalTo: buyBtn.centerXAnchor),
             buyLoader.centerYAnchor.constraint(equalTo: buyBtn.centerYAnchor)
         ])
+    }
+
+    func applyBuyButtonTheme() {
+        let color = whiteLabelAccentColor
+
+        buyBtn.backgroundColor = color
+        buyBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+        buyLoader.color = color.suitableTextColor()
     }
 
 }
@@ -656,8 +667,8 @@ private extension PremiumTableCheckoutVC {
         let date = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: tz) ?? ""
         let time = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: tz) ?? ""
         dateLabel.text      = date.isEmpty ? "" : "\(date) at \(time)"
-        dateLabel.textColor = UIColor(hex: event?.whiteLabelColor ?? "#E8A030")
-        buyBtn.backgroundColor = UIColor(hex: "#D99935")
+        dateLabel.textColor = whiteLabelAccentColor
+        applyBuyButtonTheme()
         seatingLabel.text = seatingAreas.first?.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             ? seatingAreas.first?.name
             : "Table seating"

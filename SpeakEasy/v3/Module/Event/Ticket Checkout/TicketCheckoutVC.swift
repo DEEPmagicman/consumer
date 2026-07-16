@@ -130,6 +130,10 @@ final class TicketCheckoutVC: UIViewController {
         return venueDetails?.venueSettings?.currencyPosition
     }
 
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
+
     private var paymentSheet: PaymentSheet?
     private var paymentIntentClientSecret: String = ""
     private var paymentHistoryId: String = ""
@@ -385,11 +389,10 @@ final class TicketCheckoutVC: UIViewController {
             purchaseTicketBtn.setTitle("REDEEM TICKETS", for: .normal)
         }
 
-        if let hex = event?.whiteLabelColor {
-            let color = UIColor(hex: hex)
-            dateandtimeLbl.textColor = color
-            purchaseTicketBtn.backgroundColor = color
-        }
+        let color = whiteLabelAccentColor
+        dateandtimeLbl.textColor = color
+        purchaseTicketBtn.backgroundColor = color
+        purchaseTicketBtn.setTitleColor(color.suitableTextColor(), for: .normal)
 
         if let customText = event?.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

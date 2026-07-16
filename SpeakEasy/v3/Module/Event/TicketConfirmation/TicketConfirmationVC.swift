@@ -40,6 +40,10 @@ class TicketConfirmationVC: UIViewController {
     private let titleMarqueeLabel = PremiumMarqueeLabel()
 
     private let paymentService = PaymentService()
+
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,11 +106,10 @@ class TicketConfirmationVC: UIViewController {
             }
         }
         
-        if let hexColor = event?.whiteLabelColor {
-            let color = UIColor(hex: hexColor)
-//            viewTicketBtnView.backgroundColor = color
-//            dateandtimeLbl.textColor = color
-        }
+        let color = whiteLabelAccentColor
+        dateandtimeLbl.textColor = color
+        viewTicketBtnView.backgroundColor = color
+        viewTicketBtn.setTitleColor(color.suitableTextColor(), for: .normal)
         
         let timezone = venueDetails?.useTimezone ?? ""
 

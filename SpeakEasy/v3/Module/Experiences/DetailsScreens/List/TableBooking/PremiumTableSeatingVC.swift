@@ -133,7 +133,7 @@ private extension PremiumTableSeatingVC {
         titleLabel.text = "Table seating"
         titleLabel.font = Constant.Font.geistMedium(size: 16)
         titleLabel.textColor = .white
-        titleLabel.numberOfLines = 1
+        titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -468,7 +468,7 @@ private extension PremiumTableSeatingVC {
 
         // Guest stepper
         currentGuestCount = area.defaultGuest ?? 1
-        guestRow.setValue(currentGuestCount, min: area.defaultGuest ?? 1, max: area.maxGuest ?? 100)
+        guestRow.setValue(currentGuestCount, min: 1, max: area.maxGuest ?? 100)
 
         updatePricing()
     }

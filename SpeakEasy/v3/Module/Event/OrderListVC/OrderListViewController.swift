@@ -116,6 +116,7 @@ final class OrderListViewController: UIViewController {
         calculateTotal()
         setupTermsText()
         setupHoldTimerView()
+        applyWhiteLabelTheme()
         startCountdown()
         fetchPaymentIntentAndSetup(promoCode: "")
         fetchEventQuestions()
@@ -123,6 +124,7 @@ final class OrderListViewController: UIViewController {
         ticketTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         applyPromoBtn.indicator = MaterialLoadingIndicator(color: .black)
+        applyWhiteLabelTheme()
     }
 
     override func viewDidLayoutSubviews() {
@@ -172,6 +174,18 @@ final class OrderListViewController: UIViewController {
         configureQuestionSection()
 
         checkOutView.delegate = self
+        applyWhiteLabelTheme()
+    }
+
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
+
+    private func applyWhiteLabelTheme() {
+        let color = whiteLabelAccentColor
+
+        dateandtimeLbl.textColor = color
+        checkOutView.applyAccentColor(color)
     }
 
     private func loadSavedPaymentMethods() {
@@ -434,6 +448,7 @@ final class OrderListViewController: UIViewController {
         }
 
         configureAgreementText()
+        applyWhiteLabelTheme()
     }
 
     private func setupTitleMarqueeLabel() {
@@ -575,10 +590,14 @@ final class OrderListViewController: UIViewController {
 
     // MARK: - Totals
 
-    private func calculateTotal() {
-        let subtotal = selectedTickets.reduce(0.0) {
+    private var selectedTicketsSubtotal: Double {
+        selectedTickets.reduce(0.0) {
             $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
         }
+    }
+
+    private func calculateTotal() {
+        let subtotal = selectedTicketsSubtotal
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         isFreeTicket = subtotal <= 0
         updateOrderSummaryAmounts(total: subtotal, fees: 0)
@@ -882,6 +901,8 @@ final class OrderListViewController: UIViewController {
                 }
 
                 self.isFreeTicket              = isFreeTicket || (paymentDetail?.total ?? 0) <= 0
+                let payableTotal = paymentDetail?.total ?? self.selectedTicketsSubtotal
+                self.isFreeTicket              = payableTotal <= 0
                 self.stripePaymentHistoryId    = paymentHistoryId
                 self.paymentIntentClientSecret = clientSecret ?? ""
                 self.stripeEphemeralKey        = ephemeralKey

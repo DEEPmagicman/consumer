@@ -82,6 +82,10 @@ class EventQRTicketVC: UIViewController {
     private var didFetchFullBookingDetail = false
     private var previousInteractivePopEnabled: Bool?
 
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: booking?.event?.whiteLabelColor ?? sourceEvent?.whiteLabelColor ?? "#FFFFFF")
+    }
+
     private var faqs: [(question: String, answer: String)] = []
 
     private var fandQItems: [EventFAQ] = []
@@ -363,7 +367,7 @@ class EventQRTicketVC: UIViewController {
         eventHeaderVenueLabel.lineBreakMode = .byTruncatingTail
 
         eventHeaderTimeLabel.font = Constant.Font.geistMedium(size: 14)
-        eventHeaderTimeLabel.textColor = .white
+        eventHeaderTimeLabel.textColor = whiteLabelAccentColor
         eventHeaderTimeLabel.textAlignment = .center
         eventHeaderTimeLabel.numberOfLines = 2
         eventHeaderTimeLabel.lineBreakMode = .byTruncatingTail
@@ -694,6 +698,7 @@ class EventQRTicketVC: UIViewController {
             bookingId = booking.id
         }
 
+        applyWhiteLabelTheme()
         configureEventRows()
         refreshPosterBackground()
         renderTicketPass()
@@ -903,6 +908,7 @@ class EventQRTicketVC: UIViewController {
             ?? booking.event?.venue?.name
             ?? "-"
         eventHeaderTimeLabel.text = eventHeaderTimeText()
+        applyWhiteLabelTheme()
         accountNameLabel.text = accountNameText()
         purchaseTimeLabel.text = purchaseTimeText()
         qrCodeLabel.text = backupCodeText()
@@ -912,6 +918,10 @@ class EventQRTicketVC: UIViewController {
         qrLogoImageView.image = UIImage(named: "qrLogo") ?? UIImage(named: "newSpeakeasy") ?? UIImage(named: "appLogo")
         renderTicketRows()
         renderOrderSummary()
+    }
+
+    private func applyWhiteLabelTheme() {
+        eventHeaderTimeLabel.textColor = whiteLabelAccentColor
     }
 
     private func applyQRCodeBorderColor(for booking: Booking) {

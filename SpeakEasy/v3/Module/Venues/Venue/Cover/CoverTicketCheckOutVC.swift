@@ -128,10 +128,19 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         venue?.venueSettings?.currencyPosition
     }
 
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: venue?.venueSettings?.whiteLabelColor ?? "#FFFFFF")
+    }
+
     private var hasPaidCoverSelection: Bool {
         selectedCoverTickets.contains {
             $0.price > 0 || ($0.extraFees ?? 0) > 0
         }
+    }
+
+    private var shouldUseAddOnsPaymentIntentAsPrimary: Bool {
+        !selectedAddOnsItems.isEmpty &&
+        (selectedCoverTickets.isEmpty || !hasPaidCoverSelection || bookingType == .FREE)
     }
 
     private var isApplePayNotSupported: Bool {
@@ -284,6 +293,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         checkOutBtnView.setButtonTitle(
             totalPrice <= 0 ? "Confirm Free Booking" : "Pay Now"
         )
+        checkOutBtnView.applyAccentColor(whiteLabelAccentColor)
     }
 
     private func setupPaymentMethodUI() {
@@ -765,6 +775,7 @@ extension CoverTicketCheckOutVC {
         checkOutBtnView.setButtonTitle(
             isFree ? "Confirm Free Booking" : "Pay \(CurrencyFormatter.amount(grandTotal, symbol: currency, position: currencyPosition))"
         )
+        checkOutBtnView.applyAccentColor(whiteLabelAccentColor)
     }
 
     /// Sum of all fees/tax above the subtotal for one PaymentDetail.
@@ -988,7 +999,7 @@ extension CoverTicketCheckOutVC {
             if isSuccess {
                 self.addOnsPaymentDetail = paymentDetail
                 self.addOnsBookingId = bookingId
-                if self.selectedCoverTickets.isEmpty {
+                if self.shouldUseAddOnsPaymentIntentAsPrimary {
                     self.paymentIntent = clientSecret ?? ""
                     self.ephemeralKey = ephemeralKey
                 }
@@ -1056,6 +1067,11 @@ extension CoverTicketCheckOutVC {
 extension CoverTicketCheckOutVC {
 
     private func setupStripePaymentSheet() {
+        guard !paymentIntent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            paymentSheet = nil
+            return
+        }
+
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
 
         var configuration = PaymentSheet.Configuration()

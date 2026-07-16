@@ -524,29 +524,10 @@ private extension PremiumReservationVC {
 
         if area.bookingType != .timeWise {
 
-            let minimum = Double(area.minimum ?? 0)
-
-            let deposit: Double
-
-            if (area.depositType ?? "")
-                .uppercased() == "PERCENTAGE" {
-
-                deposit =
-                    minimum *
-                    Double(area.deposit ?? 0) /
-                    100
-
-            } else {
-
-                deposit = Double(area.deposit ?? 0)
-            }
-
-            return (
-                minimum,
-                calculateFinalDeposit(
-                    deposit: deposit,
-                    fees: fees
-                )
+            return calculatedDepositValues(
+                for: area,
+                slot: nil,
+                fees: fees
             )
         }
 
@@ -556,67 +537,65 @@ private extension PremiumReservationVC {
             ($0.soldPublicInventory ?? 0)
         }
 
-        guard let slot = availableSlots
-            .sorted(by: {
+        guard !availableSlots.isEmpty else {
 
-                ($0.minimum ?? 0) <
-                ($1.minimum ?? 0)
-
-            }).first else {
-
-            let minimum = Double(area.minimum ?? 0)
-
-            let deposit: Double
-
-            if (area.depositType ?? "")
-                .uppercased() == "PERCENTAGE" {
-
-                deposit =
-                    minimum *
-                    Double(area.deposit ?? 0) /
-                    100
-
-            } else {
-
-                deposit = Double(area.deposit ?? 0)
-            }
-
-            return (
-                minimum,
-                calculateFinalDeposit(
-                    deposit: deposit,
-                    fees: fees
-                )
+            return calculatedDepositValues(
+                for: area,
+                slot: nil,
+                fees: fees
             )
         }
 
+        return availableSlots
+            .compactMap {
+                calculatedDepositValues(
+                    for: area,
+                    slot: $0,
+                    fees: fees
+                )
+            }
+            .sorted {
+                if $0.deposit == $1.deposit {
+                    return $0.minimum < $1.minimum
+                }
+
+                return $0.deposit < $1.deposit
+            }
+            .first
+    }
+
+    func calculatedDepositValues(
+        for area: SeatingArea,
+        slot: TableTimeSlot?,
+        fees: TableBookingSettings?
+    ) -> (
+        minimum: Double,
+        deposit: Double
+    ) {
+
         let minimum = Double(
-            slot.minimum ??
+            slot?.minimum ??
             area.minimum ??
             0
         )
 
-        let deposit: Double
+        let depositValue = Double(
+            slot?.deposit ??
+            area.deposit ??
+            0
+        )
 
-        let depositType = slot.depositType ?? area.depositType ?? "FLAT"
+        let depositType = slot?.depositType ?? area.depositType ?? "FLAT"
 
-        if depositType
-            .uppercased() == "PERCENTAGE" {
-
-            deposit =
-                minimum *
-                Double(slot.deposit ?? area.deposit ?? 0) /
-                100
-
-        } else {
-
-            deposit = Double(slot.deposit ?? area.deposit ?? 0)
-        }
+        let baseDeposit =
+            depositType.uppercased() == "PERCENTAGE"
+            ? minimum * depositValue / 100
+            : depositValue
 
         return (
             minimum,
             calculateFinalDeposit(
-                deposit: deposit,
+                deposit: baseDeposit,
                 fees: fees
             )
         )
@@ -742,19 +721,22 @@ private extension PremiumReservationVC {
             )
         }
 
-        let roundedProcessingFees =
-            (totalProcessingFees * 100).rounded() / 100
+        let roundedProcessingCents =
+            (totalProcessingFees * 100).rounded()
+        let roundedSalesTaxCents =
+            (salesTax * 100).rounded()
         let amountCharged = rounded2(
             deposit +
             (fees.isProcessingFeePassToCustomer == true
-             ? roundedProcessingFees
+             ? roundedProcessingCents / 100
              : 0) +
             taxable +
             nonTaxable +
             salesTax
         )
+        let amountChargedCents = (amountCharged * 100).rounded()
 
-        return max(0, amountCharged - salesTax)
+        return max(0, (amountChargedCents - roundedSalesTaxCents) / 100)
     }
 
     func calculatedCustomFees(
@@ -854,12 +836,14 @@ private extension PremiumReservationVC {
 
         let depositText = hidePricing
             ? ""
-            : convertPriceFormat(
-                values?.deposit,
-                event?
-                    .venue?
-                    .venueSettings?
-                    .currencyCode
+            : (
+                values?.deposit != nil
+                ? CurrencyFormatter.amount(
+                    values?.deposit ?? 0,
+                    symbol: event?.venue?.venueSettings?.currencySymbol ?? "$",
+                    position: event?.venue?.venueSettings?.currencyPosition
+                )
+                : ""
             )
 
         let minimumText = hidePricing

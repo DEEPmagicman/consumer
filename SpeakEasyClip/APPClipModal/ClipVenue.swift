@@ -365,6 +365,106 @@ struct VenueSettings: Codable {
     var isEnabledSpendAgreement: Bool?
     var spendAgreementSettings: SpendAgreementSettings?
     var currencyPosition: String?
+
+    enum CodingKeys: String, CodingKey {
+        case optedPolicy
+        case policyText
+        case emailPolicyText
+        case optedEmailPolicy
+        case enabledCustomBookingSMS
+        case bookingSMSText
+        case collectNameDuringBooking
+        case collectEmailDuringBooking
+        case collectEmailDuringBookingOptional
+        case currencySymbol
+        case currencyCode
+        case coverTicketSettings
+        case customCoverTicketSettings
+        case posTransactionSettings
+        case addOnsBookingSettings
+        case isOrganizer
+        case bookingStatus
+        case coverTicketViewSettings
+        case isEnableCoverTicketViewSettings
+        case whiteLabelColor
+        case paidEventTicketQrCodeBorderColor
+        case freeEventTicketQrCodeBorderColor
+        case paidCoverTicketQrCodeBorderColor
+        case freeCoverTicketQrCodeBorderColor
+        case compedTicketQrCodeBorderColor
+        case showCoverDisclaimer
+        case coverDisclaimerText
+        case barTabBookingPolicy
+        case tableBookingTermsAndCondition
+        case tableBookingImportantInformation
+        case tableBookingPolicy
+        case reservationConfirmationMessage
+        case prepaidReservationConfirmationMessage
+        case reservationRequestPolicy
+        case customNoteOnReservationManagementPage
+        case reservationWidgetSettings
+        case websiteUrl
+        case instagramUrl
+        case tiktokUrl
+        case facebookUrl
+        case xUrl
+        case youtubeUrl
+        case tableBookingSettings
+        case isEnabledSpendAgreement
+        case spendAgreementSettings
+        case currencyPosition
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        optedPolicy = try container.decodeIfPresent(Bool.self, forKey: .optedPolicy) ?? false
+        policyText = try container.decodeIfPresent(String.self, forKey: .policyText)
+        emailPolicyText = try container.decodeIfPresent(String.self, forKey: .emailPolicyText)
+        optedEmailPolicy = try container.decodeIfPresent(Bool.self, forKey: .optedEmailPolicy)
+        enabledCustomBookingSMS = try container.decodeIfPresent(Bool.self, forKey: .enabledCustomBookingSMS)
+        bookingSMSText = try container.decodeIfPresent(String.self, forKey: .bookingSMSText)
+        collectNameDuringBooking = try container.decodeIfPresent(Bool.self, forKey: .collectNameDuringBooking)
+        collectEmailDuringBooking = try container.decodeIfPresent(Bool.self, forKey: .collectEmailDuringBooking)
+        collectEmailDuringBookingOptional = try container.decodeIfPresent(Bool.self, forKey: .collectEmailDuringBookingOptional)
+        currencySymbol = try container.decodeIfPresent(String.self, forKey: .currencySymbol)
+        currencyCode = try container.decodeIfPresent(String.self, forKey: .currencyCode)
+        coverTicketSettings = try container.decodeIfPresent(CoverTicketFeesSettings.self, forKey: .coverTicketSettings)
+        customCoverTicketSettings = try container.decodeIfPresent(CoverTicketFeesSettings.self, forKey: .customCoverTicketSettings)
+        posTransactionSettings = try container.decodeIfPresent(CoverTicketFeesSettings.self, forKey: .posTransactionSettings)
+        addOnsBookingSettings = try container.decodeIfPresent(CoverTicketFeesSettings.self, forKey: .addOnsBookingSettings)
+        isOrganizer = try container.decodeIfPresent(Bool.self, forKey: .isOrganizer)
+        bookingStatus = try container.decodeIfPresent(String.self, forKey: .bookingStatus)
+        coverTicketViewSettings = try container.decodeIfPresent(CoverTicketViewSettings.self, forKey: .coverTicketViewSettings)
+        isEnableCoverTicketViewSettings = try container.decodeIfPresent(Bool.self, forKey: .isEnableCoverTicketViewSettings)
+        whiteLabelColor = try container.decodeIfPresent(String.self, forKey: .whiteLabelColor)
+        paidEventTicketQrCodeBorderColor = try container.decodeIfPresent(String.self, forKey: .paidEventTicketQrCodeBorderColor)
+        freeEventTicketQrCodeBorderColor = try container.decodeIfPresent(String.self, forKey: .freeEventTicketQrCodeBorderColor)
+        paidCoverTicketQrCodeBorderColor = try container.decodeIfPresent(String.self, forKey: .paidCoverTicketQrCodeBorderColor)
+        freeCoverTicketQrCodeBorderColor = try container.decodeIfPresent(String.self, forKey: .freeCoverTicketQrCodeBorderColor)
+        compedTicketQrCodeBorderColor = try container.decodeIfPresent(String.self, forKey: .compedTicketQrCodeBorderColor)
+        showCoverDisclaimer = try container.decodeIfPresent(Bool.self, forKey: .showCoverDisclaimer)
+        coverDisclaimerText = try container.decodeIfPresent(String.self, forKey: .coverDisclaimerText)
+        barTabBookingPolicy = try container.decodeIfPresent(String.self, forKey: .barTabBookingPolicy)
+        tableBookingTermsAndCondition = try container.decodeIfPresent(String.self, forKey: .tableBookingTermsAndCondition)
+        tableBookingImportantInformation = try container.decodeIfPresent(String.self, forKey: .tableBookingImportantInformation)
+        tableBookingPolicy = try container.decodeIfPresent(String.self, forKey: .tableBookingPolicy)
+        reservationConfirmationMessage = try container.decodeIfPresent(String.self, forKey: .reservationConfirmationMessage)
+        prepaidReservationConfirmationMessage = try container.decodeIfPresent(String.self, forKey: .prepaidReservationConfirmationMessage)
+        reservationRequestPolicy = try container.decodeIfPresent(String.self, forKey: .reservationRequestPolicy)
+        customNoteOnReservationManagementPage = try container.decodeIfPresent(String.self, forKey: .customNoteOnReservationManagementPage)
+        reservationWidgetSettings = try container.decodeIfPresent(ReservationWidgetSettings.self, forKey: .reservationWidgetSettings)
+        websiteUrl = try container.decodeIfPresent(String.self, forKey: .websiteUrl)
+        instagramUrl = try container.decodeIfPresent(String.self, forKey: .instagramUrl)
+        tiktokUrl = try container.decodeIfPresent(String.self, forKey: .tiktokUrl)
+        facebookUrl = try container.decodeIfPresent(String.self, forKey: .facebookUrl)
+        xUrl = try container.decodeIfPresent(String.self, forKey: .xUrl)
+        youtubeUrl = try container.decodeIfPresent(String.self, forKey: .youtubeUrl)
+        tableBookingSettings = try container.decodeIfPresent(TableBookingSettings.self, forKey: .tableBookingSettings)
+        isEnabledSpendAgreement = try container.decodeIfPresent(Bool.self, forKey: .isEnabledSpendAgreement)
+        spendAgreementSettings = try container.decodeIfPresent(SpendAgreementSettings.self, forKey: .spendAgreementSettings)
+        currencyPosition = try container.decodeIfPresent(String.self, forKey: .currencyPosition)
+    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

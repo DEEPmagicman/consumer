@@ -46,10 +46,7 @@ class CheckoutBarView: UIView {
         ]
 
         addSubview(containerView)
-        actionBtn.indicator =
-            MaterialLoadingIndicator(
-                color: .black
-            )
+        applyAccentColor(.white)
     }
 
     // MARK: - Public API
@@ -69,6 +66,16 @@ class CheckoutBarView: UIView {
 
     func setButtonTitle(_ title: String) {
         actionBtn.setTitle(title, for: .normal)
+    }
+
+    func applyAccentColor(_ color: UIColor?) {
+        let accentColor = color ?? .white
+        let textColor = accentColor.suitableTextColor()
+
+        actionBtn.backgroundColor = accentColor
+        actionBtn.bgColor = accentColor
+        actionBtn.setTitleColor(textColor, for: .normal)
+        actionBtn.indicator = MaterialLoadingIndicator(color: textColor)
     }
 
     func showLoader() { actionBtn.showLoader(userInteraction: false) }

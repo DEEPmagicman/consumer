@@ -115,6 +115,7 @@ final class Tables3DMapVC: UIViewController {
         super.viewDidLoad()
 
         buyNowBtnView.isHidden = true
+        setupBuyNowButton()
         zoneSelector.isHidden = true
         mapView.backgroundColor = .clear
         setupAdvancedLoader()
@@ -169,11 +170,13 @@ private extension Tables3DMapVC {
     }
 
     func setupBuyNowButton() {
-        buyNowBtn.backgroundColor = .white
-        if let hex = self.event?.whiteLabelColor {
-            let color = UIColor(hex: hex)
-            buyNowBtn.bgColor = color
-        }
+        let color = UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        let textColor = color.suitableTextColor()
+
+        buyNowBtn.backgroundColor = color
+        buyNowBtn.bgColor = color
+        buyNowBtn.setTitleColor(textColor, for: .normal)
+        buyNowBtn.indicator = MaterialLoadingIndicator(color: textColor)
     }
 
     func setupZoneSelector() {
@@ -1021,6 +1024,7 @@ private extension Tables3DMapVC {
         let highlightColor = event?.whiteLabelColor.map { UIColor(hex: $0) } ?? PinStyle.activeColor
         updatePinColor(seatingAreaId: meta.seatingAreaId, color: highlightColor, in: sceneView.scene)
 
+        setupBuyNowButton()
         buyNowBtnView.isHidden = false
         zoneSelector.isHidden = true
     }

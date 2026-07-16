@@ -469,7 +469,7 @@ final class PremiumArrivalTimeView: UIView {
         button.tag = index
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = Constant.Font.geistMedium(size: 14)
-        button.setTitleColor(isSelected ? .white : UIColor(hex: "#121212"), for: .normal)
+        button.setTitleColor(isSelected ? accentColor.suitableTextColor() : UIColor(hex: "#121212"), for: .normal)
         button.backgroundColor = isSelected ? accentColor : UIColor(hex: "#E3E3E7")
         button.layer.cornerRadius = PremiumTableCornerRadius.field
         button.layer.borderWidth = isSelected ? 0 : 1

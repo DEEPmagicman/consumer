@@ -457,6 +457,7 @@ struct TableBookingSettings: Codable {
     
     var isEnableCustomFee: Bool?
     var customFees: [TableSettingCustomFee]?
+    var salesTaxes: [TableSettingSalesTax]?
     
     var isEnableGratuity: Bool?
     var gratuityFeeType: String?
@@ -487,6 +488,7 @@ struct SpendAgreementSettings: Codable {
     
     var isEnableCustomFee: Bool?
     var customFees: [TableSettingCustomFee]?
+    var salesTaxes: [TableSettingSalesTax]?
     
     var isEnableGratuity: Bool?
     var gratuityFeeType: String?
@@ -511,6 +513,13 @@ struct TableSettingCustomFee: Codable {
     var customFeeType: String?
     var isEnableCustomFee: Bool?
     var isCustomFeeTaxable: Bool?
+}
+
+struct TableSettingSalesTax: Codable {
+    var id: String?
+    var salesTax: Double?
+    var salesTaxName: String?
+    var isEnableSalesTax: Bool?
 }
 
 struct BookingCustomFeeSetting: Codable {

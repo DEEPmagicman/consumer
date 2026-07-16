@@ -93,6 +93,10 @@ final class CoverTicketListVC: UIViewController {
         venueDetails?.venueSettings?.bookingStatus?.uppercased() == "OPEN"
     }
 
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: venueDetails?.venueSettings?.whiteLabelColor ?? "#FFFFFF")
+    }
+
     private var totalSelectedCount: Int {
         coverTicketCount.values.reduce(0, +) +
         upSellTicketCount.values.reduce(0, +)
@@ -538,7 +542,16 @@ private extension CoverTicketListVC {
         continueToCheckoutBtn.isHidden = true
         continueToCheckoutBtn.alpha = 0
         continueToCheckoutBtn.delegate = self
+        applyWhiteLabelTheme()
         updateTicketsTitle()
+    }
+
+    func applyWhiteLabelTheme() {
+        let color = whiteLabelAccentColor
+
+        timeLbl.textColor = color
+        navTimeLbl.textColor = color
+        continueToCheckoutBtn.applyAccentColor(color)
     }
 
     func styleVenueHeader() {
@@ -1018,6 +1031,7 @@ private extension CoverTicketListVC {
             subtotal: subtotal,
             fees: 0
         )
+        applyWhiteLabelTheme()
 
         bookingType = hasPaidCoverTicket ? .PAID : .FREE
 

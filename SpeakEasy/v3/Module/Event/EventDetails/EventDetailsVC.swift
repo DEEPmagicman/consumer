@@ -207,7 +207,7 @@ class EventDetailsVC: UIViewController {
         let imageURLString = (event?.flyer?.key ?? "").imageURL
 
         loadMainImageIfNeeded(from: imageURLString)
-        posterHeaderView.loadImage(from: imageURLString)
+        reloadPosterBackground()
         setupMainImageStyle()
         scrollView.contentInsetAdjustmentBehavior = .never
 
@@ -245,6 +245,7 @@ class EventDetailsVC: UIViewController {
         
         checkOutBtnView.delegate = self
         checkOutBtnView.setButtonTitle("Continue to Checkout")
+        applyWhiteLabelTheme()
         configureCheckoutBarInitialState()
         registerSocketDelegate()
         updateCheckoutSummaryView()
@@ -567,6 +568,8 @@ class EventDetailsVC: UIViewController {
     }
     
     private func setupPosterHeaderView() {
+        posterHeaderView.applyBackgroundStyle(.abstractColorWash)
+        imageBackGroundView.backgroundColor = UIColor(hex: "#121212")
         imageBackGroundView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -576,6 +579,37 @@ class EventDetailsVC: UIViewController {
             posterHeaderView.trailingAnchor.constraint(equalTo: imageBackGroundView.trailingAnchor),
             posterHeaderView.bottomAnchor.constraint(equalTo: imageBackGroundView.bottomAnchor)
         ])
+    }
+
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
+
+    private var eventBackgroundImageURLString: String {
+        let key = venueDetails?.venueAttachment?.first?.key
+            ?? event?.venue?.venueAttachment?.first?.key
+            ?? venueDetails?.logo?.key
+            ?? event?.venue?.logo?.key
+            ?? ""
+
+        return key.imageURL
+    }
+
+    private func reloadPosterBackground() {
+        posterHeaderView.loadImage(from: eventBackgroundImageURLString)
+    }
+
+    private func applyWhiteLabelTheme() {
+        let color = whiteLabelAccentColor
+        let textColor = color.suitableTextColor()
+
+        timingLbl.textColor = color
+        webSiteView.borderColor = color
+        checkOutBtn.backgroundColor = color
+        checkOutBtn.bgColor = color
+        checkOutBtn.setTitleColor(textColor, for: .normal)
+        checkOutBtn.indicator = MaterialLoadingIndicator(color: textColor)
+        checkOutBtnView.applyAccentColor(color)
     }
 
     private func startTicketTableObserver() {
@@ -1889,11 +1923,7 @@ class EventDetailsVC: UIViewController {
         venueTitleLbl.text = event.venue?.name.uppercased() ?? ""
         pageTitleName.text = event.title
         
-        if let hexColor = event.whiteLabelColor {
-            let color = UIColor(hex: hexColor)
-            timingLbl.textColor = color
-            checkOutBtn.indicator = MaterialLoadingIndicator(color: .black)
-        }
+        applyWhiteLabelTheme()
 
         if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -1943,7 +1973,7 @@ class EventDetailsVC: UIViewController {
         titleLbl.text = event.title
         let flyerImageURLString = (event.flyer?.key ?? "").imageURL
         loadMainImageIfNeeded(from: flyerImageURLString)
-        posterHeaderView.loadImage(from: flyerImageURLString)
+        reloadPosterBackground()
         
         titleLbl.text = event.title
         eventTitleMarqueeLabel.setText(event.title)
@@ -2156,17 +2186,7 @@ class EventDetailsVC: UIViewController {
             }
         }
 
-        if let hexColor = event.whiteLabelColor {
-            let color = UIColor(hex: hexColor)
-            timingLbl.textColor = color
-//            checkOutBtn.backgroundColor = color
-//            buyNowBtnLbl.textColor = color.suitableTextColor()
-            webSiteView.borderColor = color
-            checkOutBtn.indicator = MaterialLoadingIndicator(color: .black)
-//            checkOutBtn.bgColor = color
-//            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
-            
-        }
+        applyWhiteLabelTheme()
 
         setupSocialLinks()
 
@@ -4741,18 +4761,51 @@ final class EventDetailsSkeletonView: UIView {
 }
 
 final class EventPosterHeaderView: UIView {
-    
+
+    enum BackgroundStyle {
+        case standard
+        case abstractColorWash
+    }
+
     private let screenBackgroundColor = UIColor(hex: "#121212")
-    
+
     private let backgroundImageView = UIImageView()
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let darkOverlayView = UIView()
     private var representedImageURLString: String?
     private var isLoadingImage = false
-    
+
     private let bottomGradientView = UIView()
     private let bottomGradientLayer = CAGradientLayer()
-    
+    private var backgroundStyle: BackgroundStyle = .abstractColorWash
+
+    private var imageAlpha: CGFloat {
+        switch backgroundStyle {
+        case .standard:
+            return 0.75
+        case .abstractColorWash:
+            return 0.78
+        }
+    }
+
+    private var blurAlpha: CGFloat {
+        switch backgroundStyle {
+        case .standard:
+            return 0.90
+        case .abstractColorWash:
+            return 1.0
+        }
+    }
+
+    private var overlayAlpha: CGFloat {
+        switch backgroundStyle {
+        case .standard:
+            return 0.35
+        case .abstractColorWash:
+            return 0.46
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -4774,7 +4827,7 @@ final class EventPosterHeaderView: UIView {
     private func setupBlurredBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
-        backgroundImageView.alpha = 0.75
+        backgroundImageView.alpha = imageAlpha
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundImageView)
         
@@ -4785,7 +4838,7 @@ final class EventPosterHeaderView: UIView {
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 20)
         ])
         
-        blurView.alpha = 0.90
+        blurView.alpha = blurAlpha
         blurView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(blurView)
         
@@ -4796,7 +4849,7 @@ final class EventPosterHeaderView: UIView {
             blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(overlayAlpha)
         darkOverlayView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(darkOverlayView)
         
@@ -4819,19 +4872,27 @@ final class EventPosterHeaderView: UIView {
             bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomGradientView.topAnchor.constraint(equalTo: topAnchor) // full screen
         ])
-        
+
         bottomGradientView.layer.addSublayer(bottomGradientLayer)
-        
+        updateBottomGradient()
+    }
+
+    private func updateBottomGradient() {
         bottomGradientLayer.colors = [
-            UIColor.clear.cgColor,             // top — fully transparent
-            UIColor.clear.cgColor,             // stays clear through middle
-            UIColor.black.withAlphaComponent(0.60).cgColor, // starts bleeding in
-            UIColor.black.cgColor              // bottom — solid black
+            UIColor.clear.cgColor,
+            UIColor.clear.cgColor,
+            UIColor.black.withAlphaComponent(backgroundStyle == .abstractColorWash ? 0.76 : 0.60).cgColor,
+            UIColor.black.cgColor
         ]
-        
-        bottomGradientLayer.locations = [0.0, 0.50, 0.75, 1.0]
-        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0) // top
-        bottomGradientLayer.endPoint  = CGPoint(x: 0.5, y: 1.0) // bottom
+
+        if backgroundStyle == .abstractColorWash {
+            bottomGradientLayer.locations = [0.0, 0.42, 0.70, 1.0]
+        } else {
+            bottomGradientLayer.locations = [0.0, 0.50, 0.75, 1.0]
+        }
+
+        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        bottomGradientLayer.endPoint  = CGPoint(x: 0.5, y: 1.0)
     }
     
     override func layoutSubviews() {
@@ -4843,6 +4904,14 @@ final class EventPosterHeaderView: UIView {
         backgroundImageView.image = image
     }
     
+    func applyBackgroundStyle(_ style: BackgroundStyle) {
+        backgroundStyle = style
+        backgroundImageView.alpha = imageAlpha
+        blurView.alpha = blurAlpha
+        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(overlayAlpha)
+        updateBottomGradient()
+    }
+
     func loadImage(from urlString: String) {
         let normalizedURLString = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -4864,12 +4933,22 @@ final class EventPosterHeaderView: UIView {
         let requestedURLString = normalizedURLString
         let shouldAnimate = backgroundImageView.image == nil
         let scale = UIScreen.main.scale
-        let targetSize = CGSize(
-            width: max(bounds.width, UIScreen.main.bounds.width) * scale,
-            height: max(bounds.height, 360) * scale
-        )
+        let targetSize: CGSize
 
-        backgroundImageView.alpha = shouldAnimate ? 0 : 0.75
+        switch backgroundStyle {
+        case .standard:
+            targetSize = CGSize(
+                width: max(bounds.width, UIScreen.main.bounds.width) * scale,
+                height: max(bounds.height, 360) * scale
+            )
+        case .abstractColorWash:
+            targetSize = CGSize(
+                width: 12,
+                height: 20
+            )
+        }
+
+        backgroundImageView.alpha = shouldAnimate ? 0 : imageAlpha
 
         backgroundImageView.sd_setImage(
             with: url,
@@ -4886,12 +4965,12 @@ final class EventPosterHeaderView: UIView {
 
                 guard image != nil else {
                     self.representedImageURLString = nil
-                    self.backgroundImageView.alpha = 0.75
+                    self.backgroundImageView.alpha = self.imageAlpha
                     return
                 }
 
                 guard shouldAnimate else {
-                    self.backgroundImageView.alpha = 0.75
+                    self.backgroundImageView.alpha = self.imageAlpha
                     return
                 }
 
@@ -4900,7 +4979,7 @@ final class EventPosterHeaderView: UIView {
                     delay: 0,
                     options: [.curveEaseOut]
                 ) {
-                    self.backgroundImageView.alpha = 0.75
+                    self.backgroundImageView.alpha = self.imageAlpha
                 }
             }
         )

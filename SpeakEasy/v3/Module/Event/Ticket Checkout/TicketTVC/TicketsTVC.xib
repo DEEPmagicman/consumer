@@ -49,7 +49,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="479" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission   " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8T-Xq-ve2">
-                                                <rect key="frame" x="0.0" y="0.0" width="206.33333333333334" height="21"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="479" height="21"/>
                                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -59,6 +59,7 @@
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="i8T-Xq-ve2" secondAttribute="bottom" id="88q-Yh-MT0"/>
                                             <constraint firstItem="i8T-Xq-ve2" firstAttribute="top" secondItem="dJz-Tb-tfB" secondAttribute="top" id="9g2-gp-We9"/>
+                                            <constraint firstAttribute="trailing" secondItem="i8T-Xq-ve2" secondAttribute="trailing" id="fX9-aw-8gu"/>
                                             <constraint firstItem="i8T-Xq-ve2" firstAttribute="leading" secondItem="dJz-Tb-tfB" secondAttribute="leading" id="uJU-Kd-pEP"/>
                                         </constraints>
                                     </view>

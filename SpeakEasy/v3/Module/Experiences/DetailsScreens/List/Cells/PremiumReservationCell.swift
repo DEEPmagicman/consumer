@@ -183,36 +183,6 @@ final class PremiumReservationCell: UITableViewCell {
         cardView.addSubview(minimumLabel)
     }
     
-    func configurePrice(
-        amount: String,
-        unit: String = "/guest"
-    ) {
-
-        let attributed = NSMutableAttributedString()
-
-        attributed.append(
-            NSAttributedString(
-                string: amount,
-                attributes: [
-                    .font: Constant.Font.geistMedium(size: 16),
-                    .foregroundColor: UIColor.white
-                ]
-            )
-        )
-
-        attributed.append(
-            NSAttributedString(
-                string: unit,
-                attributes: [
-                    .font: Constant.Font.geistRegular(size: 12),
-                    .foregroundColor: UIColor.white
-                ]
-            )
-        )
-
-        depositLabel.attributedText = attributed
-    }
-    
     func setupButton() {
         
         bookButton.setTitleColor(
@@ -338,7 +308,7 @@ final class PremiumReservationCell: UITableViewCell {
             )
         }
         
-        configurePrice(amount: depositText)
+        depositLabel.text = "\(depositText)"
         
         minimumLabel.text = minimumText
         

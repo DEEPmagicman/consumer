@@ -124,6 +124,7 @@ class TicketSelectionViewController: UIViewController {
         setupTitleMarqueeLabel()
         getTicketLinksAndSetup()
         setupHeaderData()
+        applyWhiteLabelTheme()
         registerSocketDelegate()
     }
 
@@ -318,7 +319,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func setupContinueButton() {
-        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .black)
+        applyWhiteLabelTheme()
         view.addSubview(interactionBlockerView)
         NSLayoutConstraint.activate([
             interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -326,6 +327,21 @@ class TicketSelectionViewController: UIViewController {
             interactionBlockerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             interactionBlockerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    private var whiteLabelAccentColor: UIColor {
+        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+    }
+
+    private func applyWhiteLabelTheme() {
+        let color = whiteLabelAccentColor
+        let textColor = color.suitableTextColor()
+
+        dateandtimeLbl.textColor = color
+        continueToCheckOutBtn.backgroundColor = color
+        continueToCheckOutBtn.bgColor = color
+        continueToCheckOutBtn.setTitleColor(textColor, for: .normal)
+        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: textColor)
     }
 
     private func setCheckoutInProgress(_ inProgress: Bool) {
@@ -461,6 +477,7 @@ class TicketSelectionViewController: UIViewController {
         venueName.text = venueDetails?.name ?? ""
         setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
+        applyWhiteLabelTheme()
     }
 
     private func setupTitleMarqueeLabel() {
@@ -489,6 +506,7 @@ class TicketSelectionViewController: UIViewController {
         venueName.text = venueDetails?.name ?? ""
         setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
+        applyWhiteLabelTheme()
         disabledTicketIds.removeAll()
 
         let filteredNormal = filterAvailableTickets(event.eventTicket ?? [])
