@@ -317,10 +317,34 @@ class EventDetailsVC: UIViewController {
             return false
         }
 
-        return isBeingDismissed ||
+        if isBeingDismissed ||
             navigationController?.isBeingDismissed == true ||
-            presentingViewController?.isBeingDismissed == true ||
-            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+            parent?.isBeingDismissed == true ||
+            presentingViewController?.isBeingDismissed == true {
+            return true
+        }
+
+        guard let navigationController else {
+            return false
+        }
+
+        return !isSelfOrAncestorInNavigationStack(navigationController)
+    }
+
+    private func isSelfOrAncestorInNavigationStack(
+        _ navigationController: UINavigationController
+    ) -> Bool {
+        var viewController: UIViewController? = self
+
+        while let currentViewController = viewController {
+            if navigationController.viewControllers.contains(where: { $0 === currentViewController }) {
+                return true
+            }
+
+            viewController = currentViewController.parent
+        }
+
+        return false
     }
 
     private func releaseHeavyResources() {
@@ -742,11 +766,7 @@ class EventDetailsVC: UIViewController {
         isBackNavigationInProgress = true
         leftEdgeBackGesture?.isEnabled = false
 
-        if (navigationController?.viewControllers.count ?? 0) > 1 {
-            Navigate.to.back(self)
-        } else {
-            dismissPremium()
-        }
+        Navigate.to.back(self)
     }
 
     @objc private func handleLeftEdgeBackGesture(_ gesture: UIScreenEdgePanGestureRecognizer) {

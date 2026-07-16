@@ -113,9 +113,33 @@ class BaseOrdersGridVC: UIViewController {
             return false
         }
 
-        return isBeingDismissed ||
+        if isBeingDismissed ||
             navigationController?.isBeingDismissed == true ||
-            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+            parent?.isBeingDismissed == true {
+            return true
+        }
+
+        guard let navigationController else {
+            return false
+        }
+
+        return !isSelfOrAncestorInNavigationStack(navigationController)
+    }
+
+    private func isSelfOrAncestorInNavigationStack(
+        _ navigationController: UINavigationController
+    ) -> Bool {
+        var viewController: UIViewController? = self
+
+        while let currentViewController = viewController {
+            if navigationController.viewControllers.contains(where: { $0 === currentViewController }) {
+                return true
+            }
+
+            viewController = currentViewController.parent
+        }
+
+        return false
     }
 
     private func releaseResources() {

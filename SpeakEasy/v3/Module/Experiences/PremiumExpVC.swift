@@ -39,6 +39,8 @@ final class PremiumExpVC: UIViewController {
     private weak var premiumIntroVC: PremiumExperienceIntroVC?
     private var hasReleasedResources = false
     private var showsNoInternetView = false
+    private var hasAppearedOnce = false
+    private var needsCollectionLayoutRefreshOnAppear = false
     
     init() {
         let layout = PinterestLayout()
@@ -84,12 +86,34 @@ final class PremiumExpVC: UIViewController {
         updateScrollableHeader()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        defer { hasAppearedOnce = true }
+
+        guard hasAppearedOnce,
+              needsCollectionLayoutRefreshOnAppear else {
+            return
+        }
+
+        needsCollectionLayoutRefreshOnAppear = false
+        refreshCollectionLayoutAfterNavigationReturnIfNeeded()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         applyScrollableHeaderInsetIfNeeded()
         updateScrollableHeader()
         refreshCollectionLayoutIfNeeded()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        if !isLeavingScreenPermanently {
+            needsCollectionLayoutRefreshOnAppear = true
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -109,9 +133,33 @@ final class PremiumExpVC: UIViewController {
             return false
         }
 
-        return isBeingDismissed ||
+        if isBeingDismissed ||
             navigationController?.isBeingDismissed == true ||
-            navigationController?.viewControllers.contains(where: { $0 === self }) == false
+            parent?.isBeingDismissed == true {
+            return true
+        }
+
+        guard let navigationController else {
+            return false
+        }
+
+        return !isSelfOrAncestorInNavigationStack(navigationController)
+    }
+
+    private func isSelfOrAncestorInNavigationStack(
+        _ navigationController: UINavigationController
+    ) -> Bool {
+        var viewController: UIViewController? = self
+
+        while let currentViewController = viewController {
+            if navigationController.viewControllers.contains(where: { $0 === currentViewController }) {
+                return true
+            }
+
+            viewController = currentViewController.parent
+        }
+
+        return false
     }
 
     private func releaseResources() {
@@ -681,6 +729,48 @@ private extension PremiumExpVC {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
         }
+    }
+
+    func refreshCollectionLayoutAfterNavigationReturnIfNeeded() {
+        guard AppDesign.useLegacyDesign,
+              isViewLoaded,
+              !hasReleasedResources,
+              !collectionView.isHidden else {
+            return
+        }
+
+        let currentOffset = collectionView.contentOffset
+
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        applyScrollableHeaderInsetIfNeeded()
+
+        lastCollectionLayoutWidth = 0
+
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.layoutIfNeeded()
+        }
+
+        restoreCollectionOffsetIfNeeded(currentOffset)
+        updateScrollableHeader()
+    }
+
+    func restoreCollectionOffsetIfNeeded(_ offset: CGPoint) {
+        guard collectionView.bounds.height > 0 else { return }
+
+        let adjustedInset = collectionView.adjustedContentInset
+        let minY = -adjustedInset.top
+        let maxY = max(
+            minY,
+            collectionView.contentSize.height - collectionView.bounds.height + adjustedInset.bottom
+        )
+        let restoredY = min(max(offset.y, minY), maxY)
+
+        collectionView.setContentOffset(
+            CGPoint(x: offset.x, y: restoredY),
+            animated: false
+        )
     }
 
     func loadNextPageIfNeeded() {
