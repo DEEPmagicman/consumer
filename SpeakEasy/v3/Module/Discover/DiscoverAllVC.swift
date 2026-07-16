@@ -25,6 +25,7 @@ final class DiscoverAllVC: UIViewController {
     private var activeLoadShowsSkeleton = true
     private weak var refreshControl: UIRefreshControl?
     private var isNavigatingToDiscoverItem = false
+    private let noInternetView = V3NoInternetView()
 
     var selectedCity: String = ""
 
@@ -35,6 +36,7 @@ final class DiscoverAllVC: UIViewController {
         selectedCity = UserDefault.shared.activeCity
         setupPullToRefresh()
         setupSections()
+        setupNoInternetView()
         updatePremiumExperiencePromptVisibility()
         fetchInitialData()
         
@@ -149,6 +151,22 @@ private extension DiscoverAllVC {
         premiumExperiencesView.addGestureRecognizer(tap)
     }
 
+    func setupNoInternetView() {
+        noInternetView.isHidden = true
+        noInternetView.onTryAgain = { [weak self] in
+            self?.refreshAllList(showsSkeleton: true)
+        }
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(noInternetView)
+
+        NSLayoutConstraint.activate([
+            noInternetView.topAnchor.constraint(equalTo: view.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
     @objc func onTapPremiumExperiences() {
         dismissPremiumExperiencePrompt()
 
@@ -242,6 +260,12 @@ private extension DiscoverAllVC {
             guard isSuccess,
                   let data else {
 
+                if V3NoInternetView.isNoInternet(errMsg) {
+                    self.showNoInternetView()
+                    self.finishInitialLoad(loadID: loadID)
+                    return
+                }
+
                 if self.activeLoadShowsSkeleton {
                     Alert.showAlertSheet(
                         style: .alert,
@@ -254,6 +278,7 @@ private extension DiscoverAllVC {
                 return
             }
 
+            self.hideNoInternetView()
             self.todaysEvents = data.eventsTonight
             self.allEvents = data.events
             self.venues = data.venues
@@ -345,6 +370,20 @@ private extension DiscoverAllVC {
             self.view.isHidden = false
             self.refreshControl?.endRefreshing()
         }
+    }
+
+    func showNoInternetView() {
+        todaysEventsView.isHidden = true
+        allEventsView.isHidden = true
+        venuesView.isHidden = true
+        premiumExperiencesView.isHidden = true
+        noInternetView.isHidden = false
+        view.bringSubviewToFront(noInternetView)
+    }
+
+    func hideNoInternetView() {
+        noInternetView.isHidden = true
+        updatePremiumExperiencePromptVisibility()
     }
 }
 

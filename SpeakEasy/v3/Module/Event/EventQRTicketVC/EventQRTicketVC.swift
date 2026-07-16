@@ -656,36 +656,11 @@ class EventQRTicketVC: UIViewController {
         pagerView.interitemSpacing = 16
     }
 
-    private func setupTickets() {
-        guard let booking else { return }
-
-        tickets.removeAll()
-
-        booking.uniqueTickets.forEach { ticket in
-            let qrString = """
-            {
-                "id": "\(booking.id)",
-                "type": "BOOKING"
-            }
-            """
-
-            tickets.append(
-                EventTicketQR(
-                    ticketName: ticket.ticketName ?? "",
-                    qrString: qrString,
-                    backupCode: backupCodeText(),
-                    purchasedAtText: purchaseTimeText()
-                )
-            )
-        }
-
-        setupProgressDots(count: tickets.count)
-    }
 
     private func loadBookingData() {
         tableView.isHidden = true
         fandQtableHiddenView.superview?.superview?.isHidden = true
-        setupProgressDots(count: 0)
+
 
         if let booking {
             applyBooking(booking)
@@ -909,45 +884,6 @@ class EventQRTicketVC: UIViewController {
         }
     }
 
-    // MARK: - Progress Dots
-    private func setupProgressDots(count: Int) {
-        guard let progressBarView else { return }
-        progressBarView.subviews.forEach { $0.removeFromSuperview() }
-        dotViews.removeAll()
-
-        progressBarView.isHidden = count <= 1
-
-        guard count > 1 else { return }
-
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-        progressBarView.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: progressBarView.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: progressBarView.centerYAnchor)
-        ])
-
-        for _ in 0..<count {
-            let dot = UIView()
-            dot.translatesAutoresizingMaskIntoConstraints = false
-            dot.layer.cornerRadius = 5
-
-            NSLayoutConstraint.activate([
-                dot.widthAnchor.constraint(equalToConstant: 10),
-                dot.heightAnchor.constraint(equalToConstant: 10)
-            ])
-
-            stackView.addArrangedSubview(dot)
-            dotViews.append(dot)
-        }
-
-        updateProgressDots()
-    }
 
     private func renderTicketPass() {
         guard let booking else { return }

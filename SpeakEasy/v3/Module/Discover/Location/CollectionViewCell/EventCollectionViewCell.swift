@@ -97,10 +97,13 @@ private extension EventCollectionViewCell {
         venueLogoImage.isHidden = true
         venueName.numberOfLines = 1
         venueName.lineBreakMode = .byTruncatingTail
+        venueName.setContentCompressionResistancePriority(.required, for: .vertical)
         eventName.numberOfLines = 2
         eventName.lineBreakMode = .byTruncatingTail
+        eventName.setContentCompressionResistancePriority(.required, for: .vertical)
         eventDate.numberOfLines = 1
         eventDate.lineBreakMode = .byTruncatingTail
+        eventDate.setContentCompressionResistancePriority(.required, for: .vertical)
         eventDate.font = Constant.Font.geistMedium(size: 11)
     }
 

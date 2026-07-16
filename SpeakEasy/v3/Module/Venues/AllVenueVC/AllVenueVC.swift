@@ -23,6 +23,7 @@ final class AllVenueVC: UIViewController {
     private var isPaginating = false
     private var screenFilterCity: String?
     private var loadID = 0
+    private var showsNoInternetView = false
 
     // MARK: - Layout Constants
     private let horizontalMargin: CGFloat = 20
@@ -154,11 +155,15 @@ final class AllVenueVC: UIViewController {
 
             if isSuccess,
                let page {
+                self.showsNoInternetView = false
                 self.venueList.append(contentsOf: page.list)
                 self.skip = self.venueList.count
                 self.hasMore = page.hasMore
             } else {
-                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                self.showsNoInternetView = V3NoInternetView.isNoInternet(errMsg)
+                if !self.showsNoInternetView {
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
             }
 
             self.collectionView.reloadData()
@@ -199,6 +204,14 @@ final class AllVenueVC: UIViewController {
     private func makeEmptyStateView() -> UIView {
         let container = UIView(frame: collectionView.bounds)
         container.backgroundColor = .clear
+
+        if showsNoInternetView {
+            return V3NoInternetView.backgroundView(
+                frame: collectionView.bounds
+            ) { [weak self] in
+                self?.fetchVenues(reset: true)
+            }
+        }
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

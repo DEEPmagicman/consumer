@@ -17,6 +17,7 @@ final class VenueEventsVC: UIViewController,
     var venueId = ""
 
     private let emptyStateView = V3EmptyStateView(style: .venueEvents)
+    private let noInternetView = V3NoInternetView()
     private var events: [Event] = []
 
     private var skip = 0
@@ -26,6 +27,7 @@ final class VenueEventsVC: UIViewController,
     private var isInitialLoading = true
     private var isPaginating = false
     private var lastCollectionLayoutWidth: CGFloat = 0
+    private var showsNoInternetView = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,14 +105,27 @@ extension VenueEventsVC {
     private func setupEmptyStateView() {
         emptyView.subviews.forEach { $0.removeFromSuperview() }
         emptyStateView.configure(style: .venueEvents)
+        emptyStateView.isHidden = false
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         emptyView.addSubview(emptyStateView)
+
+        noInternetView.isHidden = true
+        noInternetView.onTryAgain = { [weak self] in
+            self?.getEvents(reset: true)
+        }
+        noInternetView.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.addSubview(noInternetView)
 
         NSLayoutConstraint.activate([
             emptyStateView.topAnchor.constraint(equalTo: emptyView.topAnchor),
             emptyStateView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor),
             emptyStateView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor),
-            emptyStateView.bottomAnchor.constraint(equalTo: emptyView.bottomAnchor)
+            emptyStateView.bottomAnchor.constraint(equalTo: emptyView.bottomAnchor),
+
+            noInternetView.topAnchor.constraint(equalTo: emptyView.topAnchor),
+            noInternetView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor),
+            noInternetView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor),
+            noInternetView.bottomAnchor.constraint(equalTo: emptyView.bottomAnchor)
         ])
     }
 
@@ -216,6 +231,7 @@ extension VenueEventsVC {
                 self.isLoading = false
 
                 if isSuccess {
+                    self.showsNoInternetView = false
                     let newItems = list.filter { newEvent in
                         !self.events.contains(where: {
                             $0.id == newEvent.id
@@ -232,6 +248,8 @@ extension VenueEventsVC {
 
                     self.emptyView.isHidden = !self.events.isEmpty
                     self.collectionView.isHidden = self.events.isEmpty
+                    self.emptyStateView.isHidden = self.showsNoInternetView
+                    self.noInternetView.isHidden = !self.showsNoInternetView
 
                     if wasInitialLoading || reset {
                         self.isPaginating = false
@@ -254,9 +272,13 @@ extension VenueEventsVC {
                 } else {
                     self.isInitialLoading = false
                     self.isPaginating = false
+                    self.showsNoInternetView =
+                        V3NoInternetView.isNoInternet(errMsg)
 
                     self.emptyView.isHidden = false
                     self.collectionView.isHidden = true
+                    self.emptyStateView.isHidden = self.showsNoInternetView
+                    self.noInternetView.isHidden = !self.showsNoInternetView
 
                     print(errMsg ?? "Error")
                 }

@@ -39,6 +39,7 @@ final class CoverTicketListVC: UIViewController {
     private let directUpsellFooterView = UIView()
     private let directUpsellButton = UIButton(type: .system)
     private let venueService = VenueService()
+    private let coverTicketCellBackgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.25)
 
     // MARK: - Public
 
@@ -1326,6 +1327,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 currencyPosition: currencyPosition,
                 whiteLabelColor: whiteLabelColor,
                 isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
+                backgroundColor: coverTicketCellBackgroundColor,
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )
@@ -1356,6 +1358,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 currencyPosition: currencyPosition,
                 whiteLabelColor: whiteLabelColor,
                 isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
+                backgroundColor: coverTicketCellBackgroundColor,
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )

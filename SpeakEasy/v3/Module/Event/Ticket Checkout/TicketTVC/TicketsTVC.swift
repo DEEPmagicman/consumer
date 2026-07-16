@@ -51,6 +51,7 @@ class TicketsTVC: UITableViewCell {
     private var isDescriptionExpanded = false
     private var isLinkDisabled = false
     private var isCoverTicketMode = false
+    private var backgroundOverrideColor: UIColor?
     private let ticketBackgroundGradientLayer = CAGradientLayer()
 
     // MARK: - Lifecycle
@@ -94,6 +95,7 @@ class TicketsTVC: UITableViewCell {
         isLinkDisabled = false
         isCoverTicketMode = false
         isFromGroupTicket = false
+        backgroundOverrideColor = nil
 
         shimmerView.stopAnimating()
         shimmerView.isHidden = true
@@ -147,6 +149,12 @@ class TicketsTVC: UITableViewCell {
     }
 
     private func setupTicketBackgroundGradient() {
+        if let backgroundOverrideColor {
+            ticketBackgroundGradientLayer.removeFromSuperlayer()
+            bgView.backgroundColor = backgroundOverrideColor
+            return
+        }
+
         bgView.backgroundColor = .clear
 
         ticketBackgroundGradientLayer.colors = [
@@ -233,6 +241,7 @@ class TicketsTVC: UITableViewCell {
         currencyPosition: String?,
         whiteLabelColor: String?,
         isDescriptionExpanded: Bool,
+        backgroundColor: UIColor? = nil,
         onPlus: (() -> Void)?,
         onMinus: (() -> Void)?
     ) {
@@ -249,6 +258,7 @@ class TicketsTVC: UITableViewCell {
         onCoverPlusTap = onPlus
         onCoverMinusTap = onMinus
         self.isDescriptionExpanded = isDescriptionExpanded
+        self.backgroundOverrideColor = backgroundColor
 
         resetUI()
 

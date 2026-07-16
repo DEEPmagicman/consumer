@@ -952,6 +952,69 @@ class TicketSelectionViewController: UIViewController {
 
     private func createBooking(event: Event, user: User, tickets: [EventTicket]) {
         let payload = buildTicketsPayload(from: tickets)
+
+        checkFreeTicketStockIfNeeded(
+            event: event,
+            user: user,
+            tickets: tickets,
+            payload: payload
+        ) { [weak self] isAvailable, errMsg in
+            guard let self else { return }
+
+            guard isAvailable else {
+                self.continueToCheckOutBtn.hideLoader()
+                self.setCheckoutInProgress(false)
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                return
+            }
+
+            self.createCheckedBooking(
+                event: event,
+                user: user,
+                tickets: tickets,
+                payload: payload
+            )
+        }
+    }
+
+    private func checkFreeTicketStockIfNeeded(
+        event: Event,
+        user: User,
+        tickets: [EventTicket],
+        payload: [[String: Any]],
+        completion: @escaping (_ isAvailable: Bool, _ errMsg: String?) -> Void
+    ) {
+
+        guard isFreeTicketSelection(tickets) else {
+            completion(true, nil)
+            return
+        }
+
+        paymentService.checkEventTicketStock(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: payload,
+            completion: completion
+        )
+    }
+
+    private func isFreeTicketSelection(_ tickets: [EventTicket]) -> Bool {
+        let total = tickets.reduce(0.0) {
+            $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
+        }
+        return total <= 0
+    }
+
+    private func createCheckedBooking(
+        event: Event,
+        user: User,
+        tickets: [EventTicket],
+        payload: [[String: Any]]
+    ) {
+
         paymentService.createEventBooking(
             eventId: event.id,
             code: user.code,

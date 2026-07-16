@@ -87,7 +87,6 @@
 		04A202F22F3605D400900A27 /* EventLineUpCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F12F3605D400900A27 /* EventLineUpCVC.xib */; };
 		04A202F52F36060D00900A27 /* FAQsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */; };
 		04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F62F36061000900A27 /* FAQsTableViewCell.xib */; };
-		04A2D7302F83C84800E58AC2 /* PremiumExperience.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */; };
 		04A4331B2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
 		04A4331C2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
 		04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331D2F442DFB00FB119A /* TablePresenter.swift */; };
@@ -142,7 +141,6 @@
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
 		69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */; };
-		6A0DFE472FFFB54600AB7379 /* SplashAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */; };
 		6A10AD122FFF9FCB0062707F /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6A10AD112FFF9FCB0062707F /* GLTFKit2 */; };
 		6A2A99F02FBC27E800A2A68B /* ProfileMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A99EF2FBC27E800A2A68B /* ProfileMenuVC.swift */; };
 		6A40D1AF2FBDCC3100F3FAAB /* ConfirmContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A40D1AE2FBDCC3100F3FAAB /* ConfirmContactVC.swift */; };
@@ -157,6 +155,7 @@
 		6A40D1CB2FBF2CAA00F3FAAB /* FloatingTabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A40D1CA2FBF2CAA00F3FAAB /* FloatingTabButton.swift */; };
 		6A482C982FD7E88F006193A5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A482C972FD7E88F006193A5 /* Extensions.swift */; };
 		6A4A4BC22FD0513D005C428E /* DateRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4A4BC12FD0513D005C428E /* DateRowView.swift */; };
+		6A4F91A32FFF000100C0DE01 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 6A4F91A52FFF000100C0DE01 /* Lottie */; };
 		6A4FA19C2FC818FB007EB116 /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA19B2FC818FB007EB116 /* PinterestLayout.swift */; };
 		6A4FA1A02FC81F67007EB116 /* OrdersSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA19F2FC81F67007EB116 /* OrdersSectionHeaderView.swift */; };
 		6A4FA1A22FC82B6A007EB116 /* OrderCardShimmerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA1A12FC82B6A007EB116 /* OrderCardShimmerCell.swift */; };
@@ -371,6 +370,7 @@
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
+		CE161AB1300795DE00212485 /* Splash.json in Resources */ = {isa = PBXBuildFile; fileRef = CE161AB0300795DE00212485 /* Splash.json */; };
 		CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */ = {isa = PBXBuildFile; productRef = CE19C1AA2CA44469007050ED /* MHLoadingButton */; };
 		CE1F68B62FCD6D8B00FC861E /* ArtistsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1F68B42FCD6D8B00FC861E /* ArtistsTableViewCell.swift */; };
 		CE1F68B72FCD6D8B00FC861E /* ArtistsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE1F68B52FCD6D8B00FC861E /* ArtistsTableViewCell.xib */; };
@@ -707,7 +707,6 @@
 		04A202F12F3605D400900A27 /* EventLineUpCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventLineUpCVC.xib; sourceTree = "<group>"; };
 		04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQsTableViewCell.swift; sourceTree = "<group>"; };
 		04A202F62F36061000900A27 /* FAQsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FAQsTableViewCell.xib; sourceTree = "<group>"; };
-		04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = PremiumExperience.mp4; sourceTree = "<group>"; };
 		04A4331A2F442D9100FB119A /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		04A4331D2F442DFB00FB119A /* TablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePresenter.swift; sourceTree = "<group>"; };
 		04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSeatingViewController.swift; sourceTree = "<group>"; };
@@ -754,7 +753,6 @@
 		691609422C7F418000C74F48 /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Motor-Regular.ttf"; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
-		6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SplashAnimation.gif; sourceTree = "<group>"; };
 		6A2A99EF2FBC27E800A2A68B /* ProfileMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuVC.swift; sourceTree = "<group>"; };
 		6A40D1AE2FBDCC3100F3FAAB /* ConfirmContactVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmContactVC.swift; sourceTree = "<group>"; };
 		6A40D1B02FBECF2100F3FAAB /* LogoutConfirmationBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutConfirmationBottomSheet.swift; sourceTree = "<group>"; };
@@ -983,6 +981,7 @@
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
 		CE0F423C29FBE6AB0082723B /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
+		CE161AB0300795DE00212485 /* Splash.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Splash.json; sourceTree = "<group>"; };
 		CE1F68B42FCD6D8B00FC861E /* ArtistsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsTableViewCell.swift; sourceTree = "<group>"; };
 		CE1F68B52FCD6D8B00FC861E /* ArtistsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistsTableViewCell.xib; sourceTree = "<group>"; };
 		CE221A642C3BC93900BC1BD8 /* DropDown+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropDown+Appearance.swift"; sourceTree = "<group>"; };
@@ -1209,6 +1208,7 @@
 				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
 				69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */,
 				CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */,
+				6A4F91A32FFF000100C0DE01 /* Lottie in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
 				6A10AD122FFF9FCB0062707F /* GLTFKit2 in Frameworks */,
@@ -2574,8 +2574,7 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6A0DFE462FFFB54600AB7379 /* SplashAnimation.gif */,
-				04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */,
+				CE161AB0300795DE00212485 /* Splash.json */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
 			);
@@ -3279,6 +3278,7 @@
 				04749CFC2F56AB6F0035898F /* Hero */,
 				CE78964D2FB33AE800F9DFDF /* HorizonCalendar */,
 				6A10AD112FFF9FCB0062707F /* GLTFKit2 */,
+				6A4F91A52FFF000100C0DE01 /* Lottie */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -3327,6 +3327,7 @@
 				04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */,
 				CE78964C2FB33AE800F9DFDF /* XCRemoteSwiftPackageReference "HorizonCalendar" */,
 				6A10AD102FFF9FCB0062707F /* XCRemoteSwiftPackageReference "GLTFKit2" */,
+				6A4F91A42FFF000100C0DE01 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -3444,6 +3445,7 @@
 				04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
+				CE161AB1300795DE00212485 /* Splash.json in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */,
 				CE4246012FBB0F41006FF16F /* FiltersViewController.xib in Resources */,
@@ -3453,7 +3455,6 @@
 				04AB758B2F862478001D76D0 /* SearchVenueTableViewCell.xib in Resources */,
 				82847A792982485B00611DC4 /* Home.storyboard in Resources */,
 				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
-				6A0DFE472FFFB54600AB7379 /* SplashAnimation.gif in Resources */,
 				CEEACF452FD038690009EFB5 /* CoverQRCodeVC.xib in Resources */,
 				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
 				CEE646EC2FC4666B001DF84E /* OrderListViewController.xib in Resources */,
@@ -3496,7 +3497,6 @@
 				CE2A6CAB2FB5DBB200FE8596 /* EventCollectionViewCell.xib in Resources */,
 				0425E3C92F3460B8005E4130 /* EventDetailsVC.xib in Resources */,
 				6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */,
-				04A2D7302F83C84800E58AC2 /* PremiumExperience.mp4 in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
 				046AA23C2F84E54300961C9B /* OrdersTableViewCell.xib in Resources */,
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
@@ -4559,6 +4559,14 @@
 				minimumVersion = 0.5.15;
 			};
 		};
+		6A4F91A42FFF000100C0DE01 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.6.1;
+			};
+		};
 		CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSPagerView.git";
@@ -4666,6 +4674,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6A10AD102FFF9FCB0062707F /* XCRemoteSwiftPackageReference "GLTFKit2" */;
 			productName = GLTFKit2;
+		};
+		6A4F91A52FFF000100C0DE01 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A4F91A42FFF000100C0DE01 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 		CE19C1AA2CA44469007050ED /* MHLoadingButton */ = {
 			isa = XCSwiftPackageProductDependency;

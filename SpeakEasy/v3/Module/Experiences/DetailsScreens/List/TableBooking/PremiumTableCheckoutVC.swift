@@ -995,7 +995,7 @@ private extension PremiumTableCheckoutVC {
 
         let settings = event?.venue?.venueSettings
 
-        let importantInformation = ""
+        let importantInformation = cleanAgreementText(settings?.tableBookingTermsAndCondition ?? "")
         checkoutPolicyView.titleText = nil
         checkoutPolicyView.showsCheckbox = false
         checkoutPolicyView.bodyText = importantInformation
@@ -1003,9 +1003,8 @@ private extension PremiumTableCheckoutVC {
         checkoutPolicyView.isChecked = true
         checkoutPolicyView.isHidden = true
 
-        let terms = cleanAgreementText(settings?.tableBookingTermsAndCondition ?? "")
-
-        termsAgreementView.titleText = terms.isEmpty ? nil : "Terms & Conditions"
+        let terms = cleanAgreementText(settings?.tableBookingPolicy ?? "")
+        termsAgreementView.titleText = terms.isEmpty ? nil : ""
         termsAgreementView.showsCheckbox = true
         termsAgreementView.bodyText = terms
         termsAgreementView.bodyAttributedText = formattedAgreementHTML(

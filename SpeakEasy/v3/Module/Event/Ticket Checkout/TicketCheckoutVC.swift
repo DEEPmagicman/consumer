@@ -633,32 +633,52 @@ final class TicketCheckoutVC: UIViewController {
             ]
         }
 
-        paymentService.createEventBooking(
+        let user = UserDefault.shared.user
+
+        paymentService.checkEventTicketStock(
             eventId: eventId,
-            code: UserDefault.shared.user?.code ?? "+1",
-            phone: UserDefault.shared.user?.phone ?? "",
-            gender: "UNASSIGNED",
-            userId: UserDefault.shared.user?.id ?? "",
-            tickets: ticketsPayload,
-            promotionLinkId: promotionLinkId,
-            promotionLinkUniqueCode: promotionLinkUniqueCode
-        ) { [weak self] isSuccess, _, id, _ in
+            code: user?.code ?? "+1",
+            phone: user?.phone ?? "",
+            gender: user?.gender ?? "UNASSIGNED",
+            userId: user?.id ?? "",
+            tickets: ticketsPayload
+        ) { [weak self] isAvailable, errMsg in
             guard let self = self else { return }
-            if isSuccess, let id = id {
-                self.countdownTimer?.invalidate()
-                NotificationCenter.default.postOrdersRefresh(.tickets)
-                Navigate.to.showQRCode(
-                    self,
-                    booking: nil,
-                    bookingId: id,
-                    type: .singleTickedEvent,
-                    sourceEvent: self.event,
-                    presentationMode: .pushedFromPurchase
-                )
-            } else {
+
+            guard isAvailable else {
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)
-                Alert.showToast(Constant.String.somethingWrong)
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                return
+            }
+
+            self.paymentService.createEventBooking(
+                eventId: eventId,
+                code: user?.code ?? "+1",
+                phone: user?.phone ?? "",
+                gender: user?.gender ?? "UNASSIGNED",
+                userId: user?.id ?? "",
+                tickets: ticketsPayload,
+                promotionLinkId: self.promotionLinkId,
+                promotionLinkUniqueCode: self.promotionLinkUniqueCode
+            ) { [weak self] isSuccess, errMsg, id, message in
+                guard let self = self else { return }
+                if isSuccess, let id = id {
+                    self.countdownTimer?.invalidate()
+                    NotificationCenter.default.postOrdersRefresh(.tickets)
+                    Navigate.to.showQRCode(
+                        self,
+                        booking: nil,
+                        bookingId: id,
+                        type: .singleTickedEvent,
+                        sourceEvent: self.event,
+                        presentationMode: .pushedFromPurchase
+                    )
+                } else {
+                    self.isPaymentInitiated = false
+                    self.setScreenInteractionBlocked(false)
+                    Alert.showToast(message ?? errMsg ?? Constant.String.somethingWrong)
+                }
             }
         }
     }

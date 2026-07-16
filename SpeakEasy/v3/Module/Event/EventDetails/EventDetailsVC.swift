@@ -121,6 +121,7 @@ class EventDetailsVC: UIViewController {
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
     private var shouldClearInlineRSVPSelectionOnReturn = false
+    private var isInlineRSVPStockCheckInProgress = false
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
@@ -2657,7 +2658,10 @@ class EventDetailsVC: UIViewController {
         updateCheckoutSummaryView()
     }
 
-    private func selectOnlyInlineTicket(_ ticket: EventTicket) -> EventTicket? {
+    private func selectOnlyInlineTicket(
+        _ ticket: EventTicket,
+        shouldUpdateCheckoutBar: Bool = true
+    ) -> EventTicket? {
         guard let ticketId = ticket.id else { return nil }
 
         normalTickets.indices.forEach {
@@ -2697,7 +2701,11 @@ class EventDetailsVC: UIViewController {
         updateTicketTableHeight()
         updateGroupTableHeight()
         updateContinueBtnState()
-        updateCheckoutSummaryView()
+        if shouldUpdateCheckoutBar {
+            updateCheckoutSummaryView()
+        } else {
+            hideCheckoutBarImmediately()
+        }
 
         return selectedTicket
     }
@@ -2709,23 +2717,9 @@ class EventDetailsVC: UIViewController {
 
     private func handleRSVP(ticket: EventTicket) {
         guard !isTicketDisabledByLink(ticket) else { return }
-        guard let event, let selectedTicket = selectOnlyInlineTicket(ticket) else { return }
-
-        shouldClearInlineRSVPSelectionOnReturn = true
-
-        if hasVisibleAddOnOptions(for: event) {
-            Navigate.to.ticketSelectionVc(
-                self,
-                event: event,
-                mode: .addOn,
-                selectedNormalTickets: [selectedTicket],
-                promotionLinkId: promoteId,
-                promotionLinkUniqueCode: promotionLinkUniqueCode
-            )
-            return
+        checkInlineRSVPStock(ticket: ticket) { [weak self] in
+            self?.continueInlineRSVP(ticket: ticket)
         }
-
-        createInlineOrderBookingAndCheckout(selectedTickets: [selectedTicket])
     }
 
     private func handleGroupPlus(ticket: EventTicket) {
@@ -2802,7 +2796,68 @@ class EventDetailsVC: UIViewController {
 
     private func handleGroupRSVP(ticket: EventTicket) {
         guard !isTicketDisabledByLink(ticket) else { return }
-        guard let event, let selectedTicket = selectOnlyInlineTicket(ticket) else { return }
+        checkInlineRSVPStock(ticket: ticket) { [weak self] in
+            self?.continueInlineRSVP(ticket: ticket)
+        }
+    }
+
+    private func checkInlineRSVPStock(
+        ticket: EventTicket,
+        completion: @escaping () -> Void
+    ) {
+        guard LoginRequiredCoordinator.isAuthenticated else {
+            LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
+                self?.checkInlineRSVPStock(ticket: ticket, completion: completion)
+            }
+            return
+        }
+
+        guard let user = UserDefault.shared.user,
+              let event,
+              let ticketId = ticket.id else { return }
+
+        guard !isInlineRSVPStockCheckInProgress else { return }
+        isInlineRSVPStockCheckInProgress = true
+        hideCheckoutBarImmediately()
+
+        let payload: [[String: Any]] = [
+            [
+                "ticketId": ticketId,
+                "ticketQuantity": 1,
+                "ticketPrice": ticket.price ?? 0
+            ]
+        ]
+
+        paymentService.checkEventTicketStock(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: payload
+        ) { [weak self] isAvailable, errMsg in
+            DispatchQueue.main.async {
+                guard let self else { return }
+
+                self.isInlineRSVPStockCheckInProgress = false
+
+                guard isAvailable else {
+                    self.hideCheckoutBarImmediately()
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                    return
+                }
+
+                completion()
+            }
+        }
+    }
+
+    private func continueInlineRSVP(ticket: EventTicket) {
+        guard let event,
+              let selectedTicket = selectOnlyInlineTicket(
+                ticket,
+                shouldUpdateCheckoutBar: false
+              ) else { return }
 
         shouldClearInlineRSVPSelectionOnReturn = true
 

@@ -28,14 +28,12 @@ final class DiscoverSectionView: UIView {
         static let minItemWidth: CGFloat = 132
         static let maxItemWidth: CGFloat = 148
         static let titleTopPadding: CGFloat = 10
-        static let headerHeight: CGFloat = 28
-        static let headerToCollectionSpacing: CGFloat = 10
-        static let itemHeight: CGFloat = 210
-        static let sectionHeight: CGFloat =
-        titleTopPadding +
-        headerHeight +
-        headerToCollectionSpacing +
-        itemHeight
+        static let collectionTopOffset: CGFloat = 55
+        static let venueItemHeight: CGFloat = 210
+        static let eventItemHeight: CGFloat = 222
+        static let defaultSectionHeight: CGFloat =
+        collectionTopOffset +
+        eventItemHeight
 
         static func itemWidth(for availableWidth: CGFloat) -> CGFloat {
             let resolvedWidth = availableWidth > 0
@@ -68,7 +66,7 @@ final class DiscoverSectionView: UIView {
 
     private var sectionType: DiscoverSectionType = .tonightEvents
     private var sectionData: DiscoverSectionData?
-    private var currentHeight: CGFloat = DiscoverSectionLayout.sectionHeight
+    private var currentHeight: CGFloat = DiscoverSectionLayout.defaultSectionHeight
     private var lastAppliedCollectionWidth: CGFloat = 0
 
     override var intrinsicContentSize: CGSize {
@@ -194,14 +192,16 @@ private extension DiscoverSectionView {
 
     func updateSectionHeight(animated: Bool) {
         let itemSize = currentItemSize()
+        let itemHeight = currentItemHeight()
+
         applyCollectionLayout(itemSize: itemSize)
 
         updateHeightConstraint(
             in: collectionView.constraints,
-            to: DiscoverSectionLayout.itemHeight
+            to: itemHeight
         )
 
-        currentHeight = DiscoverSectionLayout.sectionHeight
+        currentHeight = currentSectionHeight()
 
         updateHeightConstraint(
             in: constraints,
@@ -253,8 +253,24 @@ private extension DiscoverSectionView {
 
         return CGSize(
             width: itemWidth,
-            height: DiscoverSectionLayout.itemHeight
+            height: currentItemHeight()
         )
+    }
+
+    func currentItemHeight() -> CGFloat {
+        switch sectionType {
+        case .venues:
+            return DiscoverSectionLayout.venueItemHeight
+
+        case .tonightEvents,
+             .allEvents,
+             .premiumExperiences:
+            return DiscoverSectionLayout.eventItemHeight
+        }
+    }
+
+    func currentSectionHeight() -> CGFloat {
+        DiscoverSectionLayout.collectionTopOffset + currentItemHeight()
     }
 
     func applyCollectionLayout(itemSize: CGSize? = nil) {
