@@ -760,16 +760,16 @@ class EventDetailsVC: UIViewController {
         titleLbl.font = Constant.Font.geistMedium(size: 20)
         eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 18)
         venueTitleLbl.font = Constant.Font.geistMedium(size: 12)
+        venueTitleLbl.isUserInteractionEnabled = true
+        venueTitleLbl.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(onClickVenueTitle(_:))
+            )
+        )
         venueName.font = Constant.Font.geistMedium(size: 14)
         venueName.textAlignment = .center
         venueNameLbl.font = Constant.Font.geistMedium(size: 18)
-        venueNameLbl.isUserInteractionEnabled = true
-        venueNameLbl.addGestureRecognizer(
-            UITapGestureRecognizer(
-                target: self,
-                action: #selector(onClickVenueImage(_:))
-            )
-        )
         updateVenueLogoCornerRadius()
     }
 
