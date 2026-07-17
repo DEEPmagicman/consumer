@@ -21,10 +21,6 @@ class QRTicketTableViewCell: UITableViewCell {
         setupTextBehavior()
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-
     override func prepareForReuse() {
         super.prepareForReuse()
         ticketNameLbl.text = nil

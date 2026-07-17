@@ -69,7 +69,6 @@ final class StartScreenViewController: UIViewController {
                 countryCode: countryCode
             ) { [weak self] in
                 
-            
             }
         }
         return

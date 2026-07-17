@@ -16,17 +16,17 @@ struct Stripe {
 }
 
 struct SharedURL {
-#if DEBUG
-    static let baseURL = "https://dev.speakeasygo.com"
-    static let webBaseURL = "https://dev-consumer.speakeasygo.com"
-    static let isEncryptionEnabled = false
-    static let tableBaseURL = "https://dev.speakeasygo.com"
-#else
+// #if DEBUG
+//    static let baseURL = "https://dev.speakeasygo.com"
+//    static let webBaseURL = "https://dev-consumer.speakeasygo.com"
+//    static let isEncryptionEnabled = false
+//    static let tableBaseURL = "https://dev.speakeasygo.com"
+// #else
     static let baseURL = "https://production.speakeasygo.com"
     static let webBaseURL = "https://speakeasygo.com"
     static let isEncryptionEnabled = true
     static let tableBaseURL = "https://production.speakeasygo.com"
-#endif
+// #endif
     static let amazonStorage = "https://media.speakeasygo.com/"
     static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
     

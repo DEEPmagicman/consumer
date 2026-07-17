@@ -55,7 +55,6 @@ final class SideMenuVC: UIViewController {
      
     }
 
-    
     private func setupUserData() {
         
         guard let user = UserDefault.shared.user else { return }

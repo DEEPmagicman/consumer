@@ -5,7 +5,6 @@
 //  Created by Square Infosoft on 28/05/26.
 //
 
-
 //
 //  DateSelectionCVC.swift
 //  SpeakEasy-Consumer
@@ -29,7 +28,6 @@ final class DateSelectionCVC: UICollectionViewCell {
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottemConstraint: NSLayoutConstraint!
     
-
     func configure(
         with date: String,
         isSelected: Bool,

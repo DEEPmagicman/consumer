@@ -9,10 +9,6 @@ import UIKit
 
 final class DeleteAccountViewController: UIViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
@@ -23,7 +19,7 @@ final class DeleteAccountViewController: UIViewController {
 
     @IBAction private func onClickDelete(_ sender: Any) {
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
-            UIAlertAction in
+            _ in
             self.deleteAccount()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {

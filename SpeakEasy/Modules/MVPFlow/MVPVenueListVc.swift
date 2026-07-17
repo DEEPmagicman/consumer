@@ -98,7 +98,7 @@ final class MVPVenueListVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue, city: nil) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
+        presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue, city: nil) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -136,7 +136,7 @@ final class MVPVenueListVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue, city: nil) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
+        presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue, city: nil) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return

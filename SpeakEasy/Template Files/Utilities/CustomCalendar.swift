@@ -404,7 +404,6 @@ struct CalendarWeekdayItem: CalendarItemViewRepresentable {
     }
 }
  
-
 final class CalendarDayCircleView: UIView {
 
     let circleView = UIView()

@@ -342,7 +342,7 @@ class BaseOrdersGridVC: UIViewController {
 
         UIView.performWithoutAnimation {
             
-            self.collectionView.performBatchUpdates ({
+            self.collectionView.performBatchUpdates({
                 
                 self.collectionView.insertItems(
                     at: indexPaths
@@ -543,7 +543,6 @@ UICollectionViewDelegate {
             return footer
         }
 
-        
         let header =
             collectionView.dequeueReusableSupplementaryView(
                 ofKind: UICollectionView.elementKindSectionHeader,

@@ -10,9 +10,9 @@ import UIKit
 
 extension UICollectionView {
 
-    public var centerPoint : CGPoint {
+    public var centerPoint: CGPoint {
         get {
-            return CGPoint(x: self.center.x + self.contentOffset.x, y: self.center.y + self.contentOffset.y);
+            return CGPoint(x: self.center.x + self.contentOffset.x, y: self.center.y + self.contentOffset.y)
         }
     }
 

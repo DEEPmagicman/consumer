@@ -7,7 +7,7 @@
 
 import Foundation
 
-//struct FloorPlan: Codable {
+// struct FloorPlan: Codable {
 //
 //    var floorImage: Flyer
 //    var id: String
@@ -58,9 +58,9 @@ import Foundation
 //        try container.encodeIfPresent(floorPlanShiftId, forKey: .floorPlanShiftId)
 //        try container.encodeIfPresent(floorPlanTable, forKey: .floorPlanTable)
 //    }
-//}
+// }
 
-//struct FloorPlanTable: Codable {
+// struct FloorPlanTable: Codable {
 //
 //    var id: String
 //    var floorPlanId: String
@@ -105,4 +105,4 @@ import Foundation
 //        try container.encode(createdAt, forKey: .createdAt)
 //        try container.encode(updatedAt, forKey: .updatedAt)
 //    }
-//}
+// }

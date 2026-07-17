@@ -9,7 +9,7 @@ import UIKit
 
 final class ProfileService {
 
-    //MARK: - Profile
+    // MARK: - Profile
     
     func updateProfile(
         firstName: String? = nil,

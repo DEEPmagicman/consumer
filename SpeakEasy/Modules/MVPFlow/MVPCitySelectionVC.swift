@@ -39,7 +39,6 @@ final class MVPCitySelectionVC: UIViewController {
         }
     }
 
-
     @IBAction func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -73,27 +72,26 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
-//import UIKit
-//import SceneKit
-//import GLTFKit2
-//import simd
-//import ObjectiveC.runtime
+// import UIKit
+// import SceneKit
+// import GLTFKit2
+// import simd
+// import ObjectiveC.runtime
 //
 //// MARK: - Global Constants
-//private enum PinStyle {
+// private enum PinStyle {
 //    static let normalColor = UIColor.systemGreen
 //    static let selectedColor = UIColor.systemPink
 //    static let djGold = UIColor(red: 0.83, green: 0.64, blue: 0.29, alpha: 1.0)
-//}
+// }
 //
-//enum CameraConfig {
+// enum CameraConfig {
 //    static let minOrtho: Double = 5
 //    static let maxOrtho: Double = 60
-//}
+// }
 //
 //
-//final class Tables3DMapVC: UIViewController {
+// final class Tables3DMapVC: UIViewController {
 //    
 //    @IBOutlet weak var mapView: UIView!
 //    
@@ -157,11 +155,11 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //
 //        fetchNext()
 //    }
-//}
+// }
 //
 //// MARK: - Scene Setup
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    func setupSceneView() {
 //        sceneView.frame = mapView.bounds
@@ -172,11 +170,11 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //        sceneView.scene = SCNScene()
 //        mapView.addSubview(sceneView)
 //    }
-//}
+// }
 //
 //// MARK: - GLB Loading
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    private func centeredContentNode(from scene: SCNScene) -> SCNNode {
 //        let container = SCNNode()
@@ -252,11 +250,11 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //            }
 //        }
 //    }
-//}
+// }
 //
 //// MARK: - JSON
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    func loadSeatingAreaMap() {
 //        
@@ -273,9 +271,9 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //            parentByChildId[area.parentSeatingAreaId] = area
 //        }
 //    }
-//}
+// }
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    private func buildMeshSeatingMap(asset: GLTFAsset) {
 //
@@ -511,9 +509,9 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //            wavePlane.firstMaterial?.diffuse.contents = color
 //        }
 //    }
-//}
+// }
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    func makeDJDot(position: simd_float3) -> SCNNode {
 //        
@@ -805,9 +803,9 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //        
 //        return node
 //    }
-//}
+// }
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    func constantMaterial(
 //        color: Any,
@@ -845,9 +843,9 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //        node.constraints = [billboard]
 //        return node
 //    }
-//}
+// }
 //
-//private extension Tables3DMapVC {
+// private extension Tables3DMapVC {
 //    
 //    func setupCamera(_ scene: SCNScene) {
 //
@@ -977,39 +975,39 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //        cam.orthographicScale = min(max(newScale, CameraConfig.minOrtho), CameraConfig.maxOrtho)
 //        g.scale = 1
 //    }
-//}
+// }
 //
-//struct RootResponse: Codable {
+// struct RootResponse: Codable {
 //    let list: [SeatingAreaAPIModel]
-//}
+// }
 //
-//struct SeatingAreaAPIModel: Codable {
+// struct SeatingAreaAPIModel: Codable {
 //    let id: String
 //    let parentSeatingAreaId: String
 //    let name: String
 //    let highlight: String?
 //    let maxGuest: Int?
-//}
+// }
 //
-//struct SeatingAreaDTO {
+// struct SeatingAreaDTO {
 //    let id: String?                    // seatingAreaID
 //    let parentSeatingAreaId: String?   // seatingAreaTag
 //    let name: String?
 //    let highlight: String?
 //    let maxGuest: Int?
 //    let isDJBoot: Bool                 // djBootTag
-//}
+// }
 //
-//private var seatingMetaKey: UInt8 = 0
+// private var seatingMetaKey: UInt8 = 0
 //
-//struct SeatingMeta {
+// struct SeatingMeta {
 //    let seatingAreaId: String
 //    let name: String
 //    let parentId: String
 //    let maxGuest: Int
-//}
+// }
 //
-//extension SCNNode {
+// extension SCNNode {
 //    
 //    var seatingMeta: SeatingMeta? {
 //        get {
@@ -1024,12 +1022,12 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
 //            )
 //        }
 //    }
-//}
+// }
 //
-//extension Dictionary {
+// extension Dictionary {
 //    func mapKeys<T>(_ transform: (Key) throws -> T) rethrows -> [T: Value] {
 //        Dictionary<T, Value>(
 //            uniqueKeysWithValues: try map { (try transform($0.key), $0.value) }
 //        )
 //    }
-//}
+// }

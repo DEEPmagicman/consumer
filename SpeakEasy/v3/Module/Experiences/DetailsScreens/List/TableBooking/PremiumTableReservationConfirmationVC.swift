@@ -497,7 +497,6 @@ private extension PremiumTableReservationConfirmationVC {
         let slotMinimum = reservation?.timeSlot?.minimum
         let baseMinimum = priceBreakdown?.base
 
-        
         let minimum = reservationMinimum
             ?? bookingMinimum
             ?? slotMinimum

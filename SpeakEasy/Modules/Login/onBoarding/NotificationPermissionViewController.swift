@@ -8,10 +8,6 @@
 import UIKit
 
 final class NotificationPermissionViewController: UIViewController, UNUserNotificationCenterDelegate {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     @IBAction func onClickTurnOnNotification(_ sender: Any) {
         allowNotification()

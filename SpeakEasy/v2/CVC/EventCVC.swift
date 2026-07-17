@@ -77,8 +77,8 @@ final class EventCVC: UICollectionViewCell {
         } else {
             let timezone  = event.venue?.timezone ?? ""
             let dateText  = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: timezone)
-            let startTime = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma,    customTimeZone: timezone)
-            let endTime   = event.endDateTime?.convertDateFormat(from:  .yyyyMMddHHmmss, to: .hmma,    customTimeZone: timezone) ?? "LATE"
+            let startTime = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone)
+            let endTime   = event.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? "LATE"
             eventTimeLbl.text = (!dateText.isEmpty && !startTime.isEmpty) ? "\(dateText) at \(startTime) - \(endTime)" : ""
         }
     }
@@ -153,9 +153,9 @@ extension UIImage {
 
         // * 0.85 keeps color vibrant but dark enough for readable text
         return UIColor(
-            red:   CGFloat(bitmap[0]) / 255 * 0.85,
+            red: CGFloat(bitmap[0]) / 255 * 0.85,
             green: CGFloat(bitmap[1]) / 255 * 0.85,
-            blue:  CGFloat(bitmap[2]) / 255 * 0.85,
+            blue: CGFloat(bitmap[2]) / 255 * 0.85,
             alpha: 1
         )
     }

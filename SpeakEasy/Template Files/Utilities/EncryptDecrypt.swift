@@ -45,7 +45,6 @@ func encrypt(data: Data, key: Data, iv: Data) throws -> Data {
     return buffer
 }
 
-
 func decrypt(data: Data, key: Data, iv: Data) throws -> Data {
     let bufferSize = data.count + kCCBlockSizeAES128
     var buffer = Data(count: bufferSize)

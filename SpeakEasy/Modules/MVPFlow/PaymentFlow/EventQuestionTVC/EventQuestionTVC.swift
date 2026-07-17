@@ -58,7 +58,7 @@ final class EventQuestionTVC: UITableViewCell {
         dropDown.width = dropDownBtn.bounds.width
         
         dropDown.cellNib = UINib(nibName: "DropdownCustomCell", bundle: nil)
-        dropDown.customCellConfiguration = { [weak self] (index: Index, item: String, cell: DropDownCell) -> Void in
+        dropDown.customCellConfiguration = { [weak self] (index: Index, _: String, cell: DropDownCell) in
             guard let self = self, let cell = cell as? DropdownCustomCell else {
                 return
             }
@@ -69,7 +69,7 @@ final class EventQuestionTVC: UITableViewCell {
             }
         }
         
-        dropDown.selectionAction = { [weak self] (index, item) in
+        dropDown.selectionAction = { [weak self] (_, item) in
             guard let self = self else { return }
             if questionType == "SINGLE_SELECT" {
                 selectedAns.removeAll()

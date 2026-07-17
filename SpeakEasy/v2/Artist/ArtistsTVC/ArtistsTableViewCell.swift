@@ -67,9 +67,4 @@ final class ArtistsTableViewCell: UITableViewCell {
     @IBAction func onTapViewAllButton(_ sender: UIButton) {
         onViewEvents?()
     }
-
-    // MARK: - Selection
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
 }

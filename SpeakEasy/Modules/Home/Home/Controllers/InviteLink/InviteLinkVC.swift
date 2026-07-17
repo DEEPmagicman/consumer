@@ -56,7 +56,7 @@ final class InviteLinkVC: UIViewController {
     
     private func getInviteData() {
         Loader.show()
-        InvitePresenter.getInvite(inviteId: inviteId) { [weak self] isSuccess, errMsg, invite in
+        InvitePresenter.getInvite(inviteId: inviteId) { [weak self] isSuccess, _, invite in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess, let inviteObj = invite {

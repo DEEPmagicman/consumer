@@ -687,8 +687,7 @@ extension BarTabCheckOutClipVC: UITextFieldDelegate {
             let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "", withRegion: phoneNumTextField.defaultRegion)
             self.phoneNumber = phoneNumber
             self.isValidNo = true
-        }
-        catch {
+        } catch {
             self.isValidNo = false
         }
     }

@@ -223,7 +223,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
     }
 
     @objc private func handleUseThisPictureTap() {
-        let imgDetail = ImageDetail(key: self.instaProfileData?.profilePictureKey ?? "" , name: self.instaProfileData?.profilePictureFilename ?? "", description: "profile picture")
+        let imgDetail = ImageDetail(key: self.instaProfileData?.profilePictureKey ?? "", name: self.instaProfileData?.profilePictureFilename ?? "", description: "profile picture")
         
         self.profileService.updateProfile(image: imgDetail) { [weak self] isSuccess, errorMsg  in
             guard let self = self else { return }

@@ -88,7 +88,7 @@ final class ShimmerView: UIView {
 
         let anim            = CABasicAnimation(keyPath: "locations")
         anim.fromValue      = [-0.8, -0.4, 0.0]
-        anim.toValue        = [1.0,  1.4,  1.8]
+        anim.toValue        = [1.0, 1.4, 1.8]
         anim.duration       = 1.5
         anim.repeatCount    = .infinity
         anim.timingFunction = CAMediaTimingFunction(name: .linear)

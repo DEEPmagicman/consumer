@@ -94,7 +94,7 @@ struct User {
         self.phone = dictionary["phone"] as? String ?? ""
         self.phoneVerified = dictionary["phoneVerified"] as? Bool ?? false
         self.status = dictionary["status"] as? String ?? ""
-        self.image = ImageDetail(fromDictionary: dictionary["image"] as? [String:Any] ?? [:])
+        self.image = ImageDetail(fromDictionary: dictionary["image"] as? [String: Any] ?? [:])
 //        self.instagramId = dictionary["instagramId"] as? String ?? ""
 //        self.instagramToken = dictionary["instagramToken"] as? String ?? ""
 //        self.instaNextPageURL = dictionary["instaNextPageURL"] as? String ?? nil
@@ -203,7 +203,7 @@ struct ImageDetail {
         self.description = description
     }
     
-    init(fromDictionary dictionary: [String : Any]) {
+    init(fromDictionary dictionary: [String: Any]) {
         self.key = dictionary["key"] as? String ?? ""
         self.name = dictionary["name"] as? String ?? ""
         self.description = dictionary["description"] as? String ?? ""

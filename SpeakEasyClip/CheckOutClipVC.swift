@@ -402,7 +402,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -502,7 +502,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -547,7 +547,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func getAddOnsBooking(completion: @escaping (()-> Void)) {
+    private func getAddOnsBooking(completion: @escaping (() -> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnsBookingId)") else { return }
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
@@ -559,7 +559,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             AppClipLoader.showLoader(self.view)
         }
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             DispatchQueue.main.async {
                 guard let data = data else {
                     AppClipLoader.hideLoader()
@@ -567,7 +567,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 }
                 var json = [String: Any]()
                 if !SharedURL.isEncryptionEnabled {
-                    guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
@@ -623,7 +623,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -832,7 +832,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         request.httpBody = bodyData
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, _) in
             AppClipLoader.hideLoader()
             guard let self = self else { return }
             guard let data = data else {
@@ -929,7 +929,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    func paymentStatus(_ status: PaymentStatus, optedPolicy: Bool, completion: @escaping (()-> Void)) {
+    func paymentStatus(_ status: PaymentStatus, optedPolicy: Bool, completion: @escaping (() -> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -969,11 +969,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 var json = [String: Any]()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
-                    json = dataJson;
+                    json = dataJson
                 } else {
                     guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]
@@ -991,7 +991,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    func addOnsPaymentSuccess(_ status: PaymentStatus, completion: @escaping (()-> Void)) {
+    func addOnsPaymentSuccess(_ status: PaymentStatus, completion: @escaping (() -> Void)) {
         retryCount = 0
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/add-ons/\(addOnsBookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
@@ -1034,11 +1034,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     do {
                         var json = [String: Any]()
                         if !SharedURL.isEncryptionEnabled {
-                            guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                            guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                                 AppClipLoader.hideLoader()
                                 return
                             }
-                            json = dataJson;
+                            json = dataJson
                         } else {
                             guard let response = String(data: data, encoding: .utf8) else { return }
                             json =  response.decrypted() ?? [:]
@@ -1071,7 +1071,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func getAddOnsBooking(_ addOnsBookingId: String, completion: @escaping (()-> Void)) {
+    private func getAddOnsBooking(_ addOnsBookingId: String, completion: @escaping (() -> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(addOnsBookingId)?include%5B%5D=addOnsBookingHasItem.addOns&include%5B%5D=addOnsBookingHasCheckIn.addOnsBookingItemCheckIn") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -1080,16 +1080,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, _) in
             if let data = data {
                 do {
                     var json = [String: Any]()
                     if !SharedURL.isEncryptionEnabled {
-                        guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                             AppClipLoader.hideLoader()
                             return
                         }
-                        json = dataJson;
+                        json = dataJson
                     } else {
                         guard let response = String(data: data, encoding: .utf8) else { return }
                         json =  response.decrypted() ?? [:]
@@ -1139,7 +1139,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (_, _, _) in
         })
         task.resume()
     }
@@ -1406,7 +1406,7 @@ extension CheckOutClipVC {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -1498,7 +1498,7 @@ extension CheckOutClipVC {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -1507,7 +1507,7 @@ extension CheckOutClipVC {
             }
             var json = [String: Any]()
             if !SharedURL.isEncryptionEnabled {
-                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                     AppClipLoader.hideLoader()
                     self.alertPopup("Alert", "Internal data formate error")
                     return
@@ -1553,7 +1553,7 @@ extension CheckOutClipVC {
         task.resume()
     }
     
-    func createFreeBookingWithAddOns(completion: @escaping (()-> Void)) {
+    func createFreeBookingWithAddOns(completion: @escaping (() -> Void)) {
         let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII } ?? "+1"
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
@@ -1597,7 +1597,7 @@ extension CheckOutClipVC {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -1606,7 +1606,7 @@ extension CheckOutClipVC {
             }
             var json = [String: Any]()
             if !SharedURL.isEncryptionEnabled {
-                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                     AppClipLoader.hideLoader()
                     self.alertPopup("Alert", "Internal data formate error")
                     return
@@ -1762,8 +1762,7 @@ extension CheckOutClipVC: UITextFieldDelegate {
             let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "", withRegion: phoneNumTextField.defaultRegion)
             self.phoneNumber = phoneNumber
             self.isValidNo = true
-        }
-        catch {
+        } catch {
             self.isValidNo = false
         }
     }

@@ -372,10 +372,10 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     private func setupNotifications() {
         let pairs: [(Notification.Name, Selector)] = [
-            (UIApplication.didEnterBackgroundNotification,  #selector(enterBackGround)),
+            (UIApplication.didEnterBackgroundNotification, #selector(enterBackGround)),
             (UIApplication.willEnterForegroundNotification, #selector(exitBackGround)),
-            (UIApplication.willResignActiveNotification,    #selector(enterBackGround)),
-            (UIApplication.didBecomeActiveNotification,     #selector(exitBackGround))
+            (UIApplication.willResignActiveNotification, #selector(enterBackGround)),
+            (UIApplication.didBecomeActiveNotification, #selector(exitBackGround))
         ]
         pairs.forEach {
             NotificationCenter.default.addObserver(self, selector: $0.1, name: $0.0, object: nil)
@@ -757,7 +757,7 @@ extension CoverTicketCheckOutVC {
         let grandTotal  = coverTotal + upsellTotal
 
         let coverCount  = selectedCoverTickets.reduce(0) { $0 + ($1.selectedQuantity ?? 0) }
-        let upsellCount = selectedAddOnsItems.reduce(0)  { $0 + ($1.selectedQuantity ?? 0) }
+        let upsellCount = selectedAddOnsItems.reduce(0) { $0 + ($1.selectedQuantity ?? 0) }
         let totalCount  = coverCount + upsellCount
 
         let totalFees = feesAboveSubtotal(from: paymentDetail)

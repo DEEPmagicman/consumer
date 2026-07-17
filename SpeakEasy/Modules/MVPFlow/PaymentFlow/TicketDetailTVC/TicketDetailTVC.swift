@@ -15,8 +15,4 @@ final class TicketDetailTVC: UITableViewCell {
     @IBOutlet weak var checkInProgressBarView: UIView!
     @IBOutlet weak var checkInProgress: UIProgressView!
     @IBOutlet weak var checkInCount: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }

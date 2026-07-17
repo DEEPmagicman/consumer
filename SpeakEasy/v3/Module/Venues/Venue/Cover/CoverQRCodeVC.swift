@@ -740,7 +740,7 @@ final class CoverQRCodeVC: UIViewController {
 
         addToWalletBtn.isUserInteractionEnabled = false
         addToWalletBtn.alpha = 0.65
-        URLSession.shared.fetchData(at: url) { [weak self] data, error in
+        URLSession.shared.fetchData(at: url) { [weak self] data, _ in
             guard let self else { return }
             DispatchQueue.main.async {
                 self.addToWalletBtn.isUserInteractionEnabled = true

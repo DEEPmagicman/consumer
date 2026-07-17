@@ -226,7 +226,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getTonightEvent() {
         Loader.show()
-        EventPresenter.getEvents(from: tonightEventSkip,venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] _, _, eventList, hasMore in
+        EventPresenter.getEvents(from: tonightEventSkip, venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] _, _, eventList, hasMore in
             Loader.hide()
             guard let self = self else { return }
             
@@ -381,10 +381,10 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func updateCloseViewVisibility() {
-        if (events.count == 0 && todaysEvents.count == 0 &&
+        if events.count == 0 && todaysEvents.count == 0 &&
             (venueDetails?.coverTicket?.allSatisfy({ ticket in
                 ticket.status == "DISABLED"
-        }) == true)) {
+        }) == true) {
             closeTicketView.isHidden = false
         } else {
             closeTicketView.isHidden = true

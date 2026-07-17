@@ -282,7 +282,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
 
         setLoading(true)
 
-        profileService.fetchInstagramProfile(instagramUserId: username) { [weak self] isSuccess, errMsg, profileData in
+        profileService.fetchInstagramProfile(instagramUserId: username) { [weak self] isSuccess, _, profileData in
             guard let self = self else { return }
 
             DispatchQueue.main.async {
@@ -305,7 +305,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
     }
     
     private func updateUserProfile(instagramUserId: String) {
-        profileService.updateProfile(instagramUserId: instagramUserId) { [weak self] isSuccess, errorMsg in
+        profileService.updateProfile(instagramUserId: instagramUserId) { [weak self] isSuccess, _ in
             DispatchQueue.main.async {
                 if isSuccess {
                     if var user = UserDefault.shared.user {

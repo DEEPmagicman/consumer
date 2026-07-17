@@ -12,10 +12,6 @@ class SignUpDetailsViewController: UIViewController {
     var gender: String?
     var presenter = OnBoardingPresenter()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }

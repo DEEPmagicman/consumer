@@ -690,7 +690,7 @@ private extension PremiumTableCheckoutVC {
             timeTag.isHidden = true
         }
         guestDisplayRow.configure(
-            icon:  UIImage(named: "guestIcon"),
+            icon: UIImage(named: "guestIcon"),
             title: "Guests",
             value: "\(guestCount)"
         )
@@ -925,11 +925,11 @@ private extension PremiumTableCheckoutVC {
             guard let area = seatingAreas.first(where: { $0.id == bookingItem.seatingAreaId }) else { continue }
             let timeText = formattedTime(bookingItem.timeSlot?.startTime)
             let item = TableBookingCheckoutItem(
-                id:       area.id ?? "",
-                name:     area.name ?? "",
-                guests:   bookingItem.guests,
-                minimum:  bookingItem.calculatedMinimum ?? 0,
-                deposit:  bookingItem.calculatedDeposit ?? 0,
+                id: area.id ?? "",
+                name: area.name ?? "",
+                guests: bookingItem.guests,
+                minimum: bookingItem.calculatedMinimum ?? 0,
+                deposit: bookingItem.calculatedDeposit ?? 0,
                 timeSlot: timeText.isEmpty ? nil : timeText
             )
             checkoutItems.append(item)
@@ -937,7 +937,7 @@ private extension PremiumTableCheckoutVC {
 
         if let item = checkoutItems.first {
             guestDisplayRow.configure(
-                icon:  UIImage(named: "guestIcon"),
+                icon: UIImage(named: "guestIcon"),
                 title: "Guests",
                 value: "\(item.guests)"
             )
@@ -1175,8 +1175,8 @@ private extension PremiumTableCheckoutVC {
         cancelCurrentBooking(returnToPrevious: false) { [weak self] in
             guard let self else { return }
             let alert = UIAlertController(
-                title:          "Session Expired",
-                message:        "Your reservation time has expired. Please try again.",
+                title: "Session Expired",
+                message: "Your reservation time has expired. Please try again.",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
@@ -1735,10 +1735,10 @@ private extension PremiumTableCheckoutVC {
 
         promoRow.setSubmitting(true)
         tableService.applyPromoCode(
-            eventId:        eventId,
+            eventId: eventId,
             tableBookingId: bookingId,
-            code:           code,
-            venueId:        venueId
+            code: code,
+            venueId: venueId
         ) { [weak self] success, message, data in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -1778,9 +1778,9 @@ private extension PremiumTableCheckoutVC {
 
         promoRow.setSubmitting(true)
         tableService.removePromoCode(
-            eventId:        eventId,
+            eventId: eventId,
             tableBookingId: bookingId,
-            venueId:        venueId
+            venueId: venueId
         ) { [weak self] success, message, data in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -1881,13 +1881,13 @@ private extension PremiumTableCheckoutVC {
         let notes = noteRow.noteText
 
         tableService.confirmTableBooking(
-            eventId:        eventId,
-            queueId:        queueId,
+            eventId: eventId,
+            queueId: queueId,
             tableBookingId: currentBookingId,
             consumerUserId: UserDefault.shared.user?.id ?? "",
-            optedPolicy:    venueMessageView.isHidden ? termsAgreementView.isChecked : venueMessageView.isChecked,
-            notes:          notes,
-            venueId:        venueId,
+            optedPolicy: venueMessageView.isHidden ? termsAgreementView.isChecked : venueMessageView.isChecked,
+            notes: notes,
+            venueId: venueId,
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] success, message, response in

@@ -68,7 +68,7 @@ final class AccountVC: UIViewController {
     }
     
     private func getUpcomingTickets() {
-        PaymentPresenter.getUpcomingTicket(skip: skipValue) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        PaymentPresenter.getUpcomingTicket(skip: skipValue) { [weak self] isSuccess, _, bookings, hasMany in
             guard let self = self else { return }
             Loader.hide()
             self.isLoading = false
@@ -92,7 +92,7 @@ final class AccountVC: UIViewController {
     }
     
     private func getRecommended() {
-        EventPresenter.getRecommendedEvents { [weak self] isSuccess, errMsg, eventList in
+        EventPresenter.getRecommendedEvents { [weak self] _, _, eventList in
             guard let self = self else { return }
             self.recommended = eventList
 //            DispatchQueue.main.async {
@@ -107,13 +107,13 @@ final class AccountVC: UIViewController {
     }
     
     private func uploadProfileImg() {
-        onBoardingPresenter.uploadPhotoApi(image: profileImg.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
+        onBoardingPresenter.uploadPhotoApi(image: profileImg.image ?? UIImage()) { [weak self] imgUrl, isSuccess in
             guard let self = self else {
                 Loader.hide()
                 return
             }
             if isSuccess {
-                let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
+                let imgDetail = ImageDetail(key: imgUrl, name: "\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
                 self.onBoardingPresenter.editUserProfileApi(image: imgDetail) { isSuccess, errorMsg  in
                     if isSuccess {
                         UserDefault.shared.user?.image = imgDetail
@@ -287,7 +287,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             profileImg.image = editedImage
             

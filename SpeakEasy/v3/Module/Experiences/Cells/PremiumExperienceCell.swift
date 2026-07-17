@@ -201,7 +201,6 @@ final class PremiumExperienceCell: UICollectionViewCell {
             priceWidthConstraint.constant = 70
         }
 
-        
         if let url = URL(string: item.imageUrl), !item.imageUrl.isEmpty {
             let screenScale = UIScreen.main.scale
             let targetPixelSize = CGSize(

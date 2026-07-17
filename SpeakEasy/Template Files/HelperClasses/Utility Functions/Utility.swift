@@ -9,7 +9,7 @@
 import UIKit
 import MHLoadingButton
 
-@objc class Utility: NSObject{
+@objc class Utility: NSObject {
     static let main = Utility()
     fileprivate override init() {}
 }
@@ -38,16 +38,16 @@ extension Utility {
         return base
     }
     
-    func showAlert(message: String, title: String, usingCompletionHandler handler:@escaping (() -> Swift.Void)) {
+    func showAlert(message: String, title: String, usingCompletionHandler handler: @escaping (() -> Swift.Void)) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: {
-            (action) in
+            (_) in
             handler()
         }))
         Utility().topViewController()?.present(alertController, animated: true, completion: nil)
     }
     
-    func shareSocialWith(text: String){
+    func shareSocialWith(text: String) {
         let textToShare = [text]
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = Utility.main.topViewController()?.view

@@ -57,9 +57,9 @@ final class DiscoverAllVC: UIViewController {
     }
 
     private func registerCells() {
-        tonightEventCollectionView.register(EventV2CVC.nib,    forCellWithReuseIdentifier: EventV2CVC.identifier)
-        venueListCollectionView.register(VenueCVC.nib,       forCellWithReuseIdentifier: VenueCVC.identifier)
-        allEventsCollectionView.register(EventV2CVC.nib,     forCellWithReuseIdentifier: EventV2CVC.identifier)
+        tonightEventCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
+        venueListCollectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
+        allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
     }
     
     private func setupHero() {
@@ -355,16 +355,6 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
 }
 
-import UIKit
-
-// MARK: - ShimmerView
-// Single reusable shimmer tile. Add as subview, call startAnimating().
-
-
-// MARK: - HomeSkeletonView
-// Place this as a full-screen overlay on top of DiscoverAllVC's root view.
-// Call startShimmer() to show, stopShimmer() to hide.
-
 final class HomeSkeletonView: UIView {
 
     private var allShimmerViews: [ShimmerView] = []
@@ -404,7 +394,7 @@ final class HomeSkeletonView: UIView {
         // ─────────────────────────────────────────
 
         // Section header: title + "See all"
-        make(CGRect(x: pad,       y: y, width: 140, height: 15), corner: 6)
+        make(CGRect(x: pad, y: y, width: 140, height: 15), corner: 6)
         make(CGRect(x: W - pad - 48, y: y, width: 48, height: 13), corner: 6)
         y += 15 + 14
 
@@ -519,7 +509,6 @@ final class HomeSkeletonView: UIView {
     }
 }
 
-
 extension UIColor {
     convenience init(hex: String, alpha: CGFloat = 1.0) {
         let h = hex.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -527,9 +516,9 @@ extension UIColor {
         var rgb: UInt64 = 0
         Scanner(string: h).scanHexInt64(&rgb)
         self.init(
-            red:   CGFloat((rgb & 0xFF0000) >> 16) / 255,
+            red: CGFloat((rgb & 0xFF0000) >> 16) / 255,
             green: CGFloat((rgb & 0x00FF00) >> 8)  / 255,
-            blue:  CGFloat( rgb & 0x0000FF)         / 255,
+            blue: CGFloat( rgb & 0x0000FF)         / 255,
             alpha: alpha
         )
     }

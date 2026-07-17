@@ -14,7 +14,7 @@ struct SearchVenueItem {
     let id: String
     let name: String
     let imageURL: String?
-    var venue: ClipVenue? = nil
+    var venue: ClipVenue?
 
     var venueUniqueId: String {
         venue?.uniqueId ?? id
@@ -26,8 +26,8 @@ struct SearchEventItem {
     let title: String
     let dateText: String?
     let imageURL: String?
-    var venueName: String? = nil
-    var event: Event? = nil
+    var venueName: String?
+    var event: Event?
     var cellHeight: CGFloat = 0
 }
 
@@ -35,7 +35,7 @@ struct SearchArtistItem {
     let id: String
     let name: String
     let imageURL: String?
-    var artist: Artists? = nil
+    var artist: Artists?
 }
 
 // MARK: - Service

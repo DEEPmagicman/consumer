@@ -62,7 +62,7 @@ public class DatePicker {
     }
 
     // Setup with a min and max date
-    public func setup(beginWith: Date? = nil, min:Date, max: Date, selected: @escaping (_ selected: Bool, _ date: Date?) -> Void) {
+    public func setup(beginWith: Date? = nil, min: Date, max: Date, selected: @escaping (_ selected: Bool, _ date: Date?) -> Void) {
         vc.mode = .basic
         if let begin = beginWith {
             vc.set(date: begin)
@@ -107,7 +107,7 @@ public class DatePicker {
         display_PopOver(on: on, in: parent, width: width, completion: completion)
     }
     
-    private func display_PopOver(on: UIView, in parent: UIViewController, width: CGFloat? = nil, completion: @escaping ()-> Void) {
+    private func display_PopOver(on: UIView, in parent: UIViewController, width: CGFloat? = nil, completion: @escaping () -> Void) {
         // dismiss keyboards
         parent.view.endEditing(true)
 

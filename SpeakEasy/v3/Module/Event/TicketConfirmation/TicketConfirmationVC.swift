@@ -181,7 +181,7 @@ class TicketConfirmationVC: UIViewController {
     override func observeValue(
         forKeyPath keyPath: String?,
         of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
+        change: [NSKeyValueChangeKey: Any]?,
         context: UnsafeMutableRawPointer?
     ) {
         guard keyPath == "contentSize",
@@ -322,9 +322,6 @@ extension TicketConfirmationVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
-
-import UIKit
 import SDWebImage
 
 @IBDesignable
@@ -445,9 +442,6 @@ final class TicketCardView: UIView {
 
         applyPerspective()
     }
-    
-   
-    
     
     private func playShineAnimation(delay: TimeInterval = 0.55) {
         shineLayer.removeAnimation(forKey: "shineAnimation")

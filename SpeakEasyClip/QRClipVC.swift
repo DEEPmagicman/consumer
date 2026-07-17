@@ -10,7 +10,7 @@ import FSPagerView
 
 final class QRClipVC: UIViewController {
     
-    var venueId: String? = nil
+    var venueId: String?
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
@@ -23,8 +23,8 @@ final class QRClipVC: UIViewController {
     var createdAT = String()
     var appClipTicket = [CoverTicket]()
     var selectedAddOns = [UpSellTicket]()
-    var qrImage:UIImage? = nil
-    var addOnsQR:UIImage? = nil
+    var qrImage: UIImage?
+    var addOnsQR: UIImage?
     var isOnlyAddOnsAvailable = false
     var venueImageData = Data()
     var guestInfo = String()
@@ -33,7 +33,7 @@ final class QRClipVC: UIViewController {
     @IBOutlet weak var swipeLbl: UILabel!
     @IBOutlet weak var pageControl: FSPageControl!
     @IBOutlet weak var venueImg: UIImageView!
-    @IBOutlet weak var pagerView: FSPagerView!{
+    @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
@@ -98,7 +98,7 @@ final class QRClipVC: UIViewController {
         WebSocketWrapper.shared.removeDelegate(self)
     }
     
-    private func getBooking(completion: @escaping (()-> Void)) {
+    private func getBooking(completion: @escaping (() -> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/booking/\(self.bookingId)?include%5B%5D=bookingHasItem&include%5B%5D=bookingHasCheckIn.bookingItemCheckIn&include%5B%5D=bookingDetails") else { return }
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
@@ -110,7 +110,7 @@ final class QRClipVC: UIViewController {
             AppClipLoader.showLoader(self.view)
         }
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             DispatchQueue.main.async {
                 guard let data = data else {
                     AppClipLoader.hideLoader()
@@ -120,11 +120,11 @@ final class QRClipVC: UIViewController {
                 var json = [String: Any]()
 
                 if !SharedURL.isEncryptionEnabled {
-                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
-                    json = dataJson;
+                    json = dataJson
                 } else {
                     guard let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]
@@ -142,7 +142,7 @@ final class QRClipVC: UIViewController {
         }.resume()
     }
     
-    private func getAddOnsBooking(completion: @escaping (()-> Void)) {
+    private func getAddOnsBooking(completion: @escaping (() -> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnBookingId)?include%5B%5D=addOnsBookingHasItem.addOns&include%5B%5D=addOnsBookingHasCheckIn.addOnsBookingItemCheckIn") else { return }
         var request = URLRequest(url: url)
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
@@ -154,7 +154,7 @@ final class QRClipVC: UIViewController {
             AppClipLoader.showLoader(self.view)
         }
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             DispatchQueue.main.async {
                 guard let data = data else {
                     AppClipLoader.hideLoader()
@@ -164,11 +164,11 @@ final class QRClipVC: UIViewController {
                 var json = [String: Any]()
 
                 if !SharedURL.isEncryptionEnabled {
-                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
-                    json = dataJson;
+                    json = dataJson
                 } else {
                     guard let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]

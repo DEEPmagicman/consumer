@@ -42,7 +42,6 @@ class PagerViewTVC: FSPagerViewCell {
         super.contentView.layer.shadowColor = UIColor.clear.cgColor
     }
     
-    
     @objc func qrImageTapped() {
         containerView.isUserInteractionEnabled = false
         flipView()

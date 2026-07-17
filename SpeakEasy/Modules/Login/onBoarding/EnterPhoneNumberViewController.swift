@@ -123,8 +123,7 @@ extension EnterPhoneNumberViewController: UITextFieldDelegate {
             self.phoneNumber = phoneNumber
             continueBtn.isUserInteractionEnabled = true
             continueBtn.alpha = 1
-        }
-        catch {
+        } catch {
             continueBtn.isUserInteractionEnabled = false
             continueBtn.alpha = 0.5
         }

@@ -16,20 +16,20 @@ final class DateRangeSelectionVC: UIViewController {
 
     @IBOutlet weak var calendarView: CustomCalendar!
     @IBOutlet weak var dateRangeLbl: UILabel?
-    @IBOutlet weak var todayBtnWidth:    NSLayoutConstraint!
+    @IBOutlet weak var todayBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var tomorrowBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var thisWeekBtnWidth: NSLayoutConstraint!
 
     // MARK: - Public
 
     var initialStartDate: Date?
-    var initialEndDate:   Date?
+    var initialEndDate: Date?
     weak var dateDelegate: SelectedDateDelegate?
 
     // MARK: - Private
 
     private var startDate: Date?
-    private var endDate:   Date?
+    private var endDate: Date?
     private var didScrollInitially = false
 
     private var venueCalendar: Calendar {
@@ -182,8 +182,6 @@ extension SelectedDateDelegate {
     func selectedDateRange(startDate: String?, endDate: String?) { }
 }
 
-
-import UIKit
 import SwiftUI
 
 enum AppIconType: String {
@@ -351,8 +349,6 @@ final class AppIconButton: UIButton {
     }
 }
 
-
-
 @available(iOS 26.0, *)
 private struct LiquidGlassSurface: View {
     let cornerRadius: CGFloat
@@ -444,9 +440,6 @@ final class LiquidGlassBackgroundView: UIView {
         layer.borderWidth    = borderColor != nil ? borderWidth : 0
     }
 }
-
-
-import UIKit
 
 final class LocationUpdatePopupView: UIView {
 

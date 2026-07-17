@@ -105,7 +105,6 @@ extension FiltersViewController: UICollectionViewDelegate {
     }
 }
 
-
 final class LeftAlignedFlowLayout: UICollectionViewFlowLayout {
 
     override func layoutAttributesForElements(

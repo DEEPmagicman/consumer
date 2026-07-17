@@ -183,7 +183,7 @@ private extension PremiumTableSeatingVC {
     func setupGuestRow() {
         guestRow.translatesAutoresizingMaskIntoConstraints = false
         guestRow.configure(
-            icon:  UIImage(resource: .guestIcon).withRenderingMode(.alwaysTemplate),
+            icon: UIImage(resource: .guestIcon).withRenderingMode(.alwaysTemplate),
             title: "Guests"
         )
         guestRow.onValueChanged = { [weak self] val in
@@ -709,12 +709,12 @@ private extension PremiumTableSeatingVC {
         setCheckoutLoading(true)
 
         TablePresenter.createSeatingAreaBooking(
-            eventId:      event.id ?? "",
+            eventId: event.id ?? "",
             seatingAreaId: area.id ?? "",
-            timeSlotId:   selectedTimeSlot?.id,
-            venueId:      event.venue?.id ?? "",
-            guests:       currentGuestCount,
-            queueId:      queueId,
+            timeSlotId: selectedTimeSlot?.id,
+            venueId: event.venue?.id ?? "",
+            guests: currentGuestCount,
+            queueId: queueId,
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] success, message, response in

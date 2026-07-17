@@ -11,10 +11,6 @@ class DayHeaderCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var dayLabel: UILabel!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     func setup(day: String) {
         self.dayLabel.text = day
         style()

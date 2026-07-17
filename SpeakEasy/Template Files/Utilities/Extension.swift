@@ -191,7 +191,7 @@ extension UITapGestureRecognizer {
     layoutManager.addTextContainer(textContainer)
     let textStorage = NSTextStorage(attributedString: attributedText)
     if let font = label.font {
-      textStorage.addAttribute(NSAttributedString.Key.font, value: font, range: NSMakeRange(0, attributedText.length))
+      textStorage.addAttribute(NSAttributedString.Key.font, value: font, range: NSRange(location: 0, length: attributedText.length))
     }
     textStorage.addLayoutManager(layoutManager)
     let locationOfTouchInLabel = location(in: label)
@@ -426,7 +426,6 @@ extension Decodable {
         }
     }
 }
-
 
 extension UITextView {
 

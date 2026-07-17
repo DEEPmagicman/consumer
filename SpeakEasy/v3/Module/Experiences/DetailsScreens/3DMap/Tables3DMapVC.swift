@@ -81,14 +81,17 @@ final class Tables3DMapVC: UIViewController {
 
     private enum PinStyle {
         static let activeColor = UIColor(red: 0.39, green: 0.84, blue: 0.48, alpha: 1.0)
-        static let inactiveColor = UIColor(red: 0.69, green: 0.69, blue: 0.69, alpha: 1.0)
+        static let inactiveColor = UIColor(red: 0.74, green: 0.76, blue: 0.78, alpha: 1.0)
         static let djGold = UIColor(red: 0.85, green: 0.60, blue: 0.21, alpha: 1.0)
     }
 
     private enum PinMetrics {
-        static let minScale: CGFloat = 0.85
-        static let maxScale: CGFloat = 3.6
-        static let djBaseSize: CGFloat = 0.38
+        static let tableCircleWorldSize: CGFloat = 0.15
+        static let targetTableCirclePoints: CGFloat = 12
+        static let fallbackScale: CGFloat = 1.15
+        static let minScale: CGFloat = 0.25
+        static let maxScale: CGFloat = 8.0
+        static let djBaseSize: CGFloat = 0.34
     }
 
     let resetViewBtn: UIButton = {
@@ -352,7 +355,7 @@ extension Tables3DMapVC {
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
                 minimum: area.minimum,
-                allowActions: true
+                allowActions: false
             )
         }
 
@@ -365,7 +368,7 @@ extension Tables3DMapVC {
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
                 minimum: area.minimum,
-                allowActions: true
+                allowActions: false
             )
         }
 
@@ -378,7 +381,7 @@ extension Tables3DMapVC {
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
                 minimum: area.minimum,
-                allowActions: false
+                allowActions: true
             )
         }
 
@@ -391,7 +394,7 @@ extension Tables3DMapVC {
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
                 minimum: area.minimum,
-                allowActions: false
+                allowActions: true
             )
         }
 
@@ -710,8 +713,8 @@ private extension Tables3DMapVC {
 
     private func makeTableDot(position: simd_float3, seating: SeatingAreaDTO, sourceNode: SCNNode) -> SCNNode {
         let root = SCNNode()
-        let scale = uiScale(for: position)
-        let yOffset = Float(0.15 * scale)
+        let scale = uiScale(for: position) * 2
+        let yOffset = Float(0.12 * scale)
         root.simdPosition = position + simd_float3(0, yOffset, 0)
 
         let uiNode = makeBillboardNode()
@@ -728,8 +731,8 @@ private extension Tables3DMapVC {
         hitNode.name = "hit"
         uiNode.addChildNode(hitNode)
 
-        let pulseGeo = SCNPlane(width: 0.45 * scale, height: 0.45 * scale)
-        pulseGeo.cornerRadius = (0.45 * scale) / 2
+        let pulseGeo = SCNPlane(width: 0.4 * scale, height: 0.4 * scale)
+        pulseGeo.cornerRadius = (0.44 * scale) / 2
         pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.40))]
         let pulse = SCNNode(geometry: pulseGeo)
         pulse.name = "wave"
@@ -737,8 +740,8 @@ private extension Tables3DMapVC {
         addSoftPulseAnimation(to: pulse)
         uiNode.addChildNode(pulse)
 
-        let glowGeo = SCNPlane(width: 0.12 * scale, height: 0.12 * scale)
-        glowGeo.cornerRadius = (0.12 * scale) / 2
+        let glowGeo = SCNPlane(width: 0.1 * scale, height: 0.1 * scale)
+        glowGeo.cornerRadius = (0.1 * scale) / 2
         glowGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.45))]
 
         let glow = SCNNode(geometry: glowGeo)
@@ -1040,7 +1043,7 @@ private extension Tables3DMapVC {
     }
 
     private func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
-        let scale = uiScale(for: position)
+        let scale = uiScale(for: position) * 0.97
         let base = PinMetrics.djBaseSize
 
         let root = SCNNode()
@@ -1145,7 +1148,7 @@ private extension Tables3DMapVC {
     private func addDJWaveAnimation(to node: SCNNode) {
         node.removeAllActions()
         node.runAction(.repeatForever(.sequence([
-            .group([.scale(to: 2.2, duration: 1.2), .fadeOut(duration: 1.2)]),
+            .group([.scale(to: 1.65, duration: 1.2), .fadeOut(duration: 1.2)]),
             .run { $0.opacity = 1; $0.scale = SCNVector3(1, 1, 1) },
             .wait(duration: 0.5)
         ])))

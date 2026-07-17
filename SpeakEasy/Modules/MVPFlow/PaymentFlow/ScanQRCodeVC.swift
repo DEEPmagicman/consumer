@@ -32,7 +32,7 @@ final class ScanQRCodeVC: UIViewController {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicket: UIButton!
     @IBOutlet weak var pageControl: FSPageControl!
-    @IBOutlet weak var pagerView: FSPagerView!{
+    @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(UINib(nibName: "CustomPagerViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
@@ -44,8 +44,8 @@ final class ScanQRCodeVC: UIViewController {
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
     var bookingId = String()
-    var qrImage:UIImage? = nil
-    var addOnsQR:UIImage? = nil
+    var qrImage: UIImage?
+    var addOnsQR: UIImage?
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
     var addOnsBookingId: String?
@@ -132,7 +132,7 @@ final class ScanQRCodeVC: UIViewController {
             return
         }
         Loader.show()
-        URLSession.shared.fetchData(at: url) { [weak self] data, error in
+        URLSession.shared.fetchData(at: url) { [weak self] data, _ in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -183,7 +183,7 @@ final class ScanQRCodeVC: UIViewController {
     
     private func getBooking(id: String) {
         Loader.show()
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
@@ -213,7 +213,7 @@ final class ScanQRCodeVC: UIViewController {
     private func getAddOnsBooking() {
         Loader.show()
         let bookingId = booking != nil ? booking?.addOnsBookingId ?? "" : addOnsBookingId ?? ""
-        PaymentPresenter.getAddOnsBooking(addOnsBookingId: bookingId) {[weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getAddOnsBooking(addOnsBookingId: bookingId) {[weak self] isSuccess, _, booking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {

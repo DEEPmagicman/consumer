@@ -177,7 +177,7 @@ public class PickerViewController: UIViewController {
 
     // cancel
     func close() {
-        dimissAnimations() {
+        dimissAnimations {
             if self.mode == .yearless {
                 if self.yearlessCallBack != nil {
                     return self.yearlessCallBack!(false, nil, nil)
@@ -194,7 +194,7 @@ public class PickerViewController: UIViewController {
     func sendResult() {
         if loading {return}
         notification.notificationOccurred(.success)
-        dimissAnimations() {
+        dimissAnimations {
             if self.mode == .yearless {
                 if self.yearlessCallBack != nil {
                     let m = self.month

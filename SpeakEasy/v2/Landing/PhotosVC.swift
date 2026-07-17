@@ -8,9 +8,4 @@
 import UIKit
 
 final class PhotosVC: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
 }

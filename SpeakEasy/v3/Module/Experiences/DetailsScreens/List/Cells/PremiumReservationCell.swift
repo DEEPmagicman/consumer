@@ -176,7 +176,7 @@ final class PremiumReservationCell: UITableViewCell {
         Constant.Font.geistRegular(size: 12)
         
         minimumLabel.textColor =
-        UIColor(hex:"#A1A1A1")
+        UIColor(hex: "#A1A1A1")
         
         minimumLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -194,7 +194,7 @@ final class PremiumReservationCell: UITableViewCell {
         Constant.Font.geistMedium(size: 12)
         
         bookButton.backgroundColor =
-        UIColor(hex:"#D99935")
+        UIColor(hex: "#D99935")
         
         bookButton.translatesAutoresizingMaskIntoConstraints = false
         

@@ -122,7 +122,7 @@ class TableSeatingViewController: UIViewController {
         }
 
         // 🔥 Fix 0000 case (fallback if still zero)
-        if (minValue == 0 || baseDeposit == 0),
+        if minValue == 0 || baseDeposit == 0,
            let firstSlot = item.timeSlots?.first {
 
             minValue = Double(firstSlot.minimum ?? minValue)

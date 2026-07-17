@@ -65,7 +65,7 @@ public class DatePickerHelper {
         let dateComponents = DateComponents(year: year, month: month)
 
         let calendar = Calendar.current
-        if let date = calendar.date(from: dateComponents), let range = calendar.range(of: .day, in: .month, for: date)  {
+        if let date = calendar.date(from: dateComponents), let range = calendar.range(of: .day, in: .month, for: date) {
             return range.count
         } else {
             return 0

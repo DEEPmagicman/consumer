@@ -996,8 +996,8 @@ private extension CoverTicketListVC {
         case "DIFFRENT_PRICE": return 0.5
         case "TAO_PRICING":    return 0.5
         case "INCREMENTAL":
-            if ticketPrice <= 10  { return 0.5 }
-            if ticketPrice <= 20  { return 1 }
+            if ticketPrice <= 10 { return 0.5 }
+            if ticketPrice <= 20 { return 1 }
             if ticketPrice <= 100 { return 2 }
             return 5
         default: return 0
@@ -1498,8 +1498,6 @@ extension CoverTicketListVC: WebSocketCallBackDelegate {
         return tickets.contains { $0.addOns?.venueId == currentVenueId }
     }
 }
-
-import UIKit
 
 final class VenuePosterHeaderView: UIView {
     

@@ -13,7 +13,7 @@ enum PaymentIntentType {
 }
 
 final class PaymentPresenter {
-    static func createCoverBooking(coverTickets: [[String: Any]], venueId: String, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?,_ message: String?) -> Void) {
+    static func createCoverBooking(coverTickets: [[String: Any]], venueId: String, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message: String?) -> Void) {
         let param = ["coverTicket": coverTickets,
                      "venueId": venueId] as [String: Any]
         AFWrapper.postRequest(APIBuilder.createCoverBookingURL, params: param, headers: Header.header(doormanId: doormanId)) { response in
@@ -28,16 +28,16 @@ final class PaymentPresenter {
             if let booking = responseDic["booking"] as? [String: Any], let id = booking["id"] as? String {
                 completion(true, nil, id, "")
             } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
-                completion(false, error, "" , message)
+                completion(false, error, "", message)
             } else {
-                completion(false, "Alert","", "Booking failed")
+                completion(false, "Alert", "", "Booking failed")
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain,"", "")
+                completion(false, err.domain, "", "")
                 return
             }
-            completion(false, nil,"", "")
+            completion(false, nil, "", "")
         }
     }
     
@@ -59,19 +59,18 @@ final class PaymentPresenter {
             if let id = responseDic["id"] as? String {
                 completion(true, nil, id, "")
             } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
-                completion(false, error,"", message)
+                completion(false, error, "", message)
             } else {
-                completion(false, "Alert","", "Booking failed")
+                completion(false, "Alert", "", "Booking failed")
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain,"", "")
+                completion(false, err.domain, "", "")
                 return
             }
             completion(false, nil, "", "")
         }
     }
-    
     
     static func createEventBookingV2(
         eventId: String,
@@ -118,8 +117,7 @@ final class PaymentPresenter {
         }
     }
 
-
-    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], bookingId: String? = "", promotionLinkId: String = "", promotionLinkUniqueCode: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message:String?) -> Void) {
+    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], bookingId: String? = "", promotionLinkId: String = "", promotionLinkUniqueCode: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message: String?) -> Void) {
         
         var param = ["isAppClipUser": false,
                      "phone": phone,
@@ -146,20 +144,20 @@ final class PaymentPresenter {
             if let id = responseDic["id"] as? String {
                 completion(true, nil, id, "")
             } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
-                completion(false, error,"", message)
+                completion(false, error, "", message)
             } else {
-                completion(false, "Alert", "","Booking failed")
+                completion(false, "Alert", "", "Booking failed")
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain, "","")
+                completion(false, err.domain, "", "")
                 return
             }
-            completion(false, nil,"", "")
+            completion(false, nil, "", "")
         }
     }
     
-    static func createCoverFreeBooking(coverTickets: [[String: Any]], venueId: String, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String? , _ message: String?) -> Void) {
+    static func createCoverFreeBooking(coverTickets: [[String: Any]], venueId: String, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message: String?) -> Void) {
         let param = ["coverTicket": coverTickets,
                      "venueId": venueId,
                      "optedPolicy": false] as [String: Any]
@@ -278,7 +276,7 @@ final class PaymentPresenter {
                 completion(false, nil, "", "", nil, "")
                 return
             }
-            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any], let bookingId = responseDic["bookingId"] as? String{
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any], let bookingId = responseDic["bookingId"] as? String {
                 if let detail = PaymentDetail.parse(paymentDetail) {
                     completion(true, nil, paymentIntentClientSecret, ephemeralKey, detail, bookingId)
                 } else {
@@ -317,7 +315,7 @@ final class PaymentPresenter {
     }
     
     static func getPastTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
-        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "event", "fees", "venue"], "orderBy": "createdAt|desc"] as [String : Any]
+        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "event", "fees", "venue"], "orderBy": "createdAt|desc"] as [String: Any]
         AFWrapper.getRequest(APIBuilder.pastTicketsURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -338,7 +336,7 @@ final class PaymentPresenter {
     }
     
     static func getUpcomingTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
-        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "venue", "inviteLink.guestList"], "orderBy": "createdAt|desc"] as [String : Any]
+        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "venue", "inviteLink.guestList"], "orderBy": "createdAt|desc"] as [String: Any]
         AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -359,7 +357,7 @@ final class PaymentPresenter {
     }
     
     static func deleteMethod(customerId: String, methodId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.deleteRequest(APIBuilder.deleteMethod(customerId, methodId: methodId), headers: Header.header()) { response in
+        AFWrapper.deleteRequest(APIBuilder.deleteMethod(customerId, methodId: methodId), headers: Header.header()) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
@@ -375,7 +373,7 @@ final class PaymentPresenter {
         if let optedPolicy = optedPolicy {
             param = ["optedPolicy": optedPolicy]
         }
-        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: param, headers: Header.header(doormanId: doormanId)) { response in
+        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: param, headers: Header.header(doormanId: doormanId)) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = (error as NSError?), err.code == 0 {
@@ -391,7 +389,7 @@ final class PaymentPresenter {
         if mainBookingId != "" {
             param["mainBookingId"] = mainBookingId
         }
-        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: param, headers: Header.header(doormanId: doormanId)) { response in
+        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: param, headers: Header.header(doormanId: doormanId)) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = (error as NSError?), err.code == 0 {
@@ -460,7 +458,7 @@ extension URLSession {
     func fetchData(at url: URL, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         var request = URLRequest(url: url)
         request.addValue("Bearer \(UserDefault.shared.accessToken ?? "")", forHTTPHeaderField: "Authorization")
-        self.dataTask(with: request) { (data, response, error) in
+        self.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 completion(nil, error)
             }

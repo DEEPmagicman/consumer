@@ -135,16 +135,16 @@ final class SelectTicketClipVC: UIViewController {
             AppClipLoader.showLoader(self.view)
         }
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             DispatchQueue.main.async {
                 var json = [String: Any]()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
-                    json = dataJson;
+                    json = dataJson
                 } else {
                     guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]
@@ -169,13 +169,13 @@ final class SelectTicketClipVC: UIViewController {
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, error in
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
                 let decoder = JSONDecoder()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         return
                     }
                     if let addOns = json["list"] as? [[String: Any]] {
@@ -187,7 +187,7 @@ final class SelectTicketClipVC: UIViewController {
                             DispatchQueue.main.async {
                                 self.upSellView.isHidden = self.upSellTickets.count <= 0
                             }
-                        } catch (let error) {
+                        } catch let error {
                             print(error)
                         }
                         
@@ -204,7 +204,7 @@ final class SelectTicketClipVC: UIViewController {
                             DispatchQueue.main.async {
                                 self.upSellView.isHidden = self.upSellTickets.count <= 0
                             }
-                        } catch (let error) {
+                        } catch let error {
                             print(error)
                         }
                     }
@@ -231,13 +231,13 @@ final class SelectTicketClipVC: UIViewController {
             }
         }
         
-        URLSession.shared.dataTask(with: request) { data, respons, error in
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
                 let decoder = JSONDecoder()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                         return
                     }
                     guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
@@ -254,7 +254,7 @@ final class SelectTicketClipVC: UIViewController {
                 }
                 self.venueDetail?.coverTicket?.removeAll(where: { $0.price == 0 && $0.isBarTicket == true})
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
-                self.connectWebSocket(venueId:  self.venueDetail?.id ?? "")
+                self.connectWebSocket(venueId: self.venueDetail?.id ?? "")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false
                 if let color = self.venueDetail?.venueSettings?.whiteLabelColor {
@@ -358,7 +358,7 @@ final class SelectTicketClipVC: UIViewController {
         self.disclaimerText.text = self.venueDetail?.venueSettings?.coverDisclaimerText ?? ""
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         tableViewHeight.constant = ticketTypeTableView.contentSize.height
     }
     

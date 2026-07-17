@@ -124,7 +124,7 @@ private extension EventCollectionViewCell {
         )
 
         image.sd_setImage(
-            with:  URL(string: (event.flyer?.key ?? "").imageURL),
+            with: URL(string: (event.flyer?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage,
             context: [
                 .imageTransformer: transformer

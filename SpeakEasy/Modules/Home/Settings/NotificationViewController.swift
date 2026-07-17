@@ -11,10 +11,6 @@ final class NotificationViewController: UIViewController, UNUserNotificationCent
 
     @IBOutlet private weak var notificationBtn: UIButton!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         notificationOnOff(notificationOn: UserDefault.shared.isNotificationOn)

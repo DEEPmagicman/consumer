@@ -12,7 +12,7 @@ final class BarTabQRCodeClipVC: UIViewController {
     
     @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var venueImg: UIImageView!
-    @IBOutlet weak var pagerView: FSPagerView!{
+    @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
@@ -21,7 +21,7 @@ final class BarTabQRCodeClipVC: UIViewController {
     var barBooking: BarTabBooking?
     var venue: ClipVenue?
     var barTabId = String()
-    var qrImage: UIImage? = nil
+    var qrImage: UIImage?
     private var isAlertDisplayed = false
     var guestInfo = String()
     var appClipTicket = [CoverTicket]()
@@ -66,7 +66,7 @@ final class BarTabQRCodeClipVC: UIViewController {
         
         request.httpMethod = "GET"
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()

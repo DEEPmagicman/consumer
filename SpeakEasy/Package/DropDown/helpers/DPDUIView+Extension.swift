@@ -8,7 +8,7 @@
 
 import UIKit
 
-//MARK: - Constraints
+// MARK: - Constraints
 
 internal extension UIView {
 	
@@ -22,7 +22,6 @@ internal extension UIView {
 	}
 	
 }
-
 
 // MARK: - Bounds
 internal extension UIView {

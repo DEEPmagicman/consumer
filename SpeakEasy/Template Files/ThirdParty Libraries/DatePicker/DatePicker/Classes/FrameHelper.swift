@@ -42,10 +42,9 @@ class FrameHelper {
         let imageView = UIImageView(image: uiView.toImage())
         imageView.frame =  CGRect(x: 0, y: 0, width: uiView.frame.width, height: uiView.frame.height)
 
-
         view.center.y = uiView.center.y
         view.center.x = uiView.center.x
-        view.backgroundColor = UIColor(red:1, green:1, blue:1, alpha:0.9)
+        view.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.9)
         view.alpha = 1
         view.tag = 99
         imageView.frame = view.frame
@@ -62,7 +61,7 @@ class FrameHelper {
 //        view.centerYAnchor.constraint(equalTo: p.view.centerYAnchor)
     }
 
-    func positionCenter(view:UIView, in parentVC: UIViewController, yearless: Bool) {
+    func positionCenter(view: UIView, in parentVC: UIViewController, yearless: Bool) {
         view.frame = getSuggesedFrame(padding: 20, for: parentVC.view.frame.size, yearless: yearless)
         view.center.x = parentVC.view.center.x
         view.center.y = parentVC.view.center.y
@@ -82,7 +81,7 @@ class FrameHelper {
 //        view.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
     }
 
-    func positionBottomPreAnimation(view:UIView, in parentVC: UIViewController, yearless: Bool) {
+    func positionBottomPreAnimation(view: UIView, in parentVC: UIViewController, yearless: Bool) {
         let parentHeight = parentVC.view.frame.size.height
         var h = getSuggestedHeight(for: parentVC.view.frame.size)
         let w = getSuggestedWidth(for: parentVC.view.frame.size)
@@ -94,7 +93,6 @@ class FrameHelper {
         view.center.x = parentVC.view.center.x
 //        view.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
     }
-
 
     // MARK: Suggesged Frame
     func getSuggesedFrame(padding: CGFloat? = 0, for size: CGSize? = nil, yearless: Bool) -> CGRect {
@@ -158,7 +156,7 @@ class FrameHelper {
     // MARK: Frame styling
     func addShadow(to layer: CALayer) {
         layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowColor = UIColor(red:0.14, green:0.25, blue:0.46, alpha:0.2).cgColor
+        layer.shadowColor = UIColor(red: 0.14, green: 0.25, blue: 0.46, alpha: 0.2).cgColor
         layer.shadowOpacity = 1
         layer.shadowRadius = 10
     }

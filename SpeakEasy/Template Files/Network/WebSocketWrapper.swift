@@ -104,14 +104,14 @@ final class WebSocketWrapper: NSObject {
     }
     
     @objc func setArrData() {
-        socket?.on("DOORMAN_SETTINGS") { data, ack in
+        socket?.on("DOORMAN_SETTINGS") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["id"] as? String, let uniqueId = content["uniqueId"] as? String else {
                 return
             }
             self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
         }
         
-        socket?.on("VENUE") { data, ack in
+        socket?.on("VENUE") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueData = content["venueData"] as? [String: Any], let venueId = venueData["id"] as? String, let venueStatus = content["venueStatus"] as? String, let uniqueId = venueData["uniqueId"] as? String else {
                 return
             }
@@ -121,7 +121,7 @@ final class WebSocketWrapper: NSObject {
             self.delegate.forEach { $0.updateVenueStatus(venueId: newVenueId, venueStatus: venueStatus) }
         }
         
-        socket?.on("updatedEvent") { data, ack in
+        socket?.on("updatedEvent") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventId = content["eventId"] as? String else {
                 return
             }

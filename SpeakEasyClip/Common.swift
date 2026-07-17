@@ -99,7 +99,7 @@ extension UITextField {
 extension String {
     var isValidEmail: Bool {
         let regularExpressionForEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
+        let testEmail = NSPredicate(format: "SELF MATCHES %@", regularExpressionForEmail)
         return testEmail.evaluate(with: self.replacingOccurrences(of: " ", with: ""))
     }
     
@@ -127,7 +127,7 @@ extension String {
         }
     }
     
-    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date? {
+    func toDate(withFormat format: DateFormat, isUTC: Bool = true) -> Date? {
         let dateFormatter = DateFormatter()
         if isUTC {
             dateFormatter.timeZone = TimeZone(identifier: "UTC")
@@ -220,7 +220,7 @@ extension Dictionary {
         guard var params = self as? [String: Any] else {
             return nil
         }
-        if params["file"] as? UIImage != nil {
+        if params["file"] is UIImage {
             params["file"] = ""
         }
         do {
@@ -338,7 +338,7 @@ extension UITextView {
     func setHTMLFromString(htmlText: String) {
         let fontName = self.font?.fontName ?? "-apple-system"
         let fontSize = self.font?.pointSize ?? 16
-        let modifiedFont = String(format:"<span style=\"font-family: \(fontName); font-size: \(fontSize)\">%@</span>", htmlText)
+        let modifiedFont = String(format: "<span style=\"font-family: \(fontName); font-size: \(fontSize)\">%@</span>", htmlText)
 
         guard let data = modifiedFont.data(using: .unicode) else { return }
 

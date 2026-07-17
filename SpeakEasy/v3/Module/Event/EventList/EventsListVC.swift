@@ -37,7 +37,6 @@ final class EventsListVC: UIViewController {
     @IBOutlet weak var topViewLeftSideConstraint: NSLayoutConstraint!
     @IBOutlet weak var topViewRightSideConstraint: NSLayoutConstraint!
     
-
     private var eventList: [Event] = []
 
     private var skip = 0
@@ -53,7 +52,7 @@ final class EventsListVC: UIViewController {
     private var hasReleasedResources = false
     private var showsNoInternetView = false
 
-    var venue: SearchVenueItem? = nil
+    var venue: SearchVenueItem?
     var listMode: EventsListMode = .cityEvents
 
     private let discoverService = DiscoverService()

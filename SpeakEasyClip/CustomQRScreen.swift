@@ -15,7 +15,7 @@ final class CustomQRScreen: UIViewController {
     @IBOutlet weak var customBtn: UIButton!
     @IBOutlet weak var pageControl: FSPageControl!
     @IBOutlet weak var buyAnotherTicketBtn: UIButton!
-    @IBOutlet weak var pagerView: FSPagerView!{
+    @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
@@ -32,8 +32,8 @@ final class CustomQRScreen: UIViewController {
     var createdAT = String()
     var appClipTicket = [CoverTicket]()
     var selectedAddOns = [UpSellTicket]()
-    var qrImage:UIImage? = nil
-    var addOnsQR:UIImage? = nil
+    var qrImage: UIImage?
+    var addOnsQR: UIImage?
     var isOnlyAddOnsAvailable = false
     var guestInfo = String()
     
@@ -199,4 +199,3 @@ extension CustomQRScreen: WebSocketCallBackDelegate {
         }
     }
 }
-

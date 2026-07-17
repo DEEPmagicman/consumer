@@ -97,7 +97,7 @@ class DaysCollectionViewCell: UICollectionViewCell {
 
         UIView.transition(with: copy, duration: flipDuration, options: transitionOptions, animations: {
             copy.removeFromSuperview()
-        }, completion: { (done) in
+        }, completion: { (_) in
             copy.removeFromSuperview()
         })
 
@@ -118,7 +118,7 @@ class DaysCollectionViewCell: UICollectionViewCell {
         UIView.transition(with: copy, duration: flipDuration, options: transitionOptions, animations: {
             copy.isHidden = true
             copy.removeFromSuperview()
-        }, completion: { (done) in
+        }, completion: { (_) in
             copy.removeFromSuperview()
         })
 
@@ -126,7 +126,6 @@ class DaysCollectionViewCell: UICollectionViewCell {
             self.isHidden = false
         })
     }
-
 
     var randomlyRealodedIndexes: [Int] = [Int]()
 
@@ -163,7 +162,7 @@ class DaysCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: CollectionView
-extension DaysCollectionViewCell : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension DaysCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func initCollectionView() {
         registerCell(name: "DayCollectionViewCell")
         registerCell(name: "DayHeaderCollectionViewCell")

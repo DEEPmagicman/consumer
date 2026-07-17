@@ -39,7 +39,7 @@ import UIKit
      
      - returns: SJShadow
      */
-    public convenience init(offset: CGSize, color: UIColor, radius :CGFloat, opacity: Float) {
+    public convenience init(offset: CGSize, color: UIColor, radius: CGFloat, opacity: Float) {
         self.init()
         self.offset = offset
         self.color = color

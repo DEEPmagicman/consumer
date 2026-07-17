@@ -32,10 +32,6 @@ class BaseAuthViewController: UIViewController {
         setupBackground()
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

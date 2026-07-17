@@ -14,7 +14,7 @@ import UIKit
 /**
  A beautiful and flexible textfield implementation with support for title label, error message and placeholder.
  */
-//@IBDesignable
+// @IBDesignable
 open class SkyFloatingLabelTextField: UITextField, UITextFieldDelegate { // swiftlint:disable:this type_body_length
     /**
      A Boolean value that determines if the language displayed is LTR. 
@@ -392,7 +392,6 @@ open class SkyFloatingLabelTextField: UITextField, UITextFieldDelegate { // swif
     override open func becomeFirstResponder() -> Bool {
         let result = super.becomeFirstResponder()
         
-        
         disabledColor = UIColor.clear
         placeholderColor = UIColor.clear
         self.placeHolderVisible = true
@@ -552,7 +551,7 @@ open class SkyFloatingLabelTextField: UITextField, UITextFieldDelegate { // swif
     fileprivate func updateTitleVisibility(_ animated: Bool = false, completion: ((_ completed: Bool) -> Void)? = nil) {
         let alpha: CGFloat = isTitleVisible() ? 1.0 : 0.0
         let frame: CGRect = titleLabelRectForBounds(bounds, editing: isTitleVisible())
-        let updateBlock = { () -> Void in
+        let updateBlock = { () in
             self.titleLabel.alpha = alpha
             self.titleLabel.frame = frame
         }
@@ -563,7 +562,7 @@ open class SkyFloatingLabelTextField: UITextField, UITextFieldDelegate { // swif
                 let animationOptions: UIViewAnimationOptions = .curveEaseOut
             #endif
             let duration = isTitleVisible() ? titleFadeInDuration : titleFadeOutDuration
-            UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: { () -> Void in
+            UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: { () in
                 updateBlock()
                 }, completion: completion)
         } else {
@@ -731,5 +730,3 @@ open class SkyFloatingLabelTextField: UITextField, UITextFieldDelegate { // swif
     }
     
 } // swiftlint:disable:this file_length
-
-

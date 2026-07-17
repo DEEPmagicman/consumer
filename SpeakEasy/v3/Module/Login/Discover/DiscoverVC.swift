@@ -151,7 +151,7 @@ extension DiscoverVC: SelectedDateDelegate {
         if let vc = children.first(where: { $0 is DiscoverDateFilterVC }) as? DiscoverDateFilterVC {
             vc.selectedDates = datesBetween(
                 startDate: self.startDate ?? "",
-                endDate:   self.endDate   ?? self.startDate ?? ""
+                endDate: self.endDate   ?? self.startDate ?? ""
             )
             vc.dateCollectionView.reloadData()
             vc.collectionView.reloadData()

@@ -206,8 +206,6 @@ final class TablePurchaseVC: UIViewController {
                     textColor: .black,
                     linkColor: .systemBlue)
         
-     
-
         setHTMLText(event?.venue?.venueSettings?.tableBookingTermsAndCondition,
                     on: termsLbl,
                     linkColor: .systemBlue)
@@ -342,7 +340,6 @@ final class TablePurchaseVC: UIViewController {
             }
         }
     }
-    
     
     private func getStartTime(from startTime: String?) -> String {
         guard let startTime,
@@ -748,7 +745,6 @@ final class TablePurchaseVC: UIViewController {
             ))
         }
 
-     
         feesAndTaxes = items
         feesAndTaxesTitleView.isHidden = items.isEmpty
         feesAndTaxesTableParentView.isHidden = items.isEmpty
@@ -902,7 +898,6 @@ final class TablePurchaseVC: UIViewController {
     @IBAction func onClickAddNote(_ sender: Any) {
         questionsORcommentsView.isHidden.toggle()
     }
-    
     
     @IBAction func onClickTermViewMoreBtn(_ sender: Any) {
         isTermsExpanded.toggle()

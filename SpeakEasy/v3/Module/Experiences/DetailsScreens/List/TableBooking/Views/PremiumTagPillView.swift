@@ -1127,7 +1127,7 @@ extension PremiumNoteInputView: UITextViewDelegate {
 // MARK: - SpendLineItem model
 
 struct SpendLineItem {
-    let title:  String
+    let title: String
     let amount: Double
     let isBold: Bool
 }
@@ -1354,7 +1354,6 @@ final class PremiumSpendAgreementView: UIView {
     }
 }
 
-
 final class PremiumPromoRow: UIView {
 
     var onSubmit: ((String) -> Void)?
@@ -1392,10 +1391,6 @@ final class PremiumPromoRow: UIView {
         setup()
     }
     required init?(coder: NSCoder) { fatalError() }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
 
     func setApplied(
         _ applied: Bool,

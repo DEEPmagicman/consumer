@@ -15,20 +15,20 @@ final class DateRangeSelectionVC: UIViewController {
     // MARK: - IBOutlets
 
     @IBOutlet weak var calendarView: CustomCalendar!
-    @IBOutlet weak var todayBtnWidth:    NSLayoutConstraint!
+    @IBOutlet weak var todayBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var tomorrowBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var thisWeekBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var bgView: UIView!
     // MARK: - Public
 
     var initialStartDate: Date?
-    var initialEndDate:   Date?
+    var initialEndDate: Date?
     weak var dateDelegate: SelectedDateDelegate?
 
     // MARK: - Private
 
     private var startDate: Date?
-    private var endDate:   Date?
+    private var endDate: Date?
     private var didScrollInitially = false
 
     private var venueCalendar: Calendar {
