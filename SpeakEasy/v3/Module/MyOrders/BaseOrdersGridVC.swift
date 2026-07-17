@@ -40,7 +40,12 @@ class BaseOrdersGridVC: UIViewController {
     var didLoadUpcoming = false
     var didLoadPast = false
 
-    var isInitialLoading = true
+    var isInitialLoading = true {
+        didSet {
+            guard oldValue != isInitialLoading else { return }
+            updateInitialLoadingScrollState(resetOffset: isInitialLoading)
+        }
+    }
     var isPaginating = false
     
     var paginationShimmerCount: Int {
@@ -182,6 +187,7 @@ class BaseOrdersGridVC: UIViewController {
 
         collectionView.alwaysBounceVertical = true
         configurePullToRefresh()
+        updateInitialLoadingScrollState(resetOffset: true)
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -272,8 +278,10 @@ class BaseOrdersGridVC: UIViewController {
         didLoadUpcoming = false
         didLoadPast = false
         isInitialLoading = true
+        updateInitialLoadingScrollState(resetOffset: true)
         isPaginating = false
         paginatingSection = nil
+        reloadUI()
         loadInitialData()
         finishPullRefreshIfReady()
     }
@@ -284,9 +292,17 @@ class BaseOrdersGridVC: UIViewController {
 
     // MARK: - UI Refresh
     func reloadUI() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.reloadUI()
+            }
+            return
+        }
 
         UIView.performWithoutAnimation {
 
+            updateInitialLoadingScrollState(resetOffset: false)
+            collectionView.collectionViewLayout.invalidateLayout()
             collectionView.reloadData()
 
             collectionView.layoutIfNeeded()
@@ -317,6 +333,13 @@ class BaseOrdersGridVC: UIViewController {
     }
     
     func insertOrderItems(_ indexPaths: [IndexPath]) {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.insertOrderItems(indexPaths)
+            }
+            return
+        }
+
         UIView.performWithoutAnimation {
             
             self.collectionView.performBatchUpdates ({
@@ -370,6 +393,35 @@ class BaseOrdersGridVC: UIViewController {
             self.refreshControl.endRefreshing()
         }
     }
+
+    private func updateInitialLoadingScrollState(resetOffset: Bool) {
+        guard isViewLoaded else { return }
+
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.updateInitialLoadingScrollState(resetOffset: resetOffset)
+            }
+            return
+        }
+
+        let shouldLockScroll =
+            !isPullRefreshing &&
+            isInitialLoading &&
+            !didLoadUpcoming &&
+            !didLoadPast
+        collectionView.isScrollEnabled = !shouldLockScroll
+        collectionView.alwaysBounceVertical = !shouldLockScroll
+
+        guard resetOffset else { return }
+
+        collectionView.setContentOffset(
+            CGPoint(
+                x: 0,
+                y: -collectionView.adjustedContentInset.top
+            ),
+            animated: false
+        )
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -390,10 +442,7 @@ UICollectionViewDelegate {
         numberOfItemsInSection section: Int
     ) -> Int {
 
-        // Initial shimmer
-        if isInitialLoading {
-            return 6
-        }
+        if sectionIsInitialLoading(section) { return 0 }
 
         let count: Int
 
@@ -417,7 +466,7 @@ UICollectionViewDelegate {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
 
-        if isInitialLoading {
+        if sectionIsInitialLoading(indexPath.section) {
             return collectionView.dequeueReusableCell(
                 withReuseIdentifier: OrderCardShimmerCell.identifier,
                 for: indexPath
@@ -445,7 +494,8 @@ UICollectionViewDelegate {
         didSelectItemAt indexPath: IndexPath
     ) {
 
-        guard !isInitialLoading, let booking = item(at: indexPath) else { return }
+        guard !sectionIsInitialLoading(indexPath.section),
+              let booking = item(at: indexPath) else { return }
         AppHaptic.cardOpen()
         didSelect(booking)
     }
@@ -460,7 +510,7 @@ UICollectionViewDelegate {
             UICollectionView.elementKindSectionFooter {
 
             let sectionHasNoData =
-                !isInitialLoading &&
+                !sectionIsInitialLoading(indexPath.section) &&
                 sectionIsLoaded(indexPath.section) &&
                 sectionItems(indexPath.section).isEmpty
 
@@ -486,7 +536,9 @@ UICollectionViewDelegate {
                     for: indexPath
                 ) as! PaginationShimmerFooterView
 
-            footer.isHidden = (!isPaginating || paginatingSection != indexPath.section)
+            footer.isHidden =
+                !sectionIsInitialLoading(indexPath.section) &&
+                (!isPaginating || paginatingSection != indexPath.section)
 
             return footer
         }
@@ -531,7 +583,7 @@ PinterestLayoutDelegate {
         with width: CGFloat
     ) -> CGFloat {
 
-        if isInitialLoading {
+        if sectionIsInitialLoading(indexPath.section) {
             let imageHeight = width * 1.2
             return imageHeight + 90
         }
@@ -597,7 +649,10 @@ PinterestLayoutDelegate {
             return 260
         }
 
-        guard !isInitialLoading else { return 0 }
+        if sectionIsInitialLoading(section) {
+            return shimmerFooterHeight(in: collectionView)
+        }
+
         guard sectionIsLoaded(section) else { return 0 }
         guard sectionItems(section).isEmpty else { return 0 }
 
@@ -665,6 +720,20 @@ private extension BaseOrdersGridVC {
 
     func sectionIsLoaded(_ section: Int) -> Bool {
         section == SectionType.upcoming.rawValue ? didLoadUpcoming : didLoadPast
+    }
+
+    func sectionIsInitialLoading(_ section: Int) -> Bool {
+        !sectionIsLoaded(section)
+    }
+
+    func shimmerFooterHeight(in collectionView: UICollectionView) -> CGFloat {
+        let availableWidth = collectionView.bounds.width
+            - collectionView.adjustedContentInset.left
+            - collectionView.adjustedContentInset.right
+            - 48
+            - 14
+        let columnWidth = max(0, availableWidth / 2)
+        return columnWidth * 1.2 + 90
     }
 }
 

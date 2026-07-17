@@ -107,6 +107,7 @@ final class PaymentVC: UIViewController {
         ])
 
         backgroundContainerView.addSubview(posterHeaderView)
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([

@@ -858,9 +858,7 @@ private extension PremiumReservationVC {
             title: item.name ?? "",
             guestText: guestText,
             timeText: timeText,
-            description: item.highlight?.isEmpty == false
-                ? (item.highlight ?? "")
-                : (item.description ?? ""),
+            description: item.highlight?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             depositText: depositText,
             minimumText: minimumText,
             buttonTitle: isInquiry ? "Inquire" : "Book now",

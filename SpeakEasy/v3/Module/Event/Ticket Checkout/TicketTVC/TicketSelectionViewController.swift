@@ -52,6 +52,11 @@ class TicketSelectionViewController: UIViewController {
     private var isLoading = true
     private var isCheckoutInProgress = false
     private let shimmerRowCount = 3
+    private lazy var emptyStateView: V3EmptyStateView = {
+        let view = V3EmptyStateView(style: .tickets)
+        view.setTitle("No tickets available")
+        return view
+    }()
     private let posterHeaderView = EventPosterHeaderView()
     private let titleMarqueeLabel = PremiumMarqueeLabel()
     private lazy var interactionBlockerView: UIView = {
@@ -137,6 +142,9 @@ class TicketSelectionViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupPosterBackground()
+        if shouldShowTicketEmptyState() {
+            updateTicketTableHeight()
+        }
         updateScrollBottomInset()
     }
 
@@ -148,6 +156,7 @@ class TicketSelectionViewController: UIViewController {
     private func setupPosterBackground() {
         guard posterHeaderView.superview == nil else { return }
 
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -251,11 +260,51 @@ class TicketSelectionViewController: UIViewController {
     private func updateTicketTableHeight() {
         ticketTableView.layoutIfNeeded()
         let contentHeight = ceil(ticketTableView.contentSize.height)
-        ticketTableViewHeight.constant = isLoading
-            ? max(contentHeight, CGFloat(shimmerRowCount) * 150)
-            : contentHeight
+        let shouldShowEmptyState = shouldShowTicketEmptyState()
+
+        ticketTableView.backgroundView = shouldShowEmptyState
+            ? emptyStateView
+            : nil
+        emptyStateView.isHidden = !shouldShowEmptyState
+
+        if shouldShowEmptyState {
+            ticketTableViewHeight.constant = emptyTicketTableHeight()
+        } else {
+            ticketTableViewHeight.constant = isLoading
+                ? max(contentHeight, CGFloat(shimmerRowCount) * 150)
+                : contentHeight
+        }
+
         ticketTableView.contentOffset = .zero
         updateScrollBottomInset()
+    }
+
+    private func shouldShowTicketEmptyState() -> Bool {
+        let hasGroupedTickets =
+        mode == .normal &&
+        !groupedNormalTickets.isEmpty
+
+        return !isLoading &&
+        tickets.isEmpty &&
+        !hasGroupedTickets &&
+        protectedTicketView.isHidden
+    }
+
+    private func emptyTicketTableHeight() -> CGFloat {
+        let tableTop = ticketTableView
+            .convert(ticketTableView.bounds, to: view)
+            .minY
+
+        let bottomLimit: CGFloat
+        if continueToCheckOutView.isHidden {
+            bottomLimit = view.bounds.height - view.safeAreaInsets.bottom
+        } else {
+            bottomLimit = continueToCheckOutView
+                .convert(continueToCheckOutView.bounds, to: view)
+                .minY
+        }
+
+        return max(320, bottomLimit - tableTop - 24)
     }
 
     private func updateGroupTableHeightFromContent() {
@@ -496,6 +545,8 @@ class TicketSelectionViewController: UIViewController {
             normalTickets.removeAll()
             addOnTickets.removeAll()
             groupedNormalTickets.removeAll()
+            protectedTicketView.isHidden = true
+            updateTicketOptionsLayout()
             ticketTableView.reloadData()
             groupTableView.reloadData()
             updateTicketTableHeight()

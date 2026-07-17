@@ -58,7 +58,7 @@ final class PremiumHeaderView: UIView {
         
         setup()
         
-        configure(city: UserDefault.shared.localCity)
+        configure(city: UserDefault.shared.activeCity)
         reloadUser()
     }
     
@@ -67,7 +67,7 @@ final class PremiumHeaderView: UIView {
         
         setup()
         
-        configure(city: UserDefault.shared.localCity)
+        configure(city: UserDefault.shared.activeCity)
         reloadUser()
     }
     
