@@ -670,11 +670,9 @@ class EventQRTicketVC: UIViewController {
         pagerView.interitemSpacing = 16
     }
 
-
     private func loadBookingData() {
         tableView.isHidden = true
         fandQtableHiddenView.superview?.superview?.isHidden = true
-
 
         if let booking {
             applyBooking(booking)
@@ -898,7 +896,6 @@ class EventQRTicketVC: UIViewController {
             self?.introTicketCardView = nil
         }
     }
-
 
     private func renderTicketPass() {
         guard let booking else { return }
@@ -1198,7 +1195,7 @@ class EventQRTicketVC: UIViewController {
     private func getBooking(id: String) {
         setQRLoading(true)
 
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
 
             DispatchQueue.main.async {

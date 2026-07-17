@@ -148,8 +148,8 @@ final class ShowQRCodeVC: UIViewController {
         if booking?.venueObject?.bookingCode ?? "" != "" {
             containerView.isUserInteractionEnabled = true
         }
-        venueLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL),completed: nil)
-        coverTicketLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL),completed: nil)
+        venueLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL), completed: nil)
+        coverTicketLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL), completed: nil)
         if let booking = booking {
             switch type {
             case .appClip:
@@ -221,7 +221,7 @@ final class ShowQRCodeVC: UIViewController {
             return
         }
         Loader.show()
-        URLSession.shared.fetchData(at: url) { [weak self] data, error in
+        URLSession.shared.fetchData(at: url) { [weak self] data, _ in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -254,7 +254,7 @@ final class ShowQRCodeVC: UIViewController {
     
     private func getBooking(id: String) {
         Loader.show()
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
@@ -338,7 +338,7 @@ final class ShowQRCodeVC: UIViewController {
             delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
             dismiss(animated: true)
         case .singleTickedEvent:
-            delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "" , venueDetail: booking?.venueObject, event: booking?.event)
+            delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
             dismiss(animated: true)
         }
     }
@@ -379,7 +379,6 @@ extension ShowQRCodeVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
 extension ShowQRCodeVC: PKAddPassesViewControllerDelegate {
     func addPassesViewControllerDidFinish(_ controller: PKAddPassesViewController) {
         controller.dismiss(animated: true)
@@ -391,7 +390,7 @@ extension ShowQRCodeVC: PKAddPassesViewControllerDelegate {
 }
 
 extension ShowQRCodeVC: DateSelectionDelegate {
-    func checkInStatusChange(checkInData : [BookingHasCheckIn]) {
+    func checkInStatusChange(checkInData: [BookingHasCheckIn]) {
         booking?.bookingHasCheckIn = checkInData
         setCheckInViewUI()
     }

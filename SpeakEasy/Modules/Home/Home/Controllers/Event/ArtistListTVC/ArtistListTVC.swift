@@ -11,8 +11,4 @@ final class ArtistListTVC: UITableViewCell {
 
     @IBOutlet weak var mainImg: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }

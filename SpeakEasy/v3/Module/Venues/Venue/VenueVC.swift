@@ -789,7 +789,7 @@ private extension VenueVC {
         navVenueNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         navVenueCityLabel.font = Constant.Font.geistMedium(size: 12)
-        navVenueCityLabel.textColor = UIColor(hex:"#A1A1A1")
+        navVenueCityLabel.textColor = UIColor(hex: "#A1A1A1")
         navVenueCityLabel.textAlignment = .center
         navVenueCityLabel.numberOfLines = 1
         navVenueCityLabel.lineBreakMode = .byTruncatingTail

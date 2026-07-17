@@ -78,7 +78,7 @@ class EventLineUpCVC: UICollectionViewCell {
                     .imageThumbnailPixelSize: NSValue(cgSize: targetSize)
                 ],
                 progress: nil
-            ) { [weak self] image, error, _, imageURL in
+            ) { [weak self] image, _, _, _ in
 
                 guard let self = self else { return }
 

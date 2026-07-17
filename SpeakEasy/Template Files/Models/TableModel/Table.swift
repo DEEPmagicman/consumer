@@ -539,7 +539,6 @@ struct TableBookingItem: Codable {
     let updatedAt: String?
 }
 
-
 extension KeyedDecodingContainer {
 
     func decodeFlexibleDouble(forKey key: KeyedDecodingContainer<K>.Key) throws -> Double? {

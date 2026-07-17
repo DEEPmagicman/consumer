@@ -23,11 +23,6 @@ class MonthsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var bottomDivider: UIView!
     @IBOutlet weak var middleIndicator: UIView!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
     func setup(items: [String], parent: PickerViewController) {
         self.parent = parent
         self.items = items
@@ -43,7 +38,6 @@ class MonthsCollectionViewCell: UICollectionViewCell {
     }
 
 }
-
 
 // MARK: CollectionView
 extension MonthsCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -102,7 +96,7 @@ extension MonthsCollectionViewCell: UICollectionViewDelegate, UICollectionViewDa
 
     func select(month: String) {
         guard let indexPathRow = items.firstIndex(of: month)  else { return }
-        let indexPath: IndexPath = [0,(indexPathRow + paddingCells / 2)]
+        let indexPath: IndexPath = [0, (indexPathRow + paddingCells / 2)]
         scrollToMonth(at: indexPath)
     }
 

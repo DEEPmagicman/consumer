@@ -50,7 +50,6 @@ struct Loader {
     }
 }
 
-
 // MARK: - Overlay
 
 private final class LoaderOverlayView: UIView {
@@ -73,12 +72,11 @@ private final class LoaderOverlayView: UIView {
     }
 
     func startAnimating() { loaderView.startAnimating() }
-    func stopAnimating()  { loaderView.stopAnimating() }
+    func stopAnimating() { loaderView.stopAnimating() }
 
     // Block all touches so nothing behind fires
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? { self }
 }
-
 
 // MARK: - Reusable loader badge (drop anywhere)
 

@@ -10,7 +10,7 @@ import UIKit
 
 open class DropDownCell: UITableViewCell {
 		
-	//UI
+	// UI
 	@IBOutlet open weak var optionLabel: UILabel!
 	
 	var selectedBackgroundColor: UIColor?
@@ -19,7 +19,7 @@ open class DropDownCell: UITableViewCell {
 
 }
 
-//MARK: - UI
+// MARK: - UI
 
 extension DropDownCell {
 	

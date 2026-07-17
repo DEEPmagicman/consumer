@@ -20,7 +20,6 @@ final class LandingVC: UIViewController {
     @IBOutlet weak var signInView: UIView!
     @IBOutlet weak var noImageView: UIView!
     
-    
     private var viewControllers = [UIViewController]()
     private var onBoardingPresenter = OnBoardingPresenter()
     var titles = ["", "Your Orders", "Photos", "Search"]

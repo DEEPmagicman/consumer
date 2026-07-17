@@ -75,11 +75,11 @@ class UpSellTicketVC: UIViewController {
         if venueDetails?.speakEasyCharges == "INCREMENTAL" {
             if ticketPrice <= 10 {
                 amountTransferToSE = 0.5
-            } else if (ticketPrice <= 20 && ticketPrice > 10) {
+            } else if ticketPrice <= 20 && ticketPrice > 10 {
                 amountTransferToSE = 1
-            } else if (ticketPrice <= 100 && ticketPrice > 20) {
+            } else if ticketPrice <= 100 && ticketPrice > 20 {
                 amountTransferToSE = 2
-            } else if (ticketPrice > 100) {
+            } else if ticketPrice > 100 {
                 amountTransferToSE = 5
             }
         }
@@ -193,7 +193,7 @@ class UpSellTicketVC: UIViewController {
                 }
                 continueBtn.showLoader(userInteraction: false)
                 self.view.isUserInteractionEnabled = false
-                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, message in
+                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, _ in
                     guard let self = self else { return }
                     self.continueBtn.hideLoader()
                     self.view.isUserInteractionEnabled = true
@@ -331,7 +331,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
             }
             if hasMatchedTicket {
                 let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                    UIAlertAction in
+                    _ in
                     if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                         viewC.isKind(of: MVPVenueListVc.self)
                     }) {
@@ -342,7 +342,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
                         self.navigationController?.popToViewController(vc, animated: true)
                     }
                 }
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices", actions: [okAction])
             }
         }
     }
@@ -350,7 +350,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
     func updateVenueStatus(venueId: String, venueStatus: String) {
         if venueStatus == "CLOSE" {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+                _ in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
@@ -361,7 +361,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking", actions: [okAction])
         }
     }
 }

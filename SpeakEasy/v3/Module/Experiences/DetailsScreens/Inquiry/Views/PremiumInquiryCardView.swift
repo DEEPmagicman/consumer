@@ -490,11 +490,11 @@ private extension PremiumInquiryCardView {
         else { return }
 
         let payload = RequestFormPayload(
-            date:            formattedAPIDateTime(from: date),
-            time:            formattedAPIDateTime(from: date),
-            partySize:       "\(selectedPartySize)",
-            comments:        commentView.text,
-            marketingOptIn:  areVisiblePoliciesAccepted()
+            date: formattedAPIDateTime(from: date),
+            time: formattedAPIDateTime(from: date),
+            partySize: "\(selectedPartySize)",
+            comments: commentView.text,
+            marketingOptIn: areVisiblePoliciesAccepted()
         )
 
         callReservationAPI(payload)
@@ -528,20 +528,20 @@ private extension PremiumInquiryCardView {
         sendButton.isUserInteractionEnabled = false
         sendButton.startLoading()
         TablePresenter.createReservationRequest(
-            firstName:   user.firstName,
-            lastName:    user.lastName,
-            email:       user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
             totalGuests: guests,
-            note:        payload.comments,
-            dob:         user.dateOfBirth,
-            date:        payload.date,
-            time:        payload.time,
+            note: payload.comments,
+            dob: user.dateOfBirth,
+            date: payload.date,
+            time: payload.time,
             optedPolicy: payload.marketingOptIn,
-            eventId:     event.id ?? "",
+            eventId: event.id ?? "",
             seatingArea: nil,
-            venueId:     event.venue?.id ?? "",
-            token:       UserDefault.shared.accessToken ?? "",
-            answers:     reservationQuestionAnswersPayload()
+            venueId: event.venue?.id ?? "",
+            token: UserDefault.shared.accessToken ?? "",
+            answers: reservationQuestionAnswersPayload()
         ) { [weak self] success, message, _ in
             self?.sendButton.stopLoading()
             
@@ -1114,7 +1114,7 @@ private extension PremiumInquiryCardView {
     func showProfileIncompleteAlert() {
         guard let vc = Utility.main.topViewController() else { return }
         let alert = UIAlertController(
-            title:   "Incomplete Profile",
+            title: "Incomplete Profile",
             message: "Please complete your profile before sending a request.",
             preferredStyle: .alert
         )

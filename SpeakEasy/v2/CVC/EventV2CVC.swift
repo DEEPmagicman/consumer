@@ -16,7 +16,6 @@ final class EventV2CVC: UICollectionViewCell {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var bgView: UIView!
     
-    
     private var shimmerLayers: [ShimmerView] = []
     
     override func awakeFromNib() {

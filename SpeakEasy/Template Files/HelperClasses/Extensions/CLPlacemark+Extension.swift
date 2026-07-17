@@ -6,10 +6,10 @@
 //  Copyright © 2020 Quick Delivery. All rights reserved.
 //
 
-//import Foundation
-//import CoreLocation
+// import Foundation
+// import CoreLocation
 //
-//extension CLPlacemark {
+// extension CLPlacemark {
 //    var compactAddress: String? {
 //        if let name = name {
 //            var result = name
@@ -26,4 +26,4 @@
 //        }
 //        return nil
 //    }
-//}
+// }

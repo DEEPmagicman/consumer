@@ -23,11 +23,6 @@ class PurchaseDetailsTVC: UITableViewCell {
     
     private var venueImgHeightObservation: NSKeyValueObservation?
     private var gradient: CAGradientLayer?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-    }
     func setUI() {
         let path = UIBezierPath(roundedRect: blurView.bounds, byRoundingCorners: [.topRight, .bottomLeft], cornerRadii: CGSize(width: 5, height: 5))
         let maskLayer = CAShapeLayer()

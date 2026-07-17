@@ -247,7 +247,6 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
 
-
         configure(
             OrderCardViewModel(
                 imageURL: imageURL,

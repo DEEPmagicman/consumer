@@ -30,7 +30,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
     }
     
     private func getPastPurchases() {
-        PaymentPresenter.getPastTicket(skip: skipValue) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        PaymentPresenter.getPastTicket(skip: skipValue) { [weak self] isSuccess, _, bookings, hasMany in
             guard let self = self else { return }
             if isSuccess {
                 self.isLoading = false

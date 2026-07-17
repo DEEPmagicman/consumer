@@ -760,7 +760,7 @@ class TicketSelectionViewController: UIViewController {
             eventId: event?.uniqueId ?? "",
             venueTimeZone: venueDetails?.useTimezone,
             password: unLockTF.text ?? ""
-        ) { isSuccess, errMsg, ticket in
+        ) { isSuccess, _, ticket in
             if isSuccess {
                 let tickets = ticket ?? []
 

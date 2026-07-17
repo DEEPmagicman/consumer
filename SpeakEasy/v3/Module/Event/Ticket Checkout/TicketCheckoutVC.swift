@@ -1196,7 +1196,6 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
 extension TicketCheckoutVC: DropDownDelegate {
 
     func textAns(ans: String, index: Int) {

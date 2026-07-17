@@ -40,11 +40,11 @@ final class SetProfilePictureViewController: UIViewController {
         continueBtn.showLoader(userInteraction: false)
         self.view.isUserInteractionEnabled = false
         
-        presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
+        presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl, isSuccess in
             guard let self = self else { return }
             
             if isSuccess {
-                let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
+                let imgDetail = ImageDetail(key: imgUrl, name: "\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
                 
                 self.presenter.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
                     guard let self = self else { return }
@@ -84,7 +84,7 @@ final class SetProfilePictureViewController: UIViewController {
 
 extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePickerControllerActionSheet() {
-        let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (action) in
+        let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (_) in
             Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
         }
         
@@ -93,7 +93,7 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction, cancelAction], completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imageView.image = editedImage

@@ -23,7 +23,7 @@
 import Foundation
 import UIKit
 
-typealias DidSelectSegmentAtIndex = (_ segment: SJSegmentTab?,_ index: Int,_ animated: Bool) -> Void
+typealias DidSelectSegmentAtIndex = (_ segment: SJSegmentTab?, _ index: Int, _ animated: Bool) -> Void
 
 open class SJSegmentTab: UIView {
 

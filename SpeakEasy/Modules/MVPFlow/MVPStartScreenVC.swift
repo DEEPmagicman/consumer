@@ -14,10 +14,6 @@ final class MVPStartScreenVC: UIViewController {
     
     var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         guestUserLastNavigation = (.appLaunch, "")

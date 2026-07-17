@@ -70,7 +70,7 @@ final class PaymentDetailVC: UIViewController {
         if booking == nil {
             Loader.show()
         }
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] _, _, booking in
             Loader.hide()
             guard let self = self else { return }
             self.booking = booking

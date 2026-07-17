@@ -6,7 +6,7 @@
 //
 
 import UIKit
-//import DropDown
+// import DropDown
 
 final class PersonalInformationViewController: UIViewController {
 
@@ -21,9 +21,6 @@ final class PersonalInformationViewController: UIViewController {
     
     private var presenter = OnBoardingPresenter()
     var gender = ""
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -54,7 +51,7 @@ final class PersonalInformationViewController: UIViewController {
     @IBAction func onClickSave(_ sender: Any) {
         var date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
         if date == "No date Found" { date = "" }
-        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: "", dob: date, gender: gender) { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: "", dob: date, gender: gender) { [weak self] isSuccess, errorMsg  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {

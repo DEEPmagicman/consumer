@@ -9,11 +9,6 @@ import UIKit
 
 final class MaintenanceVC: UIViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-    
     @IBAction func onClickRefresh(_ sender: Any) {
         RemoteConfigHelper.shared.updateConfigValue {
             if RemoteConfigHelper.shared.isMaintenanceiOSConsumer == false {

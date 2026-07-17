@@ -93,10 +93,6 @@ final class PremiumEventContainerVC: UIViewController {
         loadSeatingAreas()
         hydrateVenueSettingsIfNeeded()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
 }
 
 private extension PremiumEventContainerVC {

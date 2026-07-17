@@ -15,7 +15,7 @@ final class EventPresenter {
                      "timeVersion": time,
                      "status": "ENABLED",
                      "city": city ?? "",
-                     "orderBy": "startDateTime|asc"] as [String : Any]
+                     "orderBy": "startDateTime|asc"] as [String: Any]
         AFWrapper.getRequest(APIBuilder.`eventURL`(includes: ["eventTicket", "venue.venueSettings", "flyer", "customVenue"]), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
@@ -194,10 +194,9 @@ final class EventPresenter {
         }
     }
 
-    
     static func eventTicketCheckIn(bookingId: String, ticketIds: [String], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ chekInData: [BookingHasCheckIn]?) -> Void) {
         
-        let param = ["bookingId" : bookingId,
+        let param = ["bookingId": bookingId,
                      "ticketIds": ticketIds] as [String: Any]
         
         AFWrapper.patchRequest(APIBuilder.eventCheckInAPI, params: param, headers: Header.header()) { (response) in

@@ -15,9 +15,6 @@ final class PaymentTableViewCell: UITableViewCell {
     @IBOutlet weak var navigateBtn: UIButton!
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var headerLbl: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
     
     func setUi(isSetting: Bool) {
         if isSetting {

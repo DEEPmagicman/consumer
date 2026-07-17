@@ -74,7 +74,6 @@ final class PaymentService {
                 return
             }
             
-           
             let clientSecret =
                 responseDic["clientSecret"] as? String
             

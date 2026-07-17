@@ -6,10 +6,10 @@
 //  Copyright © 2019 Ingic. All rights reserved.
 //
 //
-//import Foundation
-//import UIKit
+// import Foundation
+// import UIKit
 //
-//extension Date {
+// extension Date {
 //    static func - (recent: Date, previous: Date) -> (month: Int?, day: Int?, hour: Int?, minute: Int?, second: Int?) {
 //        let day = Calendar.current.dateComponents([.day], from: previous, to: recent).day
 //        let month = Calendar.current.dateComponents([.month], from: previous, to: recent).month
@@ -19,11 +19,11 @@
 //
 //        return (month: month, day: day, hour: hour, minute: minute, second: second)
 //    }
-//}
+// }
 //
-//extension String {
+// extension String {
 //    var digits: String {
 //        return components(separatedBy: CharacterSet.decimalDigits.inverted)
 //            .joined()
 //    }
-//}
+// }

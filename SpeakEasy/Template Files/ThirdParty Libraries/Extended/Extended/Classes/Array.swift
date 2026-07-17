@@ -20,11 +20,11 @@ extension Array {
     }
     
     /// Retrieve `numSamples` of evenly distributed samples from the array.
-    public func sample(_ numSamples: Int) -> Array<Element> {
+    public func sample(_ numSamples: Int) -> [Element] {
         guard numSamples < count else { return self }
         guard numSamples > 0 else { return [] }
         let increment = Float(count) / Float(numSamples)
-        var array = Array<Element>()
+        var array = [Element]()
         for i in 0..<numSamples {
             array.append(self[Int(ceil(Float(i) * increment))])
         }

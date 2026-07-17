@@ -6,9 +6,9 @@
 ////  Copyright © 2018 Usman Bin Rehan. All rights reserved.
 ////
 //
-//import Foundation
+// import Foundation
 //
-//enum Strings: String{
+// enum Strings: String{
 //    
 //    //SingleMethod For the Usage of Localization.
 //    var text: String { return NSLocalizedString( self.rawValue, comment: "") }
@@ -407,4 +407,4 @@
 //    case INVITE_FRIENDS = "Invite Friends"
 //    case INVITE_FROM_CONTACTS = "Invite From Contacts"
 //    case PREVIOUS = "Previous"
-//}
+// }

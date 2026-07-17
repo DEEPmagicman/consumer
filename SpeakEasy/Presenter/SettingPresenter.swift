@@ -31,26 +31,26 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailPhoneVerifyApi(otp: Int, otpRef: String,isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
+    func changeEmailPhoneVerifyApi(otp: Int, otpRef: String, isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         var url = ""
-        if isForPhone  {
+        if isForPhone {
             url = APIBuilder.changePhoneOTPVerifyURL
         } else {
             url = APIBuilder.changeEmailOTPVerifyURL
         }
         AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic as? [String:Any]
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic as? [String: Any]
             else {
                 completion(false, nil)
                 return
             }
-            let imageDic = userDic["image"] as? [String:Any]
+            let imageDic = userDic["image"] as? [String: Any]
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.isGuest = false
-            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["": ""])
             print("\(user)")
         
             completion(true, nil)
@@ -65,7 +65,7 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailPhoneResendOtpApi(otpref: String,isForPhone: Bool = false, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changeEmailPhoneResendOtpApi(otpref: String, isForPhone: Bool = false, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         let param = ["otpRef": otpref]
         var url = ""
         if isForPhone {
@@ -91,7 +91,7 @@ final class SettingPresenter {
         }
     }
     
-    func changePhoneNumberApi(phone: String,code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changePhoneNumberApi(phone: String, code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         
         let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
@@ -114,13 +114,13 @@ final class SettingPresenter {
         }
     }
     
-    func changePasswordApi(oldPass: String, newPass: String, confirmPass: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+    func changePasswordApi(oldPass: String, newPass: String, confirmPass: String, completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
      
         let param = ["currentPassword": oldPass, "newPassword": newPass, "confirmPassword": confirmPass]
         Loader.show()
         AFWrapper.patchRequest(APIBuilder.changePasswordURL, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String:Any] else {
+            guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return
             }

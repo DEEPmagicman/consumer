@@ -357,7 +357,6 @@ struct Attendee: Codable {
            return !key.isEmpty
        }
     
-    
     var fullName: String {
         let first = firstName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let last = lastName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -530,9 +529,8 @@ struct CustomVenue: Codable {
     }
 }
 
-
 //
-//struct CustomVenue: Codable {
+// struct CustomVenue: Codable {
 //    
 //    var name: String
 //    var address: String
@@ -564,7 +562,7 @@ struct CustomVenue: Codable {
 //        try container.encode(lat, forKey: .lat)
 //        try container.encode(lng, forKey: .lng)
 //    }
-//}
+// }
 
 struct InstagramProfile: Codable {
     let instagramUserId: String?

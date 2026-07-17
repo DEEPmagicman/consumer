@@ -60,13 +60,13 @@ final class ConnectAccountViewController: UIViewController {
                 return
             }
             
-            //devide token
+            // devide token
             let tokenParts = idToken.components(separatedBy: ".")
             let firstPart = tokenParts[0]
             
             self.googleLoginButton.showLoader(userInteraction: false)
             self.view.isUserInteractionEnabled = false
-            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId:firstPart ) { [weak self] isSuccess, errorMsg  in
+            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: firstPart ) { [weak self] isSuccess, errorMsg  in
                 
                 guard let self = self else { return }
                 
@@ -119,11 +119,11 @@ extension ConnectAccountViewController: ASAuthorizationControllerDelegate {
         
         do {
             let jwt = try decode(jwt: identityTokenString)
-            let decodedBody = jwt.body as Dictionary<String, Any>
+            let decodedBody = jwt.body as [String: Any]
             
             self.appleLoginButton.showLoader(userInteraction: false)
             self.view.isUserInteractionEnabled = false
-            self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: UserDefault.shared.user?.firstName ?? "", lastName: UserDefault.shared.user?.lastName ?? "") { [weak self] isSuccess,errorMsg  in
+            self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: UserDefault.shared.user?.firstName ?? "", lastName: UserDefault.shared.user?.lastName ?? "") { [weak self] isSuccess, errorMsg  in
                 guard let self = self else { return }
                 
                 self.appleLoginButton.hideLoader()

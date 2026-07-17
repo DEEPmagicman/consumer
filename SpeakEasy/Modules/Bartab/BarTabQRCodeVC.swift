@@ -12,7 +12,7 @@ import PassKit
 final class BarTabQRCodeVC: UIViewController {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicket: UIButton!
-    @IBOutlet weak var pagerView: FSPagerView!{
+    @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(UINib(nibName: "CustomPagerViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
@@ -21,7 +21,7 @@ final class BarTabQRCodeVC: UIViewController {
     @IBOutlet weak var bgImage: UIImageView!
     
     weak var delegate: QRCodeVCNavigationDelegate?
-    var qrImage: UIImage? = nil
+    var qrImage: UIImage?
     var booking: BarTabBooking?
     var venue: ClipVenue?
 //    var posCheckId = String()
@@ -65,7 +65,7 @@ final class BarTabQRCodeVC: UIViewController {
     
     private func getBarTabPaymentDetails() {
         Loader.show()
-        BarTabPresenter.getBarTabPaymentDetails(posCheckId: barTabId) { [weak self] isSuccess, errMsg, barTabBooking in
+        BarTabPresenter.getBarTabPaymentDetails(posCheckId: barTabId) { [weak self] isSuccess, _, barTabBooking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {

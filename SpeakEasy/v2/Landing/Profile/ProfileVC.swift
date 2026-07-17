@@ -5,9 +5,9 @@
 ////  Created by MAC on 02/04/26.
 ////
 //
-//import UIKit
+// import UIKit
 //
-//class ProfileVC: UIViewController {
+// class ProfileVC: UIViewController {
 //    
 //    @IBOutlet weak var name: UILabel!
 //    @IBOutlet weak var userImage: UIImageView!
@@ -98,9 +98,9 @@
 //    @IBAction func onClickBackBtn(_ sender: Any) {
 //        Navigate.to.back(self)
 //    }
-//}
+// }
 //
-//extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
+// extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
 //    
 //    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        
@@ -155,9 +155,9 @@
 //        
 //        return UICollectionViewCell()
 //    }
-//}
+// }
 //
-//extension UIView {
+// extension UIView {
 //    
 //    func applyHeaderGradient() {
 //          layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
@@ -177,4 +177,4 @@
 //
 //          layer.insertSublayer(gradient, at: 0)
 //      }
-//}
+// }

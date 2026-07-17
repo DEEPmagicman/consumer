@@ -82,7 +82,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 
-    public func startOf() -> Date?{
+    public func startOf() -> Date? {
         return Calendar(identifier: .gregorian).startOfDay(for: self)
     }
 

@@ -172,7 +172,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.paymentStatus() {
+                self.paymentStatus {
                     Navigate.to.barTabQRCodeVC(self, venue: self.venueDetails, barTabId: self.barTabData?.barTab.id ?? "")
                 }
             case .canceled:
@@ -200,7 +200,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         paymentRequest.paymentSummaryItems = [
             // The final line should represent your company;
             // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: barTabData?.barTab.barTabPayments?.first?.bookingFees?.total ?? 0)),
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: barTabData?.barTab.barTabPayments?.first?.bookingFees?.total ?? 0))
         ]
         paymentRequest.requiredBillingContactFields = []
         // Initialize an STPApplePayContext instance
@@ -248,9 +248,9 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(completion: @escaping (() -> Void)) {
         Loader.show()
-        BarTabPresenter.barTabPaymentCompleteAPI(barId: barTabData?.barTab.id ?? "", paymentId: barTabData?.barTab.barTabPayments?.first?.id ?? "") { isSuccess, errMsg, barTab in
+        BarTabPresenter.barTabPaymentCompleteAPI(barId: barTabData?.barTab.id ?? "", paymentId: barTabData?.barTab.barTabPayments?.first?.id ?? "") { isSuccess, errMsg, _ in
             Loader.hide()
             if isSuccess {
                 completion()
@@ -335,7 +335,7 @@ extension BarTabCheckoutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            self.paymentStatus() {
+            self.paymentStatus {
                 Navigate.to.barTabQRCodeVC(self, venue: self.venueDetails, barTabId: self.barTabData?.barTab.id ?? "")
             }
         case .error:

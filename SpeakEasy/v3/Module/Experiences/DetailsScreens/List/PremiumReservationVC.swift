@@ -894,7 +894,7 @@ private extension PremiumReservationVC {
             promotionLinkUniqueCode: promotionLinkUniqueCode
         )
 
-///* ff */  Navigate.to.premiumTableSeatingVC(
+/// * ff */  Navigate.to.premiumTableSeatingVC(
 //            self,
 //            seatingArea: item,
 //            event: event

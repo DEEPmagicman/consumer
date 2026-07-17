@@ -27,10 +27,6 @@ class YearsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var bottomDivider: UIView!
     @IBOutlet weak var middleIndicator: UIView!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     func setup(items: [Int], parent: PickerViewController) {
         self.items = items
         self.parent = parent

@@ -35,12 +35,6 @@ class MapEventsTableViewCell: UITableViewCell {
         releaseImageResources()
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
     func configure(with event: Event) {
         let scale = UIScreen.main.scale
         let targetSize = CGSize(

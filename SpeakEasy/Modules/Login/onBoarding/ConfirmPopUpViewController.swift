@@ -33,7 +33,7 @@ final class ConfirmPopUpViewController: UIViewController {
         self.confirmInFoLbl.text = confirmInfoText
         self.infoDetailLbl.text = infoDetailtext
         self.infoNoteLbl.text = infoNoteText
-        view.backgroundColor = UIColor(white:0, alpha: 0.7)
+        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
         if isPrivetOrPublic {
             self.editBtn.setTitle("No", for: .normal)
             self.confirmBtn.setTitle("Yes", for: .normal)

@@ -98,7 +98,7 @@ final class EventCheckoutVC: UIViewController {
     private func postQueAns() {
         var answers = [[String: Any]]()
         
-        _ = questionAnswers.map ({ ans in
+        _ = questionAnswers.map({ ans in
             answers.append(["eventQuestionId": ans.key,
                             "answer": ans.value])
         })
@@ -127,7 +127,7 @@ final class EventCheckoutVC: UIViewController {
             tickets.append(["ticketId": $0.id ?? 0,
                             "ticketQuantity": $0.selectedTicketCount ?? 0])
         }
-        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id, massage  in
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id, _  in
             guard let self = self else {
                 return
             }

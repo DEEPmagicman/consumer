@@ -62,10 +62,10 @@ final class SettingsViewController: UIViewController {
     
     @IBAction func onClickLogOut(_ sender: Any) {
         let okAction = UIAlertAction(title: "Yes", style: .default) {
-            UIAlertAction in
+            _ in
             UserDefault.shared.emptyData()
             AppDelegate.shared.changeRootViewController()
-            OnBoardingPresenter.logout { isSuccess, errorMsg in
+            OnBoardingPresenter.logout { _, _ in
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) {

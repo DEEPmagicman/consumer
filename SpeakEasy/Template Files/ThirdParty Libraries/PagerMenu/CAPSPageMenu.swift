@@ -17,16 +17,16 @@
 //  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 //  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-//import UIKit
+// import UIKit
 //
-//@objc public protocol CAPSPageMenuDelegate {
+// @objc public protocol CAPSPageMenuDelegate {
 //    // MARK: - Delegate functions
 //    
 //    @objc optional func willMoveToPage(_ controller: UIViewController, index: Int)
 //    @objc optional func didMoveToPage(_ controller: UIViewController, index: Int)
-//}
+// }
 //
-//class MenuItemView: UIView {
+// class MenuItemView: UIView {
 //    // MARK: - Menu item view
 //    
 //    var titleLabel : UILabel?
@@ -55,9 +55,9 @@
 //            titleLabel!.sizeToFit()
 //        }
 //    }
-//}
+// }
 //
-//public enum CAPSPageMenuOption {
+// public enum CAPSPageMenuOption {
 //    case selectionIndicatorBottomOffset(CGFloat)
 //    case selectionIndicatorHeight(CGFloat)
 //    case menuItemSeparatorWidth(CGFloat)
@@ -94,9 +94,9 @@
 //    case iconIndicatorView(UIView)
 //    case showStepperView(Bool)
 //    case kerning(CGFloat)
-//}
+// }
 //
-//open class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+// open class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
 //    
 //    // MARK: - Properties
 //    
@@ -1121,4 +1121,4 @@
 //            })
 //        }
 //    }
-//}
+// }

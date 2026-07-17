@@ -13,7 +13,6 @@ final class PhoneNumberParser {
     let metadata: MetadataManager
     let regex: RegexManager
 
-    
     init(regex: RegexManager, metadata: MetadataManager) {
         self.regex = regex
         self.metadata = metadata

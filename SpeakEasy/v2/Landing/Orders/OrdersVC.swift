@@ -243,9 +243,6 @@ extension OrdersVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
-import UIKit
-
 class SSSegmentedControl: UIView {
     
     // MARK: - Properties
@@ -257,7 +254,7 @@ class SSSegmentedControl: UIView {
     var stackViewSpacing: CGFloat = 0
     
     // MARK: - Callback
-    var didTapSegment: ((Int) -> ())?
+    var didTapSegment: ((Int) -> Void)?
     
     // MARK: - Inspectable Properties
     @IBInspectable var currentIndex: Int = 0 {

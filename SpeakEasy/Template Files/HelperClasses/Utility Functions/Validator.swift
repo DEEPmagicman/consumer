@@ -1,25 +1,25 @@
 //
-//import Foundation
+// import Foundation
 //
-//class ValidationError: Error {
+// class ValidationError: Error {
 //    var message: String
 //    
 //    init(_ message: String) {
 //        self.message = message
 //    }
-//}
+// }
 //
-//protocol ValidatorConvertible {
+// protocol ValidatorConvertible {
 //     func validated(_ value: String) throws -> String
 //     func validated(oldPassword: String, newPassword: String, confirmPassword: String) throws -> String
-//}
-//extension ValidatorConvertible {
+// }
+// extension ValidatorConvertible {
 //    func validated(oldPassword: String, newPassword: String, confirmPassword: String) throws -> String{
 //       return ""
 //    }
-//}
+// }
 //
-//enum ValidatorType {
+// enum ValidatorType {
 //    case firstName
 //    case lastName
 //    case email
@@ -27,11 +27,11 @@
 //    case password
 //    case requiredField(field: String)
 //    case passwordComparision
-//}
-//enum ValidatorTypeCustom {
+// }
+// enum ValidatorTypeCustom {
 //    case passwordComparison
-//}
-//enum VaildatorFactory {
+// }
+// enum VaildatorFactory {
 //    static func validatorFor(type: ValidatorType) -> ValidatorConvertible {
 //        switch type {
 //        case .firstName: return FirstNameValidator()
@@ -43,8 +43,8 @@
 //        case .passwordComparision: return PasswordComparisionValidator()
 //        }
 //    }
-//}
-//struct RequiredFieldValidator: ValidatorConvertible {
+// }
+// struct RequiredFieldValidator: ValidatorConvertible {
 //    private let fieldName: String
 //    
 //    init(_ field: String) {
@@ -57,39 +57,39 @@
 //        }
 //        return value
 //    }
-//}
-//struct FirstNameValidator: ValidatorConvertible {
+// }
+// struct FirstNameValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        guard value.count >= 3 else {
 //            throw ValidationError(Strings.INVALID_F_NAME.text)
 //        }
 //        return value
 //    }
-//}
-//struct LastNameValidator: ValidatorConvertible {
+// }
+// struct LastNameValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        guard value.count >= 3 else {
 //            throw ValidationError(Strings.INVALID_L_NAME.text)
 //        }
 //        return value
 //    }
-//}
-//struct EmptyPasswordValidator: ValidatorConvertible {
+// }
+// struct EmptyPasswordValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        guard value.count > 0 else {
 //            throw ValidationError(Strings.EMPTY_PWD.text)
 //        }
 //        return value
 //    }
-//}
-//struct PasswordValidator: ValidatorConvertible {
+// }
+// struct PasswordValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        guard value != "" else {throw ValidationError(Strings.EMPTY_PWD.text)}
 //        guard value.count >= 8 else { throw ValidationError(Strings.INVALID_PWD.text) }
 //        return value
 //    }
-//}
-//struct PasswordComparisionValidator: ValidatorConvertible {
+// }
+// struct PasswordComparisionValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        return ""
 //    }
@@ -101,8 +101,8 @@
 //        return ""
 //    }
 //    
-//}
-//struct EmailValidator: ValidatorConvertible {
+// }
+// struct EmailValidator: ValidatorConvertible {
 //    func validated(_ value: String) throws -> String {
 //        guard value != "" else {throw ValidationError(Strings.EMPTY_EMAIL_ADDRESS.text)}
 //        do {
@@ -114,4 +114,4 @@
 //        }
 //        return value
 //    }
-//}
+// }

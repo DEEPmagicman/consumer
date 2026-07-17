@@ -57,7 +57,7 @@ final class SignInOptionViewController: UIViewController {
                   let idToken = user?.authentication.idToken else {
                 return
             }
-            self.onBoardingDelegate.socialMediaLoginAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in
+            self.onBoardingDelegate.socialMediaLoginAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess, errorMsg  in
                 if isSuccess {
                     AppDelegate.shared.changeRootViewController()
                 } else {
@@ -84,7 +84,7 @@ final class SignInOptionViewController: UIViewController {
     
 }
 
-extension SignInOptionViewController: ASAuthorizationControllerDelegate{
+extension SignInOptionViewController: ASAuthorizationControllerDelegate {
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
     if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
     let userIdentifier = appleIDCredential.user
@@ -96,8 +96,8 @@ extension SignInOptionViewController: ASAuthorizationControllerDelegate{
             print("Identity Token \(identityTokenString)")
             do {
                let jwt = try decode(jwt: identityTokenString)
-               let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: fullName?.givenName ?? "", lastName: fullName?.familyName ?? "" ) { isSuccess,errorMsg  in
+               let decodedBody = jwt.body as [String: Any]
+                self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: fullName?.givenName ?? "", lastName: fullName?.familyName ?? "" ) { isSuccess, errorMsg  in
                     if isSuccess {
                         if fullName?.givenName ?? "" != "" {
                             UserDefault.shared.user?.firstName = fullName?.givenName ?? ""

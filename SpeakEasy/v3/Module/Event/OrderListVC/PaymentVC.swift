@@ -93,7 +93,6 @@ final class PaymentVC: UIViewController {
         updateCheckboxStates()
     }
 
-
     private func setupBackgroundView() {
 
         backgroundContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -179,7 +178,7 @@ final class PaymentVC: UIViewController {
             innerStack.topAnchor.constraint(equalTo: mainCard.topAnchor),
             innerStack.leadingAnchor.constraint(equalTo: mainCard.leadingAnchor),
             innerStack.trailingAnchor.constraint(equalTo: mainCard.trailingAnchor),
-            innerStack.bottomAnchor.constraint(equalTo: mainCard.bottomAnchor, constant: -16),
+            innerStack.bottomAnchor.constraint(equalTo: mainCard.bottomAnchor, constant: -16)
         ])
 
         // ── Apple Pay row ────────────────────────────────────────────────────
@@ -213,7 +212,7 @@ final class PaymentVC: UIViewController {
             applePayIcon.trailingAnchor.constraint(equalTo: applePayCheckbox.leadingAnchor, constant: -10),
             applePayIcon.centerYAnchor.constraint(equalTo: applePayRow.centerYAnchor),
             applePayIcon.widthAnchor.constraint(equalToConstant: 34),
-            applePayIcon.heightAnchor.constraint(equalToConstant: 21),
+            applePayIcon.heightAnchor.constraint(equalToConstant: 21)
         ])
         innerStack.addArrangedSubview(applePayRow)
 
@@ -251,7 +250,7 @@ final class PaymentVC: UIViewController {
             cardIcon.trailingAnchor.constraint(equalTo: cardCheckbox.leadingAnchor, constant: -10),
             cardIcon.centerYAnchor.constraint(equalTo: cardRow.centerYAnchor),
             cardIcon.widthAnchor.constraint(equalToConstant: 34),
-            cardIcon.heightAnchor.constraint(equalToConstant: 21),
+            cardIcon.heightAnchor.constraint(equalToConstant: 21)
         ])
         innerStack.addArrangedSubview(cardRow)
 
@@ -279,7 +278,7 @@ final class PaymentVC: UIViewController {
             fieldStack.topAnchor.constraint(equalTo: fieldContainer.topAnchor, constant: 16),
             fieldStack.leadingAnchor.constraint(equalTo: fieldContainer.leadingAnchor, constant: 16),
             fieldStack.trailingAnchor.constraint(equalTo: fieldContainer.trailingAnchor, constant: -16),
-            fieldStack.bottomAnchor.constraint(equalTo: fieldContainer.bottomAnchor),
+            fieldStack.bottomAnchor.constraint(equalTo: fieldContainer.bottomAnchor)
         ])
         innerStack.addArrangedSubview(fieldContainer)
 
@@ -385,7 +384,7 @@ final class PaymentVC: UIViewController {
             contentStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             contentStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             contentStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32),
+            contentStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
         ])
     }
 
@@ -473,12 +472,12 @@ final class PaymentVC: UIViewController {
         }
 
         let cardDetails = CardDetails(
-            firstName:   firstName,
-            lastName:    lastName,
-            cardNumber:  cardNumber.replacingOccurrences(of: " ", with: ""),
+            firstName: firstName,
+            lastName: lastName,
+            cardNumber: cardNumber.replacingOccurrences(of: " ", with: ""),
             expiryMonth: month,
-            expiryYear:  2000 + year,
-            cvv:         cvv
+            expiryYear: 2000 + year,
+            cvv: cvv
         )
 
         AppHaptic.primaryAction()
@@ -584,7 +583,7 @@ final class PaymentTextField: UIView {
             textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             textField.topAnchor.constraint(equalTo: topAnchor),
-            textField.bottomAnchor.constraint(equalTo: bottomAnchor),
+            textField.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }
@@ -601,7 +600,6 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: alpha)
     }
 }
-
 
 extension PaymentVC: UITextFieldDelegate {
     func textField(

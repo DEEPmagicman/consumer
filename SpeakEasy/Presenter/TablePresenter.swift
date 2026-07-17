@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 final class TablePresenter {
     
     static func getSeatingAreas(
@@ -254,7 +253,6 @@ final class TablePresenter {
         }
     }
     
-    
     static func getConsumerLayout(
         date: String,
         venueId: String,
@@ -293,7 +291,6 @@ final class TablePresenter {
             completion(false, "Something went wrong", nil)
         }
     }
-    
     
     static func applyCode(
         eventId: String,

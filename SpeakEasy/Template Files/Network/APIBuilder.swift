@@ -106,7 +106,7 @@ struct APIBuilder {
     static let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"
     
-    // MARK: -------*-------- Not used -------*--------
+    // MARK: - ------*-------- Not used -------*--------
     static private let login = "/login"
     static private let socialLogin = "/social-login"
     static private let whoAmI = "/who-am-i"
@@ -120,7 +120,7 @@ struct APIBuilder {
     static private let checkin = "/checkin"
     static private let question = "/question"
     static private let answer = "/answer"
-    //-------*--------*--------*--------*--------*--------
+    // -------*--------*--------*--------*--------*--------
     static var loginWithPhoneURL: String {
         baseURL + route + auth + phoneLogin
     }

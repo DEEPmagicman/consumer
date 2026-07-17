@@ -101,7 +101,7 @@ final class OnBoardingPresenter {
         let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         AFWrapper.postRequest(APIBuilder.signUpOTPVerifyURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String: Any] else {
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any] else {
                 completion(false, nil)
                 return
             }
@@ -237,7 +237,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+    func socialMediaConnectAPi(email: String, socialType: String, socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         
 //        let tsocialIdParts = socialId.components(separatedBy: ".")
      

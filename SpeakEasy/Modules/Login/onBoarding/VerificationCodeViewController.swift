@@ -160,7 +160,7 @@ final class VerificationCodeViewController: UIViewController {
                         }
                     }
                 } else {
-                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef,isForPhone: true) { [weak self] otp, otpRef, isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef, isForPhone: true) { [weak self] otp, otpRef, isSuccess, errMsg in
                         guard let self = self else { return }
                         
                         hideResendButtonLoader()
@@ -177,7 +177,7 @@ final class VerificationCodeViewController: UIViewController {
                     }
                 }
             } else {
-                self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg  in
                     guard let self = self else { return }
                     
                     hideResendButtonLoader()
