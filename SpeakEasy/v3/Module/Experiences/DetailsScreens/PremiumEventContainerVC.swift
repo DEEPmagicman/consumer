@@ -271,7 +271,7 @@ private extension PremiumEventContainerVC {
         mapVC.promotionLinkId = promotionLinkId
         mapVC.promotionLinkUniqueCode = promotionLinkUniqueCode
         mapVC.seatingAreas = bookableSeatingAreas
-        mapVC.seatingAreasFilteredOut = visibleSeatingAreas
+        mapVC.seatingAreasFilteredOut = hiddenSeatingAreas
         if event?.isEnable3DMap == true {
             mapVC.fetchLayOut()
         }
