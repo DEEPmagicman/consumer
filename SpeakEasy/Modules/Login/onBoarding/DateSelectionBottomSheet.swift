@@ -33,9 +33,9 @@ final class DateSelectionBottomSheet: UIViewController {
     private func setDatePicker() {
         datePickerView.datePickerMode = .date
         datePickerView.preferredDatePickerStyle = .wheels
-        let maxDate = Date()
-        datePickerView.maximumDate = maxDate
-        if let date = date {
+        datePickerView.maximumDate = Date()
+
+        if let date {
             datePickerView.date = date
         }
         bottomLbl.text = "Age \(datePickerView.date.age)"
