@@ -157,8 +157,8 @@ final class PremiumSearchHeaderView: UIView {
             
             avatarGlassView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarGlassView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarGlassView.widthAnchor.constraint(equalToConstant: 30),
-            avatarGlassView.heightAnchor.constraint(equalToConstant: 30),
+            avatarGlassView.widthAnchor.constraint(equalToConstant: 36),
+            avatarGlassView.heightAnchor.constraint(equalToConstant: 36),
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
@@ -179,7 +179,7 @@ final class PremiumSearchHeaderView: UIView {
             profileButton.topAnchor.constraint(equalTo: topAnchor),
             profileButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -13),
             mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             mapButton.widthAnchor.constraint(equalToConstant: 36),
             mapButton.heightAnchor.constraint(equalToConstant: 36),

@@ -21,11 +21,18 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
     private var isLoading = false
     private var isInitialLoading = true
     private let take = 10
+    private var didMoveFixedTitleIntoTable = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        moveFixedTitleIntoTableIfNeeded()
         setupTableView()
         fetchArtists(reset: true)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateHeaderWidthIfNeeded()
     }
 
     // MARK: - Segmented Scroll Source
@@ -56,6 +63,71 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
             forCellReuseIdentifier: ArtistListShimmerCell.identifier
         )
 
+        tableView.tableHeaderView = makeHeaderView()
+    }
+
+    private func moveFixedTitleIntoTableIfNeeded() {
+        guard !didMoveFixedTitleIntoTable else { return }
+        didMoveFixedTitleIntoTable = true
+
+        view.subviews.forEach { subview in
+            guard subview !== tableView else { return }
+            subview.isHidden = true
+        }
+
+        let tableConstraints = view.constraints.filter { constraint in
+            constraint.firstItem === tableView ||
+            constraint.secondItem === tableView
+        }
+
+        NSLayoutConstraint.deactivate(tableConstraints)
+
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func makeHeaderView() -> UIView {
+        let header = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: tableView.bounds.width,
+                height: 55
+            )
+        )
+        header.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.text = "Artists"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistRegular(size: 16)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        header.addSubview(titleLabel)
+
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: header.leadingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: header.topAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: header.trailingAnchor),
+            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 21)
+        ])
+
+        return header
+    }
+
+    private func updateHeaderWidthIfNeeded() {
+        guard let header = tableView.tableHeaderView,
+              abs(header.frame.width - tableView.bounds.width) > 0.5
+        else { return }
+
+        header.frame.size.width = tableView.bounds.width
+        tableView.tableHeaderView = header
     }
 
     private func fetchArtists(reset: Bool = false) {

@@ -18,7 +18,7 @@ struct PremiumExperienceItem {
     let imageUrl: String
     let event: Event?
     let seatingAreas: [SeatingArea]
-    let minimumDeposit: Double?
+    let minimumSpend: Double?
     let isEnquiryOnly: Bool
 
     var isInquiryAction: Bool {
@@ -31,7 +31,7 @@ struct PremiumExperienceItem {
             return "Inquire"
         }
 
-        let priceText = minimumDeposit
+        let priceText = minimumSpend
             .map(Self.formattedPrice) ??
             self.priceText
 
@@ -50,7 +50,7 @@ struct PremiumExperienceItem {
         imageUrl: String,
         event: Event?,
         seatingAreas: [SeatingArea] = [],
-        minimumDeposit: Double? = nil,
+        minimumSpend: Double? = nil,
         isEnquiryOnly: Bool = false
     ) {
         self.id = id
@@ -62,7 +62,7 @@ struct PremiumExperienceItem {
         self.imageUrl = imageUrl
         self.event = event
         self.seatingAreas = seatingAreas
-        self.minimumDeposit = minimumDeposit
+        self.minimumSpend = minimumSpend
         self.isEnquiryOnly = isEnquiryOnly
     }
 }
@@ -72,7 +72,7 @@ extension PremiumExperienceItem {
     init(
         event: Event,
         seatingAreas: [SeatingArea] = [],
-        minimumDeposit: Double? = nil,
+        minimumSpend: Double? = nil,
         isEnquiryOnly: Bool = false
     ) {
         self.init(
@@ -91,7 +91,7 @@ extension PremiumExperienceItem {
             imageUrl: Self.resolvedImageUrl(key: event.flyer?.key),
             event: event,
             seatingAreas: seatingAreas,
-            minimumDeposit: minimumDeposit,
+            minimumSpend: minimumSpend,
             isEnquiryOnly: isEnquiryOnly
         )
     }
@@ -104,14 +104,14 @@ extension PremiumExperienceItem {
         let seatingAreas = eventSeatingAreas.isEmpty
             ? Self.resolvedSeatingAreas(dictionary: dictionary)
             : eventSeatingAreas
-        let minimumDeposit = Self.resolvedMinimumDeposit(from: dictionary)
+        let minimumSpend = Self.resolvedMinimumSpend(from: dictionary)
         let isEnquiryOnly = Self.resolvedIsEnquiryOnly(from: dictionary)
 
         if let event = Self.decodeEvent(from: eventDictionary) {
             self.init(
                 event: event,
                 seatingAreas: seatingAreas,
-                minimumDeposit: minimumDeposit,
+                minimumSpend: minimumSpend,
                 isEnquiryOnly: isEnquiryOnly
             )
             return
@@ -136,14 +136,14 @@ extension PremiumExperienceItem {
                 dictionary: dictionary,
                 seatingAreas: seatingAreas
             ),
-            priceText: minimumDeposit.map(Self.formattedPrice) ?? Self.resolvedPriceText(
+            priceText: minimumSpend.map(Self.formattedPrice) ?? Self.resolvedPriceText(
                 dictionary: dictionary,
                 seatingAreas: seatingAreas
             ),
             imageUrl: Self.resolvedImageUrl(dictionary: dictionary),
             event: nil,
             seatingAreas: seatingAreas,
-            minimumDeposit: minimumDeposit,
+            minimumSpend: minimumSpend,
             isEnquiryOnly: isEnquiryOnly
         )
     }
@@ -192,14 +192,24 @@ private extension PremiumExperienceItem {
         ) ?? []
     }
 
-    static func resolvedMinimumDeposit(
+    static func resolvedMinimumSpend(
         from dictionary: [String: Any]
     ) -> Double? {
 
         let eventDictionary = resolvedEventDictionary(from: dictionary)
 
-        return doubleValue(dictionary["minimumDeposit"]) ??
-        doubleValue(eventDictionary["minimumDeposit"])
+        return firstPositiveDouble(
+            in: [dictionary, eventDictionary],
+            keys: ["minimumSpend", "minimum_spend", "minSpend"]
+        ) ??
+        firstPositiveDouble(
+            in: [dictionary, eventDictionary],
+            keys: ["minimum"]
+        ) ??
+        firstPositiveDouble(
+            in: [dictionary, eventDictionary],
+            keys: ["minimumDeposit"]
+        )
     }
 
     static func resolvedIsEnquiryOnly(
@@ -512,8 +522,12 @@ private extension PremiumExperienceItem {
         event: Event,
         seatingAreas: [SeatingArea]
     ) -> String {
-        guard let price = event.lowestPriceTicket?.price, price > 0 else {
+        if !seatingAreas.isEmpty {
             return resolvedPriceText(from: seatingAreas)
+        }
+
+        guard let price = event.lowestPriceTicket?.price, price > 0 else {
+            return "Request"
         }
 
         return formattedPrice(price)
@@ -523,6 +537,10 @@ private extension PremiumExperienceItem {
         dictionary: [String: Any],
         seatingAreas: [SeatingArea]
     ) -> String {
+        if !seatingAreas.isEmpty {
+            return resolvedPriceText(from: seatingAreas)
+        }
+
         let price = doubleValue(
             dictionary["price"] ??
             dictionary["startingPrice"] ??
@@ -550,23 +568,32 @@ private extension PremiumExperienceItem {
         from seatingAreas: [SeatingArea]
     ) -> String {
 
-        let prices = seatingAreas
+        let visibleAreas = seatingAreas
             .filter { $0.hidePricing != true }
+
+        let minimumSpends = visibleAreas
+            .compactMap(\.minimum)
+            .filter { $0 > 0 }
+
+        if let minimumSpend = minimumSpends.min() {
+            return formattedPrice(minimumSpend)
+        }
+
+        let deposits = visibleAreas
             .flatMap { area in
                 [
                     area.depositWithFees,
-                    area.deposit,
-                    area.minimum
+                    area.deposit
                 ]
             }
             .compactMap { $0 }
             .filter { $0 > 0 }
 
-        guard let minPrice = prices.min() else {
-            return "Request"
+        if let deposit = deposits.min() {
+            return formattedPrice(deposit)
         }
 
-        return formattedPrice(minPrice)
+        return "Request"
     }
 
     static func formattedPrice(_ price: Double) -> String {
@@ -688,5 +715,23 @@ private extension PremiumExperienceItem {
         }
 
         return Double(text)
+    }
+
+    static func firstPositiveDouble(
+        in dictionaries: [[String: Any]],
+        keys: [String]
+    ) -> Double? {
+        for dictionary in dictionaries {
+            for key in keys {
+                guard let value = doubleValue(dictionary[key]),
+                      value > 0 else {
+                    continue
+                }
+
+                return value
+            }
+        }
+
+        return nil
     }
 }

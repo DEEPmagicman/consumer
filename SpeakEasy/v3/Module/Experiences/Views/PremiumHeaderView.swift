@@ -160,8 +160,8 @@ final class PremiumHeaderView: UIView {
             
             avatarGlassView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarGlassView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarGlassView.widthAnchor.constraint(equalToConstant: 30),
-            avatarGlassView.heightAnchor.constraint(equalToConstant: 30),
+            avatarGlassView.widthAnchor.constraint(equalToConstant: 36),
+            avatarGlassView.heightAnchor.constraint(equalToConstant: 36),
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
@@ -185,8 +185,8 @@ final class PremiumHeaderView: UIView {
             
             helpButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
             helpButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            helpButton.widthAnchor.constraint(equalToConstant: 32),
-            helpButton.heightAnchor.constraint(equalToConstant: 32),
+            helpButton.widthAnchor.constraint(equalToConstant: 36),
+            helpButton.heightAnchor.constraint(equalToConstant: 36),
             
             helpGlassView.topAnchor.constraint(equalTo: helpButton.topAnchor),
             helpGlassView.leadingAnchor.constraint(equalTo: helpButton.leadingAnchor),

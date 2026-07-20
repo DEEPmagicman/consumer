@@ -213,9 +213,7 @@ final class MyOrdersVC: UIViewController {
     }
 
     @objc private func onClickLogin() {
-        LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
-            self?.reloadAfterLogin()
-        }
+        LoginRequiredCoordinator.presentLogin(from: self)
     }
 
     private func updateLoginState() {
@@ -233,12 +231,6 @@ final class MyOrdersVC: UIViewController {
         }
     }
 
-    private func reloadAfterLogin() {
-        updateLoginState()
-        ticketsVC.refreshOrders()
-        tablesVC.refreshOrders()
-    }
-
     private func observeOrderRefreshRequests() {
         ordersRefreshObserver = NotificationCenter.default.addObserver(
             forName: .ordersShouldRefresh,
@@ -251,6 +243,8 @@ final class MyOrdersVC: UIViewController {
 
     private func handleOrderRefreshRequest(_ notification: Notification) {
         guard isLoggedIn else { return }
+
+        updateLoginState()
 
         let rawKind = notification.userInfo?["kind"] as? String
         let kind = rawKind.flatMap(OrdersRefreshKind.init(rawValue:)) ?? .all

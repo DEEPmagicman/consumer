@@ -222,9 +222,11 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         )
     }
     
-    func configureStatusBadge(eventType: EventType) -> (String?, UIColor?, UIColor?) {
+    func configureStatusBadge(
+        eventType: EventType
+    ) -> (text: String?, textColor: UIColor?, backgroundColor: UIColor?) {
         if eventType == .premiumEvent {
-            return ("PREMIUM AVAILABLE", UIColor(hex: "#FFF3E0"), UIColor(hex: "#D99935"))
+            return ("Premium available", UIColor(hex: "#FFF3E0"), UIColor(hex: "#D99935"))
         } else if eventType == .pastEvent {
             return ("PAST EVENT", .black, .white)
         } else {
@@ -247,6 +249,11 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
 
+        let status =
+        event.isPremium == true
+        ? configureStatusBadge(eventType: .premiumEvent)
+        : nil
+
         configure(
             OrderCardViewModel(
                 imageURL: imageURL,
@@ -254,7 +261,10 @@ final class OrderCardCollectionCell: UICollectionViewCell {
                 badgeText: nil,
                 title: event.title,
                 subtitle: event.venue?.name.uppercased() ?? "",
-                dateText: dateText, statusText: nil, statusBgColor: nil, statusTextColor: nil
+                dateText: dateText,
+                statusText: status?.text,
+                statusBgColor: status?.backgroundColor,
+                statusTextColor: status?.textColor
             )
         )
     }
@@ -380,9 +390,9 @@ final class OrderCardCollectionCell: UICollectionViewCell {
                 title: booking.event?.title ?? Constant.String.tableReservation,
                 subtitle: booking.venueObject?.name ?? "",
                 dateText: dateText,
-                statusText: status?.0,
-                statusBgColor: status?.2,
-                statusTextColor: status?.1
+                statusText: status?.text,
+                statusBgColor: status?.backgroundColor,
+                statusTextColor: status?.textColor
             )
         )
     }

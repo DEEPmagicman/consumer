@@ -54,10 +54,12 @@ final class BookingQueueSocketManager {
             config: [
                 .log(false),
                 .compress,
+                .forceWebsockets(true),
+                .forcePolling(false),
                 .reconnects(true),
                 .reconnectAttempts(5),
-                .reconnectWait(1),
-                .reconnectWaitMax(5),
+                .reconnectWait(2),
+                .reconnectWaitMax(10),
                 .connectParams(connectParams),
                 .extraHeaders(extraHeaders)
             ]

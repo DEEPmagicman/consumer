@@ -145,9 +145,7 @@ final class EventService {
             venueId: venueId,
             includes: [
                 "venue.venueAttachment",
-                "flyer",
-                "eventTicketLinks",
-                "eventTicket"
+                "flyer"
             ],
             take: 5,
             skip: skip,

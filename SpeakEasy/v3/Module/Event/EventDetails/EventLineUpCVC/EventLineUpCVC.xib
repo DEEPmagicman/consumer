@@ -17,39 +17,42 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="EventLineUpCVC" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="184" height="182"/>
+            <rect key="frame" x="0.0" y="0.0" width="60" height="100"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="184" height="182"/>
+                <rect key="frame" x="0.0" y="0.0" width="60" height="100"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQQ-rl-MHD">
-                        <rect key="frame" x="0.0" y="0.0" width="184" height="182"/>
+                        <rect key="frame" x="0.0" y="0.0" width="60" height="100"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="Vac-gj-B1s">
-                                <rect key="frame" x="54.666666666666657" y="16" width="75" height="75"/>
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="WiD-pb-0C7"/>
-                                    <constraint firstAttribute="height" constant="75" id="lPK-KF-12j"/>
+                                    <constraint firstAttribute="width" constant="60" id="WiD-pb-0C7"/>
+                                    <constraint firstAttribute="height" constant="60" id="lPK-KF-12j"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="37"/>
+                                        <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fat Joe FAT" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUy-mk-uj8">
-                                <rect key="frame" x="59.333333333333336" y="99" width="65.333333333333314" height="15.666666666666671"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fat Joe FAT" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUy-mk-uj8">
+                                <rect key="frame" x="0.0" y="66" width="60" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="ZvL-3d-mos"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yT7-fj-aho">
-                                <rect key="frame" x="59.333333333333336" y="99" width="65.333333333333314" height="15.666666666666671"/>
+                                <rect key="frame" x="0.0" y="66" width="60" height="31"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hAa-Uh-ox2">
-                                <rect key="frame" x="54.666666666666657" y="16" width="75" height="75"/>
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
@@ -59,8 +62,8 @@
                             <constraint firstItem="yT7-fj-aho" firstAttribute="top" secondItem="AUy-mk-uj8" secondAttribute="top" id="8dj-e1-MY4"/>
                             <constraint firstItem="hAa-Uh-ox2" firstAttribute="leading" secondItem="Vac-gj-B1s" secondAttribute="leading" id="AkG-Tz-Rut"/>
                             <constraint firstItem="hAa-Uh-ox2" firstAttribute="bottom" secondItem="Vac-gj-B1s" secondAttribute="bottom" id="EId-0J-Y53"/>
-                            <constraint firstItem="Vac-gj-B1s" firstAttribute="top" secondItem="zQQ-rl-MHD" secondAttribute="top" constant="16" id="Jk2-5X-7b5"/>
-                            <constraint firstItem="AUy-mk-uj8" firstAttribute="top" secondItem="Vac-gj-B1s" secondAttribute="bottom" constant="8" id="YLR-Eh-eag"/>
+                            <constraint firstItem="Vac-gj-B1s" firstAttribute="top" secondItem="zQQ-rl-MHD" secondAttribute="top" id="Jk2-5X-7b5"/>
+                            <constraint firstItem="AUy-mk-uj8" firstAttribute="top" secondItem="Vac-gj-B1s" secondAttribute="bottom" constant="6" id="YLR-Eh-eag"/>
                             <constraint firstItem="yT7-fj-aho" firstAttribute="leading" secondItem="AUy-mk-uj8" secondAttribute="leading" id="eAe-bt-LqR"/>
                             <constraint firstItem="AUy-mk-uj8" firstAttribute="centerX" secondItem="Vac-gj-B1s" secondAttribute="centerX" id="eOm-tt-89R"/>
                             <constraint firstItem="hAa-Uh-ox2" firstAttribute="trailing" secondItem="Vac-gj-B1s" secondAttribute="trailing" id="m9l-3F-Bmm"/>
@@ -78,14 +81,14 @@
                 <constraint firstAttribute="bottom" secondItem="zQQ-rl-MHD" secondAttribute="bottom" id="Xbp-zD-sFc"/>
                 <constraint firstAttribute="trailing" secondItem="zQQ-rl-MHD" secondAttribute="trailing" id="qfI-5F-pEV"/>
             </constraints>
-            <size key="customSize" width="184" height="182"/>
+            <size key="customSize" width="60" height="100"/>
             <connections>
                 <outlet property="imageShimmerView" destination="hAa-Uh-ox2" id="Vq2-bC-7X9"/>
                 <outlet property="imageView" destination="Vac-gj-B1s" id="sHR-NL-n2C"/>
                 <outlet property="nameLbl" destination="AUy-mk-uj8" id="Ekc-GW-HT0"/>
                 <outlet property="textSimmerView" destination="yT7-fj-aho" id="ffK-du-u4p"/>
             </connections>
-            <point key="canvasLocation" x="-174.04580152671755" y="140.14084507042253"/>
+            <point key="canvasLocation" x="-245.80152671755724" y="111.9718309859155"/>
         </collectionViewCell>
     </objects>
     <resources>

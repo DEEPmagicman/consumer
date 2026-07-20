@@ -35,6 +35,8 @@ final class EventCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var venueLogoImage: UIImageView!
+    @IBOutlet private weak var premiumBadgeView: UIView!
+    @IBOutlet private weak var premiumBadgeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -65,6 +67,7 @@ final class EventCollectionViewCell: UICollectionViewCell {
         eventName.text = nil
         eventDate.text = nil
         venueName.text = nil
+        premiumBadgeView.isHidden = true
     }
 
     func configure(with type: ContentType, screenType: ScreenType = .discover) {
@@ -105,6 +108,10 @@ private extension EventCollectionViewCell {
         eventDate.lineBreakMode = .byTruncatingTail
         eventDate.setContentCompressionResistancePriority(.required, for: .vertical)
         eventDate.font = Constant.Font.geistMedium(size: 11)
+        premiumBadgeLabel.text = "Premium available"
+        premiumBadgeView.layer.cornerRadius = 7
+        premiumBadgeView.clipsToBounds = true
+        premiumBadgeView.isHidden = true
     }
 
     func setupData(event: Event) {
@@ -112,6 +119,7 @@ private extension EventCollectionViewCell {
         eventDate.isHidden = false
         venueLogoImage.isHidden = true
         venueLogoImage.image = nil
+        premiumBadgeView.isHidden = event.isPremium != true
 
 //        image.sd_setImage(
 //            with: URL(string: (event.flyer?.key ?? "").imageURL),
@@ -147,6 +155,7 @@ private extension EventCollectionViewCell {
         eventDate.isHidden = false
         venueLogoImage.isHidden = true
         venueLogoImage.image = nil
+        premiumBadgeView.isHidden = event.isPremium != true
 
 //        image.sd_setImage(
 //            with: URL(string: (event.flyer?.key ?? "").imageURL),
@@ -179,6 +188,7 @@ private extension EventCollectionViewCell {
     func setupVenue(_ venue: ClipVenue) {
         eventName.isHidden = true
         eventDate.isHidden = true
+        premiumBadgeView.isHidden = true
         venueName.text = venue.name
 
         let logoKey = venue.logo?.key ?? ""

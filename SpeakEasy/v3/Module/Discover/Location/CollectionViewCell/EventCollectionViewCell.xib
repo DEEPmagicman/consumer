@@ -137,6 +137,8 @@
                 <outlet property="image" destination="Ksh-tt-vQW" id="G68-tH-kSV"/>
                 <outlet property="imageViewHeightConstraint" destination="T8P-H5-SrK" id="t6r-GR-XEF"/>
                 <outlet property="imageViewWidthConstraint" destination="b4S-Ws-tm5" id="afV-Lv-TVq"/>
+                <outlet property="premiumBadgeLabel" destination="HPU-m6-Pb5" id="event-premium-badge-label"/>
+                <outlet property="premiumBadgeView" destination="PgO-6F-RwC" id="event-premium-badge-view"/>
                 <outlet property="venueLogoImage" destination="A5W-k4-ElY" id="lPA-QX-jxJ"/>
                 <outlet property="venueName" destination="XfP-nr-hP9" id="svl-LJ-9gs"/>
             </connections>

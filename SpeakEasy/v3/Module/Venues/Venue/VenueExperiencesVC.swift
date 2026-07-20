@@ -18,7 +18,7 @@ final class VenueExperiencesVC: UIViewController,
 
     private let emptyStateView = V3EmptyStateView(style: .premiumEvents)
     private let noInternetView = V3NoInternetView()
-    private var events: [Event] = []
+    private var items: [PremiumExperienceItem] = []
 
     private var skip = 0
     private var hasMore = true
@@ -28,10 +28,12 @@ final class VenueExperiencesVC: UIViewController,
     private var isPaginating = false
     private var lastCollectionLayoutWidth: CGFloat = 0
     private var showsNoInternetView = false
+    private var didMoveFixedHeaderIntoCollection = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        moveFixedHeaderIntoCollectionIfNeeded()
         setupCollectionView()
         setupEmptyStateView()
         getEvents(reset: true)
@@ -68,19 +70,19 @@ extension VenueExperiencesVC {
         collectionView.alwaysBounceVertical = true
 
         collectionView.register(
-            OrderCardCollectionCell.self,
-            forCellWithReuseIdentifier: OrderCardCollectionCell.identifier
+            PremiumExperienceCell.self,
+            forCellWithReuseIdentifier: PremiumExperienceCell.identifier
         )
 
         collectionView.register(
-            OrderCardShimmerCell.self,
-            forCellWithReuseIdentifier: OrderCardShimmerCell.identifier
+            PremiumExperienceShimmerCell.self,
+            forCellWithReuseIdentifier: PremiumExperienceShimmerCell.identifier
         )
 
         collectionView.register(
-            PaginationShimmerFooterView.self,
+            PremiumExperiencePaginationFooterView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-            withReuseIdentifier: PaginationShimmerFooterView.identifier
+            withReuseIdentifier: PremiumExperiencePaginationFooterView.identifier
         )
 
         collectionView.register(
@@ -89,22 +91,66 @@ extension VenueExperiencesVC {
             withReuseIdentifier: EmptyCollectionReusableView.identifier
         )
 
+        collectionView.register(
+            PremiumExperiencesHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: PremiumExperiencesHeaderView.reuseIdentifier
+        )
+
         let layout = PinterestLayout()
 
         layout.numberOfColumns = 2
 
         layout.sectionInsets = UIEdgeInsets(
-            top: 10,
+            top: 0,
             left: 24,
             bottom: 34,
             right: 24
         )
 
-        layout.interItemSpacing = 14
+        layout.interItemSpacing = 20
         layout.lineSpacing = 16
+        layout.showsHeaders = true
         layout.delegate = self
 
         collectionView.collectionViewLayout = layout
+    }
+
+    private func moveFixedHeaderIntoCollectionIfNeeded() {
+        guard !didMoveFixedHeaderIntoCollection else { return }
+        didMoveFixedHeaderIntoCollection = true
+
+        view.subviews.forEach { subview in
+            guard subview !== collectionView,
+                  subview !== emptyView
+            else { return }
+
+            subview.isHidden = true
+        }
+
+        let rootConstraints = view.constraints.filter { constraint in
+            constraint.firstItem === collectionView ||
+            constraint.secondItem === collectionView ||
+            constraint.firstItem === emptyView ||
+            constraint.secondItem === emptyView
+        }
+
+        NSLayoutConstraint.deactivate(rootConstraints)
+
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            emptyView.topAnchor.constraint(equalTo: view.topAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 
     private func setupEmptyStateView() {
@@ -183,7 +229,7 @@ extension VenueExperiencesVC {
         guard !isPaginating else { return }
         guard !isLoading else { return }
         guard hasMore else { return }
-        guard !events.isEmpty else { return }
+        guard !items.isEmpty else { return }
 
         isPaginating = true
         collectionView.collectionViewLayout.invalidateLayout()
@@ -213,7 +259,7 @@ extension VenueExperiencesVC {
             hasMore = true
             isInitialLoading = true
             isPaginating = false
-            events.removeAll()
+            items.removeAll()
             emptyView.isHidden = true
             collectionView.isHidden = false
             reloadUI()
@@ -232,29 +278,31 @@ extension VenueExperiencesVC {
             guard let self = self else { return }
 
             DispatchQueue.main.async {
-                let oldCount = self.events.count
+                let oldCount = self.items.count
 
                 self.isLoading = false
 
                 if isSuccess {
                     self.showsNoInternetView = false
 
-                    let newItems = list.filter { newEvent in
-                        !self.events.contains(where: {
-                            $0.id == newEvent.id
-                        })
+                    let newItems = list
+                        .map { PremiumExperienceItem(event: $0) }
+                        .filter { newItem in
+                            !self.items.contains(where: {
+                                $0.id == newItem.id
+                            })
                     }
 
-                    self.events.append(contentsOf: newItems)
+                    self.items.append(contentsOf: newItems)
 
-                    self.skip = self.events.count
+                    self.skip = self.items.count
                     self.hasMore = hasMore
-                    let newCount = self.events.count
+                    let newCount = self.items.count
                     let wasInitialLoading = self.isInitialLoading
                     self.isInitialLoading = false
 
-                    self.emptyView.isHidden = !self.events.isEmpty
-                    self.collectionView.isHidden = self.events.isEmpty
+                    self.emptyView.isHidden = !self.items.isEmpty
+                    self.collectionView.isHidden = self.items.isEmpty
                     self.emptyStateView.isHidden = self.showsNoInternetView
                     self.noInternetView.isHidden = !self.showsNoInternetView
 
@@ -313,7 +361,7 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
             return 6
         }
 
-        return events.count
+        return items.count
     }
 
     func collectionView(
@@ -322,19 +370,21 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
     ) -> UICollectionViewCell {
         if isInitialLoading {
             return collectionView.dequeueReusableCell(
-                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                withReuseIdentifier: PremiumExperienceShimmerCell.identifier,
                 for: indexPath
             )
         }
 
         let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: OrderCardCollectionCell.identifier,
+            withReuseIdentifier: PremiumExperienceCell.identifier,
             for: indexPath
-        ) as! OrderCardCollectionCell
+        ) as! PremiumExperienceCell
 
-        let event = events[indexPath.item]
+        guard items.indices.contains(indexPath.item) else {
+            return cell
+        }
 
-        cell.configureDiscoverEvent(event)
+        cell.configure(items[indexPath.item])
 
         return cell
     }
@@ -348,9 +398,9 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
         if kind == UICollectionView.elementKindSectionFooter {
             let footer = collectionView.dequeueReusableSupplementaryView(
                 ofKind: kind,
-                withReuseIdentifier: PaginationShimmerFooterView.identifier,
+                withReuseIdentifier: PremiumExperiencePaginationFooterView.identifier,
                 for: indexPath
-            ) as! PaginationShimmerFooterView
+            ) as! PremiumExperiencePaginationFooterView
 
             footer.isHidden = !(isPaginating && hasMore)
             return footer
@@ -358,11 +408,14 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
 
         let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: EmptyCollectionReusableView.identifier,
+            withReuseIdentifier: PremiumExperiencesHeaderView.reuseIdentifier,
             for: indexPath
-        )
+        ) as! PremiumExperiencesHeaderView
 
-        header.isHidden = true
+        header.onInfoTapped = { [weak self] in
+            guard let self else { return }
+            Navigate.to.presentPremiumExpPopUp(self)
+        }
         return header
     }
 }
@@ -376,9 +429,13 @@ extension VenueExperiencesVC: UICollectionViewDelegate {
         didSelectItemAt indexPath: IndexPath
     ) {
         guard !isInitialLoading else { return }
-        guard events.indices.contains(indexPath.item) else { return }
+        guard items.indices.contains(indexPath.item) else { return }
 
-        let event = events[indexPath.item]
+        let item = items[indexPath.item]
+        guard let event = item.event else {
+            Alert.showToast(Constant.String.somethingWrong)
+            return
+        }
 
         Navigate.eventDetailsVC(
             self,
@@ -419,7 +476,7 @@ extension VenueExperiencesVC:
         guard !isInitialLoading else { return }
 
         if indexPaths.contains(where: {
-            $0.item >= self.events.count - 4
+            $0.item >= self.items.count - 4
         }) {
             loadNextPageIfNeeded()
         }
@@ -436,45 +493,19 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
         with width: CGFloat
     ) -> CGFloat {
         if isInitialLoading {
-            let imageHeight = width * 1.2
-            return imageHeight + 90
+            return ceil((width * 1.08) + 12 + 17 + 8 + 12 + 8 + 13 + 16 + 32)
         }
 
-        guard events.indices.contains(indexPath.item) else {
+        guard items.indices.contains(indexPath.item) else {
             return 0.1
         }
 
-        let event = events[indexPath.item]
-
-        let imageHeight = width * 1.2
-
-        let title = event.title
-        let venue = event.venue?.name ?? ""
-
-        let dateText = event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .MMMDDATHMMA,
-            useDayLightSavingTime: true,
-            customTimeZone: event.venue?.useTimezone ?? ""
-        )
+        let imageHeight = width * 1.08
 
         let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 13)
-        let dateFont = Constant.Font.geistMedium(size: 14)
+        let titleHeight = titleFont.lineHeight * 2
 
-        let titleHeight = ceil(titleFont.lineHeight * 2)
-        let venueHeight = ceil(venueFont.lineHeight)
-        let dateHeight = ceil(dateFont.lineHeight)
-
-        let height = imageHeight
-            + 16
-            + titleHeight
-            + 3
-            + venueHeight
-            + 10
-            + dateHeight
-        
-        return height
+        return ceil(imageHeight + 10 + titleHeight + 3 + 12 + 3 + 15 + 16 + 22)
     }
 
     func collectionView(
@@ -482,7 +513,7 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
         referenceHeightForHeaderIn section: Int
     ) -> CGFloat {
 
-        return 0.1
+        return 64
     }
 
     func collectionView(
@@ -491,5 +522,74 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
     ) -> CGFloat {
 
         return isPaginating && hasMore ? 300 : 0
+    }
+}
+
+private final class PremiumExperiencesHeaderView: UICollectionReusableView {
+
+    static let reuseIdentifier = "PremiumExperiencesHeaderView"
+
+    var onInfoTapped: (() -> Void)?
+
+    private let iconView = UIImageView()
+    private let titleLabel = UILabel()
+    private let infoButton = AppIconButton()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        onInfoTapped = nil
+    }
+
+    private func setupUI() {
+        backgroundColor = .clear
+
+        iconView.image = UIImage(resource: .premiumExperienceIcon)
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+
+        titleLabel.text = "Premium experiences"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistRegular(size: 16)
+        titleLabel.numberOfLines = 1
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        infoButton.iconTypeValue = AppIconType.questionMark.rawValue
+        infoButton.iconSize = 14
+        infoButton.buttonSize = 40
+        infoButton.translatesAutoresizingMaskIntoConstraints = false
+        infoButton.addTarget(self, action: #selector(onClickInfo), for: .touchUpInside)
+
+        addSubview(iconView)
+        addSubview(titleLabel)
+        addSubview(infoButton)
+
+        NSLayoutConstraint.activate([
+            iconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            iconView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            iconView.widthAnchor.constraint(equalToConstant: 20),
+            iconView.heightAnchor.constraint(equalToConstant: 20),
+
+            titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 11),
+            titleLabel.centerYAnchor.constraint(equalTo: iconView.centerYAnchor),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: infoButton.leadingAnchor, constant: -12),
+
+            infoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            infoButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            infoButton.widthAnchor.constraint(equalToConstant: 40),
+            infoButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+    }
+
+    @objc private func onClickInfo() {
+        onInfoTapped?()
     }
 }

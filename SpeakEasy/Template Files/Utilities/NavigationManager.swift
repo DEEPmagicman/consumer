@@ -819,6 +819,8 @@ final class Navigate {
         vc.onOtpSuccess = { [weak sender] in
             guard let sender else { return }
 
+            NotificationCenter.default.postOrdersRefresh(.all)
+
             if let onLoginSuccess {
                 onLoginSuccess()
             } else {

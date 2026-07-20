@@ -93,6 +93,12 @@ class EventDetailsVC: UIViewController {
     private var isExpanded = false
     private var isPolicyLblExpanded = false
     private let collapsedLines = 5
+    private let maxVisibleLineupArtists = 4
+    private let lineupChipSize: CGFloat = 60
+    private let lineupChipTargetSpacing: CGFloat = 12
+    private let lineupChipMinimumSpacing: CGFloat = 4
+    private let lineupChipTargetSideInset: CGFloat = 25
+    private var lastLineupCollectionWidth: CGFloat = 0
     private var fullText = ""
     private var faqsTableObserver: NSKeyValueObservation?
     private var ticketTableObserver: NSKeyValueObservation?
@@ -185,6 +191,15 @@ class EventDetailsVC: UIViewController {
         return normalSelected + groupedSelected
     }
 
+    private var visibleLineupItemCount: Int {
+        guard !artists.isEmpty else { return 0 }
+
+        let visibleArtistCount = min(artists.count, maxVisibleLineupArtists)
+        return artists.count > maxVisibleLineupArtists
+        ? visibleArtistCount + 1
+        : visibleArtistCount
+    }
+
     private var checkoutSubtotal: Double {
 
         allSelectedTickets.reduce(0) {
@@ -275,6 +290,19 @@ class EventDetailsVC: UIViewController {
 
         clearInlineRSVPSelectionIfNeeded()
         refreshEventDetailOnReturnIfNeeded()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let collectionWidth = lineUpCollectionView.bounds.width
+        guard collectionWidth > 0,
+              abs(collectionWidth - lastLineupCollectionWidth) > 0.5 else {
+            return
+        }
+
+        lastLineupCollectionWidth = collectionWidth
+        lineUpCollectionView.collectionViewLayout.invalidateLayout()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -1006,6 +1034,8 @@ class EventDetailsVC: UIViewController {
     
     func updateLineUpView() {
         let shouldHide = artists.isEmpty
+        lineUpCollectionView.collectionViewLayout.invalidateLayout()
+        lineUpCollectionView.reloadData()
         
         if shouldHide {
             UIView.animate(withDuration: 0.3, animations: {
@@ -3054,6 +3084,70 @@ class EventDetailsVC: UIViewController {
         vc.hasMore = attendeesHasMore || totalAttendees > attendees.count
         present(vc, animated: false)
     }
+
+    private func isLineupMoreItem(at indexPath: IndexPath) -> Bool {
+        artists.count > maxVisibleLineupArtists &&
+        indexPath.item == maxVisibleLineupArtists
+    }
+
+    private func showLineupSheet() {
+        guard artists.count > maxVisibleLineupArtists else { return }
+
+        let vc = EventLineupBottomSheetVC()
+        vc.artists = artists
+        vc.modalPresentationStyle = .formSheet
+        vc.modalTransitionStyle = .coverVertical
+
+        present(vc, animated: true)
+    }
+
+    private func lineupChipSpacing(for collectionView: UICollectionView) -> CGFloat {
+        lineupChipLayoutMetrics(for: collectionView).spacing
+    }
+
+    private func lineupChipSideInset(for collectionView: UICollectionView) -> CGFloat {
+        lineupChipLayoutMetrics(for: collectionView).sideInset
+    }
+
+    private func lineupChipLayoutMetrics(for collectionView: UICollectionView) -> (sideInset: CGFloat, spacing: CGFloat) {
+        let itemCount = max(visibleLineupItemCount, 1)
+        let availableWidth = collectionView.bounds.width
+        let alignedSideInset = lineupChipAlignedSideInset(for: collectionView)
+        let itemTotalWidth = CGFloat(itemCount) * lineupChipSize
+
+        guard itemCount > 1 else {
+            let sideInset = min(alignedSideInset, max(0, (availableWidth - itemTotalWidth) / 2))
+            return (sideInset, 0)
+        }
+
+        let spacingSlots = CGFloat(itemCount - 1)
+
+        if itemCount == maxVisibleLineupArtists + 1 {
+            let spacingForBalancedGutters =
+            (availableWidth - itemTotalWidth - (alignedSideInset * 2)) / spacingSlots
+
+            if spacingForBalancedGutters >= lineupChipMinimumSpacing {
+                return (alignedSideInset, spacingForBalancedGutters)
+            }
+
+            let compactContentWidth = itemTotalWidth + (lineupChipMinimumSpacing * spacingSlots)
+            let compactSideInset = max(0, (availableWidth - compactContentWidth) / 2)
+            return (compactSideInset, lineupChipMinimumSpacing)
+        }
+
+        let maxSpacingForAlignedInsets =
+        (availableWidth - itemTotalWidth - (alignedSideInset * 2)) / spacingSlots
+        let spacing = min(lineupChipTargetSpacing, max(lineupChipMinimumSpacing, maxSpacingForAlignedInsets))
+        let contentWidth = itemTotalWidth + (spacing * spacingSlots)
+        let sideInset = min(alignedSideInset, max(0, (availableWidth - contentWidth) / 2))
+
+        return (sideInset, spacing)
+    }
+
+    private func lineupChipAlignedSideInset(for collectionView: UICollectionView) -> CGFloat {
+        let titleAlignmentInset = max(0, -collectionView.frame.minX)
+        return titleAlignmentInset > 0 ? titleAlignmentInset : lineupChipTargetSideInset
+    }
     
     private func showIntsaPopup() {
         let vc = InstagramUsernamePopupVC()
@@ -3970,7 +4064,17 @@ extension EventDetailsVC {
 
         if let layout = lineUpCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = lineupChipTargetSpacing
+            layout.minimumInteritemSpacing = lineupChipTargetSpacing
+            layout.sectionInset = UIEdgeInsets(
+                top: 0,
+                left: lineupChipTargetSideInset,
+                bottom: 0,
+                right: lineupChipTargetSideInset
+            )
         }
+
+        lineUpCollectionView.isScrollEnabled = false
     }
 
     func setupTableView() {
@@ -4017,7 +4121,7 @@ extension EventDetailsVC: UICollectionViewDelegate,
 
             return min(attendees.count, 6)
         } else {
-            return artists.count
+            return visibleLineupItemCount
         }
     }
 
@@ -4037,6 +4141,14 @@ extension EventDetailsVC: UICollectionViewDelegate,
             return cell
         } else if collectionView == lineUpCollectionView {
             let cell: EventLineUpCVC = collectionView.dequeue(withIdentifier: EventLineUpCVC.identifier, for: indexPath)
+
+            if isLineupMoreItem(at: indexPath) {
+                cell.configureMore()
+                return cell
+            }
+
+            guard artists.indices.contains(indexPath.item) else { return cell }
+
             let artist = artists[indexPath.item]
             cell.configure(with: artist)
             return cell
@@ -4055,6 +4167,13 @@ extension EventDetailsVC: UICollectionViewDelegate,
 
             _ = attendees[indexPath.item]
         } else if collectionView == lineUpCollectionView {
+            if isLineupMoreItem(at: indexPath) {
+                showLineupSheet()
+                return
+            }
+
+            guard artists.indices.contains(indexPath.item) else { return }
+
             let artistData = artists[indexPath.item]
             let webUrl = artistData.artist.instagramUsername
             if !webUrl.isEmpty, let url = URL(string: webUrl) {
@@ -4071,14 +4190,30 @@ extension EventDetailsVC: UICollectionViewDelegate,
         if collectionView == guestListCollectionView {
             return CGSize(width: 40, height: 40)
         } else {
-            return CGSize(width: 105, height: 120)
+            return CGSize(width: lineupChipSize, height: 100)
         }
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        if collectionView == lineUpCollectionView {
+            return lineupChipSpacing(for: collectionView)
+        }
+
         return 12
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+
+        if collectionView == lineUpCollectionView {
+            let inset = lineupChipSideInset(for: collectionView)
+            return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        }
+
+        return .zero
     }
 }
 
