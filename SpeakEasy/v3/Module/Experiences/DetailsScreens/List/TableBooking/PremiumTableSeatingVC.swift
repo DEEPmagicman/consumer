@@ -641,15 +641,8 @@ private extension PremiumTableSeatingVC {
     }
 
     func timeTagText(for area: SeatingArea) -> String? {
-        if !availableTimeSlots.isEmpty {
-            return availableTimeRangeText()
-        }
-
-        let tz = event?.venue?.useTimezone ?? TimeZone.current.identifier
-        let start = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: tz)
-        let end = event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: tz)
-        guard let start, let end else { return nil }
-        return "\(start) - \(end)"
+        guard !availableTimeSlots.isEmpty else { return nil }
+        return availableTimeRangeText()
     }
 
     func availableTimeRangeText() -> String? {

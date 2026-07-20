@@ -183,6 +183,7 @@ class EventQRTicketVC: UIViewController {
         guard !hasSetupPosterBackground else { return }
 
         hasSetupPosterBackground = true
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
         posterHeaderView.isUserInteractionEnabled = false
         view.insertSubview(posterHeaderView, at: 0)

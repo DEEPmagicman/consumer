@@ -79,6 +79,7 @@ final class SelectLocationVC: UIViewController {
     var onSelectFilterCity: ((String?) -> Void)?
     var isInitialPrimarySelection = false
     var onSelectPrimaryCity: ((String) -> Void)?
+    private var didApplyInitialPrimaryFallback = false
 
     private var venueService = VenueService()
     private var cancellables = Set<AnyCancellable>()
@@ -110,6 +111,11 @@ final class SelectLocationVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         bgView.applyScreenBgGradient(direction: .topToBottom)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        applyFallbackPrimaryCityIfNeeded()
     }
     
     @IBAction func onClickEditBtn(_ sender: Any) {
@@ -254,6 +260,38 @@ private extension SelectLocationVC {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased() ?? ""
     }
+
+    func applyFallbackPrimaryCityIfNeeded() {
+        guard isInitialPrimarySelection else { return }
+        guard !didApplyInitialPrimaryFallback else { return }
+        guard !UserDefault.shared.hasPrimaryLocation else { return }
+
+        let fallbackCity = firstAvailableCity()
+        guard !fallbackCity.isEmpty else { return }
+
+        didApplyInitialPrimaryFallback = true
+        UserDefault.shared.setPrimaryCity(fallbackCity)
+        UserDefault.shared.filterCity = nil
+        onSelectPrimaryCity?(fallbackCity)
+    }
+
+    func firstAvailableCity() -> String {
+        let firstCity = (fullCityList.isEmpty
+            ? UserDefault.shared.cachedCityList
+            : fullCityList
+        )
+        .map { $0.value.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .first { !$0.isEmpty }
+
+        if let firstCity {
+            return firstCity
+        }
+
+        let fallbackCity = UserDefault.shared.primaryDisplayCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return fallbackCity.isEmpty ? "Chicago" : fallbackCity
+    }
 }
 
 // MARK: - Actions
@@ -262,6 +300,7 @@ extension SelectLocationVC {
 
     @IBAction func onClickBack(_ sender: Any) {
         AppHaptic.navigation()
+        applyFallbackPrimaryCityIfNeeded()
         dismiss(animated: true)
     }
 
@@ -318,6 +357,7 @@ extension SelectLocationVC {
         AppHaptic.primaryAction()
 
         if isInitialPrimarySelection {
+            didApplyInitialPrimaryFallback = true
             UserDefault.shared.setPrimaryCity(selectedCity)
             UserDefault.shared.filterCity = nil
             onSelectPrimaryCity?(selectedCity)

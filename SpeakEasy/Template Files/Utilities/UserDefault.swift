@@ -14,7 +14,14 @@ final class UserDefault {
     
     static let shared = UserDefault()
     private init() {
-        defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
+        let storedFilterCity = defaults.string(forKey: UserDefaultKey.filterCity.rawValue)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let storedFilterCity,
+           !storedFilterCity.isEmpty {
+            temporaryFilterCity = storedFilterCity
+            filterCitySubject.send(storedFilterCity)
+        }
     }
     
     // MARK: - Keys
@@ -191,7 +198,8 @@ final class UserDefault {
     
     var filterCity: String? {
         get {
-            guard let city = temporaryFilterCity else {
+            guard let city = temporaryFilterCity ??
+                    defaults.string(forKey: UserDefaultKey.filterCity.rawValue) else {
                 return nil
             }
 
@@ -203,7 +211,7 @@ final class UserDefault {
 
             if let trimmed, !trimmed.isEmpty {
                 temporaryFilterCity = trimmed
-                defaults.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
+                defaults.set(trimmed, forKey: UserDefaultKey.filterCity.rawValue)
                 filterCitySubject.send(trimmed)
             } else {
                 temporaryFilterCity = nil
@@ -246,8 +254,11 @@ final class UserDefault {
     
     func clearAll(except preserved: Set<UserDefaultKey> = []) {
         let all = defaults.dictionaryRepresentation()
-        temporaryFilterCity = nil
-        filterCitySubject.send(nil)
+
+        if !preserved.contains(.filterCity) {
+            temporaryFilterCity = nil
+            filterCitySubject.send(nil)
+        }
         
         all.keys.forEach { key in
             guard let typedKey = UserDefaultKey(rawValue: key) else {
@@ -262,6 +273,14 @@ final class UserDefault {
     }
     
     func emptyData() {
-        clearAll(except: [.isVersionV3Key])
+        clearAll(
+            except: [
+                .isVersionV3Key,
+                .localCity,
+                .defaultCitySelected,
+                .filterCity,
+                .cachedCityList
+            ]
+        )
     }
 }

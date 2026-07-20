@@ -113,6 +113,10 @@ final class V3EmptyStateView: UIView {
         imageHeightConstraint?.constant = style.imageSize.height
     }
 
+    func setTitle(_ title: String) {
+        titleLabel.text = title
+    }
+
     private func setupUI() {
         backgroundColor = .clear
 

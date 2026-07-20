@@ -328,6 +328,7 @@ struct AdditionalButton: Codable {
     let link: String
     let title: String
     let isEnable: Bool
+    var name: String?
 }
 
 struct AttendeesResponse: Codable {

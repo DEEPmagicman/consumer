@@ -194,11 +194,11 @@ final class PremiumStepperRow: UIView {
             plusBtn.widthAnchor.constraint(equalToConstant: 32),
             plusBtn.heightAnchor.constraint(equalToConstant: 32),
 
-            countLabel.trailingAnchor.constraint(equalTo: plusBtn.leadingAnchor, constant: -8),
+            countLabel.trailingAnchor.constraint(equalTo: plusBtn.leadingAnchor, constant: -4),
             countLabel.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
             countLabel.widthAnchor.constraint(equalToConstant: 32),
 
-            minusBtn.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -8),
+            minusBtn.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -4),
             minusBtn.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
             minusBtn.widthAnchor.constraint(equalToConstant: 32),
             minusBtn.heightAnchor.constraint(equalToConstant: 32)

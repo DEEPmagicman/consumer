@@ -26,6 +26,7 @@ final class DiscoverAllVC: UIViewController {
     private weak var refreshControl: UIRefreshControl?
     private var isNavigatingToDiscoverItem = false
     private let noInternetView = V3NoInternetView()
+    private let emptyStateView = V3EmptyStateView(style: .mapVenues)
 
     var selectedCity: String = ""
 
@@ -37,6 +38,7 @@ final class DiscoverAllVC: UIViewController {
         setupPullToRefresh()
         setupSections()
         setupNoInternetView()
+        setupEmptyStateView()
         updatePremiumExperiencePromptVisibility()
         fetchInitialData()
         
@@ -164,6 +166,20 @@ private extension DiscoverAllVC {
             noInternetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             noInternetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             noInternetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    func setupEmptyStateView() {
+        emptyStateView.isHidden = true
+        emptyStateView.isUserInteractionEnabled = false
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyStateView)
+
+        NSLayoutConstraint.activate([
+            emptyStateView.topAnchor.constraint(equalTo: view.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -310,6 +326,7 @@ private extension DiscoverAllVC {
                 city: self.selectedCity
             )
 
+            self.updateEmptyStateVisibility()
             self.finishInitialLoad(loadID: loadID)
         }
     }
@@ -377,6 +394,7 @@ private extension DiscoverAllVC {
         allEventsView.isHidden = true
         venuesView.isHidden = true
         premiumExperiencesView.isHidden = true
+        emptyStateView.isHidden = true
         noInternetView.isHidden = false
         view.bringSubviewToFront(noInternetView)
     }
@@ -384,6 +402,23 @@ private extension DiscoverAllVC {
     func hideNoInternetView() {
         noInternetView.isHidden = true
         updatePremiumExperiencePromptVisibility()
+    }
+
+    func updateEmptyStateVisibility() {
+        let shouldShow =
+        noInternetView.isHidden &&
+        todaysEvents.isEmpty &&
+        allEvents.isEmpty &&
+        venues.isEmpty
+
+        emptyStateView.isHidden = !shouldShow
+
+        if shouldShow {
+            premiumExperiencesView.isHidden = true
+            view.bringSubviewToFront(emptyStateView)
+        } else if noInternetView.isHidden {
+            updatePremiumExperiencePromptVisibility()
+        }
     }
 }
 

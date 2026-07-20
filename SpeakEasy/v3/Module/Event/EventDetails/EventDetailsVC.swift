@@ -110,6 +110,7 @@ class EventDetailsVC: UIViewController {
     var promoteId = ""
     var promotionLinkUniqueCode = ""
     var micrositeSlug = ""
+    var shouldShowDisabledTicketButton = true
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
 
@@ -568,7 +569,7 @@ class EventDetailsVC: UIViewController {
     }
     
     private func setupPosterHeaderView() {
-        posterHeaderView.applyBackgroundStyle(.abstractColorWash)
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
         imageBackGroundView.backgroundColor = UIColor(hex: "#121212")
         imageBackGroundView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -582,15 +583,27 @@ class EventDetailsVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        let hex = event?.whiteLabelColor?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let venueHex = venueDetails?.venueSettings?.whiteLabelColor?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return UIColor(hex: hex?.isEmpty == false ? hex! : venueHex ?? "#FFFFFF")
     }
 
     private var eventBackgroundImageURLString: String {
-        let key = venueDetails?.venueAttachment?.first?.key
-            ?? event?.venue?.venueAttachment?.first?.key
-            ?? venueDetails?.logo?.key
-            ?? event?.venue?.logo?.key
-            ?? ""
+        let key = [
+            event?.flyer?.key,
+            venueDetails?.venueAttachment?.first?.key,
+            event?.venue?.venueAttachment?.first?.key,
+            venueDetails?.logo?.key,
+            event?.venue?.logo?.key
+        ]
+            .compactMap {
+                $0?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .first { !$0.isEmpty } ?? ""
 
         return key.imageURL
     }
@@ -747,6 +760,13 @@ class EventDetailsVC: UIViewController {
         titleLbl.font = Constant.Font.geistMedium(size: 20)
         eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 18)
         venueTitleLbl.font = Constant.Font.geistMedium(size: 12)
+        venueTitleLbl.isUserInteractionEnabled = true
+        venueTitleLbl.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(onClickVenueTitle(_:))
+            )
+        )
         venueName.font = Constant.Font.geistMedium(size: 14)
         venueName.textAlignment = .center
         venueNameLbl.font = Constant.Font.geistMedium(size: 18)
@@ -1156,6 +1176,7 @@ class EventDetailsVC: UIViewController {
         detail.event.savedEventId != nil
 
         event = detail.event
+        applyVenueWhiteLabelColorIfNeeded(from: detail.event.venue)
 
         if !detailHasSavedState,
            let currentSavedEventId {
@@ -1214,6 +1235,21 @@ class EventDetailsVC: UIViewController {
         hideSkeleton()
         showContinueBtn()
         loadInitialSeatingAreas()
+    }
+
+    private func applyVenueWhiteLabelColorIfNeeded(from venue: ClipVenue?) {
+        let eventColor = event?.whiteLabelColor?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard eventColor?.isEmpty != false else { return }
+
+        let venueColor = venue?.venueSettings?.whiteLabelColor?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let venueColor,
+              !venueColor.isEmpty else { return }
+
+        event?.whiteLabelColor = venueColor
     }
 
     private func applyAttendees(
@@ -1356,6 +1392,11 @@ class EventDetailsVC: UIViewController {
     }
     
     private func showContinueBtn() {
+        guard !shouldHideBottomTicketButton() else {
+            hideBottomTicketButton()
+            return
+        }
+
         if event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
             buyNowBtnSuperView.isHidden = true
         } else {
@@ -1378,6 +1419,38 @@ class EventDetailsVC: UIViewController {
             }
         }
 
+    }
+
+    private func shouldHideBottomTicketButton() -> Bool {
+        guard !shouldShowDisabledTicketButton else { return false }
+        guard let event else { return false }
+
+        if event.isPausedSellingAllTickets == true ||
+            event.isSaleEndedAllTickets == true ||
+            event.isSoldOutAllTickets == true {
+            return true
+        }
+
+        return event.eventTicket?.isEmpty != false
+    }
+
+    private func hideBottomTicketButton() {
+        buyNowBtnSuperView.layer.removeAllAnimations()
+        buyNowBtnSuperView.alpha = 0
+        buyNowBtnSuperView.transform = CGAffineTransform(
+            translationX: 0,
+            y: 120
+        )
+        buyNowBtnSuperView.isHidden = true
+        hideCheckoutBarImmediately()
+    }
+
+    private func applyDisabledBottomTicketButtonVisibility() {
+        if shouldShowDisabledTicketButton {
+            showContinueBtn()
+        } else {
+            hideBottomTicketButton()
+        }
     }
     
     private func showCheckoutBar() {
@@ -2116,6 +2189,7 @@ class EventDetailsVC: UIViewController {
         let coordinate: CLLocationCoordinate2D?
         let title: String
         let mapImageURL: String?
+        let mapSearchQuery: String?
 
         if let custom = event.customVenue {
 //            , venueDetails?.venueSettings?.isOrganizer == true {
@@ -2126,6 +2200,15 @@ class EventDetailsVC: UIViewController {
             )
             
             title = custom.name ?? "Venue"
+            mapSearchQuery = addressSearchQuery(
+                components: [
+                    custom.address,
+                    custom.city,
+                    custom.pinCode,
+                    custom.region,
+                    custom.country
+                ]
+            )
             let mapImageKey = event.flyer?.key ?? ""
             mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
             
@@ -2137,12 +2220,24 @@ class EventDetailsVC: UIViewController {
             )
             
             title = venueDetails?.name ?? "Venue"
+            mapSearchQuery = addressSearchQuery(
+                components: [
+                    venueDetails?.address,
+                    venueDetails?.city,
+                    venueDetails?.pinCode ?? venueDetails?.code
+                ]
+            )
             let mapImageKey = venueDetails?.venueAttachment?.first?.key ?? venueDetails?.logo?.key ?? event.flyer?.key ?? ""
             mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
         }
 
         if let coordinate {
-            updateLocationOnMap(to: coordinate, with: title, imageURL: mapImageURL)
+            updateLocationOnMap(
+                to: coordinate,
+                with: title,
+                imageURL: mapImageURL,
+                searchQuery: mapSearchQuery
+            )
         } else {
             mapView.isHidden = true
             eventAddressView.isHidden = true
@@ -2284,11 +2379,13 @@ class EventDetailsVC: UIViewController {
       
 
         if event.isPausedSellingAllTickets == true {
-            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+//            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.setTitle("Check back later", for: .normal)
             checkOutBtn.isEnabled = false
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.salePaused.uppercased()
+            applyDisabledBottomTicketButtonVisibility()
             return
         }
 
@@ -2301,27 +2398,30 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.saleEnded.uppercased()
+            applyDisabledBottomTicketButtonVisibility()
             return
         }
 
         if event.isSoldOutAllTickets == true {
             let title = settings?.isSoldOutTextEnabled == true
-                ? (settings?.soldOutText ?? "Sold Out!")
-                : "Sold Out!"
+                ? (settings?.soldOutText ?? "Sorry, you missed it!")
+                : "Sorry, you missed it!"
             checkOutBtn.setTitle(title, for: .normal)
             checkOutBtn.isEnabled = false
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.soldOut.uppercased()
+            applyDisabledBottomTicketButtonVisibility()
             return
         }
         
         guard let tickets = event.eventTicket, !tickets.isEmpty else {
-            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.setTitle("Check back later", for: .normal)
             checkOutBtn.isEnabled = false
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.salePaused.uppercased()
+            applyDisabledBottomTicketButtonVisibility()
             return
         }
 
@@ -2428,6 +2528,21 @@ class EventDetailsVC: UIViewController {
             navBarView.backgroundColor = .clear
             navBlurView.isHidden = true
         }
+    }
+
+    private func addressSearchQuery(
+        components: [String?]
+    ) -> String? {
+        let parts =
+        components
+            .compactMap {
+                $0?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .filter { !$0.isEmpty }
+
+        guard !parts.isEmpty else { return nil }
+        return parts.joined(separator: ", ")
     }
 
     private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupId: String, groupName: String, tickets: [EventTicket])]) {
@@ -3654,7 +3769,8 @@ class EventDetailsVC: UIViewController {
     func updateLocationOnMap(
         to coordinate: CLLocationCoordinate2D,
         with title: String?,
-        imageURL: String?
+        imageURL: String?,
+        searchQuery: String? = nil
     ) {
         mapView.isHidden = false
         let googleMapView = configuredGoogleMapView(center: coordinate)
@@ -3666,7 +3782,8 @@ class EventDetailsVC: UIViewController {
         let point = EventDetailsMapAnnotation(
             coordinate: coordinate,
             title: title,
-            imageURL: imageURL
+            imageURL: imageURL,
+            searchQuery: searchQuery
         )
         
      
@@ -3720,8 +3837,18 @@ class EventDetailsVC: UIViewController {
     }
 
     private func openLocationInGoogleMaps(
-        coordinate: CLLocationCoordinate2D
+        coordinate: CLLocationCoordinate2D,
+        query: String? = nil
     ) {
+        let trimmedQuery =
+        query?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let mapQuery =
+        trimmedQuery?.isEmpty == false
+        ? trimmedQuery!
+        : "\(coordinate.latitude),\(coordinate.longitude)"
+
         var components = URLComponents(
             string: "https://www.google.com/maps/search/"
         )
@@ -3729,7 +3856,7 @@ class EventDetailsVC: UIViewController {
             URLQueryItem(name: "api", value: "1"),
             URLQueryItem(
                 name: "query",
-                value: "\(coordinate.latitude),\(coordinate.longitude)"
+                value: mapQuery
             )
         ]
 
@@ -3774,7 +3901,8 @@ extension EventDetailsVC: GMSMapViewDelegate {
 
         if let point = marker.userData as? EventDetailsMapAnnotation {
             openLocationInGoogleMaps(
-                coordinate: point.coordinate
+                coordinate: point.coordinate,
+                query: point.searchQuery
             )
         } else {
             openLocationInGoogleMaps(
@@ -4442,15 +4570,18 @@ private final class EventDetailsMapAnnotation: NSObject {
     let coordinate: CLLocationCoordinate2D
     let title: String?
     let imageURL: String?
+    let searchQuery: String?
 
     init(
         coordinate: CLLocationCoordinate2D,
         title: String?,
-        imageURL: String?
+        imageURL: String?,
+        searchQuery: String?
     ) {
         self.coordinate = coordinate
         self.title = title
         self.imageURL = imageURL
+        self.searchQuery = searchQuery
         super.init()
     }
 }
@@ -4765,6 +4896,7 @@ final class EventPosterHeaderView: UIView {
     enum BackgroundStyle {
         case standard
         case abstractColorWash
+        case softColorWash
     }
 
     private let screenBackgroundColor = UIColor(hex: "#121212")
@@ -4785,6 +4917,8 @@ final class EventPosterHeaderView: UIView {
             return 0.75
         case .abstractColorWash:
             return 0.78
+        case .softColorWash:
+            return 0.92
         }
     }
 
@@ -4794,6 +4928,8 @@ final class EventPosterHeaderView: UIView {
             return 0.90
         case .abstractColorWash:
             return 1.0
+        case .softColorWash:
+            return 0.82
         }
     }
 
@@ -4803,6 +4939,8 @@ final class EventPosterHeaderView: UIView {
             return 0.35
         case .abstractColorWash:
             return 0.46
+        case .softColorWash:
+            return 0.22
         }
     }
 
@@ -4878,16 +5016,30 @@ final class EventPosterHeaderView: UIView {
     }
 
     private func updateBottomGradient() {
-        bottomGradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(backgroundStyle == .abstractColorWash ? 0.76 : 0.60).cgColor,
-            UIColor.black.cgColor
-        ]
-
-        if backgroundStyle == .abstractColorWash {
+        switch backgroundStyle {
+        case .softColorWash:
+            bottomGradientLayer.colors = [
+                UIColor.clear.cgColor,
+                UIColor.black.withAlphaComponent(0.24).cgColor,
+                UIColor.black.withAlphaComponent(0.78).cgColor,
+                UIColor.black.cgColor
+            ]
+            bottomGradientLayer.locations = [0.0, 0.48, 0.78, 1.0]
+        case .abstractColorWash:
+            bottomGradientLayer.colors = [
+                UIColor.clear.cgColor,
+                UIColor.clear.cgColor,
+                UIColor.black.withAlphaComponent(0.76).cgColor,
+                UIColor.black.cgColor
+            ]
             bottomGradientLayer.locations = [0.0, 0.42, 0.70, 1.0]
-        } else {
+        case .standard:
+            bottomGradientLayer.colors = [
+                UIColor.clear.cgColor,
+                UIColor.clear.cgColor,
+                UIColor.black.withAlphaComponent(0.60).cgColor,
+                UIColor.black.cgColor
+            ]
             bottomGradientLayer.locations = [0.0, 0.50, 0.75, 1.0]
         }
 
@@ -4945,6 +5097,11 @@ final class EventPosterHeaderView: UIView {
             targetSize = CGSize(
                 width: 12,
                 height: 20
+            )
+        case .softColorWash:
+            targetSize = CGSize(
+                width: 32,
+                height: 56
             )
         }
 

@@ -104,8 +104,7 @@ UICollectionReusableView {
                 constant: 24
             ),
             rightCard.topAnchor.constraint(
-                equalTo: topAnchor,
-                constant: 40
+                equalTo: topAnchor
             ),
             rightCard.leadingAnchor.constraint(
                 equalTo: leftCard.trailingAnchor,
@@ -118,8 +117,11 @@ UICollectionReusableView {
             rightCard.widthAnchor.constraint(
                 equalTo: leftCard.widthAnchor
             ),
+            leftCard.bottomAnchor.constraint(
+                lessThanOrEqualTo: bottomAnchor
+            ),
             rightCard.bottomAnchor.constraint(
-                equalTo: bottomAnchor
+                lessThanOrEqualTo: bottomAnchor
             )
         ]
         NSLayoutConstraint.activate(shimmerConstraints)

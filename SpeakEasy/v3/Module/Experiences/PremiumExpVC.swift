@@ -76,7 +76,8 @@ final class PremiumExpVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
+        syncWithActiveCityIfNeeded()
         headerView.configure(city: selectedCity)
         headerView.reloadUser()
         view.setNeedsLayout()
@@ -787,12 +788,29 @@ private extension PremiumExpVC {
 
     func presentCityFilter() {
         let vc = Navigate.to.selectLocationVC(self)
-        vc.persistsFilterSelection = false
-        vc.selectedFilterCity = selectedCity
-        vc.initialFilterCity = selectedCity
+        vc.selectedFilterCity = UserDefault.shared.filterCity
+        vc.initialFilterCity = UserDefault.shared.filterCity
         vc.onSelectFilterCity = { [weak self] city in
             self?.applyCity(city)
         }
+    }
+
+    func syncWithActiveCityIfNeeded() {
+        let activeCity = UserDefault.shared.activeCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !activeCity.isEmpty,
+              activeCity.caseInsensitiveCompare(selectedCity) != .orderedSame else {
+            return
+        }
+
+        selectedCity = activeCity
+        headerView.configure(city: activeCity)
+
+        guard isViewLoaded,
+              !hasReleasedResources else { return }
+
+        loadPremiumExperiences(reset: true)
     }
 }
 

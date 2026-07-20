@@ -13,6 +13,10 @@ class AdditionalButtonsTableViewCell: UITableViewCell {
     @IBOutlet weak var webSiteDiscriptionLbl: UILabel!
     @IBOutlet weak var linkImageView: UIImageView!
     var onTap: (() -> Void)?
+
+    private var cardView: UIView? {
+        contentView.subviews.first?.subviews.first
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,6 +24,7 @@ class AdditionalButtonsTableViewCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         connectOverlayButtons(in: contentView)
+        webSiteDiscriptionLbl.isHidden = true
     }
 
     override func prepareForReuse() {
@@ -27,6 +32,7 @@ class AdditionalButtonsTableViewCell: UITableViewCell {
         onTap = nil
         webSiteTitleLbl.text = nil
         webSiteDiscriptionLbl.text = nil
+        webSiteDiscriptionLbl.isHidden = true
         linkImageView.image = nil
     }
 
@@ -35,9 +41,17 @@ class AdditionalButtonsTableViewCell: UITableViewCell {
         tintColor: UIColor
     ) {
         webSiteTitleLbl.text = item.title
-        webSiteDiscriptionLbl.text = readableLink(from: item.link)
-        webSiteDiscriptionLbl.isHidden =
-        item.link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        if let disc = item.name, !disc.isEmpty {
+            webSiteDiscriptionLbl.text = disc
+            webSiteDiscriptionLbl.isHidden = false
+        } else {
+            webSiteDiscriptionLbl.text = nil
+            webSiteDiscriptionLbl.isHidden = true
+        }
+     
+        cardView?.layer.borderWidth = 1
+        cardView?.layer.borderColor = tintColor.cgColor
 
         let icon =
         UIImage(named: "ic-webLink") ??

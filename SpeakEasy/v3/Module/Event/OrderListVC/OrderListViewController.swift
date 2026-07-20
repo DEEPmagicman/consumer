@@ -418,6 +418,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private func setupPosterBackground() {
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
