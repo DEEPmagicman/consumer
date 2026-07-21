@@ -266,13 +266,12 @@ final class ProfileInfoVC: UIViewController {
 
     @objc private func onClickDOB() {
         view.endEditing(true)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            Navigate.to.presentDateSelectionBottomSheet(
-                self,
-                date: self.dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
-            )
-        }
+
+        let vc = DateOfBirthSelectionVC(
+            date: dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
+        )
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func onClickGender() {

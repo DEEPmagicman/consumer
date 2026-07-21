@@ -371,10 +371,12 @@ final class EditProfileVC: UIViewController {
         guard !isPresentingDatePicker else { return }
         isPresentingDatePicker = true
         view.endEditing(true)
-        Navigate.to.presentDateSelectionBottomSheet(
-            self,
-            date: self.dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
+
+        let vc = DateOfBirthSelectionVC(
+            date: dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
         )
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             self.isPresentingDatePicker = false
