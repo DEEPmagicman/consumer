@@ -215,9 +215,21 @@ private extension PremiumTableSeatingVC {
     func setupSpendAgreementView() {
         spendAgreementView.translatesAutoresizingMaskIntoConstraints = false
         spendAgreementView.isHidden = true
-        spendAgreementView.onHeightChanged = { [weak self] height, _ in
+        spendAgreementView.onHeightChanged = { [weak self] height, animated in
             self?.spendAgreementHeightConstraint?.constant = height
-            self?.view.layoutIfNeeded()
+            guard animated else {
+                self?.view.layoutIfNeeded()
+                return
+            }
+
+            UIView.animate(
+                withDuration: 0.24,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction],
+                animations: {
+                    self?.view.layoutIfNeeded()
+                }
+            )
         }
         contentView.addSubview(spendAgreementView)
     }
@@ -253,7 +265,6 @@ private extension PremiumTableSeatingVC {
         labelStack.translatesAutoresizingMaskIntoConstraints = false
 
         checkoutBtn.setTitle("Checkout", for: .normal)
-        checkoutBtn.setTitleColor(UIColor(hex: "#121212"), for: .normal)
         checkoutBtn.titleLabel?.font = Constant.Font.geistMedium(size: 16)
         checkoutBtn.backgroundColor  = UIColor(hex: "#D99935")
         checkoutBtn.layer.cornerRadius = 24
@@ -601,6 +612,16 @@ private extension PremiumTableSeatingVC {
     }
 
     func configureTimeSlots(for area: SeatingArea) {
+        guard area.bookingType == .timeWise else {
+            availableTimeSlots = []
+            selectedTimeIndex = 0
+            selectedTimeSlot = nil
+            arrivalTimeView.isHidden = true
+            priceTopToGuestConstraint?.isActive = true
+            priceTopToArrivalConstraint?.isActive = false
+            return
+        }
+
         let slots = (area.timeSlots ?? [])
             .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
             .sorted { (lhs, rhs) in
@@ -641,6 +662,7 @@ private extension PremiumTableSeatingVC {
     }
 
     func timeTagText(for area: SeatingArea) -> String? {
+        guard area.bookingType == .timeWise else { return nil }
         guard !availableTimeSlots.isEmpty else { return nil }
         return availableTimeRangeText()
     }

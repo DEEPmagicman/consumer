@@ -467,6 +467,9 @@ struct EventTicketSettings: Codable {
 
 struct EventSettings: Codable {
     var qrCodeColor: String?
+    var isCustomVipTableEnabled: Bool?
+    var customVipTableTitle: String?
+    var customVipTableDescription: String?
 }
 struct Artists: Codable {
 

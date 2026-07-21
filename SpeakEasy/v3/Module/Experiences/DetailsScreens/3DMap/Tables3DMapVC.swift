@@ -173,7 +173,7 @@ private extension Tables3DMapVC {
     }
 
     func setupBuyNowButton() {
-        let color = UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        let color = UIColor(hex: "#D99935")
         let textColor = color.suitableTextColor()
 
         buyNowBtn.backgroundColor = color

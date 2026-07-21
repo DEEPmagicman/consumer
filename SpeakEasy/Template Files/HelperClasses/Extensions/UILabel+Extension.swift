@@ -47,6 +47,7 @@ enum AgreementTextFormatter {
     static let toggleFont = Constant.Font.geistMedium(size: 10)
     static let bodyColor = UIColor.white.withAlphaComponent(0.78)
     static let toggleColor = UIColor.white
+    static var allowsViewMore = false
 
     static func clean(_ text: String) -> String {
         text
@@ -58,7 +59,7 @@ enum AgreementTextFormatter {
         label.font = bodyFont
         label.textColor = bodyColor
         label.isUserInteractionEnabled = true
-        label.numberOfLines = collapsedLines
+        label.numberOfLines = allowsViewMore ? collapsedLines : 0
         label.lineBreakMode = .byWordWrapping
     }
 
@@ -78,7 +79,7 @@ enum AgreementTextFormatter {
         }
 
         let width = resolvedWidth(for: label, fallback: widthFallback)
-        let needsToggle = shouldShowToggle(for: cleanText, width: width)
+        let needsToggle = allowsViewMore && shouldShowToggle(for: cleanText, width: width)
         let toggleText = isExpanded ? "View Less" : "View More"
         let attributed: NSMutableAttributedString
 
@@ -123,13 +124,19 @@ enum AgreementTextFormatter {
         label: UILabel,
         widthFallback: CGFloat
     ) -> Bool {
-        shouldShowToggle(
+        guard allowsViewMore else { return false }
+
+        return shouldShowToggle(
             for: clean(text),
             width: resolvedWidth(for: label, fallback: widthFallback)
         )
     }
 
     static func toggleRange(in label: UILabel, isExpanded: Bool) -> NSRange {
+        guard allowsViewMore else {
+            return NSRange(location: NSNotFound, length: 0)
+        }
+
         guard let text = label.attributedText?.string else {
             return NSRange(location: NSNotFound, length: 0)
         }

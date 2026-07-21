@@ -72,6 +72,7 @@ class EventDetailsVC: UIViewController {
 //    @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var vipTableTitleLbl: UILabel!
     @IBOutlet weak var vipTableSubTitleLbl: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var viewSkeleton: UIView!
@@ -2474,6 +2475,16 @@ class EventDetailsVC: UIViewController {
         let hasAnySeatingAreas = !seatingAreas.isEmpty
         let hasSeatingAreas = !seatingAreasFilteredOut.isEmpty
 
+        if isReservationRequestEnabled ?? false {
+            setVIPTablesView(hidden: false)
+            configureVIPTablesText(defaultSubtitle: (
+                is3DMapEnabled ?? false && hasSeatingAreas
+            )
+            ? "Reservation requests available. 3D map available."
+            : "Reservation requests available.")
+            return
+        }
+
         guard
             isEventDetailAPICalled,
             hasLoadedSeatingAreas,
@@ -2485,10 +2496,6 @@ class EventDetailsVC: UIViewController {
         }
         
         let shouldShowVIPTablesView: Bool = {
-            if isReservationRequestEnabled ?? false {
-                return true
-            }
-            
             // Show online tables only if seating areas exist
             if isOnlineTablesEnabled ?? false && hasSeatingAreas {
                 return true
@@ -2500,30 +2507,41 @@ class EventDetailsVC: UIViewController {
         setVIPTablesView(hidden: !shouldShowVIPTablesView)
         
         // MARK: - Subtitle
-        
-        if isReservationRequestEnabled ?? false {
-            
-            vipTableSubTitleLbl.text = (
-                is3DMapEnabled ?? false && hasSeatingAreas
-            )
-            ? "Reservation requests available. 3D map available."
-            : "Reservation requests available."
-            
-            return
-        }
-        
+
         if isOnlineTablesEnabled ?? false {
             
-            vipTableSubTitleLbl.text = (
+            configureVIPTablesText(defaultSubtitle: (
                 is3DMapEnabled ?? false && hasSeatingAreas
             )
             ? "Ideal for larger groups. 3D map available."
-            : "Ideal for larger groups."
+            : "Ideal for larger groups.")
             
             return
         }
         
-        vipTableSubTitleLbl.text = nil
+        configureVIPTablesText(defaultSubtitle: nil)
+    }
+
+    private func configureVIPTablesText(defaultSubtitle: String?) {
+        vipTableTitleLbl.text = customVIPTableTitle ?? "VIP Tables"
+        vipTableSubTitleLbl.text = customVIPTableDescription ?? defaultSubtitle
+    }
+
+    private var customVIPTableTitle: String? {
+        customVIPTableText(event?.eventSettings?.customVipTableTitle)
+    }
+
+    private var customVIPTableDescription: String? {
+        customVIPTableText(event?.eventSettings?.customVipTableDescription)
+    }
+
+    private func customVIPTableText(_ text: String?) -> String? {
+        guard event?.eventSettings?.isCustomVipTableEnabled == true else {
+            return nil
+        }
+
+        let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmed.isEmpty ? nil : trimmed
     }
     
     private let navBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -3405,6 +3423,12 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickShareBtn(_ sender: Any) {}
 
     @IBAction func onClickVIPtable(_ sender: Any) {
+        if event?.isEnableReservationRequest == true {
+            AppHaptic.cardOpen()
+            openPremiumEventContainer(with: seatingAreas)
+            return
+        }
+
         guard didLoadSeatingAreasSuccessfully,
               !seatingAreas.isEmpty else {
             AppHaptic.warning()
@@ -3782,8 +3806,12 @@ class EventDetailsVC: UIViewController {
                              value: style,
                              range: NSRange(location: 0, length: mutable.length))
 
+        addDetectedPlainLinks(to: mutable)
+        let hasLinks = applyHTMLLinkStyle(to: mutable, linkColor: .white)
+
         detailsLbl.attributedText = mutable
         detailsLbl.numberOfLines = collapsedLines
+        configureHTMLLinkTapIfNeeded(on: detailsLbl, hasLinks: hasLinks)
         viewMoreBtn.setTitle("Read More", for: .normal)
 
         view.layoutIfNeeded()
@@ -3814,12 +3842,162 @@ class EventDetailsVC: UIViewController {
                              value: style,
                              range: NSRange(location: 0, length: mutable.length))
 
+        addDetectedPlainLinks(to: mutable)
+        let hasLinks = applyHTMLLinkStyle(to: mutable, linkColor: .white)
+
         policyLbl.attributedText = mutable
         policyLbl.numberOfLines = collapsedLines
+        configureHTMLLinkTapIfNeeded(on: policyLbl, hasLinks: hasLinks)
         policyViewMoreBtn.setTitle("Read More", for: .normal)
 
         view.layoutIfNeeded()
         checkIfPolicyTextNeedsExpansion()
+    }
+
+    private func addDetectedPlainLinks(to mutable: NSMutableAttributedString) {
+        guard mutable.length > 0,
+              let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+            return
+        }
+
+        let fullRange = NSRange(location: 0, length: mutable.length)
+        detector.enumerateMatches(in: mutable.string, options: [], range: fullRange) { match, _, _ in
+            guard let match,
+                  match.range.length > 0,
+                  let url = match.url,
+                  mutable.attribute(.link, at: match.range.location, effectiveRange: nil) == nil else {
+                return
+            }
+
+            mutable.addAttribute(.link, value: url, range: match.range)
+        }
+    }
+
+    @discardableResult
+    private func applyHTMLLinkStyle(to mutable: NSMutableAttributedString,
+                                    linkColor: UIColor) -> Bool {
+        var hasLinks = false
+        let fullRange = NSRange(location: 0, length: mutable.length)
+
+        mutable.enumerateAttribute(.link, in: fullRange, options: []) { value, range, _ in
+            guard value != nil else { return }
+
+            hasLinks = true
+
+            let currentFont = mutable.attribute(.font, at: range.location, effectiveRange: nil) as? UIFont
+            let linkFont = Constant.Font.geistSemiBold(size: currentFont?.pointSize ?? 15)
+
+            mutable.removeAttribute(.foregroundColor, range: range)
+            mutable.removeAttribute(.font, range: range)
+            mutable.addAttributes([
+                .foregroundColor: linkColor,
+                .font: linkFont,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                .underlineColor: linkColor
+            ], range: range)
+        }
+
+        return hasLinks
+    }
+
+    private func configureHTMLLinkTapIfNeeded(on label: UILabel, hasLinks: Bool) {
+        label.tintColor = .white
+        label.isUserInteractionEnabled = hasLinks
+
+        guard hasLinks,
+              label.gestureRecognizers?.contains(where: { $0.name == "EventDetailsHTMLLinkTap" }) != true else {
+            return
+        }
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleHTMLLabelTap(_:)))
+        tap.name = "EventDetailsHTMLLinkTap"
+        label.addGestureRecognizer(tap)
+    }
+
+    @objc private func handleHTMLLabelTap(_ gesture: UITapGestureRecognizer) {
+        guard let label = gesture.view as? UILabel,
+              let url = htmlLinkURL(from: gesture, in: label) else {
+            return
+        }
+
+        AppHaptic.navigation()
+        UIApplication.shared.open(url)
+    }
+
+    private func htmlLinkURL(from gesture: UITapGestureRecognizer, in label: UILabel) -> URL? {
+        guard let attributedText = label.attributedText,
+              attributedText.length > 0,
+              label.bounds.width > 0,
+              label.bounds.height > 0 else {
+            return nil
+        }
+
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: label.bounds.size)
+
+        textContainer.lineFragmentPadding = 0
+        textContainer.lineBreakMode = label.lineBreakMode
+        textContainer.maximumNumberOfLines = label.numberOfLines
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        let touchLocation = gesture.location(in: label)
+        let textBoundingBox = layoutManager.usedRect(for: textContainer)
+        let textOffset = CGPoint(
+            x: (label.bounds.width - textBoundingBox.width) * horizontalTextOffsetFactor(for: label) - textBoundingBox.origin.x,
+            y: (label.bounds.height - textBoundingBox.height) * 0.5 - textBoundingBox.origin.y
+        )
+        let locationInTextContainer = CGPoint(
+            x: touchLocation.x - textOffset.x,
+            y: touchLocation.y - textOffset.y
+        )
+
+        guard locationInTextContainer.x >= 0,
+              locationInTextContainer.y >= 0 else {
+            return nil
+        }
+
+        let glyphIndex = layoutManager.glyphIndex(for: locationInTextContainer, in: textContainer)
+        guard glyphIndex < layoutManager.numberOfGlyphs else { return nil }
+
+        let glyphRange = NSRange(location: glyphIndex, length: 1)
+        let glyphRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+        guard glyphRect.insetBy(dx: -8, dy: -8).contains(locationInTextContainer) else {
+            return nil
+        }
+
+        let characterIndex = layoutManager.characterIndexForGlyph(at: glyphIndex)
+        guard characterIndex < attributedText.length else { return nil }
+
+        let linkValue = attributedText.attribute(.link, at: characterIndex, effectiveRange: nil)
+        return normalizedHTMLLinkURL(from: linkValue)
+    }
+
+    private func horizontalTextOffsetFactor(for label: UILabel) -> CGFloat {
+        switch label.textAlignment {
+        case .center:
+            return 0.5
+        case .right:
+            return 1
+        default:
+            return 0
+        }
+    }
+
+    private func normalizedHTMLLinkURL(from value: Any?) -> URL? {
+        let rawLink: String
+
+        if let url = value as? URL {
+            rawLink = url.absoluteString
+        } else if let string = value as? String {
+            rawLink = string
+        } else {
+            return nil
+        }
+
+        return normalizedAdditionalButtonURL(from: rawLink.trimmingCharacters(in: .whitespacesAndNewlines))
     }
 
     private func checkIfTextNeedsExpansion() {
