@@ -48,9 +48,7 @@ final class PremiumSearchHeaderView: UIView {
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
     )
-    
-    private var currentVC = UIViewController()
-    
+
     // MARK: Init
     
     override init(frame: CGRect) {
@@ -200,11 +198,6 @@ final class PremiumSearchHeaderView: UIView {
             searchView.heightAnchor.constraint(equalToConstant: 36)
         ])
         
-        if Utility.main.topViewController()?.navigationController?.navigationController == nil {
-            currentVC = Utility.main.topViewController() ?? UIViewController()
-        } else {
-            currentVC = Utility.main.topViewController()?.navigationController ?? UIViewController()
-        }
     }
     
     // MARK: - Actions
@@ -223,60 +216,6 @@ final class PremiumSearchHeaderView: UIView {
 
     // MARK: - Helpers
 
-    func showSignInState() {
-
-        imageView.isHidden = true
-        firstNameLetter.isHidden = true
-        signInIconView.isHidden = false
-    }
-
-    func showProfilePlaceholder(letter: String) {
-
-        imageView.image = UIImage(resource: .signInBgIcon)
-        imageView.isHidden = false
-
-        firstNameLetter.text = letter.uppercased()
-        firstNameLetter.isHidden = false
-
-        signInIconView.isHidden = true
-    }
-
-    func updateProfileImage(url: String?) {
-
-        guard
-            let url,
-            !url.isEmpty
-        else {
-            return
-        }
-
-        imageView.sd_setImage(
-            with: URL(string: url),
-            placeholderImage: UIImage(resource: .profileIcon)
-        )
-
-        imageView.isHidden = false
-        firstNameLetter.isHidden = true
-        signInIconView.isHidden = true
-    }
-
-    func setMapHidden(_ hidden: Bool) {
-        mapButton.isHidden = hidden
-    }
-
-    func setProfileHidden(_ hidden: Bool) {
-        avatarGlassView.isHidden = hidden
-        profileButton.isHidden = hidden
-    }
-
-    func focusSearch() {
-        searchView.focus()
-    }
-
-    func resignSearch() {
-        searchView.resign()
-    }
-    
     func reloadUser() {
         
         guard let user = UserDefault.shared.user else {

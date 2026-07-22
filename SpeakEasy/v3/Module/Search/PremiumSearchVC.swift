@@ -79,7 +79,6 @@ final class PremiumSearchVC: UIViewController {
     private var searchRequestId = UUID()
     private var currentQuery = ""
     private var displayedQuery: String?
-    private var hasMoreVenues = false
     private var hasMoreEvents = false
     private var isInitialLoading = false
     private var isLoadingMoreEvents = false
@@ -378,7 +377,6 @@ final class PremiumSearchVC: UIViewController {
                         self.venues.removeAll()
                         self.events.removeAll()
                         self.artists.removeAll()
-                        self.hasMoreVenues = false
                         self.heightCache.removeAll(keepingCapacity: true)
                         self.reloadCollectionWithoutAnimation()
                     } else {
@@ -396,7 +394,6 @@ final class PremiumSearchVC: UIViewController {
                     self.venues = result.venues
                     self.events = result.events
                     self.artists = result.artists
-                    self.hasMoreVenues = result.hasMoreVenues
                     self.hasMoreEvents = result.hasMoreEvents
                     self.heightCache.removeAll(keepingCapacity: true)
                     self.reloadCollectionWithoutAnimation()
@@ -497,7 +494,6 @@ final class PremiumSearchVC: UIViewController {
             events.removeAll(keepingCapacity: true)
             artists.removeAll(keepingCapacity: true)
             heightCache.removeAll(keepingCapacity: true)
-            hasMoreVenues = false
             hasMoreEvents = false
             paginatingSection = nil
         }
@@ -697,14 +693,12 @@ extension PremiumSearchVC: UICollectionViewDataSource {
             for: indexPath
         ) as! PremiumSearchHeaderSupplementaryView
 
-        // Cap visible venues while "View more venues" is hidden for now.
         let displayedVenues = Array(venues.prefix(PremiumSearchVC.maxDisplayedVenues))
 
         header.configure(
             venues: displayedVenues,
             artists: artists,
             showsVenue: !venues.isEmpty,
-            showsViewMoreVenues: false,
             isLoading: isInitialLoading,
             showsEventTitle: isInitialLoading || !events.isEmpty
         )
@@ -714,15 +708,6 @@ extension PremiumSearchVC: UICollectionViewDataSource {
             if let venueDetails = venue.venue {
                 Navigate.to.premiumVenueVC(self, venueDetails: venueDetails)
             }
-        }
-
-        header.onViewMoreVenues = { [weak self] in
-            guard let self else { return }
-            Navigate.to.searchVenueVC(
-                self,
-                keyword: self.currentQuery,
-                mode: .global
-            )
         }
 
         header.onViewArtist = { [weak self] artist in
@@ -837,10 +822,8 @@ extension PremiumSearchVC: PinterestLayoutDelegate {
 private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableView {
 
     private let stackView = UIStackView()
-    // Up to maxDisplayedVenues venue rows, lazily created
     private var venueRows: [PremiumSearchVenueResultView] = []
     private var venueShimmerRows: [PremiumSearchVenueShimmerView] = []
-    private let viewMoreVenuesButton = UIButton(type: .system)
     private let venueTitleLabel = UILabel()
     private let artistTitleLabel = UILabel()
     private let artistScrollContainer = UIView()
@@ -853,7 +836,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     private var configuredArtistIDs: [String] = []
 
     var onViewVenue: ((SearchVenueItem) -> Void)?
-    var onViewMoreVenues: (() -> Void)?
     var onViewArtist: ((SearchArtistItem) -> Void)?
 
     override init(frame: CGRect) {
@@ -869,7 +851,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
     override func prepareForReuse() {
         super.prepareForReuse()
         onViewVenue = nil
-        onViewMoreVenues = nil
         onViewArtist = nil
     }
 
@@ -886,8 +867,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         venueTitleLabel.font = Constant.Font.geistRegular(size: 18)
         stackView.addArrangedSubview(venueTitleLabel)
 
-        // Pre-create 5 venue rows; show/hide as needed
-        for _ in 0 ..< 5 {
+        for _ in 0 ..< PremiumSearchHeaderMetrics.maxDisplayedVenues {
             let row = PremiumSearchVenueResultView()
             row.onViewVenue = { [weak self] venue in
                 self?.onViewVenue?(venue)
@@ -903,21 +883,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             stackView.addArrangedSubview(row)
             row.isHidden = true
         }
-
-        viewMoreVenuesButton.setTitle("View more venues", for: .normal)
-        viewMoreVenuesButton.setTitleColor(.white.withAlphaComponent(0.85), for: .normal)
-        viewMoreVenuesButton.titleLabel?.font = Constant.Font.geistMedium(size: 13)
-        viewMoreVenuesButton.contentHorizontalAlignment = .left
-        viewMoreVenuesButton.addTarget(
-            self,
-            action: #selector(onViewMoreVenuesPressed),
-            for: .touchUpInside
-        )
-        stackView.addArrangedSubview(viewMoreVenuesButton)
-        viewMoreVenuesButton.heightAnchor
-            .constraint(equalToConstant: 24)
-            .withPriority(.defaultHigh)
-            .isActive = true
 
         artistTitleLabel.text = "Artists"
         artistTitleLabel.textColor = .white
@@ -1015,7 +980,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         venues: [SearchVenueItem],
         artists: [SearchArtistItem],
         showsVenue: Bool,
-        showsViewMoreVenues: Bool,
         isLoading: Bool,
         showsEventTitle: Bool
     ) {
@@ -1026,7 +990,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             after: venueTitleLabel
         )
 
-        // Wire up venue rows
         for (index, row) in venueRows.enumerated() {
             if showsVenue && index < venues.count {
                 row.configure(venues[index])
@@ -1053,7 +1016,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             )
         }
 
-        // Spacing after the venue block (last row or shimmer) before "view more" / title
         let lastVisibleVenueRow = venueRows.last(where: { !$0.isHidden })
         if let last = lastVisibleVenueRow {
             stackView.setCustomSpacing(PremiumSearchHeaderMetrics.sectionSpacing, after: last)
@@ -1064,12 +1026,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
                 after: lastShimmerRow
             )
         }
-
-        viewMoreVenuesButton.isHidden = !showsViewMoreVenues
-        stackView.setCustomSpacing(
-            showsViewMoreVenues ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
-            after: viewMoreVenuesButton
-        )
 
         configureArtists(artists)
         let showsArtists = !isLoading && !artists.isEmpty
@@ -1129,11 +1085,6 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
                 view.isHidden = true
             }
         }
-    }
-
-    @objc private func onViewMoreVenuesPressed() {
-        AppHaptic.selectionChanged()
-        onViewMoreVenues?()
     }
 }
 
