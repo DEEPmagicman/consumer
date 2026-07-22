@@ -10,6 +10,19 @@ import Combine
 
 final class DiscoverVC: UIViewController {
 
+    private enum Layout {
+        static let discoverHeaderContentInset: CGFloat = 100
+        static let cityChipMinWidth: CGFloat = 76
+        static let cityChipMaxWidth: CGFloat = 220
+        static let dateChipMinWidth: CGFloat = 88
+        static let dateChipMaxWidth: CGFloat = 240
+        static let chipHorizontalPadding: CGFloat = 12
+        static let chipIconWidth: CGFloat = 12
+        static let chipIconSpacing: CGFloat = 6
+        static let cityIconSpacing: CGFloat = 4
+        static let cityCloseWidth: CGFloat = 20
+    }
+
     @IBOutlet var segmentViewContainer: [UIView]!
     @IBOutlet var dateLbl: UILabel!
     @IBOutlet var dateView: LiquidGlassBackgroundView!
@@ -38,7 +51,6 @@ final class DiscoverVC: UIViewController {
     private weak var activeHeaderScrollView: UIScrollView?
 
     private let shimmerView = HomeSkeletonView()
-    private let discoverHeaderContentInset: CGFloat = 100
 
     private var isDateSelected: Bool = false {
         didSet {
@@ -55,11 +67,8 @@ final class DiscoverVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        filterCity = UserDefault.shared.filterCity
-        if UserDefault.shared.isPrimaryCity(filterCity) {
-            filterCity = nil
-            UserDefault.shared.filterCity = nil
-        }
+        filterCity = normalizedFilterCity(UserDefault.shared.filterCity)
+        UserDefault.shared.filterCity = filterCity
         setupLandingHeader()
         setupScrollableHeader()
         setupCityChipLayout()
@@ -87,7 +96,6 @@ final class DiscoverVC: UIViewController {
     }
 
     private func setupLandingHeader() {
-//        landingHeaderView.delegate = self
         landingHeaderView.setMapHidden(false)
         landingHeaderView.translatesAutoresizingMaskIntoConstraints = false
         landingHeaderView.isHidden = true
@@ -104,7 +112,7 @@ final class DiscoverVC: UIViewController {
     private func setupScrollableHeader() {
         filtersScrollView.clipsToBounds = false
         filtersScrollView.showsVerticalScrollIndicator = false
-        segmentTopConstraint.constant -= discoverHeaderContentInset
+        segmentTopConstraint.constant -= Layout.discoverHeaderContentInset
     }
 
     private func setupCityChipLayout() {
@@ -191,9 +199,10 @@ final class DiscoverVC: UIViewController {
             to: .MMMD
         )
 
-        let dateText = (self.endDate ?? "").isEmpty
-        ? "\(startDate ?? "")"
-        : "\(startDate ?? "") - \(endDate ?? "")"
+        let dateText = selectedDateDisplayText(
+            startDate: startDate,
+            endDate: endDate
+        )
 
         self.dateLbl.text = self.isDateSelected
         ? dateText
@@ -304,7 +313,7 @@ final class DiscoverVC: UIViewController {
         activeScrollableHeader = scrollable
         activeHeaderScrollView = scrollView
 
-        let totalTopInset = discoverHeaderContentInset + scrollable.discoverHeaderAdditionalTopInset
+        let totalTopInset = Layout.discoverHeaderContentInset + scrollable.discoverHeaderAdditionalTopInset
         applyTopInset(totalTopInset, to: scrollView)
         updateScrollableHeader(for: scrollView)
         bringScrollableHeaderToFront()
@@ -351,7 +360,7 @@ final class DiscoverVC: UIViewController {
         )
         let collapseOffset = min(
             offset,
-            discoverHeaderContentInset + view.safeAreaInsets.top
+            Layout.discoverHeaderContentInset + view.safeAreaInsets.top
         )
 
         landingHeaderView.transform = CGAffineTransform(
@@ -365,7 +374,7 @@ final class DiscoverVC: UIViewController {
         updateScrollableHeaderAlpha(offset: offset)
         activeScrollableHeader?.discoverHeaderDidUpdate(
             collapseOffset: offset,
-            baseTopInset: discoverHeaderContentInset
+            baseTopInset: Layout.discoverHeaderContentInset
         )
     }
 
@@ -406,26 +415,54 @@ final class DiscoverVC: UIViewController {
         return UserDefault.shared.activeCity
     }
 
+    private var hasTemporaryCityFilter: Bool {
+        filterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty == false
+    }
+
+    private func normalizedFilterCity(_ city: String?) -> String? {
+        let trimmedCity = city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let trimmedCity,
+              !trimmedCity.isEmpty,
+              !UserDefault.shared.isPrimaryCity(trimmedCity)
+        else {
+            return nil
+        }
+
+        return trimmedCity
+    }
+
+    private func selectedDateDisplayText(
+        startDate: String?,
+        endDate: String?
+    ) -> String {
+        let startDate = startDate ?? ""
+        let endDate = endDate ?? ""
+
+        guard !startDate.isEmpty else {
+            return ""
+        }
+
+        return endDate.isEmpty
+        ? startDate
+        : "\(startDate) - \(endDate)"
+    }
+
     private func applyCityFilter(
         _ city: String?,
         showsLoading: Bool = true
     ) {
-        let trimmedCity = city?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        filterCity = trimmedCity?.isEmpty == false &&
-            !UserDefault.shared.isPrimaryCity(trimmedCity)
-            ? trimmedCity
-            : nil
+        filterCity = normalizedFilterCity(city)
 
         UserDefault.shared.filterCity = filterCity
 
         selectedLocationName.text = resolvedCity()
         updateCityCloseButton()
 
-        if let discoverAllVC = children.first(where: {
-            $0 is DiscoverAllVC
-        }) as? DiscoverAllVC {
+        if let discoverAllVC = childViewController(ofType: DiscoverAllVC.self) {
 
             discoverAllVC.reloadCityData(
                 city: resolvedCity(),
@@ -433,9 +470,7 @@ final class DiscoverVC: UIViewController {
             )
         }
 
-        if let discoverDateFilterVC = children.first(where: {
-            $0 is DiscoverDateFilterVC
-        }) as? DiscoverDateFilterVC,
+        if let discoverDateFilterVC = childViewController(ofType: DiscoverDateFilterVC.self),
            isDateSelected {
 
             discoverDateFilterVC.updateFilterDates(
@@ -447,14 +482,12 @@ final class DiscoverVC: UIViewController {
     }
 
     private func updateCityCloseButton() {
-        let hasTemporaryCity = filterCity?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-
-        cityClosebtn.isHidden = !hasTemporaryCity
-        cityCloseContainer?.isHidden = !hasTemporaryCity
+        cityClosebtn.isHidden = !hasTemporaryCityFilter
+        cityCloseContainer?.isHidden = !hasTemporaryCityFilter
         cityCloseContainerConstraints.forEach {
-            $0.isActive = hasTemporaryCity
+            $0.isActive = hasTemporaryCityFilter
         }
-        cityLabelTrailingConstraint?.isActive = !hasTemporaryCity
+        cityLabelTrailingConstraint?.isActive = !hasTemporaryCityFilter
         refreshCityChipLayout()
     }
 
@@ -474,13 +507,20 @@ final class DiscoverVC: UIViewController {
     private func updateCityChipWidth() {
         let city = selectedLocationName.text?
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let hasTemporaryCity = filterCity?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
         let font = selectedLocationName.font ?? Constant.Font.geistRegular(size: 12)
         let textWidth = ceil((city as NSString).size(withAttributes: [.font: font]).width)
-        let closeWidth: CGFloat = hasTemporaryCity ? 20 : 0
-        let width = 12 + 12 + 4 + textWidth + closeWidth + 12
+        let closeWidth: CGFloat = hasTemporaryCityFilter ? Layout.cityCloseWidth : 0
+        let width =
+        (Layout.chipHorizontalPadding * 2) +
+        Layout.chipIconWidth +
+        Layout.cityIconSpacing +
+        textWidth +
+        closeWidth
 
-        cityChipWidthConstraint?.constant = min(max(width, 76), 220)
+        cityChipWidthConstraint?.constant = min(
+            max(width, Layout.cityChipMinWidth),
+            Layout.cityChipMaxWidth
+        )
     }
 
     private func refreshDateChipLayout() {
@@ -501,9 +541,16 @@ final class DiscoverVC: UIViewController {
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? "All Dates"
         let font = dateLbl.font ?? Constant.Font.geistMedium(size: 12)
         let textWidth = ceil((text as NSString).size(withAttributes: [.font: font]).width)
-        let width = 12 + 12 + 6 + textWidth + 12
+        let width =
+        (Layout.chipHorizontalPadding * 2) +
+        Layout.chipIconWidth +
+        Layout.chipIconSpacing +
+        textWidth
 
-        dateChipWidthConstraint?.constant = min(max(width, 88), 240)
+        dateChipWidthConstraint?.constant = min(
+            max(width, Layout.dateChipMinWidth),
+            Layout.dateChipMaxWidth
+        )
     }
 
     private func bindSelectedCity() {
@@ -513,12 +560,8 @@ final class DiscoverVC: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 guard let self else { return }
-                let hasTemporaryCity =
-                    self.filterCity?
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .isEmpty == false
 
-                guard !hasTemporaryCity else { return }
+                guard !self.hasTemporaryCityFilter else { return }
 
                 self.applyCityFilter(
                     nil,
@@ -535,14 +578,12 @@ final class DiscoverVC: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         viewControllers.append(segue.destination)
-        switch segue.destination {
-        case is DiscoverAllVC:
-            print("DiscoverAllVC prepared")
-        case is DiscoverDateFilterVC:
-            print("DiscoverDateFilterVC prepared")
-        default:
-            break
-        }
+    }
+
+    private func childViewController<T: UIViewController>(
+        ofType type: T.Type
+    ) -> T? {
+        children.first { $0 is T } as? T
     }
 }
 
@@ -578,7 +619,7 @@ extension DiscoverVC: SelectedDateDelegate {
         self.startDate = startDate
         self.endDate = startDate != endDate ? endDate : nil
         isDateSelected = true
-        if let vc = children.first(where: { $0 is DiscoverDateFilterVC }) as? DiscoverDateFilterVC {
+        if let vc = childViewController(ofType: DiscoverDateFilterVC.self) {
             vc.updateFilterDates(
                 selectedDateRangeDisplayDates(),
                 apiDates: selectedDateRangeAPIDates(),

@@ -9,6 +9,12 @@ import UIKit
 
 final class DiscoverAllVC: UIViewController {
 
+    private enum Layout {
+        static let smallDeviceBottomSpacing: CGFloat = 65
+        static let regularDeviceBottomSpacing: CGFloat = 75
+        static let navigationResetDelay: TimeInterval = 0.75
+    }
+
     @IBOutlet weak var todaysEventsView: DiscoverSectionView!
     @IBOutlet weak var venuesView: DiscoverSectionView!
     @IBOutlet weak var allEventsView: DiscoverSectionView!
@@ -43,8 +49,8 @@ final class DiscoverAllVC: UIViewController {
         fetchInitialData()
         
         bottomConstraint.constant = AppDesign.adaptiveConstraint(
-                smallDeviceValue: 65,
-                regularDeviceValue: 75
+                smallDeviceValue: Layout.smallDeviceBottomSpacing,
+                regularDeviceValue: Layout.regularDeviceBottomSpacing
             )
     }
 
@@ -63,22 +69,7 @@ final class DiscoverAllVC: UIViewController {
 private extension DiscoverAllVC {
 
     func setupSections() {
-
-        todaysEventsView.configure(
-            type: .tonightEvents,
-            data: .events([])
-        )
-
-        venuesView.configure(
-            type: .venues,
-            data: .venues([])
-        )
-
-        allEventsView.configure(
-            type: .allEvents,
-            data: .events([])
-        )
-
+        configureSections()
         setupActions()
         setupPremiumExperienceTap()
     }
@@ -216,10 +207,61 @@ private extension DiscoverAllVC {
 
             action(self)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Layout.navigationResetDelay) { [weak self] in
                 self?.isNavigatingToDiscoverItem = false
             }
         }
+    }
+
+    func configureSections(
+        city: String? = nil,
+        tonightEvents: [Event] = [],
+        venues: [ClipVenue] = [],
+        allEvents: [Event] = []
+    ) {
+        let city = city ?? selectedCity
+
+        todaysEventsView.configure(
+            type: .tonightEvents,
+            data: .events(tonightEvents),
+            city: city
+        )
+
+        venuesView.configure(
+            type: .venues,
+            data: .venues(venues),
+            city: city
+        )
+
+        allEventsView.configure(
+            type: .allEvents,
+            data: .events(allEvents),
+            city: city
+        )
+    }
+
+    func clearSectionContent() {
+        todaysEvents.removeAll()
+        allEvents.removeAll()
+        venues.removeAll()
+        configureSections()
+    }
+
+    func applyDiscoverData(_ data: DiscoverHomeData) {
+        todaysEvents = data.eventsTonight
+        allEvents = data.events
+        venues = data.venues
+
+        todaysEventsView.isHidden = data.eventsTonight.isEmpty
+        allEventsView.isHidden = data.events.isEmpty
+        venuesView.isHidden = data.venues.isEmpty
+
+        configureSections(
+            city: selectedCity,
+            tonightEvents: data.eventsTonight,
+            venues: data.venues,
+            allEvents: data.events
+        )
     }
 
     func fetchInitialData() {
@@ -295,37 +337,7 @@ private extension DiscoverAllVC {
             }
 
             self.hideNoInternetView()
-            self.todaysEvents = data.eventsTonight
-            self.allEvents = data.events
-            self.venues = data.venues
-
-            self.todaysEventsView.isHidden =
-            data.eventsTonight.isEmpty
-
-            self.allEventsView.isHidden =
-            data.events.isEmpty
-
-            self.venuesView.isHidden =
-            data.venues.isEmpty
-
-            self.todaysEventsView.configure(
-                type: .tonightEvents,
-                data: .events(data.eventsTonight),
-                city: self.selectedCity
-            )
-
-            self.venuesView.configure(
-                type: .venues,
-                data: .venues(data.venues),
-                city: self.selectedCity
-            )
-
-            self.allEventsView.configure(
-                type: .allEvents,
-                data: .events(data.events),
-                city: self.selectedCity
-            )
-
+            self.applyDiscoverData(data)
             self.updateEmptyStateVisibility()
             self.finishInitialLoad(loadID: loadID)
         }
@@ -342,27 +354,7 @@ private extension DiscoverAllVC {
     ) {
 
         if clearsExistingContent {
-            todaysEvents.removeAll()
-            allEvents.removeAll()
-            venues.removeAll()
-
-            todaysEventsView.configure(
-                type: .tonightEvents,
-                data: .events([]),
-                city: selectedCity
-            )
-
-            venuesView.configure(
-                type: .venues,
-                data: .venues([]),
-                city: selectedCity
-            )
-
-            allEventsView.configure(
-                type: .allEvents,
-                data: .events([]),
-                city: selectedCity
-            )
+            clearSectionContent()
         }
 
         let loadID = beginInitialLoading(showsSkeleton: showsSkeleton)
