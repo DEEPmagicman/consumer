@@ -456,10 +456,7 @@ private extension PremiumReservationVC {
         }
 
         let slots = (area.timeSlots ?? [])
-            .filter {
-                ($0.issuedPublicInventory ?? 0) >
-                ($0.soldPublicInventory ?? 0)
-            }
+            .filter { $0.isBookable }
             .sorted { lhs, rhs in
                 reservationSlotDate(lhs.startTime) ?? .distantFuture
                 <
@@ -523,9 +520,7 @@ private extension PremiumReservationVC {
         }
 
         let availableSlots = (area.timeSlots ?? []).filter {
-
-            ($0.issuedPublicInventory ?? 0) >
-            ($0.soldPublicInventory ?? 0)
+            $0.isBookable
         }
 
         guard !availableSlots.isEmpty else {
@@ -602,11 +597,7 @@ private extension PremiumReservationVC {
         if area.bookingType == .timeWise {
 
             let charges = (area.timeSlots ?? [])
-                .filter {
-
-                    ($0.issuedPublicInventory ?? 0) >
-                    ($0.soldPublicInventory ?? 0)
-                }
+                .filter { $0.isBookable }
                 .compactMap {
 
                     $0.extraPersonCharge

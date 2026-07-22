@@ -59,6 +59,10 @@ final class PremiumTableCheckoutVC: UIViewController {
         UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
     }
 
+    private var buyButtonAccentColor: UIColor {
+        UIColor(hex: "#D99935")
+    }
+
     // MARK: - UI
 
     private let scrollView       = UIScrollView()
@@ -426,7 +430,7 @@ private extension PremiumTableCheckoutVC {
         buyBtn.isUserInteractionEnabled = false
         buyBtn.alpha = 0.5
 
-        buyLoader.color = whiteLabelAccentColor.suitableTextColor()
+        buyLoader.color = buyButtonAccentColor.suitableTextColor()
         buyLoader.hidesWhenStopped = true
         buyLoader.translatesAutoresizingMaskIntoConstraints = false
 
@@ -461,7 +465,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func applyBuyButtonTheme() {
-        let color = whiteLabelAccentColor
+        let color = buyButtonAccentColor
 
         buyBtn.backgroundColor = color
         buyBtn.setTitleColor(color.suitableTextColor(), for: .normal)

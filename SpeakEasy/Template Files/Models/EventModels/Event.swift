@@ -470,6 +470,12 @@ struct EventSettings: Codable {
     var isCustomVipTableEnabled: Bool?
     var customVipTableTitle: String?
     var customVipTableDescription: String?
+    var isGuestListByGender: Bool?
+    var guestCount: Int?
+    var tableBookingTermsAndCondition: String?
+    var tableBookingImportantInformation: String?
+    var tableBookingPolicy: String?
+    var purchasePolicy: String?
 }
 struct Artists: Codable {
 

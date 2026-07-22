@@ -264,9 +264,15 @@ private extension PremiumTableSeatingVC {
         labelStack.spacing = 2
         labelStack.translatesAutoresizingMaskIntoConstraints = false
 
+        let checkoutButtonColor = UIColor(hex: "#D99935")
+        let checkoutTextColor = checkoutButtonColor.suitableTextColor()
+
         checkoutBtn.setTitle("Checkout", for: .normal)
+        checkoutBtn.setTitleColor(checkoutTextColor, for: .normal)
+        checkoutBtn.setTitleColor(checkoutTextColor.withAlphaComponent(0.75), for: .highlighted)
+        checkoutBtn.tintColor = checkoutTextColor
         checkoutBtn.titleLabel?.font = Constant.Font.geistMedium(size: 16)
-        checkoutBtn.backgroundColor  = UIColor(hex: "#D99935")
+        checkoutBtn.backgroundColor  = checkoutButtonColor
         checkoutBtn.layer.cornerRadius = 24
         checkoutBtn.layer.cornerCurve = .continuous
         checkoutBtn.layer.masksToBounds = true
@@ -274,7 +280,7 @@ private extension PremiumTableSeatingVC {
         checkoutBtn.translatesAutoresizingMaskIntoConstraints = false
         checkoutBtn.addTarget(self, action: #selector(onCheckoutTapped), for: .touchUpInside)
 
-        checkoutLoader.color = UIColor(hex: "#121212")
+        checkoutLoader.color = checkoutTextColor
         checkoutLoader.hidesWhenStopped = true
         checkoutLoader.translatesAutoresizingMaskIntoConstraints = false
 
@@ -623,7 +629,7 @@ private extension PremiumTableSeatingVC {
         }
 
         let slots = (area.timeSlots ?? [])
-            .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
+            .filter { $0.isBookable }
             .sorted { (lhs, rhs) in
                 (lhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
                 <
