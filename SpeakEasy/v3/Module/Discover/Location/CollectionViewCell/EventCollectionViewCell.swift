@@ -139,15 +139,10 @@ private extension EventCollectionViewCell {
             ]
         )
         
-//        venueName.text = event.venue?.name.uppercased()
-        venueName.text = event.venue?.name
+        venueName.text = event.displayVenueName
         eventName.text = event.title
 
-        eventDate.text = formattedDate(
-            customText: event.openTimeCustomText,
-            startDate: event.startDateTime,
-            timezone: event.venue?.useTimezone ?? ""
-        )
+        eventDate.text = event.eventCardDateText()
     }
 
     func setupPremiumExperience(_ event: Event) {
@@ -175,14 +170,10 @@ private extension EventCollectionViewCell {
             ]
         )
 
-        venueName.text = "PREMIUM EXPERIENCE"
+        venueName.text = event.displayVenueNameOrFallback("PREMIUM EXPERIENCE")
         eventName.text = event.title
 
-        eventDate.text = formattedDate(
-            customText: event.openTimeCustomText,
-            startDate: event.startDateTime,
-            timezone: event.venue?.useTimezone ?? ""
-        )
+        eventDate.text = event.eventCardDateText()
     }
 
     func setupVenue(_ venue: ClipVenue) {
@@ -235,21 +226,4 @@ private extension EventCollectionViewCell {
         }
     }
 
-    func formattedDate(
-        customText: String?,
-        startDate: String,
-        timezone: String
-    ) -> String {
-
-        if let customText,
-           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return customText
-        }
-
-        return startDate.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .EEEMMMD,
-            customTimeZone: timezone
-        )
-    }
 }

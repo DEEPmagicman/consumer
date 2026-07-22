@@ -239,15 +239,10 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let imageURL: String?
         let placeholder: UIImage?
 
-            dateText = event.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .MMMDDATHMMA,
-                useDayLightSavingTime: true,
-                customTimeZone: event.venue?.useTimezone ?? ""
-            )
+        dateText = event.eventCardDateText()
 
-            imageURL = (event.flyer?.key ?? "").imageURL
-            placeholder = Constant.Icon.uploadImage
+        imageURL = (event.flyer?.key ?? "").imageURL
+        placeholder = Constant.Icon.uploadImage
 
         let status =
         event.isPremium == true
@@ -260,7 +255,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
                 placeholder: placeholder,
                 badgeText: nil,
                 title: event.title,
-                subtitle: event.venue?.name.uppercased() ?? "",
+                subtitle: event.displayVenueName.uppercased(),
                 dateText: dateText,
                 statusText: status?.text,
                 statusBgColor: status?.backgroundColor,
@@ -277,12 +272,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let placeholder: UIImage?
 
         if let event = booking.event {
-            dateText = event.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .MMMDDATHMMA,
-                useDayLightSavingTime: true,
-                customTimeZone: booking.venueObject?.useTimezone ?? ""
-            )
+            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
@@ -314,12 +304,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let placeholder: UIImage?
 
         if let event = booking.event {
-            dateText = event.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .MMMDDATHMMA,
-                useDayLightSavingTime: true,
-                customTimeZone: booking.venueObject?.useTimezone ?? ""
-            )
+            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
@@ -352,12 +337,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         var eventType: EventType?
 
         if let event = booking.event {
-            dateText = event.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .MMMDDATHMMA,
-                useDayLightSavingTime: true,
-                customTimeZone: booking.venueObject?.useTimezone ?? ""
-            )
+            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage

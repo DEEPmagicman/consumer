@@ -628,13 +628,7 @@ private extension PremiumTableSeatingVC {
             return
         }
 
-        let slots = (area.timeSlots ?? [])
-            .filter { $0.isBookable }
-            .sorted { (lhs, rhs) in
-                (lhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
-                <
-                (rhs.startTime?.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: true, isUTC: false) ?? .distantFuture)
-            }
+        let slots = sortedBookableTimeSlots(for: area)
 
         let slotOptions = slots.compactMap { slot -> (slot: TableTimeSlot, option: PremiumArrivalTimeOption)? in
             let title = formattedTime(slot.startTime)
@@ -684,6 +678,14 @@ private extension PremiumTableSeatingVC {
         return "\(startText) - \(endText)"
     }
 
+    func sortedBookableTimeSlots(for area: SeatingArea) -> [TableTimeSlot] {
+        TableTimeSlot.sortedByBusinessStart(
+            (area.timeSlots ?? []).filter { $0.isBookable },
+            timezone: venueTimezoneIdentifier(),
+            businessStartTime: event?.venue?.businessStartTime
+        )
+    }
+
     func formattedTime(_ value: String?) -> String {
         guard
             let value,
@@ -697,9 +699,23 @@ private extension PremiumTableSeatingVC {
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormat.hmma.rawValue
         formatter.timeZone = TimeZone(
-            identifier: event?.venue?.useTimezone ?? event?.venue?.timezone ?? ""
+            identifier: venueTimezoneIdentifier()
         ) ?? .current
         return formatter.string(from: date)
+    }
+
+    func venueTimezoneIdentifier() -> String {
+        if let timezone = event?.venue?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        let useTimezone = event?.venue?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let useTimezone, !useTimezone.isEmpty {
+            return useTimezone
+        }
+
+        return TimeZone.current.identifier
     }
 
     func arrivalTimeAccentColor() -> UIColor {
@@ -737,12 +753,14 @@ private extension PremiumTableSeatingVC {
         setCheckoutLoading(true)
 
         TablePresenter.createSeatingAreaBooking(
-            eventId: event.id ?? "",
+            eventId: event.id,
             seatingAreaId: area.id ?? "",
             timeSlotId: selectedTimeSlot?.id,
             venueId: event.venue?.id ?? "",
             guests: currentGuestCount,
             queueId: queueId,
+            consumerUserId: UserDefault.shared.user?.id ?? "",
+            mininumSpend: activeMinimum(),
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] success, message, response in

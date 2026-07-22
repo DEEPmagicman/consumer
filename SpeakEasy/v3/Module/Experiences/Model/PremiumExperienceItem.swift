@@ -328,30 +328,20 @@ private extension PremiumExperienceItem {
     }
 
     static func resolvedVenueName(event: Event) -> String {
-        let customVenue = event.customVenue?.name?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        if let customVenue = customVenue, !customVenue.isEmpty {
-            return customVenue
-        }
-
-        let venue = event.venue?.name
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return venue?.isEmpty == false ? venue! : "Premium Experience"
+        event.displayVenueNameOrFallback("Premium Experience")
     }
 
     static func resolvedVenueName(dictionary: [String: Any]) -> String {
+        if let customVenue = dictionary["customVenue"] as? [String: Any],
+           let name = firstString(in: customVenue, keys: ["name"]) {
+            return name
+        }
+
         if let venueName = firstString(
             in: dictionary,
             keys: ["venueName", "venueTitle", "locationName"]
         ) {
             return venueName
-        }
-
-        if let customVenue = dictionary["customVenue"] as? [String: Any],
-           let name = firstString(in: customVenue, keys: ["name"]) {
-            return name
         }
 
         if let venue = dictionary["venue"] as? [String: Any],
@@ -363,18 +353,7 @@ private extension PremiumExperienceItem {
     }
 
     static func resolvedDateText(event: Event) -> String {
-        if let customText = event.openTimeCustomText?
-            .trimmingCharacters(in: .whitespacesAndNewlines),
-           !customText.isEmpty {
-            return customText
-        }
-
-        return event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .MMMDDATHMMA,
-            useDayLightSavingTime: true,
-            customTimeZone: event.venue?.useTimezone ?? ""
-        )
+        event.eventCardDateText()
     }
 
     static func resolvedDateText(dictionary: [String: Any]) -> String {
@@ -397,14 +376,13 @@ private extension PremiumExperienceItem {
                 firstString(in: $0, keys: ["useTimezone", "timezone"])
             } ?? firstString(in: dictionary, keys: ["timezone"]) ?? ""
 
-        let formatted = startDate.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .MMMDDATHMMA,
-            useDayLightSavingTime: true,
-            customTimeZone: timezone
+        let formatted = Event.eventCardDateText(
+            customText: nil,
+            startDate: startDate,
+            timezone: timezone
         )
 
-        return formatted == "No date Found" ? startDate : formatted
+        return formatted
     }
 
     static func resolvedGuestText(

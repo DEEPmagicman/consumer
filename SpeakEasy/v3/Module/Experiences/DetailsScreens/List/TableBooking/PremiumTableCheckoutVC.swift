@@ -666,11 +666,8 @@ private extension PremiumTableCheckoutVC {
 
     func configureHeader() {
         eventTitleMarqueeLabel.setText(event?.title)
-        venueLabel.text      = event?.venue?.name.uppercased()
-        let tz   = event?.venue?.useTimezone ?? ""
-        let date = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: tz) ?? ""
-        let time = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: tz) ?? ""
-        dateLabel.text      = date.isEmpty ? "" : "\(date) at \(time)"
+        venueLabel.text      = event?.displayVenueName.uppercased()
+        dateLabel.text      = eventDateTimeText()
         dateLabel.textColor = whiteLabelAccentColor
         applyBuyButtonTheme()
         seatingLabel.text = seatingAreas.first?.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
@@ -678,6 +675,46 @@ private extension PremiumTableCheckoutVC {
             : "Table seating"
         configureAgreementText()
         configureSummaryPrice(total: nil)
+    }
+
+    func eventDateTimeText() -> String {
+        guard let event else { return "" }
+
+        if let customText = event.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return customText
+        }
+
+        let timezone = event.venue?.useTimezone ?? event.venue?.timezone ?? ""
+        let dateText = event.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .EEEMMMD,
+            customTimeZone: timezone
+        )
+        let startTime = event.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .hmma,
+            customTimeZone: timezone
+        )
+
+        guard !dateText.isEmpty, !startTime.isEmpty else { return "" }
+
+        let hideEnd = event.hideEventEnd == true
+        let hasEndTime = !(event.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+        if hideEnd || !hasEndTime {
+            return "\(dateText) at \(startTime)"
+        }
+
+        let endTime = event.endDateTime?.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .hmma,
+            customTimeZone: timezone
+        ) ?? ""
+
+        return endTime.isEmpty
+            ? "\(dateText) at \(startTime)"
+            : "\(dateText) at \(startTime) - \(endTime)"
     }
 
     func configureGuest() {
@@ -1032,7 +1069,7 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.isChecked = true
         termsAgreementView.isHidden = terms.isEmpty
 
-        let venueName = event?.venue?.name ?? "the venue"
+        let venueName = event?.displayVenueNameOrFallback("the venue") ?? "the venue"
         let fallbackPolicy =
             "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
         var policy = cleanAgreementText(settings?.policyText ?? fallbackPolicy)

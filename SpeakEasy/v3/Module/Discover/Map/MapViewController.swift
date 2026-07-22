@@ -942,7 +942,7 @@ class MapViewController: UIViewController {
                         total: items.count
                     ),
                     title: item.event.title,
-                    subtitle: item.event.venue?.name ?? item.event.customVenue?.name,
+                    subtitle: item.event.displayVenueName,
                     imageURL: eventPinBackgroundImageURL(item.event),
                     logoImageURL: eventVenueLogoImageURL(item.event),
                     kind: .event(item.event)

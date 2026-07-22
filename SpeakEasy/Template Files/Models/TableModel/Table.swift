@@ -203,6 +203,108 @@ struct TableTimeSlot: Codable {
     }
 }
 
+extension TableTimeSlot {
+
+    static func sortedByBusinessStart(
+        _ slots: [TableTimeSlot],
+        timezone: String?,
+        businessStartTime: String?
+    ) -> [TableTimeSlot] {
+
+        guard let businessStartSeconds = seconds(from: businessStartTime) else {
+            return slots.sorted {
+                (date(from: $0.startTime) ?? .distantFuture)
+                <
+                (date(from: $1.startTime) ?? .distantFuture)
+            }
+        }
+
+        let timezoneIdentifier = timezone?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let resolvedTimezoneIdentifier: String
+        if let timezoneIdentifier, !timezoneIdentifier.isEmpty {
+            resolvedTimezoneIdentifier = timezoneIdentifier
+        } else {
+            resolvedTimezoneIdentifier = TimeZone.current.identifier
+        }
+
+        let timeZone = TimeZone(identifier: resolvedTimezoneIdentifier) ?? .current
+
+        return slots.sorted { lhs, rhs in
+            let lhsKey = businessDaySortKey(
+                for: lhs,
+                timeZone: timeZone,
+                businessStartSeconds: businessStartSeconds
+            )
+            let rhsKey = businessDaySortKey(
+                for: rhs,
+                timeZone: timeZone,
+                businessStartSeconds: businessStartSeconds
+            )
+
+            if lhsKey != rhsKey {
+                return lhsKey < rhsKey
+            }
+
+            return (date(from: lhs.startTime) ?? .distantFuture)
+            <
+            (date(from: rhs.startTime) ?? .distantFuture)
+        }
+    }
+
+    private static func businessDaySortKey(
+        for slot: TableTimeSlot,
+        timeZone: TimeZone,
+        businessStartSeconds: Int
+    ) -> Int {
+
+        guard let date = date(from: slot.startTime) else {
+            return Int.max
+        }
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+
+        let components = calendar.dateComponents(
+            [.hour, .minute, .second],
+            from: date
+        )
+
+        let slotSeconds =
+        (components.hour ?? 0) * 3600 +
+        (components.minute ?? 0) * 60 +
+        (components.second ?? 0)
+
+        return slotSeconds < businessStartSeconds
+        ? slotSeconds + 86_400
+        : slotSeconds
+    }
+
+    private static func seconds(from businessStartTime: String?) -> Int? {
+        let parts = businessStartTime?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .split(separator: ":")
+            .compactMap { Int($0) } ?? []
+
+        guard parts.count >= 2 else {
+            return nil
+        }
+
+        return parts[0] * 3600 +
+        parts[1] * 60 +
+        (parts.count > 2 ? parts[2] : 0)
+    }
+
+    private static func date(from value: String?) -> Date? {
+        guard let value else { return nil }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = DateFormat.yyyyMMddTHHmmssSSSz.rawValue
+        return formatter.date(from: value)
+    }
+}
+
 struct SeatingAreaBookingResponse: Codable {
     let id: String
     let eventId: String

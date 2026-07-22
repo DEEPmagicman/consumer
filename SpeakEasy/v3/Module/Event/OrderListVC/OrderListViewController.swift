@@ -431,7 +431,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private func setupHeaderData() {
-        venueName.text = event?.venue?.name.uppercased()
+        venueName.text = event?.displayVenueName.uppercased()
         setHeaderTitle(event?.title)
 
         if let customText = event?.openTimeCustomText,

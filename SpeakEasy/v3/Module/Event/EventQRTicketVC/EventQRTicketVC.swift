@@ -819,7 +819,7 @@ class EventQRTicketVC: UIViewController {
 
         let venueLabel = UILabel()
         venueLabel.translatesAutoresizingMaskIntoConstraints = false
-        venueLabel.text = booking?.venueObject?.name ?? booking?.event?.venue?.name ?? ""
+        venueLabel.text = bookingVenueDisplayName()
         venueLabel.textAlignment = .center
         venueLabel.font = Constant.Font.geistMedium(size: 22)
         venueLabel.textColor = .white
@@ -902,9 +902,7 @@ class EventQRTicketVC: UIViewController {
         guard let booking else { return }
 
         eventHeaderTitleLabel.setText(booking.event?.title ?? "-")
-        eventHeaderVenueLabel.text = booking.venueObject?.name
-            ?? booking.event?.venue?.name
-            ?? "-"
+        eventHeaderVenueLabel.text = bookingVenueDisplayName(fallback: "-")
         eventHeaderTimeLabel.text = eventHeaderTimeText()
         applyWhiteLabelTheme()
         accountNameLabel.text = accountNameText()
@@ -941,8 +939,8 @@ class EventQRTicketVC: UIViewController {
             ? booking.venueObject?.venueSettings?.compedTicketQrCodeBorderColor
             : nil,
             useFallbackWhenPreferredMissing: booking.isCompedTicket == true,
-            fallbackColor: "#19D43A"
-        ) ?? UIColor(hex: "#19D43A")
+            fallbackColor: nil
+        ) ?? .clear
     }
 
     private func isFreeEventBooking(_ booking: Booking) -> Bool {
@@ -1371,13 +1369,26 @@ class EventQRTicketVC: UIViewController {
             ?? booking.event?.venue?.useTimezone
             ?? booking.event?.venue?.timezone
             ?? ""
-        let purchasedAt = booking.createdAt.convertDateFormat(
-            from: .yyyyMMddTHHmmssSSSz,
-            to: .MMDDYYYYHMMA,
-            isUTC: true,
-            customTimeZone: timezone
-        )
-        return "Purchased at \(purchasedAt)"
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = DateFormat.yyyyMMddTHHmmssSSSz.rawValue
+        inputFormatter.timeZone = TimeZone(identifier: "UTC")
+
+        guard let purchaseDate = inputFormatter.date(from: booking.createdAt) else {
+            return "Purchased at \(booking.createdAt)"
+        }
+
+        let venueTimeZone = TimeZone(identifier: timezone) ?? .current
+
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MM/dd/yyyy h:mma"
+        outputFormatter.timeZone = venueTimeZone
+
+        let timeZoneText = venueTimeZone.abbreviation(for: purchaseDate) ?? venueTimeZone.abbreviation() ?? ""
+        let purchasedAt = outputFormatter.string(from: purchaseDate)
+
+        return timeZoneText.isEmpty
+            ? "Purchased at \(purchasedAt)"
+            : "Purchased at \(purchasedAt) (\(timeZoneText))"
     }
 
     private func backupCodeText() -> String {
@@ -1455,10 +1466,19 @@ class EventQRTicketVC: UIViewController {
     }
 
     private func eventLocationName() -> String {
-        booking?.event?.customVenue?.name
-            ?? booking?.venueObject?.name
-            ?? booking?.event?.venue?.name
-            ?? "Venue"
+        bookingVenueDisplayName(fallback: "Venue")
+    }
+
+    private func bookingVenueDisplayName(fallback: String = "") -> String {
+        if let eventVenueName = booking?.event?.displayVenueName,
+           !eventVenueName.isEmpty {
+            return eventVenueName
+        }
+
+        let bookingVenueName = booking?.venueObject?.name
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        return bookingVenueName.isEmpty ? fallback : bookingVenueName
     }
 
     private func presentAddPKPass(_ pass: PKPass) {

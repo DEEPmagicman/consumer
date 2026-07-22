@@ -152,7 +152,7 @@ private extension PremiumEventContainerVC {
         
         headerView.configure(
             title: event?.title ?? "",
-            venue: event?.venue?.name ?? ""
+            venue: event?.displayVenueName ?? ""
         )
     }
     

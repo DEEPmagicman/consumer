@@ -605,13 +605,7 @@ PinterestLayoutDelegate {
 
             if let event = booking.event {
 
-                return event.startDateTime.convertDateFormat(
-                    from: .yyyyMMddHHmmss,
-                    to: .MMMDDATHMMA,
-                    useDayLightSavingTime: true,
-                    customTimeZone:
-                        booking.venueObject?.useTimezone ?? ""
-                )
+                return event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
             }
 
             return booking.createdAt.convertDateFormat(

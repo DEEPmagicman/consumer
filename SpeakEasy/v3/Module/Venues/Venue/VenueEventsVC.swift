@@ -447,14 +447,9 @@ extension VenueEventsVC: PinterestLayoutDelegate {
         let imageHeight = width * 1.2
 
         let title = event.title
-        let venue = event.venue?.name ?? ""
+        let venue = event.displayVenueName
 
-        let dateText = event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .MMMDDATHMMA,
-            useDayLightSavingTime: true,
-            customTimeZone: event.venue?.useTimezone ?? ""
-        )
+        let dateText = event.eventCardDateText()
 
         let titleFont = Constant.Font.geistMedium(size: 15)
         let venueFont = Constant.Font.geistMedium(size: 13)

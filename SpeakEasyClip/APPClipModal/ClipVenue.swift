@@ -26,6 +26,7 @@ struct ClipVenue: Codable {
     var website: String?
     var description: String?
     var status: String?
+    var businessStartTime: String?
 //    var bookingStatus: String?
 //    var venueVibes: [String]
     var isDeleted: Bool?

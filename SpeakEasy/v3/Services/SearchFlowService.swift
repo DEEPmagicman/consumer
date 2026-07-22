@@ -112,7 +112,7 @@ final class SearchFlowService {
                     title: $0.title,
                     dateText: Self.displayDate(for: $0),
                     imageURL: Self.mediaURL($0.flyer?.key),
-                    venueName: $0.venue?.name,
+                    venueName: $0.displayVenueName,
                     event: $0
                 )
             }
@@ -284,7 +284,7 @@ final class SearchFlowService {
                         title: $0.title,
                         dateText: Self.displayDate(for: $0),
                         imageURL: ($0.flyer?.key ?? "").imageURL,
-                        venueName: $0.venue?.name,
+                        venueName: $0.displayVenueName,
                         event: $0
                     )
                 },
@@ -641,16 +641,6 @@ private extension SearchFlowService {
 
     static func displayDate(for event: Event) -> String? {
 
-        if let customText = event.openTimeCustomText,
-           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return customText
-        }
-
-        return event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .MMMDDATHMMA,
-            useDayLightSavingTime: true,
-            customTimeZone: event.venue?.useTimezone ?? ""
-        )
+        event.eventCardDateText()
     }
 }

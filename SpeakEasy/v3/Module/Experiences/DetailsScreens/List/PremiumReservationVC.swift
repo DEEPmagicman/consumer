@@ -26,7 +26,12 @@ final class PremiumReservationVC: UIViewController {
 
     // MARK: Data
 
-    var event: Event?
+    var event: Event? {
+        didSet {
+            guard isViewLoaded, !isInitialLoading else { return }
+            reloadUI()
+        }
+    }
     var promotionLinkId = ""
     var promotionLinkUniqueCode = ""
 
@@ -455,13 +460,7 @@ private extension PremiumReservationVC {
             return ""
         }
 
-        let slots = (area.timeSlots ?? [])
-            .filter { $0.isBookable }
-            .sorted { lhs, rhs in
-                reservationSlotDate(lhs.startTime) ?? .distantFuture
-                <
-                reservationSlotDate(rhs.startTime) ?? .distantFuture
-            }
+        let slots = sortedBookableTimeSlots(for: area)
 
         guard let first = slots.first else { return "" }
 
@@ -490,15 +489,37 @@ private extension PremiumReservationVC {
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormat.hmma.rawValue
         formatter.timeZone = TimeZone(
-            identifier: event?.venue?.useTimezone ?? event?.venue?.timezone ?? ""
+            identifier: venueTimezoneIdentifier()
         ) ?? .current
         return formatter.string(from: date)
+    }
+
+    func sortedBookableTimeSlots(for area: SeatingArea) -> [TableTimeSlot] {
+        TableTimeSlot.sortedByBusinessStart(
+            (area.timeSlots ?? []).filter { $0.isBookable },
+            timezone: venueTimezoneIdentifier(),
+            businessStartTime: event?.venue?.businessStartTime
+        )
+    }
+
+    func venueTimezoneIdentifier() -> String {
+        if let timezone = event?.venue?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        let useTimezone = event?.venue?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let useTimezone, !useTimezone.isEmpty {
+            return useTimezone
+        }
+
+        return TimeZone.current.identifier
     }
 }
 
 private extension PremiumReservationVC {
 
-    func getLowestPricedAvailableSlot(
+    func getFirstAvailableSlotValues(
         for area: SeatingArea
     ) -> (
         minimum: Double,
@@ -519,9 +540,7 @@ private extension PremiumReservationVC {
             )
         }
 
-        let availableSlots = (area.timeSlots ?? []).filter {
-            $0.isBookable
-        }
+        let availableSlots = sortedBookableTimeSlots(for: area)
 
         guard !availableSlots.isEmpty else {
 
@@ -532,22 +551,13 @@ private extension PremiumReservationVC {
             )
         }
 
-        return availableSlots
-            .compactMap {
-                calculatedDepositValues(
-                    for: area,
-                    slot: $0,
-                    fees: fees
-                )
-            }
-            .sorted {
-                if $0.deposit == $1.deposit {
-                    return $0.minimum < $1.minimum
-                }
-
-                return $0.deposit < $1.deposit
-            }
-            .first
+        return availableSlots.first.map {
+            calculatedDepositValues(
+                for: area,
+                slot: $0,
+                fees: fees
+            )
+        }
     }
 
     func calculatedDepositValues(
@@ -812,7 +822,7 @@ private extension PremiumReservationVC {
             ? getAvailableTimeRange(for: item)
             : ""
 
-        let values = getLowestPricedAvailableSlot(
+        let values = getFirstAvailableSlotValues(
             for: item
         )
 
@@ -921,7 +931,7 @@ private extension PremiumReservationVC {
 
         TablePresenter.createSeatingAreaBooking(
 
-            eventId: event.id ?? "",
+            eventId: event.id,
 
             seatingAreaId: area.id ?? "",
 
@@ -936,14 +946,19 @@ private extension PremiumReservationVC {
 
             queueId: queueId,
 
+            consumerUserId: UserDefault.shared.user?.id ?? "",
+
+            mininumSpend: bookingCreateMinimum(
+                for: area,
+                timeSlotId: timeSlotId,
+                guestCount: guestCount
+            ),
+
             promotionLinkId: promotionLinkId,
 
             promotionLinkUniqueCode: promotionLinkUniqueCode
 
-        ) { [weak self]
-            success,
-            message,
-            _ in
+        ) { [weak self] success, message, _ in
 
             guard let self else {
                 return
@@ -966,6 +981,28 @@ private extension PremiumReservationVC {
                 )
             }
         }
+    }
+
+    func bookingCreateMinimum(
+        for area: SeatingArea,
+        timeSlotId: String?,
+        guestCount: Int
+    ) -> Double {
+
+        let selectedSlot = (area.timeSlots ?? [])
+            .first { $0.id == timeSlotId }
+
+        let defaultGuests = area.defaultGuest ?? 0
+        let extraGuests = max(0, guestCount - defaultGuests)
+
+        if area.bookingType == .timeWise {
+            let base = selectedSlot?.minimum ?? area.minimum ?? 0
+            let extraCharge = selectedSlot?.extraPersonCharge ?? area.extraPersonCharge ?? 0
+
+            return base + Double(extraGuests) * extraCharge
+        }
+
+        return (area.minimum ?? 0) + Double(extraGuests) * (area.extraPersonCharge ?? 0)
     }
 }
 

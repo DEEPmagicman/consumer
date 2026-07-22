@@ -580,3 +580,69 @@ struct InstagramProfile: Codable {
     let profilePictureFilename: String?
     let message: String?
 }
+
+extension Event {
+
+    var displayVenueName: String {
+        if let customVenueName = customVenue?.name?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+           !customVenueName.isEmpty {
+            return customVenueName
+        }
+
+        let venueName = venue?.name
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        return venueName
+    }
+
+    func displayVenueNameOrFallback(_ fallback: String) -> String {
+        displayVenueName.isEmpty ? fallback : displayVenueName
+    }
+
+    func eventCardDateText(timezone: String? = nil) -> String {
+        let preferredTimezone = timezone?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return Self.eventCardDateText(
+            customText: openTimeCustomText,
+            startDate: startDateTime,
+            timezone: preferredTimezone?.isEmpty == false
+                ? preferredTimezone
+                : venue?.useTimezone ?? venue?.timezone
+        )
+    }
+
+    static func eventCardDateText(
+        customText: String?,
+        startDate: String,
+        timezone: String?
+    ) -> String {
+        if let customText = customText?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !customText.isEmpty {
+            return customText
+        }
+
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        inputFormatter.timeZone = TimeZone(identifier: "UTC")
+
+        guard let date = inputFormatter.date(from: startDate) else {
+            return startDate
+        }
+
+        let outputTimeZone = TimeZone(identifier: timezone ?? "") ?? .current
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = DateFormat.EEEMMMD.rawValue
+        dateFormatter.timeZone = outputTimeZone
+
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = DateFormat.hmmA.rawValue
+        timeFormatter.timeZone = outputTimeZone
+
+        let dateText = dateFormatter.string(from: date)
+        let timeText = timeFormatter.string(from: date)
+
+        return "\(dateText) at \(timeText)"
+    }
+}

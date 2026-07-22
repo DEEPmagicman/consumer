@@ -176,6 +176,16 @@ class TableBookingListVC: UIViewController {
             guard let self = self else { return }
             let uuid = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
             let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
+            let selectedSlot = (item.timeSlots ?? []).first { $0.id == time }
+            let defaultGuests = item.defaultGuest ?? 0
+            let extraGuests = max(0, guestCount - defaultGuests)
+            let baseMinimum = item.bookingType == .timeWise
+                ? selectedSlot?.minimum ?? item.minimum ?? 0
+                : item.minimum ?? 0
+            let extraCharge = item.bookingType == .timeWise
+                ? selectedSlot?.extraPersonCharge ?? item.extraPersonCharge ?? 0
+                : item.extraPersonCharge ?? 0
+            let mininumSpend = baseMinimum + Double(extraGuests) * extraCharge
 
             TablePresenter.createSeatingAreaBooking(
                 eventId: self.event?.id ?? "",
@@ -183,7 +193,9 @@ class TableBookingListVC: UIViewController {
                 timeSlotId: item.bookingType == .default ? nil : time,
                 venueId: event?.venue?.id ?? "",
                 guests: guestCount,
-                queueId: queueId
+                queueId: queueId,
+                consumerUserId: UserDefault.shared.user?.id ?? "",
+                mininumSpend: mininumSpend
             ) { isSuccess, errMsg, _ in
                 
                 if isSuccess {

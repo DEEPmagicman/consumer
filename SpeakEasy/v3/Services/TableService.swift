@@ -99,6 +99,8 @@ final class TableService {
         venueId: String,
         guests: Int,
         queueId: String,
+        consumerUserId: String = "",
+        mininumSpend: Double? = nil,
         promotionLinkId: String = "",
         promotionLinkUniqueCode: String = "",
         completion: @escaping (
@@ -128,6 +130,17 @@ final class TableService {
             "items": [item],
             "queueId": queueId
         ]
+
+        let trimmedConsumerUserId =
+        consumerUserId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedConsumerUserId.isEmpty {
+            params["consumerUserId"] = trimmedConsumerUserId
+        }
+
+        if let mininumSpend {
+            params["mininumSpend"] = mininumSpend
+        }
+
         let trimmedPromotionLinkId =
         promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmedPromotionLinkId.isEmpty {

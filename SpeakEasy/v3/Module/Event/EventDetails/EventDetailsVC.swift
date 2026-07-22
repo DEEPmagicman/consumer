@@ -2024,7 +2024,7 @@ class EventDetailsVC: UIViewController {
         } else {
             venueLogo.isHidden = true
         }
-        venueTitleLbl.text = event.venue?.name.uppercased() ?? ""
+        venueTitleLbl.text = event.displayVenueName.uppercased()
         pageTitleName.text = event.title
         
         applyWhiteLabelTheme()
@@ -2086,9 +2086,7 @@ class EventDetailsVC: UIViewController {
         setupPolicyExpandableLabel()
         venueName.text = venueFooterTitle(for: event)
         
-        venueNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")"
-        : "\(venueDetails?.name ?? "")"
+        venueNameLbl.text = event.displayVenueNameOrFallback(venueDetails?.name ?? "")
         eventAddressView.isHidden = !(event.showAddress ?? true)
         pageTitleName.text = event.title
         let addressComponents: [String]
@@ -2475,6 +2473,14 @@ class EventDetailsVC: UIViewController {
         let hasAnySeatingAreas = !seatingAreas.isEmpty
         let hasSeatingAreas = !seatingAreasFilteredOut.isEmpty
 
+        guard
+            isEventDetailAPICalled,
+            hasLoadedSeatingAreas
+        else {
+            setVIPTablesView(hidden: true)
+            return
+        }
+
         if isReservationRequestEnabled ?? false {
             setVIPTablesView(hidden: false)
             configureVIPTablesText(defaultSubtitle: (
@@ -2486,8 +2492,6 @@ class EventDetailsVC: UIViewController {
         }
 
         guard
-            isEventDetailAPICalled,
-            hasLoadedSeatingAreas,
             didLoadSeatingAreasSuccessfully,
             hasAnySeatingAreas
         else {
@@ -3424,6 +3428,11 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickVIPtable(_ sender: Any) {
         if event?.isEnableReservationRequest == true {
+            guard hasLoadedSeatingAreas else {
+                AppHaptic.warning()
+                return
+            }
+
             AppHaptic.cardOpen()
             openPremiumEventContainer(with: seatingAreas)
             return

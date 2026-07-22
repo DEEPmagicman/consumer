@@ -64,9 +64,14 @@ final class PremiumReservationCell: UITableViewCell {
         descriptionLabel.text = nil
         depositLabel.text = nil
         minimumLabel.text = nil
+        onBookTap = nil
         
         guestView.isHidden = false
         timeView.isHidden = false
+        depositLabel.isHidden = false
+        minimumLabel.isHidden = false
+        bookButton.isEnabled = true
+        bookButton.isUserInteractionEnabled = true
     }
     
     override func systemLayoutSizeFitting(
@@ -308,7 +313,7 @@ final class PremiumReservationCell: UITableViewCell {
             )
         }
         
-        depositLabel.text = "\(depositText)"
+        depositLabel.text = depositText
         
         minimumLabel.text = minimumText
         

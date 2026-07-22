@@ -61,6 +61,8 @@ final class TablePresenter {
         venueId: String,
         guests: Int,
         queueId: String,
+        consumerUserId: String = "",
+        mininumSpend: Double? = nil,
         promotionLinkId: String = "",
         promotionLinkUniqueCode: String = "",
         completion: @escaping (_ isSuccess: Bool,
@@ -83,6 +85,13 @@ final class TablePresenter {
             "items": [item],
             "queueId": queueId
         ]
+        let trimmedConsumerUserId = consumerUserId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedConsumerUserId.isEmpty {
+            params["consumerUserId"] = trimmedConsumerUserId
+        }
+        if let mininumSpend {
+            params["mininumSpend"] = mininumSpend
+        }
         let trimmedPromotionLinkId = promotionLinkId.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmedPromotionLinkId.isEmpty {
             params["promotionLinkId"] = trimmedPromotionLinkId

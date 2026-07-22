@@ -51,13 +51,9 @@ class MapEventsTableViewCell: UITableViewCell {
             ]
         )
 
-        venueLabel.text = (event.venue?.name ?? event.customVenue?.name ?? "").uppercased()
+        venueLabel.text = event.displayVenueName.uppercased()
         titleLabel.text = event.title
-        dateLabel.text = formattedDate(
-            customText: event.openTimeCustomText,
-            startDate: event.startDateTime,
-            timezone: event.venue?.useTimezone ?? ""
-        )
+        dateLabel.text = event.eventCardDateText()
         actionLabel.text = "View event"
         badgeLabel.text = "PREMIUM AVAILABLE"
         badgeView.isHidden = event.isPremium != true
@@ -88,21 +84,4 @@ class MapEventsTableViewCell: UITableViewCell {
         actionLabel.superview?.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10)
     }
 
-    private func formattedDate(
-        customText: String?,
-        startDate: String,
-        timezone: String
-    ) -> String {
-        if let customText,
-           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return customText
-        }
-
-        return startDate.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .EEEMMMD,
-            customTimeZone: timezone
-        )
-    }
-    
 }
