@@ -300,7 +300,9 @@ final class CustomCalendar: UIView {
     // MARK: - Helpers
 
     private func venueToday() -> Date {
-        venueCalendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        venueCalendar.startOfDay(
+            for: Constant.venueTodayDate().dateFormatter(formate: .YYYYMMDD) ?? Date()
+        )
     }
 
     private func isPastDate(_ date: Date) -> Bool {

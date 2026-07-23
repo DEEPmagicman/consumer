@@ -24,11 +24,15 @@ final class DateOfBirthSelectionVC: UIViewController {
     private let calendar = Calendar.current
     private let months = Calendar.current.monthSymbols
     private let minimumYear = 1900
-    private let maximumDate = Date()
+    private let maximumDate = Calendar.current.date(
+        byAdding: .year,
+        value: -18,
+        to: Date()
+    ) ?? Date()
 
     private var years: [Int] {
-        let currentYear = calendar.component(.year, from: maximumDate)
-        return Array(minimumYear...currentYear)
+        let maximumYear = calendar.component(.year, from: maximumDate)
+        return Array(minimumYear...maximumYear)
     }
 
     private var selectedMonth: Int
@@ -36,7 +40,12 @@ final class DateOfBirthSelectionVC: UIViewController {
     private var selectedYear: Int
 
     init(date: Date?) {
-        let initialDate = min(date ?? Calendar.current.date(byAdding: .year, value: -18, to: Date()) ?? Date(), Date())
+        let latestEligibleDate = Calendar.current.date(
+            byAdding: .year,
+            value: -18,
+            to: Date()
+        ) ?? Date()
+        let initialDate = min(date ?? latestEligibleDate, latestEligibleDate)
         selectedMonth = Calendar.current.component(.month, from: initialDate)
         selectedDay = Calendar.current.component(.day, from: initialDate)
         selectedYear = Calendar.current.component(.year, from: initialDate)
@@ -45,9 +54,14 @@ final class DateOfBirthSelectionVC: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        selectedMonth = Calendar.current.component(.month, from: Date())
-        selectedDay = Calendar.current.component(.day, from: Date())
-        selectedYear = Calendar.current.component(.year, from: Date())
+        let latestEligibleDate = Calendar.current.date(
+            byAdding: .year,
+            value: -18,
+            to: Date()
+        ) ?? Date()
+        selectedMonth = Calendar.current.component(.month, from: latestEligibleDate)
+        selectedDay = Calendar.current.component(.day, from: latestEligibleDate)
+        selectedYear = Calendar.current.component(.year, from: latestEligibleDate)
         super.init(coder: coder)
         hidesBottomBarWhenPushed = true
     }
@@ -214,7 +228,7 @@ final class DateOfBirthSelectionVC: UIViewController {
         return range.count
     }
 
-    private func clampFutureDateIfNeeded() {
+    private func clampUnderageDateIfNeeded() {
         let date = selectedDate()
         guard date == maximumDate else {
             selectedDay = min(selectedDay, daysInSelectedMonth())
@@ -228,12 +242,12 @@ final class DateOfBirthSelectionVC: UIViewController {
     }
 
     private func updateAge() {
-        let age = calendar.dateComponents([.year], from: selectedDate(), to: maximumDate).year ?? 0
-        ageNumberLabel.text = "\(max(age, 0))"
+        let age = calendar.dateComponents([.year], from: selectedDate(), to: Date()).year ?? 0
+        ageNumberLabel.text = "\(max(age, 18))"
     }
 
     private func reloadPickerAfterSelection() {
-        clampFutureDateIfNeeded()
+        clampUnderageDateIfNeeded()
         pickerView.reloadAllComponents()
         selectInitialRows()
         updateAge()

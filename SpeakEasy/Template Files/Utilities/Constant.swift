@@ -151,7 +151,7 @@ struct Constant {
     }
     
     static func venueTodayDate(_ format: DateFormat = .YYYYMMDD) -> Swift.String {
-        Date().toString(dateFormat: format, timeZone: Constant.venueTimeZoneWithOffset)
+        Date().toString(dateFormat: format, timeZone: Constant.venueTimeZone)
     }
 }
 

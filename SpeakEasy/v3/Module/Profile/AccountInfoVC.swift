@@ -370,6 +370,7 @@ final class AccountInfoVC: UIViewController {
                 UserDefault.shared.user?.email = self.emailBox.text ?? ""
                 self.originalEmail = self.emailBox.text ?? ""
                 self.updateSaveButtonState()
+                self.navigationController?.popViewController(animated: true)
             } else {
                 Alert.showAlertSheet(
                     style: .alert,

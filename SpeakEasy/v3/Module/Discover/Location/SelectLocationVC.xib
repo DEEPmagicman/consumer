@@ -161,10 +161,10 @@
                                     </userDefinedRuntimeAttributes>
                                 </textField>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qsO-5h-bgn">
-                                    <rect key="frame" x="333" y="16" width="16" height="16"/>
+                                    <rect key="frame" x="329" y="14" width="20" height="20"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="QPq-Dr-UUO"/>
-                                        <constraint firstAttribute="width" constant="16" id="xBg-MJ-kS7"/>
+                                        <constraint firstAttribute="height" constant="20" id="QPq-Dr-UUO"/>
+                                        <constraint firstAttribute="width" constant="20" id="xBg-MJ-kS7"/>
                                     </constraints>
                                     <color key="tintColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -339,10 +339,10 @@
                                     </userDefinedRuntimeAttributes>
                                 </textField>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQK-GE-YIB">
-                                    <rect key="frame" x="333" y="10.666666666666686" width="16" height="16"/>
+                                    <rect key="frame" x="329" y="8.6666666666666856" width="20" height="20"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="LP2-TW-hmG"/>
-                                        <constraint firstAttribute="width" constant="16" id="tDk-oF-1bd"/>
+                                        <constraint firstAttribute="height" constant="20" id="LP2-TW-hmG"/>
+                                        <constraint firstAttribute="width" constant="20" id="tDk-oF-1bd"/>
                                     </constraints>
                                     <color key="tintColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>

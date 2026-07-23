@@ -36,6 +36,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
     private var timer = Timer()
     private var count = 60
     private var isVerifyingOtp = false
+    private var isResendingOtp = false
 
     var flowMode: AuthPhoneFlowMode = .login
     var initialPhone: String?
@@ -433,35 +434,42 @@ extension AuthPhoneOTPVC: AuthOTPInputViewDelegate {
     }
 
     func authOTPInputViewDidTapResend(_ view: AuthOTPInputView) {
-        count = 60
-        otpView.setResendEnabled(false)
-        startTimer()
+        guard count <= 0 else { return }
+        guard !isResendingOtp else { return }
 
+        isResendingOtp = true
+        otpView.setResendEnabled(false)
         otpView.resendBtn.showLoader(userInteraction: false)
 
-        if isFromLogin {
-            authService.resendLoginOTP(otpRef: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                guard let self else { return }
-                self.otpView.resendBtn.hideLoader()
+        let finishResend: (String?, String, Bool, String?) -> Void = { [weak self] otp, otpRef, isSuccess, errorMsg in
+            guard let self else { return }
+            self.otpView.resendBtn.hideLoader()
+            self.isResendingOtp = false
 
-                if isSuccess {
-                    self.otpRef = otpRef
-                    self.currectOtp = otp
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
-                }
+            if isSuccess {
+                self.otpRef = otpRef
+                self.currectOtp = otp
+                self.resetTimer()
+            } else {
+                self.otpView.setResendEnabled(true)
+                Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+
+        if isFromLogin {
+            authService.resendLoginOTP(otpRef: otpRef) { otp, otpRef, isSuccess, errorMsg in
+                finishResend(otp, otpRef, isSuccess, errorMsg)
+            }
+        } else if isFromSettings {
+            settingsService.resendPhoneOrEmailOTP(
+                otpRef: otpRef,
+                isPhone: !isForEmail
+            ) { otp, otpRef, isSuccess, errorMsg in
+                finishResend(otp, otpRef, isSuccess, errorMsg)
             }
         } else {
-            authService.resendSignupOTP(otpRef: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                guard let self else { return }
-                self.otpView.resendBtn.hideLoader()
-
-                if isSuccess {
-                    self.otpRef = otpRef
-                    self.currectOtp = otp
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
-                }
+            authService.resendSignupOTP(otpRef: otpRef) { otp, otpRef, isSuccess, errorMsg in
+                finishResend(otp, otpRef, isSuccess, errorMsg)
             }
         }
     }

@@ -84,6 +84,7 @@ final class V3EmptyStateView: UIView {
     private let browseEventsButton = UIButton(type: .system)
     private var imageWidthConstraint: NSLayoutConstraint?
     private var imageHeightConstraint: NSLayoutConstraint?
+    private var stackCenterYConstraint: NSLayoutConstraint?
 
     init(style: V3EmptyStateStyle) {
         super.init(frame: .zero)
@@ -111,6 +112,7 @@ final class V3EmptyStateView: UIView {
 
         imageWidthConstraint?.constant = style.imageSize.width
         imageHeightConstraint?.constant = style.imageSize.height
+        stackCenterYConstraint?.constant = style == .savedEvents ? -72 : 0
     }
 
     func setTitle(_ title: String) {
@@ -162,9 +164,11 @@ final class V3EmptyStateView: UIView {
         imageWidthConstraint = imageView.widthAnchor.constraint(equalToConstant: 100)
         imageHeightConstraint = imageView.heightAnchor.constraint(equalToConstant: 100)
 
+        stackCenterYConstraint = stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackCenterYConstraint!,
             stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 24),
             stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -24),
 

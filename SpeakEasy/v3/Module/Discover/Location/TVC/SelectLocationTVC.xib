@@ -23,9 +23,9 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Los Angeles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DYD-9c-Yga">
-                        <rect key="frame" x="59.999999999999993" y="34" width="100.33333333333331" height="18"/>
+                        <rect key="frame" x="59.999999999999993" y="31" width="100.33333333333331" height="24"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="18" id="QP0-G0-2jq"/>
+                            <constraint firstAttribute="height" constant="24" id="QP0-G0-2jq"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
