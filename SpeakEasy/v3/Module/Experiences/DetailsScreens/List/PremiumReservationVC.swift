@@ -455,56 +455,44 @@ private extension PremiumReservationVC {
             return ""
         }
 
-        let timezone =
-            event?.venue?.timezone ??
-            event?.venue?.useTimezone ??
-            TimeZone.current.identifier
-
-        let venueTimeZone = TimeZone(identifier: timezone)
-
         let slots = (area.timeSlots ?? [])
-            .sorted {
-                ($0.startTime ?? "") <
-                ($1.startTime ?? "")
+            .filter { $0.isBookable }
+            .sorted { lhs, rhs in
+                reservationSlotDate(lhs.startTime) ?? .distantFuture
+                <
+                reservationSlotDate(rhs.startTime) ?? .distantFuture
             }
 
-        guard
-            let first = slots.first,
-            let start = first.startTime,
-            let startDate = start.dateFormatter(
-                formate: .yyyyMMddTHHmmssSSSz,
-                isUTC: false
-            )
-        else {
-            return ""
-        }
+        guard let first = slots.first else { return "" }
 
-        let startText = startDate.toString(
-            dateFormat: .hmma,
-            timeZone: venueTimeZone
-        )
-
-        guard
-            let last = slots.last,
-            let end = last.startTime,
-            let endDate = end.dateFormatter(
-                formate: .yyyyMMddTHHmmssSSSz,
-                isUTC: false
-            )
-        else {
-            return startText
-        }
-
-        let endText = endDate.toString(
-            dateFormat: .hmma,
-            timeZone: venueTimeZone
-        )
+        let startText = formattedReservationTime(first.startTime)
+        guard let last = slots.last else { return startText }
+        let endText = formattedReservationTime(last.startTime)
 
         if startText == endText {
             return startText
         }
 
         return "\(startText) - \(endText)"
+    }
+
+    func reservationSlotDate(_ value: String?) -> Date? {
+        value?.dateFormatter(
+            formate: .yyyyMMddTHHmmssSSSz,
+            isTimeZoneChanged: true,
+            isUTC: false
+        )
+    }
+
+    func formattedReservationTime(_ value: String?) -> String {
+        guard let date = reservationSlotDate(value) else { return "" }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormat.hmma.rawValue
+        formatter.timeZone = TimeZone(
+            identifier: event?.venue?.useTimezone ?? event?.venue?.timezone ?? ""
+        ) ?? .current
+        return formatter.string(from: date)
     }
 }
 
@@ -532,9 +520,7 @@ private extension PremiumReservationVC {
         }
 
         let availableSlots = (area.timeSlots ?? []).filter {
-
-            ($0.issuedPublicInventory ?? 0) >
-            ($0.soldPublicInventory ?? 0)
+            $0.isBookable
         }
 
         guard !availableSlots.isEmpty else {
@@ -611,11 +597,7 @@ private extension PremiumReservationVC {
         if area.bookingType == .timeWise {
 
             let charges = (area.timeSlots ?? [])
-                .filter {
-
-                    ($0.issuedPublicInventory ?? 0) >
-                    ($0.soldPublicInventory ?? 0)
-                }
+                .filter { $0.isBookable }
                 .compactMap {
 
                     $0.extraPersonCharge

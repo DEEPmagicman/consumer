@@ -59,6 +59,10 @@ final class PremiumTableCheckoutVC: UIViewController {
         UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
     }
 
+    private var buyButtonAccentColor: UIColor {
+        UIColor(hex: "#D99935")
+    }
+
     // MARK: - UI
 
     private let scrollView       = UIScrollView()
@@ -240,7 +244,7 @@ private extension PremiumTableCheckoutVC {
         contentView.addSubview(venueLabel)
 
         dateLabel.font      = Constant.Font.geistMedium(size: 12)
-        dateLabel.textColor = UIColor(hex: event?.whiteLabelColor ?? "#E8A030")
+        dateLabel.textColor = whiteLabelAccentColor
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
 
@@ -426,7 +430,7 @@ private extension PremiumTableCheckoutVC {
         buyBtn.isUserInteractionEnabled = false
         buyBtn.alpha = 0.5
 
-        buyLoader.color = whiteLabelAccentColor.suitableTextColor()
+        buyLoader.color = buyButtonAccentColor.suitableTextColor()
         buyLoader.hidesWhenStopped = true
         buyLoader.translatesAutoresizingMaskIntoConstraints = false
 
@@ -461,7 +465,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func applyBuyButtonTheme() {
-        let color = whiteLabelAccentColor
+        let color = buyButtonAccentColor
 
         buyBtn.backgroundColor = color
         buyBtn.setTitleColor(color.suitableTextColor(), for: .normal)
@@ -993,13 +997,17 @@ private extension PremiumTableCheckoutVC {
 
         summaryPriceCard.isHidden = hasSpendAgreement || hasDepositBreakdown
 
-        paymentTopToDepositConstraint?.isActive = hasDepositBreakdown
-        paymentTopToSpendConstraint?.isActive   = !hasDepositBreakdown && hasSpendAgreement
-        paymentTopToSummaryConstraint?.isActive = !hasDepositBreakdown && !hasSpendAgreement
+        let shouldAnchorToSpend = hasSpendAgreement
+        let shouldAnchorToDeposit = !hasSpendAgreement && hasDepositBreakdown
+        let shouldAnchorToSummary = !hasSpendAgreement && !hasDepositBreakdown
 
-        promoTopToSpendConstraint?.isActive = hasSpendAgreement
-        promoTopToDepositConstraint?.isActive = hasDepositBreakdown && !hasSpendAgreement
-        promoTopToSummaryConstraint?.isActive = !hasDepositBreakdown && !hasSpendAgreement
+        paymentTopToSpendConstraint?.isActive = shouldAnchorToSpend
+        paymentTopToDepositConstraint?.isActive = shouldAnchorToDeposit
+        paymentTopToSummaryConstraint?.isActive = shouldAnchorToSummary
+
+        promoTopToSpendConstraint?.isActive = shouldAnchorToSpend
+        promoTopToDepositConstraint?.isActive = shouldAnchorToDeposit
+        promoTopToSummaryConstraint?.isActive = shouldAnchorToSummary
     }
 
     func configureAgreementText() {

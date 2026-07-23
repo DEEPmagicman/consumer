@@ -438,7 +438,7 @@ private extension PremiumInquiryCardView {
     }
 
     func configurePartySize() {
-        let maxGuest = seatingAreas.compactMap { $0.maxGuest }.max() ?? 100
+        let maxGuest = event?.eventSettings?.guestCount ?? event?.venue?.venueSettings?.reservationWidgetSettings?.guestCount ?? seatingAreas.compactMap { $0.maxGuest }.max() ?? 100
         partySizeRow.configure(max: maxGuest)
     }
 

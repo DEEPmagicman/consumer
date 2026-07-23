@@ -97,6 +97,110 @@ struct TableTimeSlot: Codable {
 
     let issuedPublicInventory: Int?
     let soldPublicInventory: Int?
+    let status: String?
+    let isEnabled: Bool?
+    let isActive: Bool?
+    let isDeleted: Bool?
+    let isDisabled: Bool?
+
+    var hasPublicInventory: Bool {
+        (issuedPublicInventory ?? 0) > (soldPublicInventory ?? 0)
+    }
+
+    var hasEnabledStatus: Bool {
+        if isDeleted == true || isDisabled == true {
+            return false
+        }
+
+        if let isEnabled {
+            return isEnabled
+        }
+
+        if let isActive {
+            return isActive
+        }
+
+        guard
+            let status = status?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(),
+            !status.isEmpty
+        else {
+            return true
+        }
+
+        return ["enabled", "enable", "on", "active", "true", "1"].contains(status)
+    }
+
+    var isBookable: Bool {
+        hasEnabledStatus && hasPublicInventory
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case startTime
+        case endTime
+        case minimum
+        case deposit
+        case depositType
+        case extraPersonCharge
+        case depositWithFees
+        case issuedPublicInventory
+        case soldPublicInventory
+        case status
+        case isEnabled
+        case isEnable
+        case enabled
+        case isActive
+        case active
+        case isDeleted
+        case isDisabled
+        case disabled
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+        startTime = try container.decodeIfPresent(String.self, forKey: .startTime)
+        endTime = try container.decodeIfPresent(String.self, forKey: .endTime)
+        minimum = try container.decodeFlexibleDouble(forKey: .minimum)
+        deposit = try container.decodeFlexibleDouble(forKey: .deposit)
+        depositType = try container.decodeIfPresent(String.self, forKey: .depositType)
+        extraPersonCharge = try container.decodeFlexibleDouble(forKey: .extraPersonCharge)
+        depositWithFees = try container.decodeFlexibleDouble(forKey: .depositWithFees)
+        issuedPublicInventory = try container.decodeIfPresent(Int.self, forKey: .issuedPublicInventory)
+        soldPublicInventory = try container.decodeIfPresent(Int.self, forKey: .soldPublicInventory)
+        status = try container.decodeFlexibleString(forKey: .status)
+        isEnabled =
+            try container.decodeFlexibleBool(forKey: .isEnabled) ??
+            (try container.decodeFlexibleBool(forKey: .isEnable)) ??
+            (try container.decodeFlexibleBool(forKey: .enabled))
+        isActive =
+            try container.decodeFlexibleBool(forKey: .isActive) ??
+            (try container.decodeFlexibleBool(forKey: .active))
+        isDeleted = try container.decodeFlexibleBool(forKey: .isDeleted)
+        isDisabled =
+            try container.decodeFlexibleBool(forKey: .isDisabled) ??
+            (try container.decodeFlexibleBool(forKey: .disabled))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(startTime, forKey: .startTime)
+        try container.encodeIfPresent(endTime, forKey: .endTime)
+        try container.encodeIfPresent(minimum, forKey: .minimum)
+        try container.encodeIfPresent(deposit, forKey: .deposit)
+        try container.encodeIfPresent(depositType, forKey: .depositType)
+        try container.encodeIfPresent(extraPersonCharge, forKey: .extraPersonCharge)
+        try container.encodeIfPresent(depositWithFees, forKey: .depositWithFees)
+        try container.encodeIfPresent(issuedPublicInventory, forKey: .issuedPublicInventory)
+        try container.encodeIfPresent(soldPublicInventory, forKey: .soldPublicInventory)
+        try container.encodeIfPresent(status, forKey: .status)
+        try container.encodeIfPresent(isEnabled, forKey: .isEnabled)
+        try container.encodeIfPresent(isActive, forKey: .isActive)
+        try container.encodeIfPresent(isDeleted, forKey: .isDeleted)
+        try container.encodeIfPresent(isDisabled, forKey: .isDisabled)
+    }
 }
 
 struct SeatingAreaBookingResponse: Codable {
@@ -554,6 +658,47 @@ extension KeyedDecodingContainer {
         if let value = try? self.decodeIfPresent(String.self, forKey: key),
            let doubleValue = Double(value) {
             return doubleValue
+        }
+
+        return nil
+    }
+
+    func decodeFlexibleString(forKey key: KeyedDecodingContainer<K>.Key) throws -> String? {
+
+        if let value = try? self.decodeIfPresent(String.self, forKey: key) {
+            return value
+        }
+
+        if let value = try? self.decodeIfPresent(Bool.self, forKey: key) {
+            return value ? "ENABLED" : "DISABLED"
+        }
+
+        if let value = try? self.decodeIfPresent(Int.self, forKey: key) {
+            return value == 0 ? "DISABLED" : "ENABLED"
+        }
+
+        return nil
+    }
+
+    func decodeFlexibleBool(forKey key: KeyedDecodingContainer<K>.Key) throws -> Bool? {
+
+        if let value = try? self.decodeIfPresent(Bool.self, forKey: key) {
+            return value
+        }
+
+        if let value = try? self.decodeIfPresent(Int.self, forKey: key) {
+            return value != 0
+        }
+
+        if let value = try? self.decodeIfPresent(String.self, forKey: key) {
+            switch value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+            case "enabled", "enable", "on", "active", "true", "1":
+                return true
+            case "disabled", "disable", "off", "inactive", "false", "0":
+                return false
+            default:
+                return nil
+            }
         }
 
         return nil

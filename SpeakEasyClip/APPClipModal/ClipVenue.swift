@@ -521,6 +521,8 @@ struct ReservationWidgetSettings: Codable {
     var isReservationRequestFormTextEnabled: Bool?
     var reservationRequestFormText: String?
     var formSubmitButtonText: String?
+    var guestCount: Int?
+    var blockDuplicateReservationRequest: Bool?
     var status: String?
     var isDeleted: Bool?
 }
