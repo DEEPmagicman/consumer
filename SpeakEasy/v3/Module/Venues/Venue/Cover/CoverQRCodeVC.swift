@@ -40,8 +40,10 @@ final class CoverQRCodeVC: UIViewController {
     var venueNameText: String? = ""
     var shouldReturnToVenueAfterClose = false
     var shouldPlayPurchaseSuccessHaptic = false
+    weak var buyAnotherCoverListTarget: CoverTicketListVC?
 
     private let paymentService = PaymentService()
+    private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
     private var dotViews: [UIView] = []
     private let scrollView = UIScrollView()
@@ -57,10 +59,15 @@ final class CoverQRCodeVC: UIViewController {
     private var wasInteractivePopGestureEnabled: Bool?
     private weak var interactivePopNavigationController: UINavigationController?
     private var isInitialLoadingVisible = false
+    private var isBuyAnotherNavigationInProgress = false
     private var hasPlayedPurchaseSuccessHaptic = false
 
+    private var isAddOnsQRCodeReady: Bool {
+        addOnsBooking != nil && addOnsQRImage != nil
+    }
+
     private var showsAddOnsPage: Bool {
-        isAddOnsAvailable && !isOnlyAddOnAvailable
+        isAddOnsAvailable && !isOnlyAddOnAvailable && isAddOnsQRCodeReady
     }
 
     private var pagerItemCount: Int {
@@ -73,7 +80,7 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     private var shouldShowWalletButton: Bool {
-        !coverWalletBookingID.isEmpty
+        false
     }
 
     // MARK: - Lifecycle
@@ -629,7 +636,10 @@ final class CoverQRCodeVC: UIViewController {
     }
 
     private func venueForPagerCell(at index: Int) -> ClipVenue? {
-        booking?.venueObject ?? venue
+        if let bookingVenue = booking?.venueObject {
+            return bookingVenue
+        }
+        return venue
     }
 
     // MARK: - Apple Wallet
@@ -642,18 +652,8 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Actions
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
         AppHaptic.primaryAction()
-        let uniqueId = booking?.venueObject?.uniqueId ?? addOnsBooking?.venue?.uniqueId ?? ""
-        let timeZone = booking?.venueObject?.timezone ?? addOnsBooking?.venue?.timezone ?? ""
-        delegate?.navigateToVenueDetail(
-            venueId: booking?.venueId ?? venueId,
-            venueUniqueId: uniqueId,
-            venueTimeZone: timeZone
-        )
-        if shouldReturnToVenueAfterClose {
-            returnToVenueScreen(animated: true)
-        } else {
-            dismiss(animated: true)
-        }
+
+        openBuyAnotherTicketFlow()
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
@@ -686,7 +686,8 @@ final class CoverQRCodeVC: UIViewController {
             navigationController.popToViewController(venueVC, animated: animated)
         } else if let venueVC = navigationController.viewControllers.last(where: { $0 is MVPVenueDetailVc }) {
             navigationController.popToViewController(venueVC, animated: animated)
-        } else if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) {
+        } else if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC {
+            coverListVC.resetForFreshPurchase()
             navigationController.popToViewController(coverListVC, animated: animated)
         } else if navigationController.viewControllers.count > 1 {
             navigationController.popViewController(animated: animated)
@@ -766,6 +767,236 @@ final class CoverQRCodeVC: UIViewController {
                 }
             }
         }
+    }
+}
+
+private extension CoverQRCodeVC {
+
+    struct VenueNavigationContext {
+        let venueId: String
+        let uniqueId: String
+        let timeZone: String
+    }
+
+    func currentVenueNavigationContext() -> VenueNavigationContext {
+        let currentVenueId = booking?.venueId
+            ?? booking?.venueObject?.id
+            ?? addOnsBooking?.venue?.id
+            ?? venue?.id
+            ?? venueId
+        let uniqueId = booking?.venueObject?.uniqueId
+            ?? booking?.uniqueId
+            ?? addOnsBooking?.venue?.uniqueId
+            ?? venue?.uniqueId
+            ?? ""
+        let timeZone = booking?.venueObject?.timezone
+            ?? addOnsBooking?.venue?.timezone
+            ?? venue?.timezone
+            ?? ""
+
+        return VenueNavigationContext(
+            venueId: currentVenueId,
+            uniqueId: uniqueId,
+            timeZone: timeZone
+        )
+    }
+
+    func openBuyAnotherTicketFlow() {
+        guard !isBuyAnotherNavigationInProgress else { return }
+
+        let presenter = presentingViewController
+        let navigationController = resolvedNavigationController(using: presenter)
+
+        if let coverListVC = buyAnotherCoverListTarget ?? existingCoverTicketList(using: presenter) {
+            returnToCoverTicketList(coverListVC)
+            return
+        }
+
+        if shouldReturnToVenueAfterClose {
+            openFreshTicketsFromVenueFlow(using: presenter, navigationController: navigationController)
+        } else {
+            openVenueFromOrderFlow(using: presenter)
+        }
+    }
+
+    func openFreshTicketsFromVenueFlow(
+        using presenter: UIViewController?,
+        navigationController: UINavigationController?
+    ) {
+        if let venueVC = navigationController?.viewControllers.last(where: { $0 is VenueVC }) as? VenueVC {
+            performAfterClosingQRCode(using: presenter, animated: false) { navigationController in
+                navigationController.popToViewController(venueVC, animated: false)
+            }
+            return
+        }
+
+        dismissQRCodeOnly(animated: false)
+    }
+
+    func returnToCoverTicketList(_ coverListVC: CoverTicketListVC) {
+        coverListVC.resetForFreshPurchase()
+
+        let complete: () -> Void = { [weak coverListVC] in
+            guard let coverListVC,
+                  let coverNavigationController = coverListVC.navigationController else { return }
+
+            if coverNavigationController.topViewController !== coverListVC {
+                coverNavigationController.popToViewController(coverListVC, animated: false)
+            }
+        }
+
+        if presentingViewController != nil {
+            dismiss(animated: false, completion: complete)
+        } else {
+            complete()
+        }
+    }
+
+    func openVenueFromOrderFlow(using presenter: UIViewController?) {
+        let context = currentVenueNavigationContext()
+        let venueDetails = preferredVenueDetailsForNavigation()
+
+        performAfterClosingQRCode(using: presenter) { navigationController in
+            let venueVC = VenueVC(nibName: "VenueVC", bundle: nil)
+            venueVC.venueDetails = venueDetails
+            venueVC.uniqueId = context.uniqueId
+            venueVC.hidesBottomBarWhenPushed = true
+            navigationController.pushViewController(venueVC, animated: true)
+        }
+    }
+
+    func fetchAndOpenCoverTicketList(using presenter: UIViewController?) {
+        setBuyAnotherNavigationLoading(true)
+
+        fetchFreshVenueDetailsForBuyAnother { [weak self] venueDetail in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                guard let venueDetail else {
+                    self.setBuyAnotherNavigationLoading(false)
+                    Alert.showAlertSheet(
+                        style: .alert,
+                        title: "Unable to load tickets",
+                        message: "Please try again."
+                    )
+                    return
+                }
+
+                let shouldShowDirectUpsell = self.shouldOpenDirectUpsell(for: venueDetail)
+
+                self.performAfterClosingQRCode(using: presenter) { navigationController in
+                    guard let sender = navigationController.topViewController else { return }
+                    Navigate.to.coverTicketListVC(
+                        sender,
+                        venueDetails: venueDetail,
+                        shouldShowDirectUpsell: shouldShowDirectUpsell
+                    )
+                }
+            }
+        }
+    }
+
+    func fetchFreshVenueDetailsForBuyAnother(completion: @escaping (ClipVenue?) -> Void) {
+        let context = currentVenueNavigationContext()
+        let venueTimeZone = context.timeZone.isEmpty ? TimeZone.current.identifier : context.timeZone
+
+        if !context.uniqueId.isEmpty {
+            venueService.fetchCoverVenueDetail(
+                uniqueId: context.uniqueId,
+                venueTimeZone: venueTimeZone
+            ) { isSuccess, _, venueDetail in
+                completion(isSuccess ? venueDetail : nil)
+            }
+            return
+        }
+
+        guard !context.venueId.isEmpty else {
+            completion(preferredVenueDetailsForNavigation())
+            return
+        }
+
+        venueService.fetchVenueDetail(
+            venueId: context.venueId,
+            venueTimeZone: venueTimeZone
+        ) { isSuccess, _, venueDetail in
+            completion(isSuccess ? venueDetail : nil)
+        }
+    }
+
+    func resolvedNavigationController(using presenter: UIViewController?) -> UINavigationController? {
+        presenter as? UINavigationController
+            ?? presenter?.navigationController
+            ?? presenter?.presentingViewController as? UINavigationController
+            ?? presenter?.presentingViewController?.navigationController
+            ?? navigationController
+    }
+
+    func existingCoverTicketList(using presenter: UIViewController?) -> CoverTicketListVC? {
+        navigationCandidates(using: presenter).compactMap {
+            $0.viewControllers.last(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC
+        }.last
+    }
+
+    func navigationCandidates(using presenter: UIViewController?) -> [UINavigationController] {
+        [
+            navigationController,
+            presenter as? UINavigationController,
+            presenter?.navigationController,
+            presenter?.presentingViewController as? UINavigationController,
+            presenter?.presentingViewController?.navigationController
+        ].compactMap { $0 }
+    }
+
+    func performAfterClosingQRCode(
+        using presenter: UIViewController?,
+        animated: Bool = true,
+        completion: @escaping (UINavigationController) -> Void
+    ) {
+        let wasPresented = presentingViewController != nil
+        let navigationController = resolvedNavigationController(using: presenter)
+
+        let complete: () -> Void = { [weak self, weak navigationController] in
+            guard let navigationController else { return }
+
+            self?.setBuyAnotherNavigationLoading(false)
+            completion(navigationController)
+        }
+
+        if wasPresented {
+            dismiss(animated: animated, completion: complete)
+        } else {
+            complete()
+        }
+    }
+
+    func dismissQRCodeOnly(animated: Bool) {
+        if presentingViewController != nil {
+            dismiss(animated: animated)
+        } else {
+            navigationController?.popViewController(animated: animated)
+        }
+    }
+
+    func preferredVenueDetailsForNavigation() -> ClipVenue? {
+        if let bookingVenue = booking?.venueObject {
+            return bookingVenue
+        }
+        return venue
+    }
+
+    func shouldOpenDirectUpsell(for venueDetail: ClipVenue) -> Bool {
+        let hasCoverTickets = venueDetail.coverTicket?.contains {
+            !($0.isDeleted ?? false) &&
+            $0.status == "ENABLED"
+        } ?? false
+
+        return !hasCoverTickets && isOnlyAddOnAvailable
+    }
+
+    func setBuyAnotherNavigationLoading(_ isLoading: Bool) {
+        isBuyAnotherNavigationInProgress = isLoading
+        buyAnotherTicketBtn.isEnabled = !isLoading
+        setInitialLoadingVisible(isLoading, animated: true)
     }
 }
 

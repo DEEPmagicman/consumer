@@ -74,6 +74,9 @@ final class VenueVC: UIViewController {
     private var isSocketRefreshInProgress = false
     private var hasAvailableUpsellTickets = false
     private var upsellAvailabilityVenueId: String?
+    private var isVenueDetailsLoaded = false
+    private var isUpsellAvailabilityLoaded = false
+    private var isCoverTicketNavigationInProgress = false
     private var followedVenueId: String?
     private var hasLocalFollowState = false
     private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
@@ -107,6 +110,7 @@ final class VenueVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        isCoverTicketNavigationInProgress = false
         setupLeftEdgeBackGestureIfNeeded()
         registerSocketDelegate()
 
@@ -132,6 +136,11 @@ final class VenueVC: UIViewController {
         let venueUniqueId =
         (venueDetails?.uniqueId ?? uniqueId) ?? ""
 
+        isVenueDetailsLoaded = false
+        isUpsellAvailabilityLoaded = false
+        hasAvailableUpsellTickets = false
+        updateCoverTicketViewVisibility()
+
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
             venueTimeZone: TimeZone.current.identifier,
@@ -142,11 +151,17 @@ final class VenueVC: UIViewController {
             if isSuccess, var venue = venueDetail {
                 self.applyLocalFollowStateIfNeeded(to: &venue)
                 self.venueDetails = venue
+                self.isVenueDetailsLoaded = true
+                self.isUpsellAvailabilityLoaded = false
+                self.hasAvailableUpsellTickets = false
+                self.upsellAvailabilityVenueId = nil
                 WebSocketWrapper.shared.updateSocketContext(venueId: venue.id)
                 self.setUpData()
                 self.setupTabsIfNeeded()
-                self.refreshUpsellAvailabilityIfNeeded(force: true)
             } else {
+                self.isVenueDetailsLoaded = false
+                self.isUpsellAvailabilityLoaded = true
+                self.updateCoverTicketViewVisibility()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? "Something went wrong",
@@ -163,7 +178,9 @@ final class VenueVC: UIViewController {
         updateFollowUI(animated: false)
         updateCoverTicketViewVisibility()
         updatePosterBackgroundImage()
-        refreshUpsellAvailabilityIfNeeded()
+        if isVenueDetailsLoaded {
+            refreshUpsellAvailabilityIfNeeded()
+        }
 
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueLogo.sd_setImage(with: URL(string: logoUrl), completed: nil)
@@ -354,7 +371,15 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickBuyTicket(_ sender: Any) {
-        guard hasAvailableTickets || hasAvailableUpsellTickets else { return }
+        openCoverTicketList()
+    }
+
+    func openCoverTicketList() {
+        guard isCoverTicketNavigationReady,
+              !isCoverTicketNavigationInProgress
+        else { return }
+
+        isCoverTicketNavigationInProgress = true
         Navigate.to.coverTicketListVC(
             self,
             venueDetails: venueDetails,
@@ -468,6 +493,10 @@ private extension VenueVC {
         guard !venueUniqueId.isEmpty else { return }
 
         isSocketRefreshInProgress = true
+        isVenueDetailsLoaded = false
+        isUpsellAvailabilityLoaded = false
+        hasAvailableUpsellTickets = false
+        updateCoverTicketViewVisibility()
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
@@ -483,9 +512,12 @@ private extension VenueVC {
             var refreshedVenue = venueDetail
             self.applyLocalFollowStateIfNeeded(to: &refreshedVenue)
             self.venueDetails = refreshedVenue
+            self.isVenueDetailsLoaded = true
+            self.isUpsellAvailabilityLoaded = false
+            self.hasAvailableUpsellTickets = false
+            self.upsellAvailabilityVenueId = nil
             WebSocketWrapper.shared.updateSocketContext(venueId: refreshedVenue.id)
             self.setUpData()
-            self.refreshUpsellAvailabilityIfNeeded(force: true)
 
             if resetTickets {
                 self.refreshVenueEventTabs()
@@ -749,16 +781,37 @@ private extension VenueVC {
         }
     }
 
+    var isCoverTicketNavigationReady: Bool {
+        isVenueDetailsLoaded &&
+        isUpsellAvailabilityLoaded &&
+        (hasAvailableTickets || hasAvailableUpsellTickets)
+    }
+
     func updateCoverTicketViewVisibility() {
-        coverTicketView.isHidden = !(hasAvailableTickets || hasAvailableUpsellTickets)
+        coverTicketView.isHidden = !isCoverTicketNavigationReady
+        coverTicketView.isUserInteractionEnabled = isCoverTicketNavigationReady
         view.setNeedsLayout()
     }
 
     func refreshUpsellAvailabilityIfNeeded(force: Bool = false) {
-        guard let venueId = venueDetails?.id, !venueId.isEmpty else { return }
+        guard isVenueDetailsLoaded else {
+            isUpsellAvailabilityLoaded = false
+            updateCoverTicketViewVisibility()
+            return
+        }
+
+        guard let venueId = venueDetails?.id, !venueId.isEmpty else {
+            isUpsellAvailabilityLoaded = true
+            hasAvailableUpsellTickets = false
+            updateCoverTicketViewVisibility()
+            return
+        }
+
         guard force || upsellAvailabilityVenueId != venueId else { return }
 
+        isUpsellAvailabilityLoaded = false
         upsellAvailabilityVenueId = venueId
+        updateCoverTicketViewVisibility()
 
         MVPPresenter.getUpSellItem(skip: 0, venueId: venueId) { [weak self] isSuccess, _, upSellItems, _, _ in
             guard let self else { return }
@@ -767,6 +820,7 @@ private extension VenueVC {
             self.hasAvailableUpsellTickets = isSuccess && upSellItems.contains {
                 !$0.isDeleted && $0.status == "ENABLED" && $0.addOns?.isDeleted == false && $0.addOns?.status == "ENABLED"
             }
+            self.isUpsellAvailabilityLoaded = true
             self.updateCoverTicketViewVisibility()
         }
     }

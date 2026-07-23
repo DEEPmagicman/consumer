@@ -193,7 +193,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
 
         } else if let addOnsBooking = addOnsBooking {
 //            upsellBadgeView.isHidden = false
-            backupCodeLbl.text = ""
+            backupCodeLbl.text = addOnsBooking.venue?.bookingCode ?? venue?.bookingCode ?? ""
             bookingDateTimeLbl.text = "Purchased on \(addOnsBooking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: timeZone))"
         }
 

@@ -603,7 +603,7 @@ final class OrderListViewController: UIViewController {
         isFreeTicket = subtotal <= 0
         updateOrderSummaryAmounts(total: subtotal, fees: 0)
         checkOutView.updateSummary(currency: currency, currencyPosition: currencyPosition, count: totalTickets, subtotal: subtotal, fees: 0)
-        checkOutView.setButtonTitle("Purchase Tickets")
+        updateCheckoutButtonTitle()
         updateFreeTicketUI()
     }
 
@@ -651,6 +651,18 @@ final class OrderListViewController: UIViewController {
         addCodeTextFeild.isUserInteractionEnabled = false
         addCodeTextFeild.alpha = 1
         pluseBtn.setImage(UIImage(named: "plusIcon"), for: .normal)
+    }
+
+    private func updateCheckoutButtonTitle() {
+        checkOutView.setButtonTitle(
+            hasOnlyFreeSelectedTickets ? "Redeem Ticket" : "Purchase Tickets"
+        )
+    }
+
+    private var hasOnlyFreeSelectedTickets: Bool {
+        selectedTickets.allSatisfy {
+            ($0.price ?? 0) <= 0 && ($0.extraFees ?? 0) <= 0
+        }
     }
 
     // MARK: - Checkbox UI
@@ -998,6 +1010,7 @@ final class OrderListViewController: UIViewController {
             subtotal: detail.total,
             fees: feesAmount
         )
+        updateCheckoutButtonTitle()
         updateFreeTicketUI()
 
 //        DispatchQueue.main.async {

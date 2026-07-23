@@ -386,9 +386,7 @@ final class TicketCheckoutVC: UIViewController {
 
         totalAmountLbl.text = subtotal == 0 ? "Free" : CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
         self.isFreeTicket = subtotal == 0
-        if isFreeTicket {
-            purchaseTicketBtn.setTitle("REDEEM TICKETS", for: .normal)
-        }
+        updatePurchaseButtonTitle()
 
         let color = whiteLabelAccentColor
         dateandtimeLbl.textColor = color
@@ -420,6 +418,19 @@ final class TicketCheckoutVC: UIViewController {
             ) ?? "LATE"
 
             dateandtimeLbl.text = (!dateText.isEmpty && !startTime.isEmpty) ? "\(dateText) at \(startTime) - \(endTime)" : ""
+        }
+    }
+
+    private func updatePurchaseButtonTitle() {
+        purchaseTicketBtn.setTitle(
+            hasOnlyFreeSelectedTickets ? "Redeem Ticket" : "Purchase Tickets",
+            for: .normal
+        )
+    }
+
+    private var hasOnlyFreeSelectedTickets: Bool {
+        selectedTickets.allSatisfy {
+            ($0.price ?? 0) <= 0 && ($0.extraFees ?? 0) <= 0
         }
     }
 

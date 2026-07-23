@@ -903,12 +903,8 @@ extension PremiumExpVC: UICollectionViewDataSource, UICollectionViewDelegate {
             return
         }
 
-//        Navigate.eventDetailsVC(self, event: event)
-        Navigate.to.premiumEventContainerVC(
-            self,
-            event: event,
-            seatingAreas: item.seatingAreas
-        )
+        AppHaptic.cardOpen()
+        Navigate.eventDetailsVC(self, event: event)
     }
 
     func collectionView(

@@ -11,6 +11,11 @@ import StripePayments
 import MHLoadingButton
 import SDWebImage
 
+private enum FeeBreakdownSection {
+    case cover
+    case upsell
+}
+
 final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     // MARK: - Outlets - TableViews
@@ -81,8 +86,10 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private var isTermsAccepted = true
     private var isVenueMessageAccepted = true
+    private var isEmailMessageAccepted = true
     private var isTermsExpanded = false
     private var isVenueMessageExpanded = false
+    private var isEmailMessageExpanded = false
     private var isCoverFeesExpanded = true
     private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
@@ -91,8 +98,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private let coverFeeShimmerRowCount = 3
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
+    private var hasPlayedTicketCardEntryAnimation = false
+    private var loadedHeaderImageURLString: String?
+    private var loadedLogoURLString: String?
     private var fullTermsText = ""
     private var fullVenueMessageText = ""
+    private var fullEmailMessageText = ""
+    private let emailMessageBtn = UIButton(type: .custom)
+    private let emailMessageLbl = UILabel()
+    private lazy var emailMessageView: UIView = makeEmailAgreementRow()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -183,7 +197,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         super.viewDidAppear(animated)
         wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        imageParentView.playEntryAnimation()
+        playTicketCardEntryAnimationIfNeeded()
         WebSocketWrapper.shared.addDelegate(self) 
     }
 
@@ -246,22 +260,30 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     private func setupHeaderData() {
-        venueLogoImg.sd_setImage(
-            with: URL(string: (venue?.logo?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+        let logoUrlString = (venue?.logo?.key ?? "").imageURL
+        if loadedLogoURLString != logoUrlString {
+            loadedLogoURLString = logoUrlString
+            venueLogoImg.sd_setImage(
+                with: URL(string: logoUrlString),
+                placeholderImage: Constant.Icon.uploadImage
+            )
+        }
 
         let imageUrlString = "\(SharedURL.amazonStorage)\(venue?.venueAttachment?.first?.key ?? "")"
-        if let url = URL(string: imageUrlString) {
-            SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
-                [weak self] image, _, _, _, _, _ in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    self.imageParentView.setImage(image ?? UIImage(named: "newSpeakeasy"))
+        if loadedHeaderImageURLString != imageUrlString {
+            loadedHeaderImageURLString = imageUrlString
+
+            if let url = URL(string: imageUrlString) {
+                SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
+                    [weak self] image, _, _, _, _, _ in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        self.imageParentView.setImage(image ?? UIImage(named: "newSpeakeasy"))
+                    }
                 }
+            } else {
+                imageParentView.setImage(named: "newSpeakeasy")
             }
-        } else {
-            imageParentView.setImage(named: "newSpeakeasy")
         }
 
         venueName.text = venue?.name ?? ""
@@ -284,15 +306,19 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
 
+    private func playTicketCardEntryAnimationIfNeeded() {
+        guard !hasPlayedTicketCardEntryAnimation else { return }
+        hasPlayedTicketCardEntryAnimation = true
+        imageParentView.playEntryAnimation()
+    }
+
     private func setupCheckoutBar() {
         checkOutBtnView.delegate = self
         setCheckoutButton(enabled: false, animated: false)
         checkOutBtnView.isHidden = true
         checkOutBtnView.alpha = 0
         checkOutBtnView.transform = CGAffineTransform(translationX: 0, y: 80)
-        checkOutBtnView.setButtonTitle(
-            totalPrice <= 0 ? "Confirm Free Booking" : "Pay Now"
-        )
+        checkOutBtnView.setButtonTitle(initialCheckoutButtonTitle)
         checkOutBtnView.applyAccentColor(whiteLabelAccentColor)
     }
 
@@ -391,10 +417,17 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         let image = isVenueMessageAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
         venueMessageBtn.setImage(image, for: .normal)
     }
+
+    private func updateEmailCheckboxUI() {
+        let image = isEmailMessageAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
+        emailMessageBtn.setImage(image, for: .normal)
+    }
     
     private func setupTermsText() {
+        installEmailAgreementRowIfNeeded()
         AgreementTextFormatter.configure(termsAndConditionsLbl)
         AgreementTextFormatter.configure(venueMessageLbl)
+        AgreementTextFormatter.configure(emailMessageLbl)
 
         let termsTap = UITapGestureRecognizer(
             target: self,
@@ -408,9 +441,57 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         )
         venueMessageLbl.addGestureRecognizer(venueMessageTap)
 
+        let emailMessageTap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(onTapEmailMessageLabel)
+        )
+        emailMessageLbl.addGestureRecognizer(emailMessageTap)
+
         updateAgreementLabels()
         updateTermsCheckboxUI()
         updateVenueCheckboxUI()
+        updateEmailCheckboxUI()
+    }
+
+    private func installEmailAgreementRowIfNeeded() {
+        guard emailMessageView.superview == nil,
+              let stackView = termsAndConditions.superview as? UIStackView else { return }
+
+        let insertIndex = stackView.arrangedSubviews.firstIndex(of: termsAndConditions)
+            .map { $0 + 1 } ?? stackView.arrangedSubviews.count
+        stackView.insertArrangedSubview(emailMessageView, at: insertIndex)
+    }
+
+    private func makeEmailAgreementRow() -> UIView {
+        let row = UIView()
+        row.backgroundColor = .clear
+        row.translatesAutoresizingMaskIntoConstraints = false
+
+        emailMessageBtn.translatesAutoresizingMaskIntoConstraints = false
+        emailMessageBtn.imageView?.contentMode = .scaleAspectFit
+        emailMessageBtn.addTarget(self, action: #selector(onClickEmailMessageBtn(_:)), for: .touchUpInside)
+
+        emailMessageLbl.translatesAutoresizingMaskIntoConstraints = false
+        emailMessageLbl.numberOfLines = 0
+        emailMessageLbl.lineBreakMode = .byWordWrapping
+
+        row.addSubview(emailMessageBtn)
+        row.addSubview(emailMessageLbl)
+
+        NSLayoutConstraint.activate([
+            emailMessageBtn.topAnchor.constraint(equalTo: row.topAnchor),
+            emailMessageBtn.leadingAnchor.constraint(equalTo: row.leadingAnchor),
+            emailMessageBtn.widthAnchor.constraint(equalToConstant: 16),
+            emailMessageBtn.heightAnchor.constraint(equalToConstant: 16),
+
+            emailMessageLbl.topAnchor.constraint(equalTo: row.topAnchor),
+            emailMessageLbl.leadingAnchor.constraint(equalTo: emailMessageBtn.trailingAnchor, constant: 8),
+            emailMessageLbl.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            emailMessageLbl.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+            row.bottomAnchor.constraint(greaterThanOrEqualTo: emailMessageBtn.bottomAnchor, constant: 5)
+        ])
+
+        return row
     }
 
     private func hideScrollIndicators(in rootView: UIView) {
@@ -423,19 +504,29 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     private func configureAgreementText() {
         let settings = venue?.venueSettings
-        let fallbackTermsText =
-            settings?.coverTicketSettings?.disclaimer
+        let fallbackTermsText = settings?.coverTicketSettings?.disclaimer
             ?? Constant.String.checkoutTextCover
         let fallbackVenueMessageText =
             "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        let fallbackEmailMessageText =
+            "I agree to receive marketing related email messages from \(venue?.name ?? "the venue")."
 
-        let termsText = cleanAgreementText(settings?.emailPolicyText ?? fallbackTermsText)
-        let venueMessageText = cleanAgreementText(settings?.policyText ?? fallbackVenueMessageText)
+        var venueMessageText = cleanAgreementText(settings?.policyText ?? fallbackVenueMessageText)
+        if settings?.optedPolicy == true, venueMessageText.isEmpty {
+            venueMessageText = cleanAgreementText(fallbackVenueMessageText)
+        }
 
-        fullTermsText = termsText
+        var emailMessageText = cleanAgreementText(settings?.emailPolicyText ?? fallbackEmailMessageText)
+        if settings?.optedEmailPolicy == true, emailMessageText.isEmpty {
+            emailMessageText = cleanAgreementText(fallbackEmailMessageText)
+        }
+
+        fullTermsText = cleanAgreementText(fallbackTermsText)
         fullVenueMessageText = venueMessageText
+        fullEmailMessageText = emailMessageText
         termsAndConditions.isHidden = fullTermsText.isEmpty
         venueMessageView.isHidden = settings?.optedPolicy != true || fullVenueMessageText.isEmpty
+        emailMessageView.isHidden = true
         updateAgreementLabels()
     }
 
@@ -464,6 +555,11 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             venueMessageLbl,
             text: fullVenueMessageText,
             isExpanded: isVenueMessageExpanded
+        )
+        updateAgreementLabel(
+            emailMessageLbl,
+            text: fullEmailMessageText,
+            isExpanded: isEmailMessageExpanded
         )
     }
 
@@ -619,6 +715,17 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
 
+    @objc
+    private func onTapEmailMessageLabel(_ gesture: UITapGestureRecognizer) {
+        toggleAgreementIfNeeded(
+            gesture: gesture,
+            label: emailMessageLbl,
+            expanded: isEmailMessageExpanded
+        ) { [weak self] in
+            self?.isEmailMessageExpanded.toggle()
+        }
+    }
+
     // MARK: - Actions
     @IBAction func onClickBackBtn(_ sender: Any) {
         guard !isPaymentInitiated else { return }
@@ -639,6 +746,13 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         updateVenueCheckboxUI()
     }
 
+    @objc private func onClickEmailMessageBtn(_ sender: UIButton) {
+        guard !isPaymentInitiated else { return }
+        isEmailMessageAccepted.toggle()
+        AppHaptic.selectionChanged()
+        updateEmailCheckboxUI()
+    }
+
     @IBAction func onClickPaymentTypeBtn(_ sender: Any) {
         // Payment selection is handled inline through PaymentSheet now.
     }
@@ -655,11 +769,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             return
         }
 
-        if venueMessageView.isHidden == false && !isVenueMessageAccepted {
-            AppHaptic.error()
-            Alert.showToast("Please accept Venue Message")
-            return
-        }
         AppHaptic.primaryAction()
         isPaymentInitiated = true
         setScreenInteractionBlocked(true)
@@ -760,8 +869,8 @@ extension CoverTicketCheckOutVC {
         let upsellCount = selectedAddOnsItems.reduce(0) { $0 + ($1.selectedQuantity ?? 0) }
         let totalCount  = coverCount + upsellCount
 
-        let totalFees = feesAboveSubtotal(from: paymentDetail)
-                      + feesAboveSubtotal(from: addOnsPaymentDetail)
+        let totalFees = feesAboveSubtotal(from: paymentDetail, section: .cover)
+                      + feesAboveSubtotal(from: addOnsPaymentDetail, section: .upsell)
 
         checkOutBtnView.updateSummary(
             currency: currency,
@@ -771,31 +880,47 @@ extension CoverTicketCheckOutVC {
             fees: totalFees
         )
         
-        let isFree = grandTotal <= 0
-        checkOutBtnView.setButtonTitle(
-            isFree ? "Confirm Free Booking" : "Pay \(CurrencyFormatter.amount(grandTotal, symbol: currency, position: currencyPosition))"
-        )
+        checkOutBtnView.setButtonTitle(checkoutButtonTitle(for: grandTotal))
         checkOutBtnView.applyAccentColor(whiteLabelAccentColor)
     }
 
     /// Sum of all fees/tax above the subtotal for one PaymentDetail.
-    private func feesAboveSubtotal(from detail: PaymentDetail?) -> Double {
-        guard let detail, detail.subTotal != detail.total else { return 0 }
-        var fees: Double = 0
-        if let customFees = detail.customFees, !customFees.isEmpty {
-            fees += customFees.reduce(0) { $0 + ($1.fee ?? 0) }
-        } else {
-            fees += detail.customFee
-        }
-        fees += totalSalesTax(from: detail)
-        fees += detail.processingFee
-        return fees
+    private func feesAboveSubtotal(from detail: PaymentDetail?, section: FeeBreakdownSection) -> Double {
+        visibleFeeItems(from: detail, section: section).reduce(0) { $0 + $1.amount }
     }
 
     private func totalSalesTax(from detail: PaymentDetail) -> Double {
         let salesTaxesTotal = detail.salesTaxes?
             .reduce(0) { $0 + ($1.salesTax ?? 0) } ?? 0
         return salesTaxesTotal > 0 ? salesTaxesTotal : (detail.salesTax ?? 0)
+    }
+
+    private var initialCheckoutButtonTitle: String {
+        hasOnlyFreeSelection ? "Redeem Ticket" : "Pay Now"
+    }
+
+    private func checkoutButtonTitle(for total: Double) -> String {
+        hasOnlyFreeSelection && total <= 0
+            ? "Redeem Ticket"
+            : "Pay \(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
+    }
+
+    private var hasOnlyFreeSelection: Bool {
+        let hasPaidCover = selectedCoverTickets.contains {
+            $0.price > 0 || ($0.extraFees ?? 0) > 0
+        }
+        let hasPaidAddOn = selectedAddOnsItems.contains {
+            $0.price > 0 || ($0.extraFees ?? 0) > 0
+        }
+        return !hasPaidCover && !hasPaidAddOn
+    }
+
+    fileprivate var selectedCoverTicketsAreAllCustom: Bool {
+        !selectedCoverTickets.isEmpty && selectedCoverTickets.allSatisfy { $0.isCustom }
+    }
+
+    fileprivate var selectedCoverTicketsAreAllStandard: Bool {
+        !selectedCoverTickets.isEmpty && selectedCoverTickets.allSatisfy { !$0.isCustom }
     }
 }
 
@@ -1047,8 +1172,6 @@ extension CoverTicketCheckOutVC {
 
     private func handlePaymentCanceled() {
         resetPaymentInteractionAfterFailure()
-        AppHaptic.warning()
-        Alert.showToast("Payment canceled.")
     }
 
     private func returnToCoverFlow(animated: Bool) {
@@ -1097,8 +1220,8 @@ extension CoverTicketCheckOutVC {
 extension CoverTicketCheckOutVC {
 
     private func updateUIWithPaymentDetail() {
-        let newFees       = buildFeesArray(from: paymentDetail)
-        let newUpsellFees = buildFeesArray(from: addOnsPaymentDetail)
+        let newFees       = buildFeesArray(from: paymentDetail, section: .cover)
+        let newUpsellFees = buildFeesArray(from: addOnsPaymentDetail, section: .upsell)
 
         let coverTotal  = paymentDetail?.total ?? 0
         let upsellTotal = addOnsPaymentDetail?.total ?? 0
@@ -1187,14 +1310,15 @@ extension CoverTicketCheckOutVC {
     }
 
     // MARK: - Fee array builder
-    private func buildFeesArray(from detail: PaymentDetail?) -> [FeeDisplayItem] {
+    private func buildFeesArray(from detail: PaymentDetail?, section: FeeBreakdownSection) -> [FeeDisplayItem] {
         guard let detail else { return [] }
 
         let subTotal = detail.subTotal
         let total    = detail.total
 
-        // No breakdown needed when subtotal equals total
-        guard subTotal != total else {
+        let feeItems = visibleFeeItems(from: detail, section: section)
+
+        guard subTotal != total, !feeItems.isEmpty else {
             return [FeeDisplayItem(title: "Total", amount: total)]
         }
 
@@ -1204,6 +1328,31 @@ extension CoverTicketCheckOutVC {
             items.append(FeeDisplayItem(title: "Subtotal", amount: subTotal))
         }
 
+        items.append(contentsOf: feeItems)
+        items.append(FeeDisplayItem(title: "Total", amount: total))
+        return items
+    }
+
+    private func visibleFeeItems(from detail: PaymentDetail?, section: FeeBreakdownSection) -> [FeeDisplayItem] {
+        guard let detail else { return [] }
+        var items: [FeeDisplayItem] = []
+
+        if shouldShowCustomFees(section: section) {
+            appendCustomFeeItems(from: detail, to: &items)
+        }
+
+        if shouldShowSalesTax(section: section, detail: detail) {
+            appendSalesTaxItems(from: detail, to: &items)
+        }
+
+        if shouldShowProcessingFee(section: section, detail: detail) {
+            appendFeeItem(title: "Processing Fee", amount: detail.processingFee, to: &items)
+        }
+
+        return items
+    }
+
+    private func appendCustomFeeItems(from detail: PaymentDetail, to items: inout [FeeDisplayItem]) {
         if let customFees = detail.customFees, !customFees.isEmpty {
             customFees.forEach {
                 appendFeeItem(
@@ -1219,7 +1368,9 @@ extension CoverTicketCheckOutVC {
                 to: &items
             )
         }
+    }
 
+    private func appendSalesTaxItems(from detail: PaymentDetail, to items: inout [FeeDisplayItem]) {
         let salesTaxItems = feeItemsForSalesTaxes(from: detail)
         if !salesTaxItems.isEmpty {
             salesTaxItems.forEach {
@@ -1232,13 +1383,6 @@ extension CoverTicketCheckOutVC {
                 to: &items
             )
         }
-
-        if detail.processingFee > 0 {
-            appendFeeItem(title: "Processing Fee", amount: detail.processingFee, to: &items)
-        }
-
-        items.append(FeeDisplayItem(title: "Total", amount: total))
-        return items
     }
 
     private func feeItemsForSalesTaxes(from detail: PaymentDetail) -> [FeeDisplayItem] {
@@ -1268,6 +1412,68 @@ extension CoverTicketCheckOutVC {
             items.append(FeeDisplayItem(title: displayTitle, amount: amount))
         }
     }
+
+    private func shouldShowCustomFees(section: FeeBreakdownSection) -> Bool {
+        switch section {
+        case .cover:
+            if selectedCoverTicketsAreAllCustom {
+                return venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true
+            }
+            if selectedCoverTicketsAreAllStandard {
+                let settings = venue?.venueSettings?.coverTicketSettings
+                return settings?.isEnableCustomFee == true && settings?.isUpFront == false
+            }
+            let standardSettings = venue?.venueSettings?.coverTicketSettings
+            return (standardSettings?.isEnableCustomFee == true && standardSettings?.isUpFront == false)
+                || venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true
+        case .upsell:
+            let settings = venue?.venueSettings?.addOnsBookingSettings
+            return (settings?.isEnableCustomFee ?? true) && settings?.isUpFront == false
+        }
+    }
+
+    private func shouldShowSalesTax(section: FeeBreakdownSection, detail: PaymentDetail) -> Bool {
+        guard totalSalesTax(from: detail) > 0 else { return false }
+
+        switch section {
+        case .cover:
+            if selectedCoverTicketsAreAllCustom {
+                return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true
+            }
+            if selectedCoverTicketsAreAllStandard {
+                let settings = venue?.venueSettings?.coverTicketSettings
+                return settings?.isEnableSalesTax == true && settings?.isUpFront == false
+            }
+            let standardSettings = venue?.venueSettings?.coverTicketSettings
+            return (standardSettings?.isEnableSalesTax == true && standardSettings?.isUpFront == false)
+                || venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true
+        case .upsell:
+            let settings = venue?.venueSettings?.addOnsBookingSettings
+            return (settings?.isEnableSalesTax ?? true) && settings?.isUpFront == false
+        }
+    }
+
+    private func shouldShowProcessingFee(section: FeeBreakdownSection, detail: PaymentDetail) -> Bool {
+        guard detail.processingFee > 0 else { return false }
+
+        switch section {
+        case .cover:
+            if selectedCoverTicketsAreAllCustom {
+                return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true
+            }
+            if selectedCoverTicketsAreAllStandard {
+                let settings = venue?.venueSettings?.coverTicketSettings
+                return settings?.isProcessingFeePassToCustomer == true && settings?.isUpFront == false
+            }
+            let standardSettings = venue?.venueSettings?.coverTicketSettings
+            return (standardSettings?.isProcessingFeePassToCustomer == true && standardSettings?.isUpFront == false)
+                || venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true
+        case .upsell:
+            let settings = venue?.venueSettings?.addOnsBookingSettings
+            return (settings?.isProcessingFeePassToCustomer ?? true) && settings?.isUpFront == false
+        }
+    }
+
 }
 
 // MARK: - Payment Completion Flow
@@ -1290,7 +1496,10 @@ extension CoverTicketCheckOutVC {
             return
         }
 
-        paymentStatus(optedPolicy: self.venueMessageView.isHidden ? nil : self.isVenueMessageAccepted) {
+        paymentStatus(
+            optedPolicy: self.selectedVenueMessageOptIn,
+            optedEmailPolicy: self.selectedEmailMessageOptIn
+        ) {
             if self.selectedAddOnsItems.isEmpty {
                 self.finishAndNavigate(isAddOnsAvailable: false, isOnlyAddOn: false)
             } else {
@@ -1325,23 +1534,38 @@ extension CoverTicketCheckOutVC {
         countdownTimer?.invalidate()
         NotificationCenter.default.postOrdersRefresh(.tickets)
         AppHaptic.success()
+        let qrPresenter = resetCoverListForFreshPurchaseIfNeeded() ?? self
         Navigate.to.scanQR(
-            self,
+            qrPresenter,
             isAddOnsAvailable: isAddOnsAvailable,
             bookingId: bookingId,
             isOnlyAddOnAvailable: isOnlyAddOn,
             venueId: venue?.id ?? "",
             addOnsBookingId: addOnsBookingId ?? "",
             venueName: venue?.name ?? "",
-            shouldPushFromVenueFlow: true
+            shouldPushFromVenueFlow: true,
+            buyAnotherCoverListTarget: qrPresenter as? CoverTicketListVC
         )
     }
 
-    private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping () -> Void) {
+    private var selectedVenueMessageOptIn: Bool? {
+        venueMessageView.isHidden ? nil : isVenueMessageAccepted
+    }
+
+    private var selectedEmailMessageOptIn: Bool? {
+        emailMessageView.isHidden ? nil : isEmailMessageAccepted
+    }
+
+    private func paymentStatus(
+        optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
+        completion: @escaping () -> Void
+    ) {
         PaymentPresenter.successPayment(
             paymentHistoryId: paymentHistoryId,
             bookingId: bookingId,
             optedPolicy: optedPolicy,
+            optedEmailPolicy: optedEmailPolicy,
             doormanId: doormanId
         ) { [weak self] isSuccess, errMsg in
             if isSuccess {
@@ -1377,8 +1601,13 @@ extension CoverTicketCheckOutVC {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venue?.id ?? "", doormanId: doormanId) {
-            [weak self] isSuccess, errMsg, id, _ in
+        PaymentPresenter.createCoverFreeBooking(
+            coverTickets: tickets,
+            venueId: venue?.id ?? "",
+            optedPolicy: selectedVenueMessageOptIn,
+            optedEmailPolicy: selectedEmailMessageOptIn,
+            doormanId: doormanId
+        ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             if isSuccess, let id {
                 self.bookingId = id
@@ -1588,7 +1817,8 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
 
         let ticket   = selectedCoverTickets[indexPath.row]
         let quantity = ticket.selectedQuantity ?? 0
-        let total    = Double(quantity) * ticket.price
+        let price    = ticket.price - (ticket.extraFees ?? 0)
+        let total    = Double(quantity) * price
 
         cell.selectionStyle           = .none
         cell.totalTicketCountLbl.text = "\(quantity)"
@@ -1711,7 +1941,8 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
     private func popAction() -> UIAlertAction {
         UIAlertAction(title: "OK", style: .default) { [weak self] _ in
             guard let self else { return }
-            if let vc = navigationController?.viewControllers.first(where: { $0 is CoverTicketListVC }) {
+            if let vc = navigationController?.viewControllers.first(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC {
+                vc.resetForFreshPurchase()
                 navigationController?.popToViewController(vc, animated: true)
             } else if let vc = navigationController?.viewControllers.first(where: { $0 is VenueVC }) {
                 navigationController?.popToViewController(vc, animated: true)
@@ -1726,10 +1957,39 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
     }
 }
 
+private extension CoverTicketCheckOutVC {
+
+    func resetCoverListForFreshPurchaseIfNeeded() -> CoverTicketListVC? {
+        guard let coverListVC = navigationController?.viewControllers
+            .first(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC else {
+            return nil
+        }
+
+        coverListVC.reloadForFreshPurchase()
+
+        if let navigationController = coverListVC.navigationController,
+           let coverListIndex = navigationController.viewControllers.firstIndex(of: coverListVC) {
+            let retainedStack = Array(navigationController.viewControllers.prefix(coverListIndex + 1))
+            navigationController.setViewControllers(retainedStack, animated: false)
+        }
+
+        return coverListVC
+    }
+}
+
 // MARK: - CheckoutBarDelegate
 extension CoverTicketCheckOutVC: CheckoutBarDelegate {
     func checkoutBarDidTapButton() {
         onClickContinueToCheckout()
+    }
+}
+
+private extension CoverTicketFeesSettings {
+    var hasEnabledCustomFees: Bool {
+        if let customFees, !customFees.isEmpty {
+            return customFees.contains { $0.isEnableCustomFee }
+        }
+        return isEnableCustomFee
     }
 }
 

@@ -455,22 +455,36 @@ struct UpSellTicket: Codable {
     // MARK: app side parameters
     var selectedQuantity: Int?
     var calculatedNetPrice: Double {
-            let fees = extraFees ?? 0
-            return price - fees
-        }
+        let fees = extraFees ?? 0
+        return (price - fees).roundedToCurrencyScale
+    }
+
+    private var roundedPrice: Double {
+        price.roundedToCurrencyScale
+    }
+
+    private var roundedExtraFees: Double? {
+        extraFees?.roundedToCurrencyScale
+    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(doormanId, forKey: .doormanId)
         try container.encode(addOnsId, forKey: .addOnsId)
-        try container.encode(price, forKey: .price)
-        try container.encodeIfPresent(extraFees, forKey: .extraFees)
+        try container.encode(roundedPrice, forKey: .price)
+        try container.encodeIfPresent(roundedExtraFees, forKey: .extraFees)
         try container.encode(status, forKey: .status)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encodeIfPresent(addOns, forKey: .addOns)
+    }
+}
+
+private extension Double {
+    var roundedToCurrencyScale: Double {
+        (self * 100).rounded() / 100
     }
 }
 

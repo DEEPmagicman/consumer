@@ -30,8 +30,10 @@ final class CoverTicketListVC: UIViewController {
     @IBOutlet weak var followBtn: UIButton!
     @IBOutlet weak var followBtnLbl: UILabel!
     @IBOutlet weak var coverDisclaimerContainerView: UIView!
+    @IBOutlet weak var coverDisclaimerIconView: UIImageView!
     @IBOutlet weak var coverDisclaimerLabel: UILabel!
-
+    @IBOutlet weak var upcellDiscriptionLbl: UILabel!
+    
     private let posterHeaderView = VenuePosterHeaderView()
     private let stickyTopBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let stickyTicketsTitleContainer = UIView()
@@ -40,6 +42,10 @@ final class CoverTicketListVC: UIViewController {
     private let directUpsellButton = UIButton(type: .system)
     private let venueService = VenueService()
     private let coverTicketCellBackgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.25)
+    private let headerFadeStartProgress: CGFloat = 0.12
+    private let headerFadeEndProgress: CGFloat = 0.42
+    private let navTitleFadeStartProgress: CGFloat = 0.52
+    private let navTitleFadeEndProgress: CGFloat = 0.82
 
     // MARK: - Public
 
@@ -141,7 +147,7 @@ final class CoverTicketListVC: UIViewController {
     private var selectedStepTitle: String {
         switch currentStep {
         case .coverTickets:
-            return Constant.String.liveCoverTicket
+            return "Live Entry Tickets"
         case .addOns:
             let title = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -558,12 +564,17 @@ private extension CoverTicketListVC {
         headerView.clipsToBounds = false
         venueImage.contentMode = .scaleAspectFit
         venueImage.clipsToBounds = true
+        navVenueNameLbl.font = Constant.Font.geistMedium(size: 20)
+        navTimeLbl.font = Constant.Font.geistMedium(size: 12)
+        navVenueNameLbl.textAlignment = .center
+        navTimeLbl.textAlignment = .center
 
         [venueName, navVenueNameLbl].forEach {
             $0?.numberOfLines = 1
             $0?.lineBreakMode = .byTruncatingTail
             $0?.adjustsFontSizeToFitWidth = true
             $0?.minimumScaleFactor = 0.75
+            applyReadableTextShadow(to: $0)
         }
 
         [timeLbl, navTimeLbl].forEach {
@@ -571,7 +582,16 @@ private extension CoverTicketListVC {
             $0?.lineBreakMode = .byTruncatingTail
             $0?.adjustsFontSizeToFitWidth = true
             $0?.minimumScaleFactor = 0.8
+            applyReadableTextShadow(to: $0)
         }
+    }
+
+    func applyReadableTextShadow(to label: UILabel?) {
+        label?.layer.shadowColor = UIColor.black.cgColor
+        label?.layer.shadowOpacity = 0.55
+        label?.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label?.layer.shadowRadius = 2
+        label?.layer.masksToBounds = false
     }
 
     func updateVenueLogoCornerRadius() {
@@ -613,30 +633,65 @@ private extension CoverTicketListVC {
     }
 
     func configureInitialFlowStep() {
-        currentStep = .coverTickets
+        currentStep = shouldShowDirectUpsell ? .addOns : .coverTickets
         updateTicketsTitle()
     }
 
     func updateTicketsTitle() {
         ticketsTitleLbl.text = selectedStepTitle
+        updateUpsellDescriptionLabel()
         updateTableHeaderView()
         updateDirectUpsellFooterVisibility()
     }
 
     func setupCoverDisclaimerHeader() {
         tableView.tableHeaderView = nil
-        coverDisclaimerContainerView.backgroundColor = .clear
+        coverDisclaimerContainerView.backgroundColor = UIColor.black.withAlphaComponent(0.22)
         coverDisclaimerContainerView.layer.cornerRadius = 8
         coverDisclaimerContainerView.layer.borderWidth = 1
         let tintColor = UIColor(hex: Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
         coverDisclaimerContainerView.borderColor = tintColor
         coverDisclaimerContainerView.clipsToBounds = true
 
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .regular)
+        coverDisclaimerIconView.image = UIImage(
+            systemName: "bubble.left",
+            withConfiguration: iconConfig
+        )?.withRenderingMode(.alwaysTemplate)
+        coverDisclaimerIconView.tintColor = UIColor.white.withAlphaComponent(0.78)
+        coverDisclaimerIconView.contentMode = .scaleAspectFit
+
         coverDisclaimerLabel.font = Constant.Font.geistRegular(size: 13)
-        coverDisclaimerLabel.textColor = UIColor.white.withAlphaComponent(0.86)
+        coverDisclaimerLabel.textColor = UIColor.white.withAlphaComponent(0.82)
         coverDisclaimerLabel.numberOfLines = 0
         coverDisclaimerLabel.lineBreakMode = .byWordWrapping
         coverDisclaimerContainerView.isHidden = true
+
+        upcellDiscriptionLbl.font = Constant.Font.geistRegular(size: 12)
+        upcellDiscriptionLbl.textColor = UIColor.white.withAlphaComponent(0.82)
+        upcellDiscriptionLbl.numberOfLines = 0
+        upcellDiscriptionLbl.lineBreakMode = .byWordWrapping
+        upcellDiscriptionLbl.text = nil
+        upcellDiscriptionLbl.isHidden = true
+    }
+
+    func updateUpsellDescriptionLabel() {
+        guard currentStep == .addOns else {
+            upcellDiscriptionLbl.text = nil
+            upcellDiscriptionLbl.isHidden = true
+            return
+        }
+
+        let text = venueDetails?.venueSettings?.addOnsBookingSettings?.description?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !text.isEmpty else {
+            upcellDiscriptionLbl.text = nil
+            upcellDiscriptionLbl.isHidden = true
+            return
+        }
+
+        upcellDiscriptionLbl.text = text
+        upcellDiscriptionLbl.isHidden = false
     }
 
     func updateTableHeaderView() {
@@ -832,10 +887,12 @@ private extension CoverTicketListVC {
         let navHeight = max(navBarHiddenView.bounds.height, 1)
         let threshold = max(headerHeight - navHeight, 1)
         let progress = min(max(offset / threshold, 0), 1)
+        let headerAlpha = headerContentAlpha(for: progress)
+        let navAlpha = navTitleAlpha(for: progress)
 
-        navBarHiddenView.isHidden = progress <= 0.01
-        navBarHiddenView.alpha = progress
-        headerView.alpha = 1 - progress
+        navBarHiddenView.isHidden = navAlpha <= 0.01
+        navBarHiddenView.alpha = navAlpha
+        headerView.alpha = headerAlpha
         updateStickyTicketsTitle()
     }
 
@@ -846,6 +903,7 @@ private extension CoverTicketListVC {
         let progress = min(max(scrollView.contentOffset.y / threshold, 0), 1)
         let shouldCollapse = progress >= 0.5
         let targetAlpha: CGFloat = shouldCollapse ? 1 : 0
+        let targetHeaderAlpha: CGFloat = shouldCollapse ? 0 : 1
 
         navBarHiddenView.isHidden = targetAlpha == 0
 
@@ -855,7 +913,7 @@ private extension CoverTicketListVC {
             options: [.curveEaseOut, .allowUserInteraction]
         ) {
             self.navBarHiddenView.alpha = targetAlpha
-            self.headerView.alpha = 1 - targetAlpha
+            self.headerView.alpha = targetHeaderAlpha
         } completion: { _ in
             self.navBarHiddenView.isHidden = targetAlpha == 0
             self.updateStickyTicketsTitle()
@@ -872,8 +930,31 @@ private extension CoverTicketListVC {
         stickyTicketsTitleContainer.isHidden = true
         stickyTicketsTitleContainer.alpha = 0
         stickyTopBlurView.isHidden = navBarHiddenView.isHidden
-        stickyTopBlurView.alpha = navBarHiddenView.alpha
+        stickyTopBlurView.alpha = min(1, navBarHiddenView.alpha * 1.15)
         ticketsTitleLbl.alpha = 1
+    }
+
+    func headerContentAlpha(for progress: CGFloat) -> CGFloat {
+        1 - smoothProgress(
+            progress,
+            start: headerFadeStartProgress,
+            end: headerFadeEndProgress
+        )
+    }
+
+    func navTitleAlpha(for progress: CGFloat) -> CGFloat {
+        smoothProgress(
+            progress,
+            start: navTitleFadeStartProgress,
+            end: navTitleFadeEndProgress
+        )
+    }
+
+    func smoothProgress(_ value: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
+        guard end > start else { return value >= end ? 1 : 0 }
+
+        let normalized = min(1, max(0, (value - start) / (end - start)))
+        return normalized * normalized * (3 - 2 * normalized)
     }
 }
 
@@ -934,7 +1015,7 @@ private extension CoverTicketListVC {
             if clearSelection {
                 self.coverTicketCount.removeAll()
                 self.upSellTicketCount.removeAll()
-                self.currentStep = .coverTickets
+                self.configureInitialFlowStep()
             }
 
             self.setupCoverTickets()
@@ -1008,7 +1089,7 @@ private extension CoverTicketListVC {
 private extension CoverTicketListVC {
 
     func updateCheckoutState() {
-        let shouldShow = totalSelectedCount > 0
+        let shouldShow = shouldShowCheckoutBar
 
         let subtotal =
             selectedCoverTickets.reduce(0.0) {
@@ -1029,11 +1110,32 @@ private extension CoverTicketListVC {
             subtotal: subtotal,
             fees: 0
         )
+        continueToCheckoutBtn.setButtonTitle(checkoutButtonTitle)
         applyWhiteLabelTheme()
 
         bookingType = hasPaidCoverTicket ? .PAID : .FREE
 
         animateCheckoutBar(show: shouldShow)
+    }
+
+    var shouldShowCheckoutBar: Bool {
+        switch currentStep {
+        case .coverTickets:
+            return totalSelectedCount > 0
+        case .addOns:
+            return hasAnyCoverSelection || !selectedAddOns.isEmpty
+        }
+    }
+
+    var checkoutButtonTitle: String {
+        switch currentStep {
+        case .coverTickets:
+            return "Continue to Checkout"
+        case .addOns:
+            return selectedAddOns.isEmpty
+                ? "Skip this & Continue to Checkout"
+                : "Continue to Checkout"
+        }
     }
 
     func animateCheckoutBar(show: Bool) {
@@ -1117,11 +1219,26 @@ private extension CoverTicketListVC {
 extension CoverTicketListVC {
 
     func resetToCoverTicketStep() {
-        currentStep = .coverTickets
+        resetForFreshPurchase()
+    }
+
+    func reloadForFreshPurchase() {
+        resetForFreshPurchase()
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    func resetForFreshPurchase() {
+        configureInitialFlowStep()
+        coverTicketCount.removeAll()
+        upSellTicketCount.removeAll()
         expandedIndexSet.removeAll()
+        isCheckoutNavigationInProgress = false
+        isFreeBookingInProgress = false
+        view.isUserInteractionEnabled = true
         tableView.reloadData()
         updateTicketsTitle()
         updateCheckoutState()
+        refreshScrollLayoutAfterUpdates()
         scrollView.setContentOffset(.zero, animated: false)
     }
 
@@ -1171,15 +1288,26 @@ extension CoverTicketListVC {
     }
 
     private func continueFlow() {
-        guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else {
-            AppHaptic.warning()
-            return
-        }
-
         switch currentStep {
         case .coverTickets:
-            hasAnyUpsell ? moveToAddOnStep() : proceedToFinalCheckout()
+            guard !selectedCoverTickets.isEmpty else {
+                AppHaptic.warning()
+                return
+            }
+
+            if hasAnyUpsell {
+                moveToAddOnStep()
+            } else {
+                proceedToFinalCheckout()
+            }
         case .addOns:
+            guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else {
+                navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+                navigationController?.navigationBar.shadowImage = nil
+                Navigate.to.back(self)
+                return
+            }
+
             proceedToFinalCheckout()
         }
     }
@@ -1204,6 +1332,7 @@ extension CoverTicketListVC {
 
             if isSuccess, let id {
                 NotificationCenter.default.postOrdersRefresh(.tickets)
+                self.resetForFreshPurchase()
                 Navigate.to.scanQR(
                     self,
                     bookingId: id,
@@ -1374,7 +1503,7 @@ extension CoverTicketListVC: UITableViewDataSource {
             cell.configure(
                 coverTicketName: ticket.addOns?.name ?? "",
                 description: ticket.addOns?.description,
-                price: modifiedUpSellTickets[indexPath.row].price,
+                price: ticket.price,
                 extraFees: ticket.extraFees,
                 selectedCount: count,
                 currency: currency,

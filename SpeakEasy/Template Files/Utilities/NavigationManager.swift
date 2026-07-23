@@ -387,7 +387,8 @@ final class Navigate {
         venueId: String = "",
         addOnsBookingId: String,
         venueName: String? = "",
-        shouldPushFromVenueFlow: Bool = false
+        shouldPushFromVenueFlow: Bool = false,
+        buyAnotherCoverListTarget: CoverTicketListVC? = nil
     ) {
         let vc = CoverQRCodeVC(nibName: "CoverQRCodeVC", bundle: nil)
         vc.isAddOnsAvailable = isAddOnsAvailable
@@ -401,6 +402,7 @@ final class Navigate {
         vc.venueNameText = venueName
         vc.shouldReturnToVenueAfterClose = shouldPushFromVenueFlow
         vc.shouldPlayPurchaseSuccessHaptic = shouldPushFromVenueFlow
+        vc.buyAnotherCoverListTarget = buyAnotherCoverListTarget
         vc.modalPresentationStyle = .fullScreen
         vc.isModalInPresentation = true
 

@@ -157,10 +157,22 @@ final class PaymentPresenter {
         }
     }
     
-    static func createCoverFreeBooking(coverTickets: [[String: Any]], venueId: String, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message: String?) -> Void) {
-        let param = ["coverTicket": coverTickets,
-                     "venueId": venueId,
-                     "optedPolicy": false] as [String: Any]
+    static func createCoverFreeBooking(
+        coverTickets: [[String: Any]],
+        venueId: String,
+        optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
+        doormanId: String = "",
+        completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?, _ message: String?) -> Void
+    ) {
+        var param = [
+            "coverTicket": coverTickets,
+            "venueId": venueId,
+            "optedPolicy": optedPolicy ?? false
+        ] as [String: Any]
+        if let optedEmailPolicy {
+            param["optedEmailPolicy"] = optedEmailPolicy
+        }
         AFWrapper.postRequest(APIBuilder.createCoverFreeBooing, params: param, headers: Header.header(doormanId: doormanId)) { response in
             
             guard let responseDic = response as? [String: Any] else {
@@ -368,10 +380,24 @@ final class PaymentPresenter {
         }
     }
     
-    static func successPayment(paymentHistoryId: String, bookingId: String, optedPolicy: Bool? = nil, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    static func successPayment(
+        paymentHistoryId: String,
+        bookingId: String,
+        optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
+        doormanId: String = "",
+        completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void
+    ) {
         var param: [String: Any]?
-        if let optedPolicy = optedPolicy {
-            param = ["optedPolicy": optedPolicy]
+        if optedPolicy != nil || optedEmailPolicy != nil {
+            var values: [String: Any] = [:]
+            if let optedPolicy {
+                values["optedPolicy"] = optedPolicy
+            }
+            if let optedEmailPolicy {
+                values["optedEmailPolicy"] = optedEmailPolicy
+            }
+            param = values
         }
         AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: param, headers: Header.header(doormanId: doormanId)) { _ in
             completion(true, nil)

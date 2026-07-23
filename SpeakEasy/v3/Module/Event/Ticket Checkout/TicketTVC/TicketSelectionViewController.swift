@@ -736,7 +736,10 @@ class TicketSelectionViewController: UIViewController {
             continueToCheckOutBtn.setTitle("Continue to Checkout", for: .normal)
         case .addOn:
             let anySelected = addOnTickets.contains(where: { ($0.selectedTicketCount ?? 0) > 0 })
-            continueToCheckOutBtn.setTitle(anySelected ? "Continue to Checkout" : "No Thanks", for: .normal)
+            continueToCheckOutBtn.setTitle(
+                anySelected ? "Continue to Checkout" : "Skip this & Continue to Checkout",
+                for: .normal
+            )
         }
     }
 

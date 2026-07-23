@@ -421,14 +421,8 @@
                                                                 <action selector="onClickTermsBtn:" destination="-1" eventType="touchUpInside" id="UOv-wI-rQe"/>
                                                             </connections>
                                                         </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms &amp; Conditions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aqf-jr-fCZ">
-                                                            <rect key="frame" x="24" y="0.0" width="329" height="15.666666666666666"/>
-                                                            <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="12"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parties Must Be at Minimum Equal Number of Male/Female. All tables require a matching credit card and ID. View more" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Fe-j6-HUG">
-                                                            <rect key="frame" x="24" y="21.666666666666742" width="329" height="28.333333333333329"/>
+                                                            <rect key="frame" x="24" y="0.0" width="329" height="50"/>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="10"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -436,15 +430,12 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="Aqf-jr-fCZ" secondAttribute="trailing" id="0U2-87-sdr"/>
-                                                        <constraint firstItem="Aqf-jr-fCZ" firstAttribute="leading" secondItem="dec-lg-kgx" secondAttribute="trailing" constant="8" id="0cf-vZ-yhV"/>
                                                         <constraint firstItem="dec-lg-kgx" firstAttribute="top" secondItem="LJL-dx-LMq" secondAttribute="top" id="1yU-K7-uia"/>
                                                         <constraint firstAttribute="trailing" secondItem="5Fe-j6-HUG" secondAttribute="trailing" id="AXS-Qo-jgY"/>
                                                         <constraint firstItem="dec-lg-kgx" firstAttribute="leading" secondItem="LJL-dx-LMq" secondAttribute="leading" id="HeD-aY-4mD"/>
                                                         <constraint firstAttribute="bottom" secondItem="5Fe-j6-HUG" secondAttribute="bottom" id="Qdy-Ju-VZo"/>
-                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="top" secondItem="Aqf-jr-fCZ" secondAttribute="bottom" constant="6" id="SgX-IB-5OE"/>
-                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="leading" secondItem="Aqf-jr-fCZ" secondAttribute="leading" id="cJn-5Z-X5W"/>
-                                                        <constraint firstItem="Aqf-jr-fCZ" firstAttribute="top" secondItem="LJL-dx-LMq" secondAttribute="top" id="gd0-Wl-L5S"/>
+                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="leading" secondItem="dec-lg-kgx" secondAttribute="trailing" constant="8" id="cJn-5Z-X5W"/>
+                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="top" secondItem="LJL-dx-LMq" secondAttribute="top" id="gd0-Wl-L5S"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2uW-t8-LyM">

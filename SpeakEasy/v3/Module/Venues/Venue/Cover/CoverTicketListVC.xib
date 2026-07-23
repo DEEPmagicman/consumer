@@ -22,6 +22,7 @@
                 <outlet property="bgImage" destination="hCx-Nc-Ij6" id="QDO-cv-hNE"/>
                 <outlet property="continueToCheckoutBtn" destination="xrz-1L-VKB" id="SqF-6R-gPd"/>
                 <outlet property="coverDisclaimerContainerView" destination="CG2-4V-Ckn" id="XcD-dg-SZ6"/>
+                <outlet property="coverDisclaimerIconView" destination="iva-mH-OIK" id="aF0-Gl-VoO"/>
                 <outlet property="coverDisclaimerLabel" destination="TpH-Uu-g3i" id="Ice-17-jCd"/>
                 <outlet property="followBtn" destination="rIO-sR-L91" id="McO-Fa-Bp6"/>
                 <outlet property="followBtnLbl" destination="Lpe-5i-7W6" id="j7T-Ry-WL3"/>
@@ -35,6 +36,7 @@
                 <outlet property="ticketsSectionView" destination="Olj-l5-loH" id="ewU-D7-rTu"/>
                 <outlet property="ticketsTitleLbl" destination="VCc-sY-cfh" id="hwr-oC-WFV"/>
                 <outlet property="timeLbl" destination="zEr-mS-Jdn" id="vXD-6w-o86"/>
+                <outlet property="upcellDiscriptionLbl" destination="RcG-sd-2Zr" id="rCC-5w-dly"/>
                 <outlet property="venueImage" destination="0Ts-N6-dnV" id="QUA-YG-CHX"/>
                 <outlet property="venueName" destination="iOG-mM-nyK" id="CCq-zq-sRO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -56,7 +58,7 @@
                     <rect key="frame" x="0.0" y="124" width="440" height="811"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Alg-kJ-KVX">
-                            <rect key="frame" x="0.0" y="0.0" width="440" height="747"/>
+                            <rect key="frame" x="0.0" y="0.0" width="440" height="789"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zOW-Vg-ojP">
                                     <rect key="frame" x="0.0" y="0.0" width="440" height="255"/>
@@ -151,25 +153,43 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Olj-l5-loH">
-                                    <rect key="frame" x="0.0" y="271" width="440" height="476"/>
+                                    <rect key="frame" x="0.0" y="271" width="440" height="518"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="K5r-na-p6I">
-                                            <rect key="frame" x="20" y="0.0" width="400" height="92"/>
+                                            <rect key="frame" x="20" y="0.0" width="400" height="134"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buy live cover" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VCc-sY-cfh">
-                                                    <rect key="frame" x="0.0" y="0.0" width="400" height="26"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="26" id="d6g-uz-SMz"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CG2-4V-Ckn">
-                                                    <rect key="frame" x="0.0" y="42" width="400" height="50"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ihy-fi-dfr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="400" height="52"/>
                                                     <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buy live cover" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VCc-sY-cfh">
+                                                            <rect key="frame" x="0.0" y="0.0" width="400" height="26"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="26" id="d6g-uz-SMz"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RcG-sd-2Zr">
+                                                            <rect key="frame" x="0.0" y="26" width="400" height="0.0"/>
+                                                            <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="14"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CG2-4V-Ckn">
+                                                    <rect key="frame" x="0.0" y="68" width="400" height="66"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iva-mH-OIK">
+                                                            <rect key="frame" x="14" y="24" width="18" height="18"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="18" id="2oS-gw-OGW"/>
+                                                                <constraint firstAttribute="width" constant="18" id="75f-Xb-wxa"/>
+                                                            </constraints>
+                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TpH-Uu-g3i">
-                                                            <rect key="frame" x="12" y="9" width="376" height="32"/>
+                                                            <rect key="frame" x="42" y="9" width="346" height="48"/>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="13"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -177,10 +197,12 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="TpH-Uu-g3i" firstAttribute="leading" secondItem="CG2-4V-Ckn" secondAttribute="leading" constant="12" id="Esm-R6-nFX"/>
+                                                        <constraint firstItem="TpH-Uu-g3i" firstAttribute="leading" secondItem="iva-mH-OIK" secondAttribute="trailing" constant="10" id="Esm-R6-nFX"/>
+                                                        <constraint firstItem="iva-mH-OIK" firstAttribute="leading" secondItem="CG2-4V-Ckn" secondAttribute="leading" constant="14" id="QRi-kp-IOm"/>
                                                         <constraint firstAttribute="trailing" secondItem="TpH-Uu-g3i" secondAttribute="trailing" constant="12" id="QSI-9u-p2H"/>
                                                         <constraint firstItem="TpH-Uu-g3i" firstAttribute="top" secondItem="CG2-4V-Ckn" secondAttribute="top" constant="9" id="Sr1-9F-dEt"/>
                                                         <constraint firstAttribute="bottom" secondItem="TpH-Uu-g3i" secondAttribute="bottom" constant="9" id="agq-xm-xGB"/>
+                                                        <constraint firstItem="iva-mH-OIK" firstAttribute="centerY" secondItem="CG2-4V-Ckn" secondAttribute="centerY" id="jbi-c9-SiU"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -191,7 +213,7 @@
                                             </subviews>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-r6-9ao">
-                                            <rect key="frame" x="0.0" y="76" width="440" height="400"/>
+                                            <rect key="frame" x="0.0" y="118" width="440" height="400"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZd-mH-WZd">
                                                     <rect key="frame" x="20" y="34" width="400" height="366"/>
@@ -317,16 +339,16 @@
                     </connections>
                 </button>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGe-Rx-9nY">
-                    <rect key="frame" x="65" y="140" width="310" height="57"/>
+                    <rect key="frame" x="65" y="140" width="310" height="49"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laissez Faire" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8IH-NF-fEQ">
-                            <rect key="frame" x="0.0" y="0.0" width="310" height="36.666666666666664"/>
-                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="28"/>
+                            <rect key="frame" x="0.0" y="0.0" width="310" height="28.666666666666668"/>
+                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="22"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York City" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nnY-LE-Cf6">
-                            <rect key="frame" x="0.0" y="38.666666666666657" width="310" height="18.333333333333329"/>
+                            <rect key="frame" x="0.0" y="30.666666666666657" width="310" height="18.333333333333329"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="14"/>
                             <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
