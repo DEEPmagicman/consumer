@@ -719,8 +719,7 @@ private extension PremiumTableSeatingVC {
     }
 
     func arrivalTimeAccentColor() -> UIColor {
-        let color = event?.whiteLabelColor?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return UIColor(hex: color?.isEmpty == false ? color! : "#A64BA0")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 }
 

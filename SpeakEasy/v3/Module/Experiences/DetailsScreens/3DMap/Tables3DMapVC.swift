@@ -410,7 +410,7 @@ extension Tables3DMapVC {
         zoneSelector.setItems(
             names,
             selectedIndex: selectedGlobalRoomIndex,
-            borderColor: event?.whiteLabelColor
+            borderColor: Event.normalizedHexColor(event?.whiteLabelColor)
         )
     }
 
@@ -660,12 +660,7 @@ private extension Tables3DMapVC {
         for node in nodes {
             applyUniqueMaterial(to: node)
             node.geometry?.materials.forEach { mat in
-                if let hex = self.event?.whiteLabelColor {
-                    let color = UIColor(hex: hex)
-                    mat.emission.contents = color
-                } else {
-                    mat.emission.contents = UIColor.systemPink.withAlphaComponent(0.05)
-                }
+                mat.emission.contents = UIColor(hex: Event.normalizedHexColor(self.event?.whiteLabelColor))
                 mat.emission.intensity = 0.05
             }
         }
@@ -1024,7 +1019,7 @@ private extension Tables3DMapVC {
         highlightOnlySelectedDot(meta: meta)
         highlightMeshOnlySelected(meta: meta)
 
-        let highlightColor = event?.whiteLabelColor.map { UIColor(hex: $0) } ?? PinStyle.activeColor
+        let highlightColor = UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
         updatePinColor(seatingAreaId: meta.seatingAreaId, color: highlightColor, in: sceneView.scene)
 
         setupBuyNowButton()
@@ -1521,7 +1516,7 @@ private extension Tables3DMapVC {
             textLayer.font = AppFont.font(.inter, weight: .medium, size: 14)
             textLayer.fontSize = 14
             textLayer.alignmentMode = .center
-            textLayer.foregroundColor = UIColor(hex: (self.event?.whiteLabelColor ?? "#FFFFFF")).cgColor
+            textLayer.foregroundColor = UIColor(hex: Event.normalizedHexColor(self.event?.whiteLabelColor)).cgColor
             textLayer.contentsScale = UIScreen.main.scale
 
             textLayer.frame = CGRect(

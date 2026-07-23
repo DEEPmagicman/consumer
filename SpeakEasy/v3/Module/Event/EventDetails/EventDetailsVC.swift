@@ -612,12 +612,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        let hex = event?.whiteLabelColor?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        let venueHex = venueDetails?.venueSettings?.whiteLabelColor?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return UIColor(hex: hex?.isEmpty == false ? hex! : venueHex ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 
     private var eventBackgroundImageURLString: String {
@@ -1269,18 +1264,12 @@ class EventDetailsVC: UIViewController {
     }
 
     private func applyVenueWhiteLabelColorIfNeeded(from venue: ClipVenue?) {
-        let eventColor = event?.whiteLabelColor?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard Event.normalizedHexColor(event?.whiteLabelColor, fallback: "").isEmpty else { return }
 
-        guard eventColor?.isEmpty != false else { return }
-
-        let venueColor = venue?.venueSettings?.whiteLabelColor?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard let venueColor,
-              !venueColor.isEmpty else { return }
-
-        event?.whiteLabelColor = venueColor
+//        let venueColor = Event.normalizedHexColor(venue?.venueSettings?.whiteLabelColor, fallback: "")
+//        guard !venueColor.isEmpty else { return }
+//
+//        event?.whiteLabelColor = venueColor
     }
 
     private func applyAttendees(
@@ -4591,9 +4580,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.selectionStyle = .none
 
-            let tintColor = UIColor(
-                hex: event?.whiteLabelColor ?? "#FFFFFF"
-            )
+            let tintColor = UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
 
             cell.configure(with: item, tintColor: tintColor)
             cell.onTap = { [weak self] in

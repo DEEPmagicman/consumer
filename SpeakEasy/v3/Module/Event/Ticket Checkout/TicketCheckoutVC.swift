@@ -131,7 +131,7 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 
     private var paymentSheet: PaymentSheet?
@@ -249,10 +249,11 @@ final class TicketCheckoutVC: UIViewController {
             feesAndTaxesParentTableView.isHidden = false
         }
 
-        venueName.text = venueDetails?.name
-        venueName2.text = venueDetails?.name
+        let displayVenueName = event?.displayVenueNameOrFallback(venueDetails?.name ?? "") ?? venueDetails?.name ?? ""
+        venueName.text = displayVenueName
+        venueName2.text = displayVenueName
         setHeaderTitle(event?.title)
-        fullPrivacyPolicyText = "I agree to receive marketing related text messages from \(venueDetails?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        fullPrivacyPolicyText = "I agree to receive marketing related text messages from \(displayVenueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
         updatePrivacyPolicyLabel()
     }
 

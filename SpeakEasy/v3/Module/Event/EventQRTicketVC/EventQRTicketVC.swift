@@ -83,7 +83,7 @@ class EventQRTicketVC: UIViewController {
     private var previousInteractivePopEnabled: Bool?
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: booking?.event?.whiteLabelColor ?? sourceEvent?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(booking?.event?.whiteLabelColor, sourceEvent?.whiteLabelColor))
     }
 
     private var faqs: [(question: String, answer: String)] = []

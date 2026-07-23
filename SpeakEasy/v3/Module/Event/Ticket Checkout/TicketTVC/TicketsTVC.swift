@@ -428,9 +428,7 @@ class TicketsTVC: UITableViewCell {
         if shouldShowLeftLabel && remaining > 0 && remaining < 20 {
             ticketLeftLbl.isHidden = false
             ticketLeftLbl.text = "Only \(remaining) left"
-            if let hex = whiteLabelColor {
-                ticketLeftLbl.textColor = UIColor(hex: hex)
-            }
+            ticketLeftLbl.textColor = UIColor(hex: Event.normalizedHexColor(whiteLabelColor))
         } else {
             ticketLeftLbl.isHidden = true
         }

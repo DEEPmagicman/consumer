@@ -94,7 +94,7 @@ final class CoverTicketListVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: venueDetails?.venueSettings?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
 
     private var totalSelectedCount: Int {
@@ -628,9 +628,7 @@ private extension CoverTicketListVC {
         coverDisclaimerContainerView.backgroundColor = .clear
         coverDisclaimerContainerView.layer.cornerRadius = 8
         coverDisclaimerContainerView.layer.borderWidth = 1
-        let tintColor = UIColor(
-            hex: venueDetails?.venueSettings?.whiteLabelColor ?? "#FFFFFF"
-        )
+        let tintColor = UIColor(hex: Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
         coverDisclaimerContainerView.borderColor = tintColor
         coverDisclaimerContainerView.clipsToBounds = true
 

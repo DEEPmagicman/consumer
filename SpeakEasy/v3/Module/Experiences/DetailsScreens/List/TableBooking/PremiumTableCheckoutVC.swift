@@ -56,7 +56,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 
     private var buyButtonAccentColor: UIColor {

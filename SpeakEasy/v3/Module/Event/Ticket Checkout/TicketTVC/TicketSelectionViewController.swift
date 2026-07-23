@@ -379,7 +379,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 
     private func applyWhiteLabelTheme() {
@@ -523,7 +523,7 @@ class TicketSelectionViewController: UIViewController {
     private func setupHeaderData() {
         guard let event = event else { return }
 
-        venueName.text = venueDetails?.name ?? ""
+        venueName.text = event.displayVenueNameOrFallback(venueDetails?.name ?? "")
         setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
         applyWhiteLabelTheme()
@@ -554,7 +554,7 @@ class TicketSelectionViewController: UIViewController {
             return
         }
 
-        venueName.text = venueDetails?.name ?? ""
+        venueName.text = event.displayVenueNameOrFallback(venueDetails?.name ?? "")
         setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
         applyWhiteLabelTheme()

@@ -178,7 +178,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
 
     private func applyWhiteLabelTheme() {

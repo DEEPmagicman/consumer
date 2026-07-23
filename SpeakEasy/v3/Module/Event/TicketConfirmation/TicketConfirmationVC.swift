@@ -42,7 +42,7 @@ class TicketConfirmationVC: UIViewController {
     private let paymentService = PaymentService()
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: event?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
     }
     
     override func viewDidLoad() {
@@ -83,7 +83,7 @@ class TicketConfirmationVC: UIViewController {
 //        )
         event = booking.event
 
-        venueName.text = venueDetails?.name ?? ""
+        venueName.text = event?.displayVenueNameOrFallback(venueDetails?.name ?? "") ?? venueDetails?.name ?? ""
 //        venueName2.text = venueDetails?.name ?? ""
         setHeaderTitle(event?.title ?? "")
 //        eventImgView.sd_setImage(

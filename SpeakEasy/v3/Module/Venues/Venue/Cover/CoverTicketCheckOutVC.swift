@@ -129,7 +129,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: venue?.venueSettings?.whiteLabelColor ?? "#FFFFFF")
+        UIColor(hex: Event.normalizedHexColor(venue?.venueSettings?.whiteLabelColor))
     }
 
     private var hasPaidCoverSelection: Bool {

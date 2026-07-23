@@ -33,7 +33,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
     private let subtitleLabel = UILabel()
     private let dateLabel = UILabel()
     private let statusBadge = PaddingLabel()
-    private var representedImageURL: String?
+    private var representedImageKey: String?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -68,7 +68,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
     func releaseResources() {
         imageView.sd_cancelCurrentImageLoad()
         imageView.image = nil
-        representedImageURL = nil
+        representedImageKey = nil
     }
 
     private func setupUI() {
@@ -191,23 +191,26 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             statusBadge.isHidden = true
         }
 
+        let screenScale = UIScreen.main.scale
+        let imageWidth = max(bounds.width, imageView.bounds.width, 240)
+        let imageHeight = max(bounds.height, imageView.bounds.height, imageWidth * 1.2, 288)
+        let qualityScale: CGFloat = 2
+        let targetPixelSize = CGSize(
+            width: imageWidth * screenScale * qualityScale,
+            height: imageHeight * screenScale * qualityScale
+        )
         let imageURL = model.imageURL ?? ""
-        guard representedImageURL != imageURL else { return }
+        let imageKey = "\(imageURL)|\(Int(targetPixelSize.width))x\(Int(targetPixelSize.height))"
+        guard representedImageKey != imageKey else { return }
 
-        representedImageURL = imageURL
-        
+        representedImageKey = imageKey
+
         imageView.sd_cancelCurrentImageLoad()
-//
+
         guard let url = URL(string: imageURL) else {
             imageView.image = Constant.Icon.uploadImage
             return
         }
-
-        let screenScale = UIScreen.main.scale
-        let targetPixelSize = CGSize(
-            width: max(bounds.width, 180) * screenScale,
-            height: max(bounds.width * 1.2, 216) * screenScale
-        )
         
         imageView.sd_setImage(
             with: url,

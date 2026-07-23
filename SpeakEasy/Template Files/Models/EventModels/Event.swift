@@ -659,4 +659,19 @@ extension Event {
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
             .first { !$0.isEmpty }
     }
+
+    static func normalizedHexColor(_ candidates: String?..., fallback: String = "#FFFFFF") -> String {
+        candidates
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { isValidHexColor($0) } ?? fallback
+    }
+
+    private static func isValidHexColor(_ value: String) -> Bool {
+        let hex = value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "#", with: "")
+
+        guard hex.count == 6 || hex.count == 8 else { return false }
+        return hex.allSatisfy { $0.isHexDigit }
+    }
 }
