@@ -177,7 +177,9 @@ extension DiscoverVC: SelectedDateDelegate {
         var dates: [String] = []
         var calendar         = Calendar(identifier: .gregorian)
         calendar.timeZone    = Constant.venueTimeZone ?? .current
-        let today            = calendar.startOfDay(for: Constant.venueTodayDate().dateFormatter() ?? Date())
+        let today            = calendar.startOfDay(
+            for: Constant.venueTodayDate().dateFormatter(formate: .YYYYMMDD) ?? Date()
+        )
         var current          = max(calendar.startOfDay(for: start), today)
         let rangeEnd         = calendar.startOfDay(for: end)
 

@@ -35,6 +35,7 @@ final class VerifyNumberVC: BaseAuthViewController {
     private var timer = Timer()
     private var count = 60
     private var isVerifyingOtp = false
+    private var isResendingOtp = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,6 +139,7 @@ final class VerifyNumberVC: BaseAuthViewController {
     }
 
     private func setResendEnabled(_ enabled: Bool) {
+        resendBtn.isEnabled = enabled
         resendBtn.isUserInteractionEnabled = enabled
         resendBtn.alpha = enabled ? 1.0 : 0.5
     }
@@ -181,62 +183,45 @@ final class VerifyNumberVC: BaseAuthViewController {
     }
 
     @objc private func onClickDidNotGetCode() {
-        count = 60
-        setResendEnabled(false)
-        startTimer()
+        guard count <= 0 else { return }
+        guard !isResendingOtp else { return }
 
+        isResendingOtp = true
+        setResendEnabled(false)
         resendBtn.showLoader(userInteraction: false)
 
-        if isFromLogin {
-            onBoardingDelegate.loginResendOtpApi(otpref: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                guard let self else { return }
-                self.hideResendButtonLoader()
+        let finishResend: (String?, String, Bool, String?) -> Void = { [weak self] otp, otpRef, isSuccess, errorMsg in
+            guard let self else { return }
+            self.hideResendButtonLoader()
 
-                if isSuccess {
-                    self.otpRef = otpRef
-                    self.currectOtp = otp
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
-                }
+            if isSuccess {
+                self.otpRef = otpRef
+                self.currectOtp = otp
+                self.resetResendTimerAfterSuccess()
+            } else {
+                self.setResendEnabled(true)
+                Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+
+        if isFromLogin {
+            onBoardingDelegate.loginResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errorMsg in
+                finishResend(otp, otpRef, isSuccess, errorMsg)
             }
         } else {
             if isFromSettings {
                 if isForEmail {
-                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef) { [weak self] otp, otpRef, isSuccess, errMsg in
-                        guard let self else { return }
-                        self.hideResendButtonLoader()
-
-                        if isSuccess {
-                            self.otpRef = otpRef
-                            self.currectOtp = otp
-                        } else {
-                            Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
-                        }
+                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errMsg in
+                        finishResend(otp, otpRef, isSuccess, errMsg)
                     }
                 } else {
-                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef, isForPhone: true) { [weak self] otp, otpRef, isSuccess, errMsg in
-                        guard let self else { return }
-                        self.hideResendButtonLoader()
-
-                        if isSuccess {
-                            self.otpRef = otpRef
-                            self.currectOtp = otp
-                        } else {
-                            Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
-                        }
+                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef, isForPhone: true) { otp, otpRef, isSuccess, errMsg in
+                        finishResend(otp, otpRef, isSuccess, errMsg)
                     }
                 }
             } else {
-                onBoardingDelegate.signUpResendOtpApi(otpref: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                    guard let self else { return }
-                    self.hideResendButtonLoader()
-
-                    if isSuccess {
-                        self.otpRef = otpRef
-                        self.currectOtp = otp
-                    } else {
-                        Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
-                    }
+                onBoardingDelegate.signUpResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errorMsg in
+                    finishResend(otp, otpRef, isSuccess, errorMsg)
                 }
             }
         }
@@ -248,8 +233,16 @@ final class VerifyNumberVC: BaseAuthViewController {
 
     private func hideResendButtonLoader() {
         resendBtn.hideLoader { [weak self] in
-            self?.resendBtn.isUserInteractionEnabled = false
+            self?.isResendingOtp = false
         }
+    }
+
+    private func resetResendTimerAfterSuccess() {
+        count = 60
+        setResendEnabled(false)
+        let time = secondsToHoursMinutesSeconds(seconds: count)
+        timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
+        startTimer()
     }
 
     private func resetAfterFailedOtp() {

@@ -198,7 +198,12 @@ final class ProfileMenuVC: UIViewController {
         addRows(
             to: profileCard,
             rows: [
-                ProfileMenuRow(title: "Profile", icon: UIImage(resource: .profileIc), action: #selector(onClickProfile)),
+                ProfileMenuRow(
+                    title: "Profile",
+                    icon: UIImage(resource: .profileIc),
+                    action: #selector(onClickProfile),
+                    iconSize: 17
+                ),
                 ProfileMenuRow(title: "Account info", icon: UIImage(resource: .accountInfoIC), action: #selector(onClickAccountInfo))
             ]
         )
@@ -384,8 +389,8 @@ final class ProfileMenuVC: UIViewController {
         NSLayoutConstraint.activate([
             iconView.leadingAnchor.constraint(equalTo: control.leadingAnchor),
             iconView.centerYAnchor.constraint(equalTo: control.centerYAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: 20),
-            iconView.heightAnchor.constraint(equalToConstant: 20),
+            iconView.widthAnchor.constraint(equalToConstant: row.iconSize),
+            iconView.heightAnchor.constraint(equalToConstant: row.iconSize),
 
             label.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 16),
             label.centerYAnchor.constraint(equalTo: control.centerYAnchor),
@@ -477,6 +482,7 @@ private struct ProfileMenuRow {
     let title: String
     let icon: UIImage?
     let action: Selector?
+    var iconSize: CGFloat = 20
 }
 
 private final class ProfileBackgroundBloomView: UIView {

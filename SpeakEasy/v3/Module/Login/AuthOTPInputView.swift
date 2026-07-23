@@ -29,6 +29,7 @@ final class AuthOTPInputView: UIView {
 
     private var otpText = ""
     private var otpSize = 58.0
+    private var isResendEnabled = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,6 +57,8 @@ final class AuthOTPInputView: UIView {
     }
 
     func setResendEnabled(_ enabled: Bool) {
+        isResendEnabled = enabled
+        resendBtn.isEnabled = enabled
         resendBtn.isUserInteractionEnabled = enabled
         resendBtn.alpha = enabled ? 1.0 : 0.5
     }
@@ -177,6 +180,7 @@ final class AuthOTPInputView: UIView {
     }
 
     @objc private func onClickResend() {
+        guard isResendEnabled else { return }
         delegate?.authOTPInputViewDidTapResend(self)
     }
 

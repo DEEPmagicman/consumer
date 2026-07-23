@@ -38,6 +38,41 @@ final class SelectLocationVC: UIViewController {
 
     // MARK: - Properties
 
+    private lazy var emptyStateView: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No cities found"
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistMedium(size: 16)
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "Try searching for another city."
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.58)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 13)
+        subtitleLabel.numberOfLines = 0
+
+        container.addSubview(titleLabel)
+        container.addSubview(subtitleLabel)
+
+        NSLayoutConstraint.activate([
+            titleLabel.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -18),
+            titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 24),
+            titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -24),
+
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            subtitleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 24),
+            subtitleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -24)
+        ])
+
+        return container
+    }()
+
     var mode: SelectLocationMode = .selectCity {
         didSet {
             guard isViewLoaded else { return }
@@ -56,7 +91,7 @@ final class SelectLocationVC: UIViewController {
         didSet {
             guard isViewLoaded else { return }
             updateApplyButtonState()
-            tableView.reloadData()
+            reloadCityList()
         }
     }
     private var selectedCity = ""
@@ -72,7 +107,7 @@ final class SelectLocationVC: UIViewController {
             guard isViewLoaded else { return }
             normalizeFilterSelectionIfNeeded()
             setupUI()
-            tableView.reloadData()
+            reloadCityList()
         }
     }
     
@@ -167,6 +202,7 @@ private extension SelectLocationVC {
         tableView.showsHorizontalScrollIndicator = false
         tableView.rowHeight = 77
         tableView.estimatedRowHeight = 77
+        updateEmptyState()
     }
 
     func setupSearch() {
@@ -292,6 +328,20 @@ private extension SelectLocationVC {
 
         return fallbackCity.isEmpty ? "Chicago" : fallbackCity
     }
+
+    func reloadCityList() {
+        tableView.reloadData()
+        updateEmptyState()
+    }
+
+    func updateEmptyState() {
+        let shouldShowEmptyState =
+            !isLoadingCityList &&
+            displayList.isEmpty &&
+            !currentSearchText().isEmpty
+
+        tableView.backgroundView = shouldShowEmptyState ? emptyStateView : nil
+    }
 }
 
 // MARK: - Actions
@@ -313,7 +363,7 @@ extension SelectLocationVC {
 
         displayList = fullCityList
 
-        tableView.reloadData()
+        reloadCityList()
     }
     
     @IBAction func onClickEditSearchClosebtn(_ sender: Any) {
@@ -325,7 +375,7 @@ extension SelectLocationVC {
 
         displayList = fullCityList
 
-        tableView.reloadData()
+        reloadCityList()
     }
 
     @IBAction func onClickApply(_ sender: Any) {
@@ -425,7 +475,7 @@ private extension SelectLocationVC {
             }
         }
 
-        tableView.reloadData()
+        reloadCityList()
     }
 
     func applyCurrentSearch() {
@@ -466,14 +516,14 @@ private extension SelectLocationVC {
             fullCityList = cachedCityList
             applyCurrentSearch()
             isLoadingCityList = false
-            tableView.reloadData()
+            reloadCityList()
             return
         }
 
         guard !isLoadingCityList else { return }
 
         isLoadingCityList = true
-        tableView.reloadData()
+        reloadCityList()
 
         venueService.fetchCityList { [weak self] cityList, isSuccess, errMsg in
 
@@ -487,10 +537,10 @@ private extension SelectLocationVC {
                     self.fullCityList = cityList
                     UserDefault.shared.cachedCityList = cityList
                     self.applyCurrentSearch()
-                    self.tableView.reloadData()
+                    self.reloadCityList()
                 } else {
                     self.isLoadingCityList = false
-                    self.tableView.reloadData()
+                    self.reloadCityList()
 
                     Alert.showAlertSheet(
                         style: .alert,
@@ -598,7 +648,7 @@ UITableViewDataSource {
             updateLocationButtonState()
         }
 
-        tableView.reloadData()
+        reloadCityList()
     }
 }
 
