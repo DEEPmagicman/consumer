@@ -270,16 +270,24 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let dateText: String
         let imageURL: String?
         let placeholder: UIImage?
+        let bookingTimezone = Event.normalizedTimezone(
+            booking.venueObject?.useTimezone,
+            booking.venueObject?.timezone
+        )
 
         if let event = booking.event {
-            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
+            dateText = event.eventCardDateText(
+                timezone: bookingTimezone,
+                includeCustomText: false
+            )
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
         } else {
             dateText = booking.createdAt.convertDateFormat(
                 from: .yyyyMMddTHHmmssSSSz,
-                to: .MMMDDATHMMA
+                to: .EEEMMMDATHMMA,
+                customTimeZone: bookingTimezone ?? ""
             )
 
             imageURL = (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL
@@ -302,16 +310,24 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let dateText: String
         let imageURL: String?
         let placeholder: UIImage?
+        let bookingTimezone = Event.normalizedTimezone(
+            booking.venueObject?.useTimezone,
+            booking.venueObject?.timezone
+        )
 
         if let event = booking.event {
-            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
+            dateText = event.eventCardDateText(
+                timezone: bookingTimezone,
+                includeCustomText: false
+            )
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
         } else {
             dateText = booking.createdAt.convertDateFormat(
                 from: .yyyyMMddTHHmmssSSSz,
-                to: .MMMDDATHMMA
+                to: .EEEMMMDATHMMA,
+                customTimeZone: bookingTimezone ?? ""
             )
 
             imageURL = (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL
@@ -335,22 +351,34 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let imageURL: String?
         let placeholder: UIImage?
         var eventType: EventType?
+        let bookingTimezone = Event.normalizedTimezone(
+            booking.venueObject?.useTimezone,
+            booking.venueObject?.timezone
+        )
 
         if let event = booking.event {
-            dateText = event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
+            dateText = event.eventCardDateText(
+                timezone: bookingTimezone,
+                includeCustomText: false
+            )
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
             eventType =
             isPastEvent(
                 event,
-                timezone: booking.venueObject?.useTimezone ??
-                event.venue?.useTimezone
+                timezone: Event.normalizedTimezone(
+                    booking.venueObject?.useTimezone,
+                    booking.venueObject?.timezone,
+                    event.venue?.useTimezone,
+                    event.venue?.timezone
+                )
             ) ? .pastEvent : nil
         } else {
             dateText = booking.createdAt.convertDateFormat(
                 from: .yyyyMMddTHHmmssSSSz,
-                to: .MMMDDATHMMA
+                to: .EEEMMMDATHMMA,
+                customTimeZone: bookingTimezone ?? ""
             )
 
             imageURL = (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL

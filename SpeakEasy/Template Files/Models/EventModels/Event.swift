@@ -600,15 +600,20 @@ extension Event {
         displayVenueName.isEmpty ? fallback : displayVenueName
     }
 
-    func eventCardDateText(timezone: String? = nil) -> String {
-        let preferredTimezone = timezone?.trimmingCharacters(in: .whitespacesAndNewlines)
+    func eventCardDateText(
+        timezone: String? = nil,
+        includeCustomText: Bool = true
+    ) -> String {
+        let preferredTimezone = Self.normalizedTimezone(
+            timezone,
+            venue?.useTimezone,
+            venue?.timezone
+        )
 
         return Self.eventCardDateText(
-            customText: openTimeCustomText,
+            customText: includeCustomText ? openTimeCustomText : nil,
             startDate: startDateTime,
-            timezone: preferredTimezone?.isEmpty == false
-                ? preferredTimezone
-                : venue?.useTimezone ?? venue?.timezone
+            timezone: preferredTimezone
         )
     }
 
@@ -623,6 +628,7 @@ extension Event {
         }
 
         let inputFormatter = DateFormatter()
+        inputFormatter.locale = Locale(identifier: "en_US_POSIX")
         inputFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
         inputFormatter.timeZone = TimeZone(identifier: "UTC")
 
@@ -630,13 +636,15 @@ extension Event {
             return startDate
         }
 
-        let outputTimeZone = TimeZone(identifier: timezone ?? "") ?? .current
+        let outputTimeZone = TimeZone(identifier: normalizedTimezone(timezone) ?? "UTC") ?? TimeZone(secondsFromGMT: 0)!
 
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = DateFormat.EEEMMMD.rawValue
         dateFormatter.timeZone = outputTimeZone
 
         let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         timeFormatter.dateFormat = DateFormat.hmmA.rawValue
         timeFormatter.timeZone = outputTimeZone
 
@@ -644,5 +652,11 @@ extension Event {
         let timeText = timeFormatter.string(from: date)
 
         return "\(dateText) at \(timeText)"
+    }
+
+    static func normalizedTimezone(_ candidates: String?...) -> String? {
+        candidates
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty }
     }
 }

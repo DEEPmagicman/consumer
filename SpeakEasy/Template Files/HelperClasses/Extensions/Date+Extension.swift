@@ -39,4 +39,5 @@ enum DateFormat: String {
     case MMMD = "MMM d"
     case EEEEMMMMDDAT = "EEE, MMMM d 'at' h:mm a"
     case MMMDDATHMMA = "MMM d 'at' ha"
+    case EEEMMMDATHMMA = "EEE, MMM d 'at' h:mm a"
 }

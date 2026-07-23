@@ -357,13 +357,22 @@ extension BaseSingleGridVC: PinterestLayoutDelegate {
         let venue = booking.venueObject?.name ?? ""
 
         let dateText: String = {
+            let bookingTimezone = Event.normalizedTimezone(
+                booking.venueObject?.useTimezone,
+                booking.venueObject?.timezone
+            )
+
             if let event = booking.event {
-                return event.eventCardDateText(timezone: booking.venueObject?.useTimezone)
+                return event.eventCardDateText(
+                    timezone: bookingTimezone,
+                    includeCustomText: false
+                )
             }
 
             return booking.createdAt.convertDateFormat(
                 from: .yyyyMMddTHHmmssSSSz,
-                to: .MMMDDATHMMA
+                to: .EEEMMMDATHMMA,
+                customTimeZone: bookingTimezone ?? ""
             )
         }()
         
