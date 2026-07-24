@@ -767,6 +767,12 @@ final class PremiumNoteInputView: UIView {
 
 final class PremiumAgreementView: UIView {
 
+    enum Style {
+        case plain
+        case darkCard
+        case whiteCard
+    }
+
     var onHeightChanged: ((CGFloat, Bool) -> Void)?
 
     var preferredHeight: CGFloat {
@@ -806,6 +812,15 @@ final class PremiumAgreementView: UIView {
     }
 
     var onToggle: ((Bool) -> Void)?
+    var style: Style = .plain {
+        didSet {
+            applyStyle()
+            updateText()
+        }
+    }
+    var preservesLinks = false {
+        didSet { updateText() }
+    }
 
     private let checkButton = UIButton(type: .system)
     private let titleLabel = UILabel()
@@ -822,6 +837,38 @@ final class PremiumAgreementView: UIView {
     private var titleLeadingToContainerConstraint: NSLayoutConstraint?
     private var toggleTopConstraint: NSLayoutConstraint?
     private var toggleHeightConstraint: NSLayoutConstraint?
+    private var checkLeadingConstraint: NSLayoutConstraint?
+    private var checkTopConstraint: NSLayoutConstraint?
+    private var titleTrailingConstraint: NSLayoutConstraint?
+    private var bodyTrailingConstraint: NSLayoutConstraint?
+    private var toggleTrailingConstraint: NSLayoutConstraint?
+    private var toggleBottomConstraint: NSLayoutConstraint?
+    private var contentInsets: UIEdgeInsets {
+        switch style {
+        case .plain:
+            return .zero
+        case .darkCard:
+            return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        case .whiteCard:
+            return UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        }
+    }
+    private var bodyColor: UIColor {
+        switch style {
+        case .whiteCard:
+            return .black
+        case .plain, .darkCard:
+            return UIColor.white.withAlphaComponent(0.82)
+        }
+    }
+    private var toggleColor: UIColor {
+        switch style {
+        case .whiteCard:
+            return .black
+        case .plain, .darkCard:
+            return UIColor.white
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -839,6 +886,7 @@ final class PremiumAgreementView: UIView {
 
     private func setup() {
         backgroundColor = .clear
+        layer.cornerCurve = .continuous
 
         checkButton.tintColor = .white
         checkButton.imageView?.tintColor = .white
@@ -883,27 +931,40 @@ final class PremiumAgreementView: UIView {
         let titleToContainer = titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
         titleLeadingToCheckboxConstraint = titleToCheckbox
         titleLeadingToContainerConstraint = titleToContainer
+        let checkLeading = checkButton.leadingAnchor.constraint(equalTo: leadingAnchor)
+        let checkTop = checkButton.topAnchor.constraint(equalTo: topAnchor)
+        let titleTrailing = titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+        let bodyTrailing = bodyLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+        let toggleTrailing = toggleButton.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
+        let toggleBottom = toggleButton.bottomAnchor.constraint(equalTo: bottomAnchor)
+        checkLeadingConstraint = checkLeading
+        checkTopConstraint = checkTop
+        titleTrailingConstraint = titleTrailing
+        bodyTrailingConstraint = bodyTrailing
+        toggleTrailingConstraint = toggleTrailing
+        toggleBottomConstraint = toggleBottom
 
         NSLayoutConstraint.activate([
-            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            checkButton.topAnchor.constraint(equalTo: topAnchor),
+            checkLeading,
+            checkTop,
             checkButton.widthAnchor.constraint(equalToConstant: 24),
             checkButton.heightAnchor.constraint(equalToConstant: 24),
 
             titleToCheckbox,
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleTrailing,
             titleTop,
 
             bodyLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            bodyLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bodyTrailing,
             bodyToTitle,
             toggleButton.leadingAnchor.constraint(equalTo: bodyLabel.leadingAnchor),
-            toggleButton.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
+            toggleTrailing,
             toggleTop,
             toggleHeight,
-            toggleButton.bottomAnchor.constraint(equalTo: bottomAnchor)
+            toggleBottom
         ])
 
+        applyStyle()
         updateCheckbox()
         updateCheckboxVisibility()
     }
@@ -912,8 +973,39 @@ final class PremiumAgreementView: UIView {
         let image = (isChecked ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon)?
             .withRenderingMode(.alwaysTemplate)
         checkButton.setImage(image, for: .normal)
-        checkButton.tintColor = .white
-        checkButton.imageView?.tintColor = .white
+        let tint: UIColor = style == .whiteCard ? UIColor(hex: "#444444") : .white
+        checkButton.tintColor = tint
+        checkButton.imageView?.tintColor = tint
+    }
+
+    private func applyStyle() {
+        switch style {
+        case .plain:
+            backgroundColor = .clear
+            layer.cornerRadius = 0
+            titleLabel.textColor = .white
+        case .darkCard:
+            backgroundColor = UIColor(hex: "#272727", alpha: 0.5)
+            layer.cornerRadius = 8
+            titleLabel.textColor = UIColor.white.withAlphaComponent(0.82)
+        case .whiteCard:
+            backgroundColor = .white
+            layer.cornerRadius = 6
+            titleLabel.textColor = .black
+        }
+        toggleButton.setTitleColor(toggleColor, for: .normal)
+        checkLeadingConstraint?.constant = contentInsets.left
+        checkTopConstraint?.constant = contentInsets.top
+        titleTopConstraint?.constant = contentInsets.top
+        bodyTopToContainerConstraint?.constant = contentInsets.top
+        titleLeadingToContainerConstraint?.constant = contentInsets.left
+        titleTrailingConstraint?.constant = -contentInsets.right
+        bodyTrailingConstraint?.constant = -contentInsets.right
+        toggleTrailingConstraint?.constant = -contentInsets.right
+        toggleBottomConstraint?.constant = -contentInsets.bottom
+        updateCheckbox()
+        invalidateIntrinsicContentSize()
+        reportHeightIfNeeded()
     }
 
     private func updateCheckboxVisibility() {
@@ -941,8 +1033,10 @@ final class PremiumAgreementView: UIView {
             isExpanded: isExpanded,
             widthFallback: UIScreen.main.bounds.width - 68,
             allowsViewMore: !showsCheckbox,
-            expandedAttributedText: bodyAttributedText
+            expandedAttributedText: bodyAttributedText,
+            preservesLinks: preservesLinks || style != .plain
         )
+        applyTextColor()
         updateToggleButton(isVisible: false, title: nil)
         invalidateIntrinsicContentSize()
         reportHeightIfNeeded(animated: false)
@@ -974,7 +1068,7 @@ final class PremiumAgreementView: UIView {
             ? bodyLabel.bounds.width
             : max(UIScreen.main.bounds.width - 68, 240)
 
-        var height: CGFloat = 0
+        var height = contentInsets.top + contentInsets.bottom
         if !title.isEmpty {
             height += ceil(Constant.Font.geistMedium(size: 12).lineHeight)
         }
@@ -982,17 +1076,40 @@ final class PremiumAgreementView: UIView {
         if !body.isEmpty {
             if !title.isEmpty { height += 6 }
             let bodyFont = Constant.Font.geistRegular(size: 10)
-            let bodyHeight = (body as NSString).boundingRect(
+            let needsToggle = shouldShowToggle()
+            let bodyHeight = bodyLabel.attributedText?.boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                context: nil
+            ).height ?? (body as NSString).boundingRect(
                 with: CGSize(width: width, height: .greatestFiniteMagnitude),
                 options: [.usesLineFragmentOrigin, .usesFontLeading],
                 attributes: [.font: bodyFont],
                 context: nil
             ).height
-            let needsToggle = shouldShowToggle()
             height += (isExpanded || !needsToggle) ? ceil(bodyHeight) : collapsedHeight(for: bodyFont)
         }
 
-        return max(24, height)
+        return max(contentInsets.top + contentInsets.bottom + 24, height)
+    }
+
+    private func applyTextColor() {
+        guard let attributedText = bodyLabel.attributedText else {
+            bodyLabel.textColor = bodyColor
+            return
+        }
+        let mutable = NSMutableAttributedString(attributedString: attributedText)
+        let fullRange = NSRange(location: 0, length: mutable.length)
+        mutable.addAttribute(.foregroundColor, value: bodyColor, range: fullRange)
+        mutable.enumerateAttribute(.link, in: fullRange, options: []) { value, range, _ in
+            if value != nil {
+                mutable.addAttributes([
+                    .foregroundColor: UIColor.systemBlue,
+                    .underlineStyle: NSUnderlineStyle.single.rawValue
+                ], range: range)
+            }
+        }
+        bodyLabel.attributedText = mutable
     }
 
     private func shouldShowToggle() -> Bool {

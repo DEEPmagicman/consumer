@@ -119,12 +119,16 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var promoTopToSummaryConstraint: NSLayoutConstraint?
     private var paymentHeightConstraint: NSLayoutConstraint?
     private var promoHeightConstraint: NSLayoutConstraint?
+    private var tablePolicyContainerHeightConstraint: NSLayoutConstraint?
+    private var tablePolicyTitleHeightConstraint: NSLayoutConstraint?
     private var checkoutPolicyHeightConstraint: NSLayoutConstraint?
     private var termsHeightConstraint: NSLayoutConstraint?
     private var venueMessageHeightConstraint: NSLayoutConstraint?
     private var emailMessageHeightConstraint: NSLayoutConstraint?
-    private var termsTopToPolicyConstraint: NSLayoutConstraint?
-    private var termsTopToPromoConstraint: NSLayoutConstraint?
+    private var termsTopToCheckoutPolicyConstraint: NSLayoutConstraint?
+    private var termsTopToPolicyContainerConstraint: NSLayoutConstraint?
+    private var venueTopToPolicyContainerConstraint: NSLayoutConstraint?
+    private var venueTopToPromoConstraint: NSLayoutConstraint?
 
     // Payment method
     private let paymentRow       = PremiumInfoRow()
@@ -133,6 +137,8 @@ final class PremiumTableCheckoutVC: UIViewController {
     private let promoRow         = PremiumPromoRow()
 
     // Agreement rows
+    private let tablePolicyContainerView = UIView()
+    private let tablePolicyTitleLabel = UILabel()
     private let checkoutPolicyView  = PremiumAgreementView()
     private let termsAgreementView  = PremiumAgreementView()
     private let venueMessageView    = PremiumAgreementView()
@@ -356,6 +362,22 @@ private extension PremiumTableCheckoutVC {
     }
 
     func setupCheckboxes() {
+        tablePolicyContainerView.backgroundColor = UIColor(hex: "#272727", alpha: 0.5)
+        tablePolicyContainerView.layer.cornerRadius = 8
+        tablePolicyContainerView.layer.cornerCurve = .continuous
+        tablePolicyContainerView.translatesAutoresizingMaskIntoConstraints = false
+        tablePolicyContainerView.isHidden = true
+        contentView.addSubview(tablePolicyContainerView)
+
+        tablePolicyTitleLabel.text = "Terms"
+        tablePolicyTitleLabel.font = Constant.Font.geistMedium(size: 14)
+        tablePolicyTitleLabel.textColor = UIColor.white.withAlphaComponent(0.82)
+        tablePolicyTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        tablePolicyTitleLabel.isHidden = true
+        tablePolicyContainerView.addSubview(tablePolicyTitleLabel)
+
+        checkoutPolicyView.style = .plain
+        checkoutPolicyView.preservesLinks = true
         checkoutPolicyView.titleText = nil
         checkoutPolicyView.showsCheckbox = false
         checkoutPolicyView.isChecked = true
@@ -364,8 +386,9 @@ private extension PremiumTableCheckoutVC {
         checkoutPolicyView.onHeightChanged = { [weak self] _, animated in
             self?.updateAgreementHeights(animated: animated)
         }
-        contentView.addSubview(checkoutPolicyView)
+        tablePolicyContainerView.addSubview(checkoutPolicyView)
 
+        termsAgreementView.style = .whiteCard
         termsAgreementView.titleText = nil
         termsAgreementView.showsCheckbox = true
         termsAgreementView.isChecked = true
@@ -374,7 +397,7 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.onHeightChanged = { [weak self] _, animated in
             self?.updateAgreementHeights(animated: animated)
         }
-        contentView.addSubview(termsAgreementView)
+        tablePolicyContainerView.addSubview(termsAgreementView)
 
         venueMessageView.titleText = nil
         venueMessageView.showsCheckbox = true
@@ -588,17 +611,27 @@ private extension PremiumTableCheckoutVC {
             promoRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             promoRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
+            // Table policy section
+            tablePolicyContainerView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10),
+            tablePolicyContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            tablePolicyContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
+            // Table policy title
+            tablePolicyTitleLabel.topAnchor.constraint(equalTo: tablePolicyContainerView.topAnchor, constant: 16),
+            tablePolicyTitleLabel.leadingAnchor.constraint(equalTo: tablePolicyContainerView.leadingAnchor, constant: 16),
+            tablePolicyTitleLabel.trailingAnchor.constraint(equalTo: tablePolicyContainerView.trailingAnchor, constant: -16),
+
             // Checkout policy
-            checkoutPolicyView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10),
-            checkoutPolicyView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            checkoutPolicyView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            checkoutPolicyView.topAnchor.constraint(equalTo: tablePolicyTitleLabel.bottomAnchor, constant: 12),
+            checkoutPolicyView.leadingAnchor.constraint(equalTo: tablePolicyContainerView.leadingAnchor, constant: 16),
+            checkoutPolicyView.trailingAnchor.constraint(equalTo: tablePolicyContainerView.trailingAnchor, constant: -16),
 
             // Terms
-            termsAgreementView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            termsAgreementView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            termsAgreementView.leadingAnchor.constraint(equalTo: tablePolicyContainerView.leadingAnchor, constant: 16),
+            termsAgreementView.trailingAnchor.constraint(equalTo: tablePolicyContainerView.trailingAnchor, constant: -16),
+            termsAgreementView.bottomAnchor.constraint(equalTo: tablePolicyContainerView.bottomAnchor, constant: -16),
 
             // Venue message
-            venueMessageView.topAnchor.constraint(equalTo: termsAgreementView.bottomAnchor, constant: 10),
             venueMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             venueMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
@@ -651,9 +684,19 @@ private extension PremiumTableCheckoutVC {
         promoHeightConstraint = promoRow.heightAnchor.constraint(equalToConstant: promoRow.preferredHeight)
         promoHeightConstraint?.isActive = true
 
-        termsTopToPolicyConstraint = termsAgreementView.topAnchor.constraint(equalTo: checkoutPolicyView.bottomAnchor, constant: 10)
-        termsTopToPromoConstraint = termsAgreementView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10)
-        termsTopToPromoConstraint?.isActive = true
+        termsTopToCheckoutPolicyConstraint = termsAgreementView.topAnchor.constraint(equalTo: checkoutPolicyView.bottomAnchor, constant: 10)
+        termsTopToPolicyContainerConstraint = termsAgreementView.topAnchor.constraint(equalTo: tablePolicyTitleLabel.bottomAnchor, constant: 12)
+        termsTopToPolicyContainerConstraint?.isActive = true
+
+        venueTopToPolicyContainerConstraint = venueMessageView.topAnchor.constraint(equalTo: tablePolicyContainerView.bottomAnchor, constant: 10)
+        venueTopToPromoConstraint = venueMessageView.topAnchor.constraint(equalTo: promoRow.bottomAnchor, constant: 10)
+        venueTopToPromoConstraint?.isActive = true
+
+        tablePolicyContainerHeightConstraint = tablePolicyContainerView.heightAnchor.constraint(equalToConstant: 0)
+        tablePolicyContainerHeightConstraint?.isActive = true
+
+        tablePolicyTitleHeightConstraint = tablePolicyTitleLabel.heightAnchor.constraint(equalToConstant: 0)
+        tablePolicyTitleHeightConstraint?.isActive = true
 
         checkoutPolicyHeightConstraint = checkoutPolicyView.heightAnchor.constraint(equalToConstant: 0)
         checkoutPolicyHeightConstraint?.isActive = true
@@ -1057,24 +1100,30 @@ private extension PremiumTableCheckoutVC {
     }
 
     func configureAgreementText() {
-
+        let tableTermsHTML = validPolicyHTML(
+            event?.eventSettings?.tableBookingTermsAndCondition,
+            event?.venue?.venueSettings?.tableBookingTermsAndCondition
+        )
+        let tablePolicyHTML = validPolicyHTML(
+            event?.eventSettings?.tableBookingPolicy,
+            event?.venue?.venueSettings?.tableBookingPolicy
+        )
         let settings = event?.venue?.venueSettings
 
-        let importantInformation = cleanAgreementText(settings?.tableBookingTermsAndCondition ?? "")
+        let importantInformation = cleanAgreementText(tableTermsHTML)
+        tablePolicyTitleLabel.isHidden = importantInformation.isEmpty && cleanAgreementText(tablePolicyHTML).isEmpty
         checkoutPolicyView.titleText = nil
         checkoutPolicyView.showsCheckbox = false
         checkoutPolicyView.bodyText = importantInformation
-        checkoutPolicyView.bodyAttributedText = nil
+        checkoutPolicyView.bodyAttributedText = formattedAgreementHTML(tableTermsHTML)
         checkoutPolicyView.isChecked = true
-        checkoutPolicyView.isHidden = true
+        checkoutPolicyView.isHidden = importantInformation.isEmpty
 
-        let terms = cleanAgreementText(settings?.tableBookingPolicy ?? "")
+        let terms = cleanAgreementText(tablePolicyHTML)
         termsAgreementView.titleText = terms.isEmpty ? nil : ""
         termsAgreementView.showsCheckbox = true
         termsAgreementView.bodyText = terms
-        termsAgreementView.bodyAttributedText = formattedAgreementHTML(
-            settings?.tableBookingTermsAndCondition ?? ""
-        )
+        termsAgreementView.bodyAttributedText = formattedAgreementHTML(tablePolicyHTML)
         termsAgreementView.isChecked = true
         termsAgreementView.isHidden = terms.isEmpty
 
@@ -1111,6 +1160,17 @@ private extension PremiumTableCheckoutVC {
         updateAgreementHeights(animated: false)
     }
 
+    func validPolicyHTML(_ values: String?...) -> String {
+        for value in values {
+            let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            guard !trimmed.isEmpty else { continue }
+            let rendered = cleanAgreementText(trimmed)
+            guard !rendered.isEmpty else { continue }
+            return trimmed
+        }
+        return ""
+    }
+
     func updateAgreementHeights(animated: Bool) {
         let checkoutPolicyVisible = !checkoutPolicyView.isHidden
             && !checkoutPolicyView.bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -1125,16 +1185,25 @@ private extension PremiumTableCheckoutVC {
         let termsHeight = termsVisible ? termsAgreementView.preferredHeight : 0
         let venueHeight = venueVisible ? venueMessageView.preferredHeight : 0
         let emailHeight = emailVisible ? emailMessageView.preferredHeight : 0
+        let tablePolicyVisible = checkoutPolicyVisible || termsVisible
+        let tablePolicyTitleHeight = tablePolicyVisible
+            ? ceil(Constant.Font.geistMedium(size: 14).lineHeight)
+            : 0
+        let tablePolicyTitleSpacing: CGFloat = tablePolicyVisible ? 12 : 0
+        let tablePolicyInnerSpacing: CGFloat = checkoutPolicyVisible && termsVisible ? 10 : 0
+        let tablePolicyHeight: CGFloat = tablePolicyVisible
+            ? 16 + tablePolicyTitleHeight + tablePolicyTitleSpacing + checkoutPolicyHeight + tablePolicyInnerSpacing + termsHeight + 16
+            : 0
 
-        termsTopToPolicyConstraint?.isActive = checkoutPolicyVisible
-        termsTopToPromoConstraint?.isActive = !checkoutPolicyVisible
+        tablePolicyContainerView.isHidden = !tablePolicyVisible
+        tablePolicyTitleLabel.isHidden = !tablePolicyVisible
+        termsTopToCheckoutPolicyConstraint?.isActive = termsVisible && checkoutPolicyVisible
+        termsTopToPolicyContainerConstraint?.isActive = termsVisible && !checkoutPolicyVisible
+        venueTopToPolicyContainerConstraint?.isActive = tablePolicyVisible
+        venueTopToPromoConstraint?.isActive = !tablePolicyVisible
 
-        let hasChanged = abs((checkoutPolicyHeightConstraint?.constant ?? 0) - checkoutPolicyHeight) > 0.5
-            || abs((termsHeightConstraint?.constant ?? 0) - termsHeight) > 0.5
-            || abs((venueMessageHeightConstraint?.constant ?? 0) - venueHeight) > 0.5
-            || abs((emailMessageHeightConstraint?.constant ?? 0) - emailHeight) > 0.5
-        guard hasChanged else { return }
-
+        tablePolicyContainerHeightConstraint?.constant = tablePolicyHeight
+        tablePolicyTitleHeightConstraint?.constant = tablePolicyTitleHeight
         checkoutPolicyHeightConstraint?.constant = checkoutPolicyHeight
         termsHeightConstraint?.constant = termsHeight
         venueMessageHeightConstraint?.constant = venueHeight
@@ -1166,27 +1235,80 @@ private extension PremiumTableCheckoutVC {
         guard let attributed = html.htmlToAttributedString else { return nil }
         let mutable = NSMutableAttributedString(attributedString: attributed)
         mutable.trimTrailingWhitespaceAndNewlines()
+        compactHTMLSpacing(in: mutable)
         guard mutable.length > 0 else { return nil }
 
-        mutable.addAttributes([
-            .font: Constant.Font.geistRegular(size: 12),
-            .foregroundColor: UIColor.white.withAlphaComponent(0.88)
-        ], range: NSRange(location: 0, length: mutable.length))
+        let fullRange = NSRange(location: 0, length: mutable.length)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakMode = .byWordWrapping
+        paragraphStyle.lineSpacing = 0
+        paragraphStyle.paragraphSpacing = 4
+        paragraphStyle.paragraphSpacingBefore = 0
+        mutable.addAttribute(.paragraphStyle, value: paragraphStyle, range: fullRange)
+        mutable.addAttribute(
+            .foregroundColor,
+            value: UIColor.white.withAlphaComponent(0.88),
+            range: fullRange
+        )
+        mutable.enumerateAttribute(.font, in: fullRange, options: []) { value, range, _ in
+            let sourceFont = value as? UIFont
+            let isBold = sourceFont?.fontDescriptor.symbolicTraits.contains(.traitBold) == true
+            mutable.addAttribute(
+                .font,
+                value: isBold
+                    ? Constant.Font.geistSemiBold(size: 12)
+                    : Constant.Font.geistRegular(size: 12),
+                range: range
+            )
+        }
 
         mutable.enumerateAttribute(
             .link,
-            in: NSRange(location: 0, length: mutable.length),
+            in: fullRange,
             options: []
         ) { value, range, _ in
             if value != nil {
                 mutable.addAttributes([
-                    .font: Constant.Font.geistMedium(size: 12),
-                    .foregroundColor: UIColor.white,
+                    .foregroundColor: UIColor.systemBlue,
                     .underlineStyle: NSUnderlineStyle.single.rawValue
                 ], range: range)
             }
         }
         return mutable
+    }
+
+    func compactHTMLSpacing(in attributed: NSMutableAttributedString) {
+        var previousWasNewline = false
+        var keptBlankLine = false
+        var index = 0
+
+        while index < attributed.length {
+            let range = NSRange(location: index, length: 1)
+            let value = (attributed.string as NSString).substring(with: range)
+            let isNewline = value == "\n"
+
+            if isNewline {
+                if previousWasNewline {
+                    if keptBlankLine {
+                        attributed.deleteCharacters(in: range)
+                        continue
+                    }
+                    keptBlankLine = true
+                } else {
+                    previousWasNewline = true
+                    keptBlankLine = false
+                }
+            } else if value.trimmingCharacters(in: .whitespaces).isEmpty, previousWasNewline {
+                attributed.deleteCharacters(in: range)
+                continue
+            } else {
+                previousWasNewline = false
+                keptBlankLine = false
+            }
+
+            index += 1
+        }
+        attributed.trimTrailingWhitespaceAndNewlines()
     }
 
     func formattedTime(_ value: String?) -> String {

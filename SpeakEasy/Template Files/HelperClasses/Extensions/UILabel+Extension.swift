@@ -70,7 +70,8 @@ enum AgreementTextFormatter {
         widthFallback: CGFloat,
         allowsViewMore: Bool = true,
         separatesToggleLine: Bool = false,
-        expandedAttributedText: NSAttributedString? = nil
+        expandedAttributedText: NSAttributedString? = nil,
+        preservesLinks: Bool = false
     ) -> Bool {
         let cleanText = clean(text)
         guard !cleanText.isEmpty else {
@@ -86,7 +87,10 @@ enum AgreementTextFormatter {
         let attributed: NSMutableAttributedString
 
         if let expandedAttributedText {
-            attributed = normalizedExpandedAttributedText(expandedAttributedText)
+            attributed = normalizedExpandedAttributedText(
+                expandedAttributedText,
+                preservesLinks: preservesLinks
+            )
             if needsToggle && !isExpanded {
                 trimAttributedTextToCollapsedHeight(
                     attributed,
@@ -220,7 +224,8 @@ enum AgreementTextFormatter {
     }
 
     private static func normalizedExpandedAttributedText(
-        _ attributedText: NSAttributedString
+        _ attributedText: NSAttributedString,
+        preservesLinks: Bool
     ) -> NSMutableAttributedString {
         let attributed = NSMutableAttributedString(attributedString: attributedText)
         trimWhitespaceAndNewlines(in: attributed)
@@ -248,9 +253,16 @@ enum AgreementTextFormatter {
             options: []
         ) { value, range, _ in
             if value != nil {
-                attributed.removeAttribute(.link, range: range)
-                attributed.removeAttribute(.underlineStyle, range: range)
-                attributed.addAttribute(.foregroundColor, value: bodyColor, range: range)
+                if preservesLinks {
+                    attributed.addAttributes([
+                        .foregroundColor: UIColor.systemBlue,
+                        .underlineStyle: NSUnderlineStyle.single.rawValue
+                    ], range: range)
+                } else {
+                    attributed.removeAttribute(.link, range: range)
+                    attributed.removeAttribute(.underlineStyle, range: range)
+                    attributed.addAttribute(.foregroundColor, value: bodyColor, range: range)
+                }
             }
         }
 
