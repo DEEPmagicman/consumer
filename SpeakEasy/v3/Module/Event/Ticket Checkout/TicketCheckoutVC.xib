@@ -542,7 +542,7 @@
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xCJ-7Y-nnF">
                                                             <rect key="frame" x="0.0" y="201.00000000000003" width="365" height="71.999999999999972"/>
                                                             <subviews>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2mI-pc-ZAc">
+                                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2mI-pc-ZAc">
                                                                     <rect key="frame" x="0.0" y="16" width="16" height="16"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="16" id="PWX-gB-hzz"/>
@@ -556,7 +556,7 @@
                                                                     </connections>
                                                                 </button>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfp-JR-CoQ">
-                                                                    <rect key="frame" x="24" y="16" width="327" height="40"/>
+                                                                    <rect key="frame" x="0.0" y="16" width="351" height="40"/>
                                                                     <string key="text">I agree to receive marketing related text messages from E11EVEN. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for support.</string>
                                                                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -565,8 +565,8 @@
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstItem="sfp-JR-CoQ" firstAttribute="leading" secondItem="2mI-pc-ZAc" secondAttribute="trailing" constant="8" id="6xC-GH-itq"/>
-                                                                <constraint firstItem="sfp-JR-CoQ" firstAttribute="top" secondItem="2mI-pc-ZAc" secondAttribute="top" id="98h-B9-o9D"/>
+                                                                <constraint firstItem="sfp-JR-CoQ" firstAttribute="leading" secondItem="xCJ-7Y-nnF" secondAttribute="leading" id="6xC-GH-itq"/>
+                                                                <constraint firstItem="sfp-JR-CoQ" firstAttribute="top" secondItem="xCJ-7Y-nnF" secondAttribute="top" constant="16" id="98h-B9-o9D"/>
                                                                 <constraint firstAttribute="trailing" secondItem="sfp-JR-CoQ" secondAttribute="trailing" constant="14" id="Nyp-te-3Q0"/>
                                                                 <constraint firstItem="2mI-pc-ZAc" firstAttribute="leading" secondItem="xCJ-7Y-nnF" secondAttribute="leading" id="b8g-t7-774"/>
                                                                 <constraint firstItem="2mI-pc-ZAc" firstAttribute="top" secondItem="xCJ-7Y-nnF" secondAttribute="top" constant="16" id="o16-rQ-SFo"/>
@@ -679,28 +679,28 @@
                                                 <action selector="onClickPurchaseTicket:" destination="-1" eventType="touchUpInside" id="iy3-Tk-P8q"/>
                                             </connections>
                                         </button>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNF-Ae-heN">
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNF-Ae-heN">
                                             <rect key="frame" x="49.666666666666657" y="102.66666666666663" width="294" height="12.333333333333329"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By checking out you accept the" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Js-yq-r8A">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Js-yq-r8A">
                                                     <rect key="frame" x="0.0" y="0.0" width="141.66666666666666" height="12.333333333333334"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms of Service" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4z-n9-ySi">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="L4z-n9-ySi" translatesAutoresizingMaskIntoConstraints="NO">
                                                     <rect key="frame" x="142.66666666666669" y="0.0" width="74.333333333333314" height="12.333333333333334"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&amp;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdQ-dr-VAm">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdQ-dr-VAm">
                                                     <rect key="frame" x="218.00000000000003" y="0.0" width="6.3333333333333428" height="12.333333333333334"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacy Policy." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2TE-04-pcG">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2TE-04-pcG">
                                                     <rect key="frame" x="225.33333333333334" y="0.0" width="68.666666666666657" height="12.333333333333334"/>
                                                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

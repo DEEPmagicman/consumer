@@ -409,7 +409,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJL-dx-LMq">
                                                     <rect key="frame" x="0.0" y="74" width="353" height="50"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dec-lg-kgx">
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dec-lg-kgx">
                                                             <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="16" id="Sj3-YQ-b8J"/>
@@ -422,7 +422,7 @@
                                                             </connections>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parties Must Be at Minimum Equal Number of Male/Female. All tables require a matching credit card and ID. View more" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Fe-j6-HUG">
-                                                            <rect key="frame" x="24" y="0.0" width="329" height="50"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="353" height="50"/>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="10"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -434,7 +434,7 @@
                                                         <constraint firstAttribute="trailing" secondItem="5Fe-j6-HUG" secondAttribute="trailing" id="AXS-Qo-jgY"/>
                                                         <constraint firstItem="dec-lg-kgx" firstAttribute="leading" secondItem="LJL-dx-LMq" secondAttribute="leading" id="HeD-aY-4mD"/>
                                                         <constraint firstAttribute="bottom" secondItem="5Fe-j6-HUG" secondAttribute="bottom" id="Qdy-Ju-VZo"/>
-                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="leading" secondItem="dec-lg-kgx" secondAttribute="trailing" constant="8" id="cJn-5Z-X5W"/>
+                                                        <constraint firstItem="5Fe-j6-HUG" firstAttribute="leading" secondItem="LJL-dx-LMq" secondAttribute="leading" id="cJn-5Z-X5W"/>
                                                         <constraint firstItem="5Fe-j6-HUG" firstAttribute="top" secondItem="LJL-dx-LMq" secondAttribute="top" id="gd0-Wl-L5S"/>
                                                     </constraints>
                                                 </view>
@@ -463,18 +463,16 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="2VL-0e-hFo" firstAttribute="top" secondItem="2uW-t8-LyM" secondAttribute="top" id="0Mp-8N-Shv"/>
+                                                        <constraint firstItem="2VL-0e-hFo" firstAttribute="top" secondItem="g9C-t7-vud" secondAttribute="top" id="0Mp-8N-Shv"/>
                                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="2VL-0e-hFo" secondAttribute="bottom" constant="5" id="8OP-hz-WN1"/>
                                                         <constraint firstAttribute="bottom" secondItem="g9C-t7-vud" secondAttribute="bottom" id="8oa-Db-PNM"/>
                                                         <constraint firstItem="2VL-0e-hFo" firstAttribute="leading" secondItem="2uW-t8-LyM" secondAttribute="leading" id="Fru-19-zUe"/>
+                                                        <constraint firstItem="g9C-t7-vud" firstAttribute="leading" secondItem="2VL-0e-hFo" secondAttribute="trailing" constant="8" id="P41-os-8Jl"/>
                                                         <constraint firstItem="g9C-t7-vud" firstAttribute="top" secondItem="2uW-t8-LyM" secondAttribute="top" id="ga4-6E-qtl"/>
                                                         <constraint firstAttribute="trailing" secondItem="g9C-t7-vud" secondAttribute="trailing" id="tLw-aY-dUY"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="g9C-t7-vud" firstAttribute="leading" secondItem="5Fe-j6-HUG" secondAttribute="leading" id="zvr-7D-taG"/>
-                                            </constraints>
                                         </stackView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

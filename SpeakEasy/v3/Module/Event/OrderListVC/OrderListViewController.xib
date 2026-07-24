@@ -680,7 +680,7 @@
                                                                 <action selector="onClickTermsBtn:" destination="-1" eventType="touchUpInside" id="chn-di-BUS"/>
                                                             </connections>
                                                         </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms &amp; Conditions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjJ-AO-Lyw">
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjJ-AO-Lyw">
                                                             <rect key="frame" x="24" y="0.0" width="333" height="15.666666666666666"/>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="12"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -703,7 +703,7 @@
                                                         <constraint firstItem="1vH-GL-eap" firstAttribute="top" secondItem="LsQ-KW-j8Z" secondAttribute="top" id="Whv-uP-z3N"/>
                                                         <constraint firstItem="gjJ-AO-Lyw" firstAttribute="top" secondItem="LsQ-KW-j8Z" secondAttribute="top" id="aCp-NV-Abz"/>
                                                         <constraint firstAttribute="bottom" secondItem="LL5-Bp-lCy" secondAttribute="bottom" id="kLs-Ro-jC2"/>
-                                                        <constraint firstItem="LL5-Bp-lCy" firstAttribute="top" secondItem="gjJ-AO-Lyw" secondAttribute="bottom" constant="6" id="nWF-YI-fmm"/>
+                                                        <constraint firstItem="LL5-Bp-lCy" firstAttribute="top" secondItem="LsQ-KW-j8Z" secondAttribute="top" id="nWF-YI-fmm"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J9k-gi-9ud">

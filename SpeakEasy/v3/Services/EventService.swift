@@ -633,7 +633,7 @@ final class EventService {
         params["isDiscounted"] = false
 
         params["include"] =
-        "flyer,customVenue,eventHasArtist.artist,eventTicketSettings,venue,venue.logo,eventSettings"
+        "flyer,customVenue,eventHasArtist.artist,eventTicketSettings,venue,venue.logo,venue.venueSettings,eventSettings"
 
         if !promotionLinkId
             .trimmingCharacters(in: .whitespaces)

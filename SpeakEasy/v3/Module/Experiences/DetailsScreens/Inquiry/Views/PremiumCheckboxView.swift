@@ -136,7 +136,8 @@ final class PremiumCheckboxView: UIView {
             to: label,
             text: labelText,
             isExpanded: isExpanded,
-            widthFallback: UIScreen.main.bounds.width - 64
+            widthFallback: UIScreen.main.bounds.width - 64,
+            allowsViewMore: false
         )
         updateToggleButton(isVisible: false, title: nil)
         label.invalidateIntrinsicContentSize()

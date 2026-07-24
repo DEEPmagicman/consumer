@@ -323,6 +323,7 @@ struct VenueSettings: Codable {
     var optedPolicy: Bool
     var policyText: String?
     var emailPolicyText: String?
+    var purchasePolicy: String?
     var optedEmailPolicy: Bool?
     var enabledCustomBookingSMS: Bool?
     var bookingSMSText: String?
@@ -371,6 +372,7 @@ struct VenueSettings: Codable {
         case optedPolicy
         case policyText
         case emailPolicyText
+        case purchasePolicy
         case optedEmailPolicy
         case enabledCustomBookingSMS
         case bookingSMSText
@@ -422,6 +424,7 @@ struct VenueSettings: Codable {
         optedPolicy = try container.decodeIfPresent(Bool.self, forKey: .optedPolicy) ?? false
         policyText = try container.decodeIfPresent(String.self, forKey: .policyText)
         emailPolicyText = try container.decodeIfPresent(String.self, forKey: .emailPolicyText)
+        purchasePolicy = try container.decodeIfPresent(String.self, forKey: .purchasePolicy)
         optedEmailPolicy = try container.decodeIfPresent(Bool.self, forKey: .optedEmailPolicy)
         enabledCustomBookingSMS = try container.decodeIfPresent(Bool.self, forKey: .enabledCustomBookingSMS)
         bookingSMSText = try container.decodeIfPresent(String.self, forKey: .bookingSMSText)
@@ -472,6 +475,7 @@ struct VenueSettings: Codable {
         try container.encode(optedPolicy, forKey: .optedPolicy)
         try container.encode(policyText, forKey: .policyText)
         try container.encodeIfPresent(emailPolicyText, forKey: .emailPolicyText)
+        try container.encodeIfPresent(purchasePolicy, forKey: .purchasePolicy)
         try container.encodeIfPresent(optedEmailPolicy, forKey: .optedEmailPolicy)
         try container.encode(enabledCustomBookingSMS, forKey: .enabledCustomBookingSMS)
         try container.encode(bookingSMSText, forKey: .bookingSMSText)

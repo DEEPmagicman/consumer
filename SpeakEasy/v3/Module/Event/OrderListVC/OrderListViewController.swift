@@ -77,6 +77,13 @@ final class OrderListViewController: UIViewController {
     private var hasLaidOutTerms = false
     private var fullTermsText = ""
     private var fullVenueMessageText = ""
+    private var fullPurchasePolicyText = ""
+    private var fullPurchasePolicyAttributedText: NSAttributedString?
+    private var isPurchasePolicyExpanded = false
+    private let purchasePolicyView = UIView()
+    private let purchasePolicyLabel = UILabel()
+    private var purchasePolicyHeightConstraint: NSLayoutConstraint?
+    private var didInstallOptInAgreementRows = false
     private let questionTableView = UITableView(frame: .zero, style: .plain)
     private var questionTableViewHeight: NSLayoutConstraint?
     private var questionContentSizeObservation: NSKeyValueObservation?
@@ -483,8 +490,11 @@ final class OrderListViewController: UIViewController {
     // MARK: - Terms & Conditions
 
     private func setupTermsText() {
+        installOptInAgreementRowsIfNeeded()
         AgreementTextFormatter.configure(termsAndConditionsLbl)
         AgreementTextFormatter.configure(venueMessageLbl)
+        setupPurchasePolicyViewIfNeeded()
+        AgreementTextFormatter.configure(purchasePolicyLabel)
 
         let termsTap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
         termsAndConditionsLbl.addGestureRecognizer(termsTap)
@@ -492,21 +502,153 @@ final class OrderListViewController: UIViewController {
         let venueMessageTap = UITapGestureRecognizer(target: self, action: #selector(onTapVenueMessageLabel))
         venueMessageLbl.addGestureRecognizer(venueMessageTap)
 
+        let purchasePolicyTap = UITapGestureRecognizer(target: self, action: #selector(onTapPurchasePolicyLabel))
+        purchasePolicyLabel.addGestureRecognizer(purchasePolicyTap)
+
         updateAgreementLabels()
         updateTermsCheckboxUI()
         updateVenueCheckboxUI()
+        configureAgreementText()
+    }
+
+    private func installOptInAgreementRowsIfNeeded() {
+        guard !didInstallOptInAgreementRows,
+              let stackView = termsAndConditions.superview as? UIStackView,
+              let emailIndex = stackView.arrangedSubviews.firstIndex(of: termsAndConditions),
+              let smsIndex = stackView.arrangedSubviews.firstIndex(of: venueMessageView) else {
+            return
+        }
+
+        didInstallOptInAgreementRows = true
+
+        stackView.removeArrangedSubview(termsAndConditions)
+        termsAndConditions.removeFromSuperview()
+        stackView.removeArrangedSubview(venueMessageView)
+        venueMessageView.removeFromSuperview()
+
+        let emailRow = makeOptInAgreementRow(
+            button: termsAndConditionsBtn,
+            label: termsAndConditionsLbl
+        )
+        let smsRow = makeOptInAgreementRow(
+            button: venueMessageBtn,
+            label: venueMessageLbl
+        )
+
+        stackView.insertArrangedSubview(emailRow, at: emailIndex)
+        stackView.insertArrangedSubview(smsRow, at: smsIndex)
+        termsAndConditions = emailRow
+        venueMessageView = smsRow
+    }
+
+    private func makeOptInAgreementRow(button: UIButton, label: UILabel) -> UIView {
+        let row = UIView()
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.backgroundColor = .clear
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.contentHorizontalAlignment = .fill
+        button.contentVerticalAlignment = .fill
+        button.imageEdgeInsets = .zero
+        button.constraints
+            .filter { $0.firstAttribute == .width || $0.firstAttribute == .height }
+            .forEach { $0.isActive = false }
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.contentMode = .top
+        label.numberOfLines = 0
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+        row.addSubview(button)
+        row.addSubview(label)
+
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: row.leadingAnchor),
+            button.topAnchor.constraint(equalTo: label.topAnchor),
+            button.widthAnchor.constraint(equalToConstant: 16),
+            button.heightAnchor.constraint(equalToConstant: 16),
+
+            label.topAnchor.constraint(equalTo: row.topAnchor),
+            label.leadingAnchor.constraint(equalTo: button.trailingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            label.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+
+            row.heightAnchor.constraint(greaterThanOrEqualToConstant: 16)
+        ])
+
+        return row
     }
 
     private func configureAgreementText() {
         let settings = venueDetails?.venueSettings ?? event?.venue?.venueSettings
         let policyText = cleanAgreementText(settings?.policyText ?? "")
         let emailPolicyText = cleanAgreementText(settings?.emailPolicyText ?? "")
+        let purchasePolicy = checkoutPolicy()
 
         fullTermsText = emailPolicyText
         fullVenueMessageText = policyText
-        termsAndConditions.isHidden = fullTermsText.isEmpty
+        fullPurchasePolicyText = purchasePolicy.text
+        fullPurchasePolicyAttributedText = purchasePolicy.attributedText
+        termsAndConditions.isHidden = settings?.optedEmailPolicy != true || fullTermsText.isEmpty
         venueMessageView.isHidden = settings?.optedPolicy != true || fullVenueMessageText.isEmpty
+        purchasePolicyView.isHidden = fullPurchasePolicyText.isEmpty
         updateAgreementLabels()
+    }
+
+    private func setupPurchasePolicyViewIfNeeded() {
+        guard purchasePolicyView.superview == nil,
+              let stackView = termsAndConditions.superview as? UIStackView else { return }
+
+        purchasePolicyView.translatesAutoresizingMaskIntoConstraints = false
+        purchasePolicyView.backgroundColor = .clear
+        purchasePolicyView.isHidden = fullPurchasePolicyText.isEmpty
+
+        purchasePolicyLabel.translatesAutoresizingMaskIntoConstraints = false
+        purchasePolicyLabel.numberOfLines = 0
+
+        purchasePolicyView.addSubview(purchasePolicyLabel)
+        let heightConstraint = purchasePolicyView.heightAnchor.constraint(equalToConstant: 0)
+        purchasePolicyHeightConstraint = heightConstraint
+        NSLayoutConstraint.activate([
+            purchasePolicyLabel.topAnchor.constraint(equalTo: purchasePolicyView.topAnchor),
+            purchasePolicyLabel.leadingAnchor.constraint(equalTo: purchasePolicyView.leadingAnchor),
+            purchasePolicyLabel.trailingAnchor.constraint(equalTo: purchasePolicyView.trailingAnchor),
+            purchasePolicyLabel.bottomAnchor.constraint(equalTo: purchasePolicyView.bottomAnchor),
+            heightConstraint
+        ])
+
+        let insertIndex = stackView.arrangedSubviews.firstIndex(of: venueMessageView).map { $0 + 1 }
+            ?? stackView.arrangedSubviews.count
+        stackView.insertArrangedSubview(purchasePolicyView, at: insertIndex)
+    }
+
+    private func checkoutPolicy() -> (text: String, attributedText: NSAttributedString?) {
+        let eventPolicy = normalizedPurchasePolicy(event?.eventSettings?.purchasePolicy)
+        let venuePolicy = normalizedPurchasePolicy(
+            event?.venue?.venueSettings?.purchasePolicy
+            ?? venueDetails?.venueSettings?.purchasePolicy
+        )
+        let policy = eventPolicy ?? venuePolicy
+        return (policy?.string ?? defaultPurchasePolicyText, policy)
+    }
+
+    private var defaultPurchasePolicyText: String {
+        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+    }
+
+    private func normalizedPurchasePolicy(_ policy: String?) -> NSAttributedString? {
+        guard let trimmed = policy?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty else {
+            return nil
+        }
+
+        let renderedText = trimmed.fromHTML
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if renderedText.isEmpty {
+            return trimmed.contains("<") && trimmed.contains(">") ? nil : NSAttributedString(string: trimmed)
+        }
+
+        return trimmed.htmlToAttributedString ?? NSAttributedString(string: renderedText)
     }
 
     private func cleanAgreementText(_ text: String) -> String {
@@ -516,6 +658,7 @@ final class OrderListViewController: UIViewController {
     private func updateAgreementLabels() {
         updateAgreementLabel(termsAndConditionsLbl, text: fullTermsText, isExpanded: isTermsExpanded)
         updateAgreementLabel(venueMessageLbl, text: fullVenueMessageText, isExpanded: isVenueMessageExpanded)
+        updatePurchasePolicyLabel()
     }
 
     private func updateAgreementLabel(_ label: UILabel, text: String, isExpanded: Bool) {
@@ -530,8 +673,40 @@ final class OrderListViewController: UIViewController {
             to: label,
             text: text,
             isExpanded: isExpanded,
-            widthFallback: view.bounds.width - 64
+            widthFallback: view.bounds.width - 64,
+            allowsViewMore: false
         )
+    }
+
+    private func updatePurchasePolicyLabel() {
+        let width = purchasePolicyLabel.bounds.width > 0
+            ? purchasePolicyLabel.bounds.width
+            : max(view.bounds.width - 64, 240)
+        purchasePolicyLabel.preferredMaxLayoutWidth = width
+        _ = AgreementTextFormatter.apply(
+            to: purchasePolicyLabel,
+            text: fullPurchasePolicyText,
+            isExpanded: isPurchasePolicyExpanded,
+            widthFallback: view.bounds.width - 64,
+            expandedAttributedText: fullPurchasePolicyAttributedText
+        )
+        updatePurchasePolicyHeight(width: width)
+    }
+
+    private func updatePurchasePolicyHeight(width: CGFloat) {
+        guard !purchasePolicyView.isHidden,
+              let attributedText = purchasePolicyLabel.attributedText,
+              !attributedText.string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            purchasePolicyHeightConstraint?.constant = 0
+            return
+        }
+
+        let height = attributedText.boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            context: nil
+        ).height
+        purchasePolicyHeightConstraint?.constant = ceil(height)
     }
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
@@ -554,6 +729,16 @@ final class OrderListViewController: UIViewController {
         }
     }
 
+    @objc private func onTapPurchasePolicyLabel(_ gesture: UITapGestureRecognizer) {
+        toggleAgreementIfNeeded(
+            gesture: gesture,
+            label: purchasePolicyLabel,
+            expanded: isPurchasePolicyExpanded
+        ) { [weak self] in
+            self?.isPurchasePolicyExpanded.toggle()
+        }
+    }
+
     private func toggleAgreementIfNeeded(
         gesture: UITapGestureRecognizer,
         label: UILabel,
@@ -564,12 +749,53 @@ final class OrderListViewController: UIViewController {
         guard range.location != NSNotFound else { return }
         let tappedToggle = gesture.didTapAttributedTextInLabel(label: label, inRange: range)
         guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
+        let scrollView = enclosingScrollView(for: label)
+        let previousOffset = scrollView?.contentOffset
         toggle()
         UIView.performWithoutAnimation {
             updateAgreementLabels()
             label.superview?.layoutIfNeeded()
-            yourOrderView.superview?.layoutIfNeeded()
+            label.superview?.superview?.layoutIfNeeded()
+            view.layoutIfNeeded()
+            if let previousOffset {
+                scrollView?.setContentOffset(
+                    clampedContentOffset(previousOffset, in: scrollView),
+                    animated: false
+                )
+            }
         }
+    }
+
+    private func enclosingScrollView(for view: UIView) -> UIScrollView? {
+        var parent = view.superview
+        while let current = parent {
+            if let scrollView = current as? UIScrollView {
+                return scrollView
+            }
+            parent = current.superview
+        }
+        return nil
+    }
+
+    private func clampedContentOffset(
+        _ offset: CGPoint,
+        in scrollView: UIScrollView?
+    ) -> CGPoint {
+        guard let scrollView else { return offset }
+
+        let maxX = max(
+            -scrollView.adjustedContentInset.left,
+            scrollView.contentSize.width - scrollView.bounds.width + scrollView.adjustedContentInset.right
+        )
+        let maxY = max(
+            -scrollView.adjustedContentInset.top,
+            scrollView.contentSize.height - scrollView.bounds.height + scrollView.adjustedContentInset.bottom
+        )
+
+        return CGPoint(
+            x: min(max(offset.x, -scrollView.adjustedContentInset.left), maxX),
+            y: min(max(offset.y, -scrollView.adjustedContentInset.top), maxY)
+        )
     }
 
     // MARK: - KVO
@@ -1197,16 +1423,6 @@ final class OrderListViewController: UIViewController {
             guard !isPaymentInitiated else { return }
         }
 
-        guard isTermsAccepted || termsAndConditions.isHidden else {
-            Alert.showToast("Please accept the terms and conditions")
-            return
-        }
-
-        if !venueMessageView.isHidden && !isVenueMessageAccepted {
-            Alert.showToast("Please accept the venue message")
-            return
-        }
-
         guard validateQuestionAnswers() else { return }
 
         isPaymentInitiated = true
@@ -1323,7 +1539,9 @@ final class OrderListViewController: UIViewController {
             tickets: tickets,
             bookingId: bookingId,
             promotionLinkId: promotionLinkId,
-            promotionLinkUniqueCode: promotionLinkUniqueCode
+            promotionLinkUniqueCode: promotionLinkUniqueCode,
+            optedPolicy: venueMessageView.isHidden ? nil : isVenueMessageAccepted,
+            optedEmailPolicy: termsAndConditions.isHidden ? nil : isTermsAccepted
         ) { [weak self] isSuccess, errMsg, freeBookingId, message in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -1364,10 +1582,12 @@ final class OrderListViewController: UIViewController {
         showPurchaseLoading()
 
         let optedPolicy = venueMessageView.isHidden ? nil : isVenueMessageAccepted
+        let optedEmailPolicy = termsAndConditions.isHidden ? nil : isTermsAccepted
         paymentService.confirmPaymentSuccess(
             paymentHistoryId: stripePaymentHistoryId,
             bookingId: bookingId,
-            optedPolicy: optedPolicy
+            optedPolicy: optedPolicy,
+            optedEmailPolicy: optedEmailPolicy
         ) { [weak self] isSuccess, errMsg in
             DispatchQueue.main.async {
                 self?.hidePurchaseLoading()

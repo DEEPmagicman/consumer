@@ -151,6 +151,7 @@ final class TicketCheckoutVC: UIViewController {
     private var isPaymentIntentLoaded = false
     private var isPrivacyPolicyExpanded = false
     private var fullPrivacyPolicyText = ""
+    private var fullPrivacyPolicyAttributedText: NSAttributedString?
     private let titleMarqueeLabel = PremiumMarqueeLabel()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
@@ -253,11 +254,15 @@ final class TicketCheckoutVC: UIViewController {
         venueName.text = displayVenueName
         venueName2.text = displayVenueName
         setHeaderTitle(event?.title)
-        fullPrivacyPolicyText = "I agree to receive marketing related text messages from \(displayVenueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        let policy = checkoutPolicy()
+        fullPrivacyPolicyText = policy.text
+        fullPrivacyPolicyAttributedText = policy.attributedText
         updatePrivacyPolicyLabel()
     }
 
     private func setupPrivacyPolicyText() {
+        checkBox.isHidden = true
+        checkBox.isUserInteractionEnabled = false
         AgreementTextFormatter.configure(privacyPolicyLbl)
         let tap = UITapGestureRecognizer(
             target: self,
@@ -272,7 +277,8 @@ final class TicketCheckoutVC: UIViewController {
             to: privacyPolicyLbl,
             text: fullPrivacyPolicyText,
             isExpanded: isPrivacyPolicyExpanded,
-            widthFallback: view.bounds.width - 64
+            widthFallback: view.bounds.width - 64,
+            expandedAttributedText: fullPrivacyPolicyAttributedText
         )
     }
 
@@ -295,6 +301,32 @@ final class TicketCheckoutVC: UIViewController {
             privacyPolicyLbl.superview?.layoutIfNeeded()
             privacyPolicyLbl.superview?.superview?.layoutIfNeeded()
         }
+    }
+
+    private func checkoutPolicy() -> (text: String, attributedText: NSAttributedString?) {
+        let eventPolicy = normalizedPurchasePolicy(event?.eventSettings?.purchasePolicy)
+        let venuePolicy = normalizedPurchasePolicy(event?.venue?.venueSettings?.purchasePolicy ?? venueDetails?.venueSettings?.purchasePolicy)
+        let policy = eventPolicy ?? venuePolicy
+        return (policy?.string ?? defaultPurchasePolicyText, policy)
+    }
+
+    private var defaultPurchasePolicyText: String {
+        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+    }
+
+    private func normalizedPurchasePolicy(_ policy: String?) -> NSAttributedString? {
+        guard let trimmed = policy?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty else {
+            return nil
+        }
+
+        let renderedText = trimmed.fromHTML
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if renderedText.isEmpty {
+            return trimmed.contains("<") && trimmed.contains(">") ? nil : NSAttributedString(string: trimmed)
+        }
+
+        return trimmed.htmlToAttributedString ?? NSAttributedString(string: renderedText)
     }
 
     private func setupTitleMarqueeLabel() {
@@ -538,10 +570,7 @@ final class TicketCheckoutVC: UIViewController {
             self.updateUIWithPaymentDetail(paymentDetail)
             self.setupStripePaymentSheet(clientSecret: clientSecret, ephemeralKey: self.ephemeralKey)
 
-            let isChecked = self.checkBox.isSelected
-
-            self.purchaseTicketBtn.isEnabled = isChecked
-            self.purchaseTicketBtn.alpha = isChecked ? 1.0 : 0.5
+            self.updatePurchaseButtonAvailability()
         }
     }
 
@@ -863,7 +892,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @IBAction func onClickCheckBox(_ sender: UIButton) {
-        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
+        guard !checkBox.isHidden, !isPaymentInitiated, !isPromoRequestInProgress else { return }
 
         sender.isSelected.toggle()
         AppHaptic.selectionChanged()
@@ -886,19 +915,7 @@ final class TicketCheckoutVC: UIViewController {
     
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
         guard !isPaymentInitiated, !isPromoRequestInProgress, !isCancellingTransaction else { return }
-        
-        if event?.venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false,
-           checkBox.isSelected == false {
 
-            AppHaptic.error()
-            Alert.showAlertSheet(
-                style: .alert,
-                title: "You must accept the terms and conditions by clicking the checkbox.",
-                message: ""
-            )
-            return
-        }
-    
         isPaymentInitiated = true
         setScreenInteractionBlocked(true)
 
@@ -1102,6 +1119,13 @@ final class TicketCheckoutVC: UIViewController {
         }
         shimmerBlocks.forEach { $0.stopShimmer() }
         shimmerView.isHidden = true
+        updatePurchaseButtonAvailability()
+    }
+
+    private func updatePurchaseButtonAvailability() {
+        let isReady = isFreeTicket ? isBookingLoaded : (isBookingLoaded && isPaymentIntentLoaded)
+        purchaseTicketBtn.isEnabled = isReady && !isPaymentInitiated && !isPromoRequestInProgress
+        purchaseTicketBtn.alpha = purchaseTicketBtn.isEnabled ? 1.0 : 0.5
     }
     
 }

@@ -151,6 +151,7 @@ final class PaymentService {
         paymentHistoryId: String,
         bookingId: String,
         optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?
@@ -159,10 +160,14 @@ final class PaymentService {
 
         var params: [String: Any]?
 
-        if let optedPolicy {
-            params = [
-                "optedPolicy": optedPolicy
-            ]
+        if optedPolicy != nil || optedEmailPolicy != nil {
+            params = [:]
+            if let optedPolicy {
+                params?["optedPolicy"] = optedPolicy
+            }
+            if let optedEmailPolicy {
+                params?["optedEmailPolicy"] = optedEmailPolicy
+            }
         }
 
         AFWrapper.postRequest(
@@ -265,6 +270,8 @@ final class PaymentService {
         bookingId: String? = "",
         promotionLinkId: String = "",
         promotionLinkUniqueCode: String = "",
+        optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -297,6 +304,14 @@ final class PaymentService {
             promotionLinkUniqueCode.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmedPromotionLinkUniqueCode.isEmpty {
             params["promotionLinkUniqueCode"] = trimmedPromotionLinkUniqueCode
+        }
+
+        if let optedPolicy {
+            params["optedPolicy"] = optedPolicy
+        }
+
+        if let optedEmailPolicy {
+            params["optedEmailPolicy"] = optedEmailPolicy
         }
 
         AFWrapper.postRequest(

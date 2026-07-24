@@ -10,6 +10,15 @@ import StripeApplePay
 import StripePaymentSheet
 import PassKit
 
+struct TableBookingCheckoutItem {
+    let id: String
+    let name: String
+    let guests: Int
+    let minimum: Double
+    let deposit: Double
+    let timeSlot: String?
+}
+
 final class PremiumTableCheckoutVC: UIViewController {
 
     // MARK: - Input

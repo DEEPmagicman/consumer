@@ -9,15 +9,6 @@ import StripeApplePay
 import StripePaymentSheet
 import MHLoadingButton
 
-struct TableBookingCheckoutItem {
-    let id: String
-    let name: String
-    let guests: Int
-    let minimum: Double
-    let deposit: Double
-    let timeSlot: String?
-}
-
 final class TablePurchaseVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!

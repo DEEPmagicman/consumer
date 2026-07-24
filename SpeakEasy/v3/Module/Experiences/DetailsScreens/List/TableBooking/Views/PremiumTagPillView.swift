@@ -940,6 +940,7 @@ final class PremiumAgreementView: UIView {
             text: bodyText,
             isExpanded: isExpanded,
             widthFallback: UIScreen.main.bounds.width - 68,
+            allowsViewMore: !showsCheckbox,
             expandedAttributedText: bodyAttributedText
         )
         updateToggleButton(isVisible: false, title: nil)

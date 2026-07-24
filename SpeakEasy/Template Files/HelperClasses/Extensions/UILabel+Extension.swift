@@ -42,12 +42,12 @@ extension UILabel {
 
 enum AgreementTextFormatter {
 
-    static let collapsedLines = 2
+    static let collapsedLines = 3
     static let bodyFont = Constant.Font.geistRegular(size: 10)
     static let toggleFont = Constant.Font.geistMedium(size: 10)
     static let bodyColor = UIColor.white.withAlphaComponent(0.78)
     static let toggleColor = UIColor.white
-    static var allowsViewMore = false
+    static var allowsViewMore = true
 
     static func clean(_ text: String) -> String {
         text
@@ -68,6 +68,8 @@ enum AgreementTextFormatter {
         text: String,
         isExpanded: Bool,
         widthFallback: CGFloat,
+        allowsViewMore: Bool = true,
+        separatesToggleLine: Bool = false,
         expandedAttributedText: NSAttributedString? = nil
     ) -> Bool {
         let cleanText = clean(text)
@@ -83,9 +85,16 @@ enum AgreementTextFormatter {
         let toggleText = isExpanded ? "View Less" : "View More"
         let attributed: NSMutableAttributedString
 
-        if isExpanded,
-           let expandedAttributedText {
+        if let expandedAttributedText {
             attributed = normalizedExpandedAttributedText(expandedAttributedText)
+            if needsToggle && !isExpanded {
+                trimAttributedTextToCollapsedHeight(
+                    attributed,
+                    width: width,
+                    toggleText: toggleText,
+                    separatesToggleLine: separatesToggleLine
+                )
+            }
         } else {
             let bodyText = isExpanded || !needsToggle
                 ? cleanText
@@ -101,15 +110,15 @@ enum AgreementTextFormatter {
         }
 
         if needsToggle {
-            if isExpanded, expandedAttributedText != nil {
-                attributed.append(NSAttributedString(string: " \(toggleText)"))
-            }
+            attributed.append(NSAttributedString(
+                string: separatesToggleLine ? "\n\(toggleText)" : " \(toggleText)"
+            ))
 
             let toggleRange = (attributed.string as NSString).range(of: toggleText)
             attributed.addAttributes(toggleAttributes, range: toggleRange)
         }
 
-        label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines + (separatesToggleLine ? 1 : 0)
         label.lineBreakMode = .byWordWrapping
         label.attributedText = attributed
         label.invalidateIntrinsicContentSize()
@@ -214,23 +223,99 @@ enum AgreementTextFormatter {
         _ attributedText: NSAttributedString
     ) -> NSMutableAttributedString {
         let attributed = NSMutableAttributedString(attributedString: attributedText)
+        trimWhitespaceAndNewlines(in: attributed)
         let fullRange = NSRange(location: 0, length: attributed.length)
 
-        attributed.addAttributes(bodyAttributes, range: fullRange)
+        attributed.addAttribute(.foregroundColor, value: bodyColor, range: fullRange)
+        attributed.enumerateAttribute(
+            .font,
+            in: fullRange,
+            options: []
+        ) { value, range, _ in
+            let sourceFont = value as? UIFont
+            let traits = sourceFont?.fontDescriptor.symbolicTraits
+            let isBold = traits?.contains(.traitBold) == true
+            attributed.addAttribute(
+                .font,
+                value: isBold ? Constant.Font.geistSemiBold(size: 10) : bodyFont,
+                range: range
+            )
+        }
+
         attributed.enumerateAttribute(
             .link,
             in: fullRange,
             options: []
         ) { value, range, _ in
             if value != nil {
-                attributed.addAttributes([
-                    .font: toggleFont,
-                    .foregroundColor: toggleColor,
-                    .underlineStyle: NSUnderlineStyle.single.rawValue
-                ], range: range)
+                attributed.removeAttribute(.link, range: range)
+                attributed.removeAttribute(.underlineStyle, range: range)
+                attributed.addAttribute(.foregroundColor, value: bodyColor, range: range)
             }
         }
 
         return attributed
+    }
+
+    private static func trimWhitespaceAndNewlines(
+        in attributed: NSMutableAttributedString
+    ) {
+        while attributed.length > 0,
+              let first = attributed.string.unicodeScalars.first,
+              CharacterSet.whitespacesAndNewlines.contains(first) {
+            attributed.deleteCharacters(in: NSRange(location: 0, length: 1))
+        }
+
+        while attributed.length > 0,
+              let last = attributed.string.unicodeScalars.last,
+              CharacterSet.whitespacesAndNewlines.contains(last) {
+            attributed.deleteCharacters(in: NSRange(location: attributed.length - 1, length: 1))
+        }
+    }
+
+    private static func trimAttributedTextToCollapsedHeight(
+        _ attributed: NSMutableAttributedString,
+        width: CGFloat,
+        toggleText: String,
+        separatesToggleLine: Bool
+    ) {
+        let suffix = separatesToggleLine ? "\n\(toggleText)" : "... \(toggleText)"
+        while attributed.length > 0,
+              attributedHeight(
+                for: attributed.appendingPlainSuffix(suffix, attributes: bodyAttributes),
+                width: width
+              ) > collapsedHeight() {
+            attributed.deleteCharacters(in: NSRange(location: attributed.length - 1, length: 1))
+        }
+
+        while attributed.string.hasSuffix("\n") || attributed.string.hasSuffix(" ") {
+            attributed.deleteCharacters(in: NSRange(location: attributed.length - 1, length: 1))
+        }
+
+        if !separatesToggleLine && !attributed.string.hasSuffix("...") {
+            attributed.append(NSAttributedString(string: "...", attributes: bodyAttributes))
+        }
+    }
+
+    private static func attributedHeight(
+        for attributed: NSAttributedString,
+        width: CGFloat
+    ) -> CGFloat {
+        attributed.boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            context: nil
+        ).height
+    }
+}
+
+private extension NSMutableAttributedString {
+    func appendingPlainSuffix(
+        _ suffix: String,
+        attributes: [NSAttributedString.Key: Any]
+    ) -> NSAttributedString {
+        let copy = NSMutableAttributedString(attributedString: self)
+        copy.append(NSAttributedString(string: suffix, attributes: attributes))
+        return copy
     }
 }

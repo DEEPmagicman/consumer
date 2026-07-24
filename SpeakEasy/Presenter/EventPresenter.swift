@@ -101,7 +101,7 @@ final class EventPresenter {
 
         params["isDiscounted"] = false
 
-        params["include"] = "flyer,customVenue,eventHasArtist.artist,eventTicketSettings,venue,venue.logo,eventSettings"
+        params["include"] = "flyer,customVenue,eventHasArtist.artist,eventTicketSettings,venue,venue.logo,venue.venueSettings,eventSettings"
 
         if !promotionLinkId.trimmingCharacters(in: .whitespaces).isEmpty {
             params["promotionLinkId"] = promotionLinkId

@@ -94,14 +94,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
     private var shouldShowCheckoutButton = false
-    private let collapsedLines = 2
     private let coverFeeShimmerRowCount = 3
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
     private var hasPlayedTicketCardEntryAnimation = false
+    private var didInstallVenueAgreementRow = false
     private var loadedHeaderImageURLString: String?
     private var loadedLogoURLString: String?
     private var fullTermsText = ""
+    private var fullTermsAttributedText: NSAttributedString?
     private var fullVenueMessageText = ""
     private var fullEmailMessageText = ""
     private let emailMessageBtn = UIButton(type: .custom)
@@ -424,10 +425,14 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setupTermsText() {
+        installVenueAgreementRowIfNeeded()
         installEmailAgreementRowIfNeeded()
+        movePurchasePolicyAfterOptInsIfNeeded()
         AgreementTextFormatter.configure(termsAndConditionsLbl)
         AgreementTextFormatter.configure(venueMessageLbl)
         AgreementTextFormatter.configure(emailMessageLbl)
+        termsAndConditionsBtn.isHidden = true
+        termsAndConditionsBtn.isUserInteractionEnabled = false
 
         let termsTap = UITapGestureRecognizer(
             target: self,
@@ -453,6 +458,27 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         updateEmailCheckboxUI()
     }
 
+    private func installVenueAgreementRowIfNeeded() {
+        guard !didInstallVenueAgreementRow,
+              let stackView = venueMessageView.superview as? UIStackView else { return }
+
+        didInstallVenueAgreementRow = true
+        let insertIndex = stackView.arrangedSubviews.firstIndex(of: venueMessageView)
+            ?? stackView.arrangedSubviews.count
+        let originalIsHidden = venueMessageView.isHidden
+
+        stackView.removeArrangedSubview(venueMessageView)
+        venueMessageView.removeFromSuperview()
+
+        let venueMessageRow = makeOptInAgreementRow(
+            button: venueMessageBtn,
+            label: venueMessageLbl
+        )
+        stackView.insertArrangedSubview(venueMessageRow, at: insertIndex)
+        venueMessageView = venueMessageRow
+        venueMessageView.isHidden = originalIsHidden
+    }
+
     private func installEmailAgreementRowIfNeeded() {
         guard emailMessageView.superview == nil,
               let stackView = termsAndConditions.superview as? UIStackView else { return }
@@ -462,33 +488,54 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         stackView.insertArrangedSubview(emailMessageView, at: insertIndex)
     }
 
+    private func movePurchasePolicyAfterOptInsIfNeeded() {
+        guard let stackView = termsAndConditions.superview as? UIStackView else { return }
+
+        stackView.removeArrangedSubview(termsAndConditions)
+        termsAndConditions.removeFromSuperview()
+
+        let visibleOptInRows = [venueMessageView, emailMessageView].filter { !$0.isHidden }
+        let anchorIndex = visibleOptInRows
+            .compactMap { stackView.arrangedSubviews.firstIndex(of: $0) }
+            .max()
+        let insertIndex = anchorIndex.map { $0 + 1 } ?? stackView.arrangedSubviews.count
+        stackView.insertArrangedSubview(termsAndConditions, at: min(insertIndex, stackView.arrangedSubviews.count))
+    }
+
     private func makeEmailAgreementRow() -> UIView {
+        emailMessageBtn.addTarget(self, action: #selector(onClickEmailMessageBtn(_:)), for: .touchUpInside)
+        return makeOptInAgreementRow(
+            button: emailMessageBtn,
+            label: emailMessageLbl
+        )
+    }
+
+    private func makeOptInAgreementRow(button: UIButton, label: UILabel) -> UIView {
         let row = UIView()
         row.backgroundColor = .clear
         row.translatesAutoresizingMaskIntoConstraints = false
 
-        emailMessageBtn.translatesAutoresizingMaskIntoConstraints = false
-        emailMessageBtn.imageView?.contentMode = .scaleAspectFit
-        emailMessageBtn.addTarget(self, action: #selector(onClickEmailMessageBtn(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.imageView?.contentMode = .scaleAspectFit
 
-        emailMessageLbl.translatesAutoresizingMaskIntoConstraints = false
-        emailMessageLbl.numberOfLines = 0
-        emailMessageLbl.lineBreakMode = .byWordWrapping
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
 
-        row.addSubview(emailMessageBtn)
-        row.addSubview(emailMessageLbl)
+        row.addSubview(button)
+        row.addSubview(label)
 
         NSLayoutConstraint.activate([
-            emailMessageBtn.topAnchor.constraint(equalTo: row.topAnchor),
-            emailMessageBtn.leadingAnchor.constraint(equalTo: row.leadingAnchor),
-            emailMessageBtn.widthAnchor.constraint(equalToConstant: 16),
-            emailMessageBtn.heightAnchor.constraint(equalToConstant: 16),
+            button.leadingAnchor.constraint(equalTo: row.leadingAnchor),
+            button.topAnchor.constraint(equalTo: label.topAnchor),
+            button.widthAnchor.constraint(equalToConstant: 16),
+            button.heightAnchor.constraint(equalToConstant: 16),
 
-            emailMessageLbl.topAnchor.constraint(equalTo: row.topAnchor),
-            emailMessageLbl.leadingAnchor.constraint(equalTo: emailMessageBtn.trailingAnchor, constant: 8),
-            emailMessageLbl.trailingAnchor.constraint(equalTo: row.trailingAnchor),
-            emailMessageLbl.bottomAnchor.constraint(equalTo: row.bottomAnchor),
-            row.bottomAnchor.constraint(greaterThanOrEqualTo: emailMessageBtn.bottomAnchor, constant: 5)
+            label.topAnchor.constraint(equalTo: row.topAnchor),
+            label.leadingAnchor.constraint(equalTo: button.trailingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            label.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+            row.bottomAnchor.constraint(greaterThanOrEqualTo: button.bottomAnchor)
         ])
 
         return row
@@ -504,8 +551,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     private func configureAgreementText() {
         let settings = venue?.venueSettings
-        let fallbackTermsText = settings?.coverTicketSettings?.disclaimer
-            ?? Constant.String.checkoutTextCover
+        let fallbackTermsText = "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+        let purchasePolicyText = normalizedPurchasePolicy(settings?.purchasePolicy)
         let fallbackVenueMessageText =
             "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
         let fallbackEmailMessageText =
@@ -521,7 +568,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             emailMessageText = cleanAgreementText(fallbackEmailMessageText)
         }
 
-        fullTermsText = cleanAgreementText(fallbackTermsText)
+        fullTermsText = cleanAgreementText(purchasePolicyText?.string ?? fallbackTermsText)
+        fullTermsAttributedText = purchasePolicyText
         fullVenueMessageText = venueMessageText
         fullEmailMessageText = emailMessageText
         termsAndConditions.isHidden = fullTermsText.isEmpty
@@ -545,25 +593,50 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         AgreementTextFormatter.clean(text)
     }
 
+    private func normalizedPurchasePolicy(_ policy: String?) -> NSAttributedString? {
+        guard let trimmed = policy?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty else {
+            return nil
+        }
+
+        let renderedText = trimmed.fromHTML
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if renderedText.isEmpty {
+            return trimmed.contains("<") && trimmed.contains(">") ? nil : NSAttributedString(string: trimmed)
+        }
+
+        return trimmed.htmlToAttributedString ?? NSAttributedString(string: renderedText)
+    }
+
     private func updateAgreementLabels() {
         updateAgreementLabel(
             termsAndConditionsLbl,
             text: fullTermsText,
-            isExpanded: isTermsExpanded
+            isExpanded: isTermsExpanded,
+            allowsViewMore: true,
+            attributedText: fullTermsAttributedText
         )
         updateAgreementLabel(
             venueMessageLbl,
             text: fullVenueMessageText,
-            isExpanded: isVenueMessageExpanded
+            isExpanded: isVenueMessageExpanded,
+            allowsViewMore: false
         )
         updateAgreementLabel(
             emailMessageLbl,
             text: fullEmailMessageText,
-            isExpanded: isEmailMessageExpanded
+            isExpanded: isEmailMessageExpanded,
+            allowsViewMore: false
         )
     }
 
-    private func updateAgreementLabel(_ label: UILabel, text: String, isExpanded: Bool) {
+    private func updateAgreementLabel(
+        _ label: UILabel,
+        text: String,
+        isExpanded: Bool,
+        allowsViewMore: Bool,
+        attributedText: NSAttributedString? = nil
+    ) {
         guard !text.isEmpty else {
             label.attributedText = nil
             label.text = ""
@@ -575,7 +648,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             to: label,
             text: text,
             isExpanded: isExpanded,
-            widthFallback: view.bounds.width - 64
+            widthFallback: view.bounds.width - 64,
+            allowsViewMore: allowsViewMore,
+            expandedAttributedText: attributedText
         )
     }
 
@@ -763,12 +838,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     func onClickContinueToCheckout() {
         guard !isPaymentInitiated, !isCancellingTransaction else { return }
-        if termsAndConditions.isHidden == false && !isTermsAccepted {
-            AppHaptic.error()
-            Alert.showToast("Please accept Terms & Conditions")
-            return
-        }
-
         AppHaptic.primaryAction()
         isPaymentInitiated = true
         setScreenInteractionBlocked(true)
