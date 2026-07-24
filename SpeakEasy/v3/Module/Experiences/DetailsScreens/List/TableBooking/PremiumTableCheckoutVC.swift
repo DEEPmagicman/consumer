@@ -1754,24 +1754,34 @@ private final class PremiumTableCheckoutPriceShimmerRow: UIView {
 private extension PremiumTableCheckoutVC {
 
     func setupStripe(secret: String, ephemeralKey: String) {
+        let trimmedSecret = secret.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedSecret.isEmpty else {
+            paymentSheet = nil
+            return
+        }
+
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
+
         var config = PaymentSheet.Configuration()
-        config.merchantDisplayName         = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-        if !ephemeralKey.isEmpty,
-           let customerId = UserDefault.shared.user?.stripeCusId,
-           !customerId.isEmpty {
-            config.customer = .init(
+        config.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
+
+        let customerId = UserDefault.shared.user?.stripeCusId ?? ""
+        let trimmedEphemeralKey = ephemeralKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !customerId.isEmpty, !trimmedEphemeralKey.isEmpty {
+            config.customer = PaymentSheet.CustomerConfiguration(
                 id: customerId,
-                ephemeralKeySecret: ephemeralKey
+                ephemeralKeySecret: trimmedEphemeralKey
             )
         }
+
         config.savePaymentMethodOptInBehavior = .automatic
         config.allowsDelayedPaymentMethods = true
         config.applePay = .init(
             merchantId: "merchant.com.speakeasy",
             merchantCountryCode: "US"
         )
-        paymentSheet = PaymentSheet(paymentIntentClientSecret: secret, configuration: config)
+
+        paymentSheet = PaymentSheet(paymentIntentClientSecret: trimmedSecret, configuration: config)
     }
 }
 
@@ -1906,11 +1916,7 @@ private extension PremiumTableCheckoutVC {
             case .completed:
                 self.confirmAndFinish()
             case .canceled:
-                self.isPaymentInitiated = false
-                self.setBuyLoading(false)
-                AppHaptic.warning()
-                Alert.showToast("Payment canceled.")
-                self.cancelCurrentBooking(returnToPrevious: true)
+                self.handlePaymentCanceled()
             case .failed:
                 self.isPaymentInitiated = false
                 self.setBuyLoading(false)
@@ -1918,6 +1924,11 @@ private extension PremiumTableCheckoutVC {
                 Alert.showToast("Payment failed.")
             }
         }
+    }
+
+    func handlePaymentCanceled() {
+        isPaymentInitiated = false
+        setBuyLoading(false)
     }
 
     func confirmAndFinish() {
