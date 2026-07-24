@@ -100,6 +100,8 @@ class EventDetailsVC: UIViewController {
     private let lineupChipMinimumSpacing: CGFloat = 4
     private let lineupChipTargetSideInset: CGFloat = 25
     private var lastLineupCollectionWidth: CGFloat = 0
+    private var lastDetailsLabelWidth: CGFloat = 0
+    private var lastPolicyLabelWidth: CGFloat = 0
     private var fullText = ""
     private var faqsTableObserver: NSKeyValueObservation?
     private var ticketTableObserver: NSKeyValueObservation?
@@ -297,13 +299,13 @@ class EventDetailsVC: UIViewController {
         super.viewDidLayoutSubviews()
 
         let collectionWidth = lineUpCollectionView.bounds.width
-        guard collectionWidth > 0,
-              abs(collectionWidth - lastLineupCollectionWidth) > 0.5 else {
-            return
+        if collectionWidth > 0,
+           abs(collectionWidth - lastLineupCollectionWidth) > 0.5 {
+            lastLineupCollectionWidth = collectionWidth
+            lineUpCollectionView.collectionViewLayout.invalidateLayout()
         }
 
-        lastLineupCollectionWidth = collectionWidth
-        lineUpCollectionView.collectionViewLayout.invalidateLayout()
+        updateExpandableTextForWidthChangesIfNeeded()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -3365,14 +3367,7 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
         AppHaptic.selectionChanged()
         isExpanded.toggle()
-
-        if isExpanded {
-            detailsLbl.numberOfLines = 0
-            viewMoreBtn.setTitle("Read Less", for: .normal)
-        } else {
-            detailsLbl.numberOfLines = collapsedLines
-            viewMoreBtn.setTitle("Read More", for: .normal)
-        }
+        updateDescriptionExpansionVisibility()
 
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
@@ -3382,14 +3377,7 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickPolicyViewMoreBtn(_ sender: Any) {
         AppHaptic.selectionChanged()
         isPolicyLblExpanded.toggle()
-
-        if isPolicyLblExpanded {
-            policyLbl.numberOfLines = 0
-            policyViewMoreBtn.setTitle("Read Less", for: .normal)
-        } else {
-            policyLbl.numberOfLines = collapsedLines
-            policyViewMoreBtn.setTitle("Read More", for: .normal)
-        }
+        updatePolicyExpansionVisibility()
 
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
@@ -3810,10 +3798,10 @@ class EventDetailsVC: UIViewController {
         detailsLbl.attributedText = mutable
         detailsLbl.numberOfLines = collapsedLines
         configureHTMLLinkTapIfNeeded(on: detailsLbl, hasLinks: hasLinks)
-        viewMoreBtn.setTitle("Read More", for: .normal)
+        isExpanded = false
 
         view.layoutIfNeeded()
-        checkIfTextNeedsExpansion()
+        updateDescriptionExpansionVisibility()
     }
 
     private func setupPolicyExpandableLabel() {
@@ -3846,10 +3834,10 @@ class EventDetailsVC: UIViewController {
         policyLbl.attributedText = mutable
         policyLbl.numberOfLines = collapsedLines
         configureHTMLLinkTapIfNeeded(on: policyLbl, hasLinks: hasLinks)
-        policyViewMoreBtn.setTitle("Read More", for: .normal)
+        isPolicyLblExpanded = false
 
         view.layoutIfNeeded()
-        checkIfPolicyTextNeedsExpansion()
+        updatePolicyExpansionVisibility()
     }
 
     private func addDetectedPlainLinks(to mutable: NSMutableAttributedString) {
@@ -3999,40 +3987,93 @@ class EventDetailsVC: UIViewController {
     }
 
     private func checkIfTextNeedsExpansion() {
-        detailsLbl.numberOfLines = 0
-
-        let fullHeight = detailsLbl.sizeThatFits(
-            CGSize(width: detailsLbl.frame.width,
-                   height: CGFloat.greatestFiniteMagnitude)
-        ).height
-
-        let maxCollapsedHeight = detailsLbl.font.lineHeight * CGFloat(collapsedLines)
-
-        if fullHeight > maxCollapsedHeight {
-            detailsLbl.numberOfLines = collapsedLines
-            viewMoreBtnView.isHidden = false
-        } else {
-            detailsLbl.numberOfLines = 0
-            viewMoreBtnView.isHidden = true
-        }
+        updateDescriptionExpansionVisibility()
     }
 
     private func checkIfPolicyTextNeedsExpansion() {
-        policyLbl.numberOfLines = 0
+        updatePolicyExpansionVisibility()
+    }
 
-        let fullHeight = policyLbl.sizeThatFits(
-            CGSize(width: policyLbl.frame.width,
-                   height: CGFloat.greatestFiniteMagnitude)
+    private func updateDescriptionExpansionVisibility() {
+        updateExpansionVisibility(
+            for: detailsLbl,
+            toggleContainer: viewMoreBtnView,
+            toggleButton: viewMoreBtn,
+            isExpanded: isExpanded
+        )
+    }
+
+    private func updatePolicyExpansionVisibility() {
+        updateExpansionVisibility(
+            for: policyLbl,
+            toggleContainer: policyViewMoreBtnView,
+            toggleButton: policyViewMoreBtn,
+            isExpanded: isPolicyLblExpanded
+        )
+    }
+
+    private func updateExpansionVisibility(
+        for label: UILabel,
+        toggleContainer: UIView,
+        toggleButton: UIButton,
+        isExpanded: Bool
+    ) {
+        let width = label.bounds.width > 0 ? label.bounds.width : label.frame.width
+        guard width > 0,
+              hasExpandableText(in: label) else {
+            label.numberOfLines = 0
+            toggleContainer.isHidden = true
+            return
+        }
+
+        let fullHeight = fittingHeight(for: label, numberOfLines: 0, width: width)
+        let collapsedHeight = fittingHeight(for: label, numberOfLines: collapsedLines, width: width)
+        let needsExpansion = fullHeight > collapsedHeight + 1
+
+        label.numberOfLines = needsExpansion && !isExpanded ? collapsedLines : 0
+        toggleContainer.isHidden = !needsExpansion
+        toggleButton.setTitle(isExpanded ? "Read Less" : "Read More", for: .normal)
+    }
+
+    private func fittingHeight(for label: UILabel, numberOfLines: Int, width: CGFloat) -> CGFloat {
+        let previousNumberOfLines = label.numberOfLines
+        let previousPreferredMaxLayoutWidth = label.preferredMaxLayoutWidth
+
+        label.numberOfLines = numberOfLines
+        label.preferredMaxLayoutWidth = width
+        let height = label.sizeThatFits(
+            CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         ).height
 
-        let maxCollapsedHeight = policyLbl.font.lineHeight * CGFloat(collapsedLines)
+        label.numberOfLines = previousNumberOfLines
+        label.preferredMaxLayoutWidth = previousPreferredMaxLayoutWidth
 
-        if fullHeight > maxCollapsedHeight {
-            policyLbl.numberOfLines = collapsedLines
-            policyViewMoreBtnView.isHidden = false
-        } else {
-            policyLbl.numberOfLines = 0
-            policyViewMoreBtnView.isHidden = true
+        return ceil(height)
+    }
+
+    private func hasExpandableText(in label: UILabel) -> Bool {
+        if let attributedText = label.attributedText {
+            return attributedText.length > 0 &&
+            !attributedText.string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+
+        return !(label.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+    }
+
+    private func updateExpandableTextForWidthChangesIfNeeded() {
+        let detailsWidth = detailsLbl.bounds.width
+        if detailsWidth > 0,
+           abs(detailsWidth - lastDetailsLabelWidth) > 0.5 {
+            lastDetailsLabelWidth = detailsWidth
+            updateDescriptionExpansionVisibility()
+        }
+
+        let policyWidth = policyLbl.bounds.width
+        if !policyView.isHidden,
+           policyWidth > 0,
+           abs(policyWidth - lastPolicyLabelWidth) > 0.5 {
+            lastPolicyLabelWidth = policyWidth
+            updatePolicyExpansionVisibility()
         }
     }
 
@@ -5841,6 +5882,20 @@ extension EventDetailsVC: CheckoutBarDelegate {
         }
 
         AppHaptic.primaryAction()
+
+        if hasVisibleAddOnOptions(for: event) {
+            shouldClearInlineRSVPSelectionOnReturn = true
+            Navigate.to.ticketSelectionVc(
+                self,
+                event: event,
+                mode: .addOn,
+                selectedNormalTickets: selectedTickets,
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
+            )
+            return
+        }
+
         checkOutBtnView.showLoader()
 
         let payload: [[String: Any]] = selectedTickets.map {
