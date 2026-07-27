@@ -97,7 +97,7 @@ final class AllVenueVC: UIViewController {
     }
 
     private func setupVenueTitle() {
-        cityLbl.text = "Venues in \(resolvedCity())"
+        cityLbl.text = "Partners in \(resolvedCity())"
     }
 
     private func resolvedCity() -> String {
@@ -215,7 +215,7 @@ final class AllVenueVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No venues found"
+        titleLabel.text = "No partners found"
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistMedium(size: 18)
         titleLabel.textAlignment = .center

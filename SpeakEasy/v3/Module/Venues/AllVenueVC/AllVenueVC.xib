@@ -36,7 +36,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHc-nY-udE" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
                             <rect key="frame" x="123.33333333333333" y="9.333333333333325" width="146.66666666666669" height="53.666666666666657"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Venues" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7QW-F0-G7m">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Partners" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7QW-F0-G7m">
                                     <rect key="frame" x="30.000000000000007" y="9.000000000000016" width="86.666666666666686" height="23.666666666666671"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

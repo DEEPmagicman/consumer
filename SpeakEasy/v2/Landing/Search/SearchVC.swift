@@ -65,7 +65,7 @@ final class SearchVC: UIViewController {
 
     private func loadDummyData() {
         events = ["Event 1", "Event 2", "Event 3"]
-        venues = ["Venue 1", "Venue 2"]
+        venues = ["Partner 1", "Partner 2"]
         artists = ["Artist 1", "Artist 2", "Artist 3", "Artist 4"]
     }
 

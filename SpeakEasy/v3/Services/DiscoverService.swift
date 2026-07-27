@@ -380,7 +380,7 @@ final class DiscoverService {
         let trimmedVenueId = venueId.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !trimmedVenueId.isEmpty else {
-            completion(false, "Venue not found", nil)
+            completion(false, "Partner not found", nil)
             return
         }
 

@@ -179,7 +179,7 @@ final class EventDetailVC: UIViewController {
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
-        updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+        updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Partner")
         dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
@@ -218,11 +218,11 @@ final class EventDetailVC: UIViewController {
         if venueDetails?.venueSettings?.isOrganizer == true {
             venueNameLbl.text = event?.customVenue?.name ?? ""
             locationLbl.text = event?.customVenue?.address ?? "-"
-            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: event?.customVenue?.latitude ?? 0, longitude: event?.customVenue?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: event?.customVenue?.latitude ?? 0, longitude: event?.customVenue?.longitude ?? 0), with: event?.customVenue?.name ?? "Partner")
         } else {
             venueNameLbl.text = venueDetails?.name ?? ""
             locationLbl.text = venueDetails?.address ?? "-"
-            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Partner")
         }
         if venueDetails?.website ?? "" != "" {
             locationImage.image = UIImage(named: "ic-link")

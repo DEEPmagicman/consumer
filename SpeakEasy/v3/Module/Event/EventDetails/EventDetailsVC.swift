@@ -260,6 +260,8 @@ class EventDetailsVC: UIViewController {
             forCellReuseIdentifier: AdditionalButtonsTableViewCell.identifier
         )
 
+        additionalButtonsTableView.rowHeight = UITableView.automaticDimension
+        additionalButtonsTableView.estimatedRowHeight = 96
         additionalButtonsTableView.isScrollEnabled = false
         
         checkOutBtnView.delegate = self
@@ -2108,6 +2110,7 @@ class EventDetailsVC: UIViewController {
         let additionalButtons = enabledAdditionalButtons
         additionalButtonsTableView.isHidden = additionalButtons.isEmpty
         additionalButtonsTableView.reloadData()
+        additionalButtonsTableView.layoutIfNeeded()
         additionalButtonsTableHeight.constant = additionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
         setSection(webSiteView, hidden: additionalButtons.isEmpty)
         
@@ -2219,7 +2222,7 @@ class EventDetailsVC: UIViewController {
                 longitude: Double(custom.lng ?? "") ?? 0
             )
             
-            title = custom.name ?? "Venue"
+            title = custom.name ?? "Partner"
             mapSearchQuery = addressSearchQuery(
                 components: [
                     custom.address,
@@ -2239,7 +2242,7 @@ class EventDetailsVC: UIViewController {
                 longitude: venueDetails?.longitude ?? 0
             )
             
-            title = venueDetails?.name ?? "Venue"
+            title = venueDetails?.name ?? "Partner"
             mapSearchQuery = addressSearchQuery(
                 components: [
                     venueDetails?.address,

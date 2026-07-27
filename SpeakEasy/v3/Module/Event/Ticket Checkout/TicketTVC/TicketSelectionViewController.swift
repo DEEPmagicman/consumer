@@ -12,7 +12,6 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var dateandtimeLbl: UILabel!
     @IBOutlet weak var ticketTableView: UITableView!
     @IBOutlet weak var eventTitleLbl: UILabel!
-    @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var protectedTicketView: UIView!
     @IBOutlet weak var unLockTF: UITextField!
@@ -22,10 +21,7 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var continueToCheckOutView: UIView!
-    @IBOutlet weak var totalAmountLbl: UILabel!
-    @IBOutlet weak var totalTicketLbl: UILabel!
-    @IBOutlet weak var extraFeesLbl: UILabel!
+    @IBOutlet weak var continueToCheckOutView: CheckoutBarView!
     @IBOutlet weak var backgroundContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var eventTitleView: UIView!
@@ -369,6 +365,10 @@ class TicketSelectionViewController: UIViewController {
 
     private func setupContinueButton() {
         applyWhiteLabelTheme()
+        continueToCheckOutView.delegate = self
+        continueToCheckOutView.isHidden = true
+        continueToCheckOutView.alpha = 0
+        continueToCheckOutView.setButtonTitle("Continue to Checkout")
         view.addSubview(interactionBlockerView)
         NSLayoutConstraint.activate([
             interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -384,13 +384,9 @@ class TicketSelectionViewController: UIViewController {
 
     private func applyWhiteLabelTheme() {
         let color = whiteLabelAccentColor
-        let textColor = color.suitableTextColor()
 
         dateandtimeLbl.textColor = color
-        continueToCheckOutBtn.backgroundColor = color
-        continueToCheckOutBtn.bgColor = color
-        continueToCheckOutBtn.setTitleColor(textColor, for: .normal)
-        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: textColor)
+        continueToCheckOutView?.applyAccentColor(color)
     }
 
     private func setCheckoutInProgress(_ inProgress: Bool) {
@@ -733,12 +729,11 @@ class TicketSelectionViewController: UIViewController {
     private func updateContinueButtonForMode() {
         switch mode {
         case .normal:
-            continueToCheckOutBtn.setTitle("Continue to Checkout", for: .normal)
+            continueToCheckOutView.setButtonTitle("Continue to Checkout")
         case .addOn:
             let anySelected = addOnTickets.contains(where: { ($0.selectedTicketCount ?? 0) > 0 })
-            continueToCheckOutBtn.setTitle(
-                anySelected ? "Continue to Checkout" : "Skip this & Continue to Checkout",
-                for: .normal
+            continueToCheckOutView.setButtonTitle(
+                anySelected ? "Continue to Checkout" : "Skip this & Continue to Checkout"
             )
         }
     }
@@ -1018,7 +1013,7 @@ class TicketSelectionViewController: UIViewController {
             if hasVisibleAddOnOptions() {
                 switchToAddOnMode()
             } else {
-                continueToCheckOutBtn.showLoader(userInteraction: false)
+                continueToCheckOutView.showLoader()
                 setCheckoutInProgress(true)
                 createBooking(event: event, user: user, tickets: selectedNormalTickets)
             }
@@ -1027,7 +1022,7 @@ class TicketSelectionViewController: UIViewController {
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let finalSelected = selectedNormalTickets + selectedAddOns
             AppHaptic.primaryAction()
-            continueToCheckOutBtn.showLoader(userInteraction: false)
+            continueToCheckOutView.showLoader()
             setCheckoutInProgress(true)
             createBooking(event: event, user: user, tickets: finalSelected)
         }
@@ -1045,7 +1040,7 @@ class TicketSelectionViewController: UIViewController {
             guard let self else { return }
 
             guard isAvailable else {
-                self.continueToCheckOutBtn.hideLoader()
+                self.continueToCheckOutView.hideLoader()
                 self.setCheckoutInProgress(false)
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                 return
@@ -1109,7 +1104,7 @@ class TicketSelectionViewController: UIViewController {
             promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
-            self.continueToCheckOutBtn.hideLoader()
+            self.continueToCheckOutView.hideLoader()
             if isSuccess {
                 AppHaptic.success()
 //                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
@@ -1339,7 +1334,7 @@ class TicketSelectionViewController: UIViewController {
         if hasVisibleAddOnOptions() {
             switchToAddOnMode()
         } else {
-            continueToCheckOutBtn.showLoader(userInteraction: false)
+            continueToCheckOutView.showLoader()
             setCheckoutInProgress(true)
             createBooking(event: event, user: user, tickets: selectedNormalTickets)
         }
@@ -1447,7 +1442,7 @@ class TicketSelectionViewController: UIViewController {
             if hasVisibleAddOnOptions() {
                 switchToAddOnMode()
             } else {
-                continueToCheckOutBtn.showLoader(userInteraction: false)
+                continueToCheckOutView.showLoader()
                 setCheckoutInProgress(true)
                 createBooking(event: event, user: user, tickets: selectedNormalTickets)
             }
@@ -1460,18 +1455,14 @@ class TicketSelectionViewController: UIViewController {
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
         let currencyPosition = venueDetails?.venueSettings?.currencyPosition
         let count = checkoutTotalTicketCount
-        let subtotal = checkoutSubtotal
-        let fees = checkoutExtraFees
 
-        totalTicketLbl.text = "\(count) Ticket\(count == 1 ? "" : "s")"
-        totalAmountLbl.text = CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
-
-        if fees > 0 {
-            extraFeesLbl.isHidden = false
-            extraFeesLbl.text = "Incl. \(CurrencyFormatter.amount(fees, symbol: currency, position: currencyPosition)) in fees"
-        } else {
-            extraFeesLbl.isHidden = true
-        }
+        continueToCheckOutView.updateSummary(
+            currency: currency,
+            currencyPosition: currencyPosition,
+            count: count,
+            subtotal: checkoutSubtotal,
+            fees: checkoutExtraFees
+        )
     }
 
     private func updateContinueBtnState(animated: Bool = true) {
@@ -1506,6 +1497,13 @@ class TicketSelectionViewController: UIViewController {
             self.continueToCheckOutView.transform = .identity
             self.updateScrollBottomInset(checkoutVisible: shouldShow)
         }
+    }
+}
+
+extension TicketSelectionViewController: CheckoutBarDelegate {
+
+    func checkoutBarDidTapButton() {
+        onClickContinueBtn(continueToCheckOutView as Any)
     }
 }
 

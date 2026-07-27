@@ -18,50 +18,42 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="83" id="KGk-i7-Jjw" customClass="AdditionalButtonsTableViewCell" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="397" height="83"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="96" id="KGk-i7-Jjw" customClass="AdditionalButtonsTableViewCell" customModule="Speakeasy" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="397" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="397" height="83"/>
+                <rect key="frame" x="0.0" y="0.0" width="397" height="96"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EVM-ir-ddK">
-                        <rect key="frame" x="0.0" y="0.0" width="397" height="83"/>
+                        <rect key="frame" x="0.0" y="0.0" width="397" height="96"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wZX-ow-vmd">
-                                <rect key="frame" x="0.0" y="10" width="397" height="73"/>
+                                <rect key="frame" x="0.0" y="10" width="397" height="86"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEL-KU-NAh">
-                                        <rect key="frame" x="0.0" y="0.0" width="397" height="73"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="397" height="86"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8LE-HV-Q89">
-                                        <rect key="frame" x="16" y="16" width="26" height="41"/>
+                                        <rect key="frame" x="16" y="16" width="331" height="54"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="VIP" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQW-Sw-dv5">
-                                                <rect key="frame" x="0.0" y="0.0" width="26" height="41"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="331" height="54"/>
                                                 <fontDescription key="fontDescription" name="Geist-SemiBold" family="Geist" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrQ-Fk-zfx">
-                                                <rect key="frame" x="0.0" y="41" width="26" height="19.666666666666671"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="19.670000000000002" id="p9u-8S-IAQ"/>
-                                                </constraints>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Long description can wrap onto a second line" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrQ-Fk-zfx">
+                                                <rect key="frame" x="0.0" y="54" width="331" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="11"/>
                                                 <color key="textColor" red="0.82352941180000006" green="0.83529411760000005" blue="0.85882352939999995" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstItem="HQW-Sw-dv5" firstAttribute="top" secondItem="8LE-HV-Q89" secondAttribute="top" id="3iG-Gh-7Fn"/>
-                                            <constraint firstAttribute="trailing" secondItem="HQW-Sw-dv5" secondAttribute="trailing" id="Op6-wi-umT"/>
-                                            <constraint firstItem="HQW-Sw-dv5" firstAttribute="leading" secondItem="8LE-HV-Q89" secondAttribute="leading" id="wN5-EI-d3J"/>
-                                        </constraints>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-webLink" translatesAutoresizingMaskIntoConstraints="NO" id="zz7-5Z-3yw">
-                                        <rect key="frame" x="357" y="24.666666666666664" width="24" height="24"/>
+                                        <rect key="frame" x="357" y="31" width="24" height="24"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="24" id="ayK-7A-KJq"/>
@@ -71,7 +63,7 @@
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.045623166179574119" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="zz7-5Z-3yw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8LE-HV-Q89" secondAttribute="trailing" constant="10" id="28O-Sd-J3p"/>
+                                    <constraint firstItem="zz7-5Z-3yw" firstAttribute="leading" secondItem="8LE-HV-Q89" secondAttribute="trailing" constant="10" id="28O-Sd-J3p"/>
                                     <constraint firstItem="8LE-HV-Q89" firstAttribute="leading" secondItem="wZX-ow-vmd" secondAttribute="leading" constant="16" id="Jia-cg-0RO"/>
                                     <constraint firstItem="dEL-KU-NAh" firstAttribute="leading" secondItem="wZX-ow-vmd" secondAttribute="leading" id="Rvz-we-dHK"/>
                                     <constraint firstItem="dEL-KU-NAh" firstAttribute="top" secondItem="wZX-ow-vmd" secondAttribute="top" id="dDD-9G-BU1"/>

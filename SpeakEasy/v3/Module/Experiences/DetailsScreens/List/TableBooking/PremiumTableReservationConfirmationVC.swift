@@ -766,7 +766,7 @@ private extension PremiumTableReservationConfirmationVC {
         )
         rows.append(
             ReservationOrderRow(
-                title: "Balance Due at Venue",
+                title: "Balance Due at Partner",
                 amount: formatMoney(spendAgreement.balanceDueAtVenue ?? 0),
                 titleFont: Constant.Font.geistMedium(size: 14),
                 amountFont: Constant.Font.geistMedium(size: 14)

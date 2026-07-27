@@ -551,12 +551,12 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     private func configureAgreementText() {
         let settings = venue?.venueSettings
-        let fallbackTermsText = "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+        let fallbackTermsText = "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the partner dress code. Entry is subject to valid ticket and ID verification at entry."
         let purchasePolicyText = normalizedPurchasePolicy(settings?.purchasePolicy)
         let fallbackVenueMessageText =
             "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
         let fallbackEmailMessageText =
-            "I agree to receive marketing related email messages from \(venue?.name ?? "the venue")."
+            "I agree to receive marketing related email messages from \(venue?.name ?? "the partner")."
 
         var venueMessageText = cleanAgreementText(settings?.policyText ?? fallbackVenueMessageText)
         if settings?.optedPolicy == true, venueMessageText.isEmpty {
@@ -1981,7 +1981,7 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
         Alert.showAlertSheet(
             style: .alert,
             title: "Update",
-            message: "The venue you're booking is closing",
+            message: "The partner you're booking is closing",
             actions: [popAction()]
         )
     }
@@ -1993,7 +1993,7 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
         Alert.showAlertSheet(
             style: .alert,
             title: "Update",
-            message: "The venue updated its ticket options",
+            message: "The partner updated its ticket options",
             actions: [popAction()]
         )
     }
@@ -2002,7 +2002,7 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
         Alert.showAlertSheet(
             style: .alert,
             title: "Update",
-            message: "The venue updated their prices",
+            message: "The partner updated their prices",
             actions: [popAction()]
         )
     }

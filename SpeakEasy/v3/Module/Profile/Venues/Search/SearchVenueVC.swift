@@ -63,7 +63,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
         searchField.layer.cornerCurve = .continuous
         searchField.clipsToBounds = true
         searchField.placeholder =
-        searchMode == .followed ? "Search followed venues" : "Search venues"
+        searchMode == .followed ? "Search followed partners" : "Search partners"
         searchField.leftView = makeSearchIcon()
         searchField.leftViewMode = .always
         searchField.addTarget(self, action: #selector(onSearchChanged), for: .editingChanged)

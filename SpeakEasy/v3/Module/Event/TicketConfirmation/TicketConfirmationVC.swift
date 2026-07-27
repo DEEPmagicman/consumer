@@ -29,7 +29,7 @@ class TicketConfirmationVC: UIViewController {
     var bookingId: String?
     private var faqs: [(question: String, answer: String)] = [
         (
-            question: "A note from the venue",
+            question: "A note from the partner",
             answer: ""
         )
     ]

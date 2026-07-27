@@ -266,7 +266,7 @@ final class DiscoverAllVC: UIViewController {
     
     private func setVenueListForSelectedCity() {
         let city = resolvedCity()
-        venueTitleLable.text      = "Venues in \(city)"
+        venueTitleLable.text      = "Partners in \(city)"
         eventsInCityTitleLbl.text = "Events in \(city)"
         fetchAllOpenVenueForMVP()
     }

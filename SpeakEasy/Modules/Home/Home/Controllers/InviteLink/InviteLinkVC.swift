@@ -83,9 +83,9 @@ final class InviteLinkVC: UIViewController {
         titleLbl.text = inviteObj?.name ?? "Untitle"
         headerTitleLbl.text = inviteObj?.name ?? "Untitle"
         venueTitleLbl.text = "\(inviteObj?.venue.name ?? ""), \(inviteObj?.venue.city ?? "")"
-        venueNameLbl.text = "Venue - \(inviteObj?.venue.name ?? "")"
+        venueNameLbl.text = "Partner - \(inviteObj?.venue.name ?? "")"
         detailLbl.text = inviteObj?.description?.withEmptyPlaceHolder ?? Constant.String.dash
-        policyLbl.text = String(format: Constant.String.venuePolicy, inviteObj?.venue.name ?? "venue")
+        policyLbl.text = String(format: Constant.String.venuePolicy, inviteObj?.venue.name ?? "partner")
         locationLbl.text = inviteObj?.venue.address
         dressCodeLbl.text = inviteObj?.venue.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: inviteObj?.venue.latitude ?? 0, longitude: inviteObj?.venue.longitude ?? 0), with: inviteObj?.venue.name)
