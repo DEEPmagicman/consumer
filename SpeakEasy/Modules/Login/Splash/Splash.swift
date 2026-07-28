@@ -13,6 +13,7 @@ final class Splash: UIViewController {
     private enum Animation {
         static let endFrame: AnimationFrameTime = 176
         static let speed: CGFloat = 1.35
+        static let v3HorizontalOffset: CGFloat = 8
     }
     
     private let animationView: LottieAnimationView = {
@@ -35,6 +36,12 @@ final class Splash: UIViewController {
     private func setupUI() {
         view.addSubview(animationView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
+        if UserDefault.shared.isVersionV3 == true {
+            animationView.transform = CGAffineTransform(
+                translationX: Animation.v3HorizontalOffset,
+                y: 0
+            )
+        }
         
         NSLayoutConstraint.activate([
             animationView.topAnchor.constraint(equalTo: view.topAnchor),

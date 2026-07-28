@@ -455,7 +455,7 @@
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hxy-qY-Xjy">
                                         <rect key="frame" x="20" y="242.99999999999997" width="353" height="36.333333333333343"/>
-                                        <string key="text">By continuing you agree to the terms of service and privacy policy. We'll text you a verification code and event updates if you opt in. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for support.</string>
+                                        <string key="text">By continuing you agree to Speakeasy's Terms of Service and Privacy Policy. By providing your number, you opt-in to receive a verification code, digital tickets, and event updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for support.</string>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>

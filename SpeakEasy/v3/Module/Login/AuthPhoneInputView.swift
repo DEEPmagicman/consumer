@@ -74,8 +74,8 @@ final class AuthPhoneInputView: UIView {
             stack.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        let titleLabel = Utility.main.makeLabel("Continue with phone number")
-        let subtitleLabel = Utility.main.makeLabel("Enter your phone number\nWe’ll send you a verification code", font: Constant.Font.geistRegular(size: 14))
+        let titleLabel = Utility.main.makeLabel("Login or Sign Up")
+        let subtitleLabel = Utility.main.makeLabel("Enter your number to find or create your account", font: Constant.Font.geistRegular(size: 14))
 
         stack.addArrangedSubview(titleLabel)
         stack.addArrangedSubview(subtitleLabel)
@@ -212,7 +212,7 @@ final class AuthPhoneInputView: UIView {
 
     private func setupTermsLabel() {
         let fullText = """
-        By continuing you agree to the Terms of Service and Privacy Policy. We'll text you a verification code and event updates if you opt in. Msg & data rates may apply. Reply STOP to opt out or HELP for support.
+        By continuing you agree to Speakeasy's Terms of Service and Privacy Policy. By providing your number, you opt-in to receive a verification code, digital tickets, and event updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for support.
         """
 
         let attributedString = NSMutableAttributedString(
@@ -227,7 +227,8 @@ final class AuthPhoneInputView: UIView {
         privacyRange = (fullText as NSString).range(of: "Privacy Policy")
 
         let highlightAttributes: [NSAttributedString.Key: Any] = [
-            .font: Constant.Font.interRegular(size: 10),
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .font: Constant.Font.geistSemiBold(size: 10),
             .foregroundColor: AppColor.primaryWhiteColor.withAlphaComponent(0.65)
         ]
 

@@ -33,6 +33,7 @@ final class PremiumInquiryVC: UIViewController {
     // MARK: - State
 
     private var isLoading = true
+    private var successDismissWorkItem: DispatchWorkItem?
 
     // MARK: - Life Cycle
 
@@ -158,6 +159,8 @@ private extension PremiumInquiryVC {
         shimmerView.isHidden = false
 
         cardView.isHidden = true
+
+        successView.isHidden = true
     }
 
     func hideLoading() {
@@ -195,17 +198,17 @@ private extension PremiumInquiryVC {
         successView.translatesAutoresizingMaskIntoConstraints = false
         successView.isHidden = true
 
-        contentView.addSubview(successView)
+        view.addSubview(successView)
 
         NSLayoutConstraint.activate([
 
-            successView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            successView.topAnchor.constraint(equalTo: view.topAnchor),
 
-            successView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            successView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 
-            successView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            successView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            successView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            successView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
@@ -213,16 +216,49 @@ private extension PremiumInquiryVC {
 private extension PremiumInquiryVC {
 
     func showSuccess() {
+        successDismissWorkItem?.cancel()
+        let user = UserDefault.shared.user
+        successView.configure(
+            name: user?.firstName ?? "",
+            email: user?.email ?? "",
+            venueName: event?.displayVenueNameOrFallback("") ?? ""
+        )
+        scrollView.setContentOffset(.zero, animated: false)
 
         UIView.transition(
-            with: contentView,
+            with: view,
             duration: 0.25,
             options: .transitionCrossDissolve
         ) {
 
+            self.scrollView.isHidden = true
+
             self.cardView.isHidden = true
 
             self.successView.isHidden = false
+        }
+
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.hideSuccess()
+        }
+        successDismissWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5, execute: workItem)
+    }
+
+    func hideSuccess() {
+        successDismissWorkItem?.cancel()
+        successDismissWorkItem = nil
+
+        UIView.transition(
+            with: view,
+            duration: 0.25,
+            options: .transitionCrossDissolve
+        ) {
+            self.successView.isHidden = true
+
+            self.scrollView.isHidden = false
+
+            self.cardView.isHidden = false
         }
     }
 }

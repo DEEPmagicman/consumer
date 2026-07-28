@@ -243,6 +243,10 @@ final class TableService {
         seatingArea: String?,
         venueId: String,
         token: String,
+        optedEmailPolicy: Bool = true,
+        maleGuests: Int? = nil,
+        femaleGuests: Int? = nil,
+        answers: [Any] = [],
         completion: @escaping (
             _ success: Bool,
             _ message: String?,
@@ -250,21 +254,34 @@ final class TableService {
         ) -> Void
     ) {
 
-        let params: [String: Any] = [
+        var guests: [String: Any] = [
+            "total": totalGuests
+        ]
+        if let maleGuests {
+            guests["male"] = maleGuests
+        }
+        if let femaleGuests {
+            guests["female"] = femaleGuests
+        }
+
+        var params: [String: Any] = [
             "firstName": firstName,
             "lastName": lastName,
             "email": email,
-            "guests": [
-                "total": totalGuests
-            ],
+            "guests": guests,
             "note": note ?? "",
             "dob": dob,
             "date": date,
             "time": time,
             "optedPolicy": optedPolicy,
+            "optedEmailPolicy": optedEmailPolicy,
             "eventId": eventId,
             "seatingArea": seatingArea
         ]
+
+        if !answers.isEmpty {
+            params["answers"] = answers
+        }
 
         var headers = Header.header()
         headers["venue"] = venueId
@@ -455,7 +472,7 @@ final class TableService {
 
                 completion(
                     false,
-                    error.localizedDescription,
+                    dict["message"] as? String ?? error.localizedDescription,
                     nil
                 )
             }
@@ -464,16 +481,28 @@ final class TableService {
 
             completion(
                 false,
-                error?.localizedDescription,
+                self.apiErrorMessage(error),
                 nil
             )
         }
     }
 
+    private func apiErrorMessage(_ error: Error?) -> String? {
+        guard let error else { return nil }
+
+        let nsError = error as NSError
+        let domainMessage = nsError.domain.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !domainMessage.isEmpty {
+            return domainMessage
+        }
+
+        let localizedMessage = nsError.localizedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        return localizedMessage.isEmpty ? nil : localizedMessage
+    }
+
     // MARK: - Remove Promo Code
 
     func removePromoCode(
-        eventId: String,
         tableBookingId: String,
         venueId: String,
         completion: @escaping (
@@ -491,7 +520,7 @@ final class TableService {
         headers["venue"] = venueId
 
         AFWrapper.postRequest(
-            APIBuilder.seatingAreaRemoveCode(eventId: eventId),
+            APIBuilder.seatingAreaRemoveCode(),
             params: params,
             headers: headers
         ) { response in
@@ -528,7 +557,7 @@ final class TableService {
 
                 completion(
                     false,
-                    error.localizedDescription,
+                    dict["message"] as? String ?? error.localizedDescription,
                     nil
                 )
             }
@@ -537,7 +566,7 @@ final class TableService {
 
             completion(
                 false,
-                error?.localizedDescription,
+                self.apiErrorMessage(error),
                 nil
             )
         }

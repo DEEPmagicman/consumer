@@ -1348,17 +1348,12 @@ private extension PremiumTableCheckoutVC {
     }
 
     func handleTimeout() {
-        cancelCurrentBooking(returnToPrevious: false) { [weak self] in
-            guard let self else { return }
-            let alert = UIAlertController(
-                title: "Session Expired",
-                message: "Your reservation time has expired. Please try again.",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                self?.navigationController?.popViewController(animated: false)
-            })
-            self.present(alert, animated: true)
+        Alert.showToast("Your reservation time has expired. Please try again.")
+        if let navigationController,
+           navigationController.viewControllers.count > 1 {
+            navigationController.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
         }
     }
 
@@ -1947,6 +1942,8 @@ private extension PremiumTableCheckoutVC {
                     self.updateBottomPrice(data.total ?? 0)
                     Alert.showToast("Promo code applied")
                 } else {
+                    self.isPromoApplied = false
+                    self.appliedPromo   = ""
                     self.promoRow.setApplied(false)
                     Alert.showToast(message ?? "Invalid promo code")
                 }
@@ -1955,8 +1952,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func removePromo() {
-        guard let eventId   = event?.id,
-              let venueId   = event?.venue?.id,
+        guard let venueId   = event?.venue?.id,
               let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else {
             Alert.showToast("Booking details not found")
             return
@@ -1964,7 +1960,6 @@ private extension PremiumTableCheckoutVC {
 
         promoRow.setSubmitting(true)
         tableService.removePromoCode(
-            eventId: eventId,
             tableBookingId: bookingId,
             venueId: venueId
         ) { [weak self] success, message, data in

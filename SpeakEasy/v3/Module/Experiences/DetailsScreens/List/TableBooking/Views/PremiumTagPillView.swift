@@ -492,6 +492,27 @@ final class PremiumArrivalTimeView: UIView {
 // MARK: - PremiumPriceCard
 /// Dark card showing "$1000 minimum" on left, "$1,048.00 deposit incl. fees" on right
 
+enum TableBookingMoneyFormatter {
+
+    static func amount(_ value: Double, symbol: String, position: String?, wholeNumber: Bool = false) -> String {
+        let absoluteValue = abs(value)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
+        formatter.minimumFractionDigits = wholeNumber ? 0 : 2
+        formatter.maximumFractionDigits = wholeNumber ? 0 : 2
+
+        let formattedAmount = formatter.string(from: NSNumber(value: absoluteValue)) ?? "\(absoluteValue)"
+        let normalizedPosition = position?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if normalizedPosition == "right" || normalizedPosition == "suffix" || normalizedPosition == "after" {
+            return "\(formattedAmount)\(symbol)"
+        }
+
+        return "\(symbol)\(formattedAmount)"
+    }
+}
+
 final class PremiumPriceCard: UIView {
 
     private let card       = GradientBorderCardView()
@@ -512,8 +533,8 @@ final class PremiumPriceCard: UIView {
     }
 
     func configure(minimum: Double, deposit: Double, currency: String = "$", currencyPosition: String? = "") {
-        minLabel.text = CurrencyFormatter.amount(minimum, symbol: currency, position: currencyPosition, haseValueInt: true)
-        depLabel.text = CurrencyFormatter.amount(deposit, symbol: currency, position: currencyPosition)
+        minLabel.text = TableBookingMoneyFormatter.amount(minimum, symbol: currency, position: currencyPosition, wholeNumber: true)
+        depLabel.text = TableBookingMoneyFormatter.amount(deposit, symbol: currency, position: currencyPosition)
     }
 
     private func setup() {
@@ -1031,7 +1052,7 @@ final class PremiumAgreementView: UIView {
             to: bodyLabel,
             text: bodyText,
             isExpanded: isExpanded,
-            widthFallback: UIScreen.main.bounds.width - 68,
+            widthFallback: bodyWidthFallback(),
             allowsViewMore: !showsCheckbox,
             expandedAttributedText: bodyAttributedText,
             preservesLinks: preservesLinks || style != .plain
@@ -1066,7 +1087,7 @@ final class PremiumAgreementView: UIView {
 
         let width = bodyLabel.bounds.width > 0
             ? bodyLabel.bounds.width
-            : max(UIScreen.main.bounds.width - 68, 240)
+            : bodyWidthFallback()
 
         var height = contentInsets.top + contentInsets.bottom
         if !title.isEmpty {
@@ -1087,7 +1108,7 @@ final class PremiumAgreementView: UIView {
                 attributes: [.font: bodyFont],
                 context: nil
             ).height
-            height += (isExpanded || !needsToggle) ? ceil(bodyHeight) : collapsedHeight(for: bodyFont)
+            height += ((isExpanded || !needsToggle) ? ceil(bodyHeight) : collapsedHeight(for: bodyFont)) + 6
         }
 
         return max(contentInsets.top + contentInsets.bottom + 24, height)
@@ -1116,8 +1137,16 @@ final class PremiumAgreementView: UIView {
         AgreementTextFormatter.shouldShowToggle(
             for: bodyText,
             label: bodyLabel,
-            widthFallback: UIScreen.main.bounds.width - 68
+            widthFallback: bodyWidthFallback()
         )
+    }
+
+    private func bodyWidthFallback() -> CGFloat {
+        let availableWidth = bounds.width > 0
+            ? bounds.width
+            : UIScreen.main.bounds.width - 40
+        let checkboxWidth: CGFloat = showsCheckbox ? 32 : 0
+        return max(availableWidth - contentInsets.left - contentInsets.right - checkboxWidth, 220)
     }
 
     private func collapsedPreview() -> String {
@@ -1392,18 +1421,19 @@ final class PremiumSpendAgreementView: UIView {
         let t = UILabel()
         t.text      = title
         t.font      = bold ? Constant.Font.geistMedium(size: 14) : Constant.Font.geistRegular(size: 14)
-        t.textColor = .white
+        let isDiscount = amount < 0
+        t.textColor = isDiscount ? .systemGreen : .white
         t.translatesAutoresizingMaskIntoConstraints = false
 
         let v = UILabel()
         let formatted = amount == 0 && title.lowercased().contains("balance")
-            ? CurrencyFormatter.amount(0, symbol: currency, position: currencyPosition)
+            ? TableBookingMoneyFormatter.amount(0, symbol: currency, position: currencyPosition)
             : (amount < 0
-               ? "-\(CurrencyFormatter.amount(amount, symbol: currency, position: currencyPosition))"
-               : CurrencyFormatter.amount(amount, symbol: currency, position: currencyPosition))
+               ? "-\(TableBookingMoneyFormatter.amount(amount, symbol: currency, position: currencyPosition))"
+               : TableBookingMoneyFormatter.amount(amount, symbol: currency, position: currencyPosition))
         v.text          = formatted
         v.font          = bold ? Constant.Font.geistMedium(size: 14) : Constant.Font.geistRegular(size: 14)
-        v.textColor     = .white
+        v.textColor     = isDiscount ? .systemGreen : .white
         v.textAlignment = .right
         v.translatesAutoresizingMaskIntoConstraints = false
 

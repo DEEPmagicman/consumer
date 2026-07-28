@@ -66,7 +66,7 @@
         private func setupTermsLabel() {
 
             let fullText = """
-            By continuing you agree to the Terms of Service and Privacy Policy. We'll text you a verification code and event updates if you opt in. Msg & data rates may apply. Reply STOP to opt out or HELP for support.
+            By continuing you agree to Speakeasy's Terms of Service and Privacy Policy. By providing your number, you opt-in to receive a verification code, digital tickets, and event updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for support.
             """
 
             let attributedString = NSMutableAttributedString(
@@ -82,7 +82,7 @@
 
             let highlightAttributes: [NSAttributedString.Key: Any] = [
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
-                .font: Constant.Font.interRegular(size: 12),
+                .font: Constant.Font.interSemiBold(size: 12),
                 .foregroundColor: UIColor.white
             ]
 

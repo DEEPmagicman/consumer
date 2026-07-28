@@ -14,6 +14,7 @@ final class PremiumInquiryCardView: UIView {
     var event: Event?
     var seatingAreas: [SeatingArea] = []
     var onRequestSuccess: (() -> Void)?
+    private let tableService = TableService()
 
     // MARK: UI
 
@@ -47,6 +48,8 @@ final class PremiumInquiryCardView: UIView {
     private var selectedDate: Date?
     private var selectedTime: Date?
     private var selectedPartySize = 0
+    private var selectedMenCount = 0
+    private var selectedWomenCount = 0
     private var reservationQuestions: [Questions] = []
     private var questionAnswers: [String: Any] = [:]
     private var questionViews: [PremiumRequestQuestionView] = []
@@ -137,6 +140,7 @@ private extension PremiumInquiryCardView {
 
     func setupDateField() {
         dateField.title     = "Reservation date"
+        dateField.isRequired = true
         dateField.leftImage = UIImage(resource: .calendarIcon)
 
         // Date field is display-only — low alpha, no interaction
@@ -152,6 +156,7 @@ private extension PremiumInquiryCardView {
 
     func setupTimeField() {
         timeField.title     = "Arrival time"
+        timeField.isRequired = true
         timeField.leftImage = UIImage(resource: .clockIcon)
 
         timeField.textField.tintColor     = .clear
@@ -166,14 +171,20 @@ private extension PremiumInquiryCardView {
 
         timePicker.datePickerMode          = .time
         timePicker.preferredDatePickerStyle = .wheels
+        timePicker.minuteInterval = 15
         timePicker.addTarget(self, action: #selector(timeChanged), for: .valueChanged)
     }
 
     func setupPartySizeRow() {
+        partySizeRow.isRequired = true
         partySizeRow.onValueChanged = { [weak self] value in
             guard let self else { return }
             self.selectedPartySize = value
             self.updateButtonState()
+        }
+        partySizeRow.onGenderValueChanged = { [weak self] men, women in
+            self?.selectedMenCount = men
+            self?.selectedWomenCount = women
         }
         partySizeRow.viewCornerRadius = 14
     }
@@ -386,15 +397,15 @@ private extension PremiumInquiryCardView {
         let fallbackPolicy =
             "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
 
-        let widgetFormText = settings?.reservationWidgetSettings?.isReservationRequestFormTextEnabled == true
-            ? cleanHTMLText(settings?.reservationWidgetSettings?.reservationRequestFormText ?? "")
+        let widgetFormHTML = settings?.reservationWidgetSettings?.isReservationRequestFormTextEnabled == true
+            ? settings?.reservationWidgetSettings?.reservationRequestFormText ?? ""
             : ""
-        let customNote = cleanHTMLText(settings?.customNoteOnReservationManagementPage ?? "")
-        let tableImportantInfo = cleanHTMLText(settings?.tableBookingImportantInformation ?? "")
-        let information = !widgetFormText.isEmpty
-            ? widgetFormText
-            : (!customNote.isEmpty ? customNote : tableImportantInfo)
-        descriptionLabel.text = information.isEmpty ? fallbackInformation : information
+        let customNoteHTML = settings?.customNoteOnReservationManagementPage ?? ""
+        let tableImportantInfoHTML = settings?.tableBookingImportantInformation ?? ""
+        let informationHTML = !cleanHTMLText(widgetFormHTML).isEmpty
+            ? widgetFormHTML
+            : (!cleanHTMLText(customNoteHTML).isEmpty ? customNoteHTML : tableImportantInfoHTML)
+        setDescriptionText(informationHTML, fallback: fallbackInformation)
 
 //        titleLabel.text = "Reservation request"
 
@@ -425,41 +436,66 @@ private extension PremiumInquiryCardView {
             let eventDate  = dateString.dateFormatter(formate: .yyyyMMddHHmmss, isUTC: true)
         else { return }
 
-        selectedDate = eventDate
-        selectedTime = eventDate
+        let timezone = venueTimeZone()
+        datePicker.timeZone = timezone
+        timePicker.timeZone = timezone
+        timePicker.minimumDate = eventDate
+        if
+            let endDateString = event?.endDateTime,
+            let endDate = endDateString.dateFormatter(formate: .yyyyMMddHHmmss, isUTC: true),
+            endDate > eventDate
+        {
+            timePicker.maximumDate = endDate
+        } else {
+            timePicker.maximumDate = nil
+        }
 
         datePicker.date = eventDate
-        timePicker.date = eventDate
+        timePicker.setDate(eventDate, animated: false)
+
+        selectedDate = eventDate
+        selectedTime = timePicker.date
 
         dateField.text = formattedDisplayDate(eventDate)
-        timeField.text = formattedDisplayTime(eventDate)
+        timeField.text = formattedDisplayTime(timePicker.date)
 
         // Date is locked — already set alpha 0.45 + isUserInteractionEnabled false above
     }
 
     func configurePartySize() {
         let maxGuest = event?.eventSettings?.guestCount ?? event?.venue?.venueSettings?.reservationWidgetSettings?.guestCount ?? seatingAreas.compactMap { $0.maxGuest }.max() ?? 100
-        partySizeRow.configure(max: maxGuest)
+        selectedPartySize = 0
+        selectedMenCount = 0
+        selectedWomenCount = 0
+        partySizeRow.configure(max: maxGuest, showsGenderCounts: isGuestListByGenderEnabled)
     }
 
     func cleanHTMLText(_ text: String) -> String {
-        guard let data = text.data(using: .utf8),
-              let attributed = try? NSAttributedString(
-                data: data,
-                options: [
-                    .documentType: NSAttributedString.DocumentType.html,
-                    .characterEncoding: String.Encoding.utf8.rawValue
-                ],
-                documentAttributes: nil
-              ) else {
-            return text
-                .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-                .trimmingCharacters(in: .whitespacesAndNewlines)
+        text.htmlPlainText()
+    }
+
+    func setDescriptionText(_ htmlText: String, fallback: String) {
+        let cleanedText = cleanHTMLText(htmlText)
+        guard !cleanedText.isEmpty else {
+            descriptionLabel.attributedText = nil
+            descriptionLabel.text = fallback
+            return
         }
 
-        return attributed.string
-            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        descriptionLabel.attributedText = htmlText.htmlAttributedString(
+            fontSize: 11,
+            textColor: UIColor.white.withAlphaComponent(0.9),
+            regularFont: Constant.Font.geistRegular(size: 11),
+            boldFont: Constant.Font.geistMedium(size: 11),
+            lineSpacing: 3,
+            paragraphSpacing: 6
+        ) ?? NSAttributedString(
+            string: cleanedText,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 11),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.9)
+            ]
+        )
     }
 }
 
@@ -485,33 +521,20 @@ private extension PremiumInquiryCardView {
     func createRequest() {
         guard
             let reservationDate = selectedDate,
-            let arrivalTime     = selectedTime,
-            let date            = combineDateAndTime(date: reservationDate, time: arrivalTime)
+            let arrivalTime = selectedTime,
+            let reservationDateTime = combineDateAndTime(date: reservationDate, time: reservationDate),
+            let arrivalDateTime = combineDateAndTime(date: reservationDate, time: arrivalTime)
         else { return }
 
         let payload = RequestFormPayload(
-            date: formattedAPIDateTime(from: date),
-            time: formattedAPIDateTime(from: date),
+            date: formattedUTCDateTime(from: reservationDateTime),
+            time: formattedUTCDateTime(from: arrivalDateTime),
             partySize: "\(selectedPartySize)",
             comments: commentView.text,
             marketingOptIn: areVisiblePoliciesAccepted()
         )
 
         callReservationAPI(payload)
-    }
-
-    func combineDateAndTime(date: Date, time: Date) -> Date? {
-        let cal          = Calendar.current
-        let dateParts    = cal.dateComponents([.year, .month, .day], from: date)
-        let timeParts    = cal.dateComponents([.hour, .minute, .second], from: time)
-        var combined     = DateComponents()
-        combined.year    = dateParts.year
-        combined.month   = dateParts.month
-        combined.day     = dateParts.day
-        combined.hour    = timeParts.hour
-        combined.minute  = timeParts.minute
-        combined.second  = timeParts.second ?? 0
-        return cal.date(from: combined)
     }
 }
 
@@ -527,7 +550,7 @@ private extension PremiumInquiryCardView {
 
         sendButton.isUserInteractionEnabled = false
         sendButton.startLoading()
-        TablePresenter.createReservationRequest(
+        tableService.createReservationRequest(
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -541,6 +564,9 @@ private extension PremiumInquiryCardView {
             seatingArea: nil,
             venueId: event.venue?.id ?? "",
             token: UserDefault.shared.accessToken ?? "",
+            optedEmailPolicy: emailCheckboxView.isHidden || emailCheckboxView.isChecked,
+            maleGuests: isGuestListByGenderEnabled ? selectedMenCount : nil,
+            femaleGuests: isGuestListByGenderEnabled ? selectedWomenCount : nil,
             answers: reservationQuestionAnswersPayload()
         ) { [weak self] success, message, _ in
             self?.sendButton.stopLoading()
@@ -560,7 +586,9 @@ private extension PremiumInquiryCardView {
 
     func resetForm() {
         selectedPartySize = 0
-        partySizeRow.configure(max: seatingAreas.compactMap { $0.maxGuest }.max() ?? 100)
+        selectedMenCount = 0
+        selectedWomenCount = 0
+        configurePartySize()
         commentView.text = ""
         checkboxView.isChecked = true
         emailCheckboxView.isChecked = true
@@ -1129,24 +1157,56 @@ private extension PremiumInquiryCardView {
 // MARK: - Date Helpers
 
 private extension PremiumInquiryCardView {
+    var isGuestListByGenderEnabled: Bool {
+        event?.eventSettings?.isGuestListByGender == true
+    }
+
+    func venueTimeZone() -> TimeZone {
+        TimeZone(identifier: venueTimeZoneIdentifier()) ?? .current
+    }
+
+    func venueTimeZoneIdentifier() -> String {
+        Event.normalizedTimezone(
+            event?.venue?.useTimezone,
+            event?.venue?.timezone
+        ) ?? TimeZone.current.identifier
+    }
+
     func formattedDisplayDate(_ date: Date) -> String {
         let formate         = DateFormatter()
         formate.dateFormat   = "MM/dd/yyyy"
-        formate.timeZone     = TimeZone(identifier: event?.venue?.useTimezone ?? TimeZone.current.identifier)
+        formate.timeZone     = venueTimeZone()
         return formate.string(from: date)
     }
 
     func formattedDisplayTime(_ date: Date) -> String {
         let formate          = DateFormatter()
         formate.dateFormat   = "hh:mm a"
-        formate.timeZone     = TimeZone(identifier: event?.venue?.useTimezone ?? TimeZone.current.identifier)
+        formate.timeZone     = venueTimeZone()
         return formate.string(from: date)
     }
 
-    func formattedAPIDateTime(from date: Date) -> String {
-        let formate          = DateFormatter()
-        formate.dateFormat   = "yyyy-MM-dd HH:mm:ss"
-        formate.locale       = Locale(identifier: "en_US_POSIX")
-        return formate.string(from: date)
+    func combineDateAndTime(date: Date, time: Date) -> Date? {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = venueTimeZone()
+        let dateParts = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeParts = calendar.dateComponents([.hour, .minute, .second], from: time)
+        var combined = DateComponents()
+        combined.timeZone = venueTimeZone()
+        combined.year = dateParts.year
+        combined.month = dateParts.month
+        combined.day = dateParts.day
+        combined.hour = timeParts.hour
+        combined.minute = timeParts.minute
+        combined.second = timeParts.second ?? 0
+        return calendar.date(from: combined)
+    }
+
+    func formattedUTCDateTime(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter.string(from: date)
     }
 }

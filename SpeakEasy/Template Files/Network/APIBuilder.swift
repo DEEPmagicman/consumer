@@ -247,6 +247,10 @@ struct APIBuilder {
     static func seatingAreaRemoveCode(eventId: String) -> String {
         return SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + removeCode
     }
+
+    static func seatingAreaRemoveCode() -> String {
+        return SharedURL.tableBaseURL + route + event + seatingAreas + removeCode
+    }
     
     static func reservationRequestURL() -> String {
         return SharedURL.tableBaseURL + route + "/reservation-request"
@@ -630,8 +634,8 @@ extension APIBuilder {
             SharedURL.webBaseURL
         }
     }
-    static let privacyConsumerURL = "\(webBaseURL)/privacy-consumer"
-    static let termsConsumerURL = "\(webBaseURL)/terms-consumer"
+    static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
+    static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
     static let supportURL = "\(webBaseURL)/support"
     static let eventWebURL = "\(webBaseURL)/%@/%@?eid=%@"
     static let eventLink = "\(webBaseURL)/event/%@"

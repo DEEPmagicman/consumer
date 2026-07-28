@@ -28,7 +28,13 @@ class PremiumTextField: UIView {
 
     var title: String = "" {
         didSet {
-            titleLabel.text = title
+            updateTitle()
+        }
+    }
+
+    var isRequired: Bool = false {
+        didSet {
+            updateTitle()
         }
     }
     
@@ -108,5 +114,27 @@ class PremiumTextField: UIView {
             textField.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
             textField.centerYAnchor.constraint(equalTo: cardView.centerYAnchor)
         ])
+    }
+
+    private func updateTitle() {
+        guard isRequired else {
+            titleLabel.text = title
+            return
+        }
+
+        let text = "\(title)*"
+        let attributed = NSMutableAttributedString(
+            string: text,
+            attributes: [
+                .font: Constant.Font.geistRegular(size: 14),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.95)
+            ]
+        )
+        attributed.addAttribute(
+            .foregroundColor,
+            value: UIColor.white.withAlphaComponent(0.95),
+            range: NSRange(location: text.count - 1, length: 1)
+        )
+        titleLabel.attributedText = attributed
     }
 }

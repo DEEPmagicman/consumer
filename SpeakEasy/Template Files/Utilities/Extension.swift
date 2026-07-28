@@ -606,4 +606,85 @@ extension String {
 
         return ceil(rect.height)
     }
+
+    func htmlPlainText() -> String {
+        guard let data = data(using: .utf8),
+              let attributed = try? NSAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ],
+                documentAttributes: nil
+              ) else {
+            return replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        return attributed.string
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func htmlAttributedString(
+        fontSize: CGFloat,
+        textColor: UIColor,
+        regularFont: UIFont,
+        boldFont: UIFont,
+        lineSpacing: CGFloat = 0,
+        paragraphSpacing: CGFloat = 0
+    ) -> NSAttributedString? {
+        let html = """
+        <html>
+        <head>
+        <style>
+        body { font-size: \(fontSize)px; }
+        p { margin: 0 0 \(paragraphSpacing)px 0; }
+        ol, ul { margin-top: 0; margin-bottom: \(paragraphSpacing)px; }
+        li { margin-bottom: \(paragraphSpacing)px; }
+        </style>
+        </head>
+        <body>\(self)</body>
+        </html>
+        """
+
+        guard let data = html.data(using: .utf8),
+              let attributed = try? NSMutableAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ],
+                documentAttributes: nil
+              )
+        else { return nil }
+
+        let fullRange = NSRange(location: 0, length: attributed.length)
+        guard fullRange.length > 0 else { return nil }
+
+        attributed.addAttribute(.foregroundColor, value: textColor, range: fullRange)
+
+        var paragraphUpdates: [(style: NSParagraphStyle, range: NSRange)] = []
+        attributed.enumerateAttribute(.paragraphStyle, in: fullRange) { value, range, _ in
+            let style = (value as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle ?? NSMutableParagraphStyle()
+            style.lineSpacing = lineSpacing
+            style.paragraphSpacing = paragraphSpacing
+            paragraphUpdates.append((style, range))
+        }
+        paragraphUpdates.forEach { update in
+            attributed.addAttribute(.paragraphStyle, value: update.style, range: update.range)
+        }
+
+        var fontUpdates: [(font: UIFont, range: NSRange)] = []
+        attributed.enumerateAttribute(.font, in: fullRange) { value, range, _ in
+            let font = value as? UIFont
+            let isBold = font?.fontDescriptor.symbolicTraits.contains(.traitBold) == true
+            fontUpdates.append((isBold ? boldFont : regularFont, range))
+        }
+        fontUpdates.forEach { update in
+            attributed.addAttribute(.font, value: update.font, range: update.range)
+        }
+
+        return attributed
+    }
 }

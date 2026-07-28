@@ -434,6 +434,7 @@ extension SelectLocationVC {
             self.primaryLocationLbl.text =
             self.selectedCity
 
+            self.onSelectPrimaryCity?(self.selectedCity)
             self.dismiss(animated: true)
         }
     }

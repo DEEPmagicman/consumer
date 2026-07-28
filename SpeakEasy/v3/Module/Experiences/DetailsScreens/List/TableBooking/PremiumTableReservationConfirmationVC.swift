@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewDelegate {
+final class PremiumTableReservationConfirmationVC: UIViewController {
 
     // MARK: - Input
 
@@ -76,7 +76,7 @@ final class PremiumTableReservationConfirmationVC: UIViewController, UITextViewD
     private let eventImageView = UIImageView()
     private let infoCard = ReservationGlassCardView(cornerRadius: 19)
     private let confirmationMessageCard = ReservationGlassCardView(cornerRadius: 16)
-    private let confirmationMessageTextView = UITextView()
+    private let confirmationMessageView = PremiumAgreementView()
     private let orderCard = ReservationGlassCardView(cornerRadius: 22)
     private let eventsDetailsRow = ReservationActionRow(title: "Events details")
     private let supportRow = ReservationActionRow(title: "Support")
@@ -230,18 +230,16 @@ private extension PremiumTableReservationConfirmationVC {
         confirmationMessageCard.isHidden = true
         contentView.addSubview(confirmationMessageCard)
 
-        confirmationMessageTextView.backgroundColor = .clear
-        confirmationMessageTextView.isEditable = false
-        confirmationMessageTextView.isScrollEnabled = false
-        confirmationMessageTextView.textContainerInset = .zero
-        confirmationMessageTextView.textContainer.lineFragmentPadding = 0
-        confirmationMessageTextView.delegate = self
-        confirmationMessageTextView.linkTextAttributes = [
-            .foregroundColor: UIColor.white,
-            .underlineStyle: NSUnderlineStyle.single.rawValue
-        ]
-        confirmationMessageTextView.translatesAutoresizingMaskIntoConstraints = false
-        confirmationMessageCard.addSubview(confirmationMessageTextView)
+        confirmationMessageView.style = .plain
+        confirmationMessageView.preservesLinks = true
+        confirmationMessageView.titleText = nil
+        confirmationMessageView.showsCheckbox = false
+        confirmationMessageView.isChecked = true
+        confirmationMessageView.translatesAutoresizingMaskIntoConstraints = false
+        confirmationMessageView.onHeightChanged = { [weak self] height, animated in
+            self?.updateConfirmationMessageHeight(height, animated: animated)
+        }
+        confirmationMessageCard.addSubview(confirmationMessageView)
     }
 
     func configureCopyButton() {
@@ -394,10 +392,10 @@ private extension PremiumTableReservationConfirmationVC {
             confirmationMessageCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
             confirmationMessageCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
 
-            confirmationMessageTextView.topAnchor.constraint(equalTo: confirmationMessageCard.topAnchor, constant: 18),
-            confirmationMessageTextView.leadingAnchor.constraint(equalTo: confirmationMessageCard.leadingAnchor, constant: 22),
-            confirmationMessageTextView.trailingAnchor.constraint(equalTo: confirmationMessageCard.trailingAnchor, constant: -22),
-            confirmationMessageTextView.bottomAnchor.constraint(equalTo: confirmationMessageCard.bottomAnchor, constant: -18),
+            confirmationMessageView.topAnchor.constraint(equalTo: confirmationMessageCard.topAnchor, constant: 18),
+            confirmationMessageView.leadingAnchor.constraint(equalTo: confirmationMessageCard.leadingAnchor, constant: 22),
+            confirmationMessageView.trailingAnchor.constraint(equalTo: confirmationMessageCard.trailingAnchor, constant: -22),
+            confirmationMessageView.bottomAnchor.constraint(equalTo: confirmationMessageCard.bottomAnchor, constant: -18),
 
             orderCard.leadingAnchor.constraint(equalTo: infoCard.leadingAnchor),
             orderCard.trailingAnchor.constraint(equalTo: infoCard.trailingAnchor),
@@ -564,23 +562,32 @@ private extension PremiumTableReservationConfirmationVC {
         let hasMessage = !text.isEmpty
 
         confirmationMessageCard.isHidden = !hasMessage
-        confirmationMessageHeightConstraint?.isActive = !hasMessage
+        confirmationMessageHeightConstraint?.isActive = true
         orderTopToInfoConstraint?.isActive = !hasMessage
         orderTopToMessageConstraint?.isActive = hasMessage
 
         guard hasMessage else {
-            confirmationMessageTextView.attributedText = nil
-            confirmationMessageTextView.text = ""
+            confirmationMessageHeightConstraint?.constant = 0
+            confirmationMessageView.bodyAttributedText = nil
+            confirmationMessageView.bodyText = ""
             return
         }
 
-        confirmationMessageTextView.attributedText = formattedMessageHTML(html) ?? NSAttributedString(
-            string: text,
-            attributes: [
-                .font: Constant.Font.geistRegular(size: 14),
-                .foregroundColor: UIColor.white.withAlphaComponent(0.82)
-            ]
-        )
+        confirmationMessageView.bodyText = text
+        confirmationMessageView.bodyAttributedText = formattedMessageHTML(html)
+        updateConfirmationMessageHeight(confirmationMessageView.preferredHeight, animated: false)
+    }
+
+    func updateConfirmationMessageHeight(_ height: CGFloat, animated: Bool) {
+        confirmationMessageHeightConstraint?.constant = height + 36
+        let updates = {
+            self.view.layoutIfNeeded()
+        }
+        guard animated else {
+            updates()
+            return
+        }
+        UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseInOut], animations: updates)
     }
 
     func confirmationMessageHTML() -> String {
@@ -944,19 +951,6 @@ private extension PremiumTableReservationConfirmationVC {
     }
 }
 
-extension PremiumTableReservationConfirmationVC {
-
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        Navigate.externalURL(URL.absoluteString)
-        return false
-    }
-}
-
 // MARK: - Formatting
 
 private extension PremiumTableReservationConfirmationVC {
@@ -993,10 +987,11 @@ private extension PremiumTableReservationConfirmationVC {
         mutable.trimTrailingWhitespaceAndNewlines()
         guard mutable.length > 0 else { return nil }
 
-        mutable.addAttributes([
-            .font: Constant.Font.geistRegular(size: 14),
-            .foregroundColor: UIColor.white.withAlphaComponent(0.82)
-        ], range: NSRange(location: 0, length: mutable.length))
+        mutable.addAttribute(
+            .foregroundColor,
+            value: UIColor.white.withAlphaComponent(0.82),
+            range: NSRange(location: 0, length: mutable.length)
+        )
 
         mutable.enumerateAttribute(
             .link,
@@ -1005,7 +1000,6 @@ private extension PremiumTableReservationConfirmationVC {
         ) { value, range, _ in
             if value != nil {
                 mutable.addAttributes([
-                    .font: Constant.Font.geistMedium(size: 14),
                     .foregroundColor: UIColor.white,
                     .underlineStyle: NSUnderlineStyle.single.rawValue
                 ], range: range)
@@ -1018,7 +1012,7 @@ private extension PremiumTableReservationConfirmationVC {
     func formatMoney(_ value: Double) -> String {
         let absoluteValue = abs(value)
         let prefix = value < 0 ? "-" : ""
-        return "\(prefix)\(CurrencyFormatter.amount(absoluteValue, symbol: currency, position: currencyPosition))"
+        return "\(prefix)\(TableBookingMoneyFormatter.amount(absoluteValue, symbol: currency, position: currencyPosition))"
     }
 
     func formattedTime(_ value: String?) -> String {

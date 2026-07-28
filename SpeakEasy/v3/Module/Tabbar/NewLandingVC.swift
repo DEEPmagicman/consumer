@@ -378,6 +378,10 @@ private enum LocationBootstrapPurpose {
     case filter
 }
 
+private enum LocationPrompt {
+    static let delay: TimeInterval = 1.2
+}
+
 private extension NewLandingVC {
     func runLocationBootstrapIfNeeded() {
         guard !didRunLocationBootstrap else { return }
@@ -397,17 +401,7 @@ private extension NewLandingVC {
         let status = locationManager.authorizationStatus
 
         if !UserDefault.shared.hasPrimaryLocation {
-            switch status {
-            case .notDetermined:
-                presentLocationPermissionPrompt()
-            case .authorizedAlways, .authorizedWhenInUse:
-                requestCurrentLocation(for: .primary)
-            case .denied, .restricted:
-                presentManualPrimaryCitySelectionIfNeeded()
-            @unknown default:
-                presentManualPrimaryCitySelectionIfNeeded()
-            }
-
+            applyFirstAvailablePrimaryCity()
             return
         }
 
@@ -421,11 +415,77 @@ private extension NewLandingVC {
         }
     }
 
+    func applyFirstAvailablePrimaryCity() {
+        let cachedCityList = UserDefault.shared.cachedCityList
+
+        if setFirstAvailablePrimaryCity(from: cachedCityList) {
+            continueLocationBootstrapAfterPrimaryFallback()
+            return
+        }
+
+        venueService.fetchCityList { [weak self] cityList, isSuccess, _ in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                if isSuccess {
+                    UserDefault.shared.cachedCityList = cityList
+                    _ = self.setFirstAvailablePrimaryCity(from: cityList)
+                }
+
+                self.continueLocationBootstrapAfterPrimaryFallback()
+            }
+        }
+    }
+
+    func setFirstAvailablePrimaryCity(from cityList: [MVPCity]) -> Bool {
+        guard let cityName = cityList.first?.value
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !cityName.isEmpty else {
+            return false
+        }
+
+        UserDefault.shared.setPrimaryCity(cityName)
+        UserDefault.shared.filterCity = nil
+        refreshCityDrivenScreens()
+        return true
+    }
+
+    func continueLocationBootstrapAfterPrimaryFallback() {
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            scheduleLocationPermissionPrompt()
+        case .authorizedAlways, .authorizedWhenInUse:
+            requestCurrentLocation(for: .primary)
+        default:
+            break
+        }
+    }
+
+    func scheduleLocationPermissionPrompt() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + LocationPrompt.delay) { [weak self] in
+            self?.presentDeferredLocationPermissionPrompt()
+        }
+    }
+
+    func presentDeferredLocationPermissionPrompt() {
+        guard locationManager.authorizationStatus == .notDetermined else { return }
+
+        guard presentedViewController == nil else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                self?.presentDeferredLocationPermissionPrompt()
+            }
+            return
+        }
+
+        presentLocationPermissionPrompt()
+    }
+
     func presentLocationPermissionPrompt() {
         guard presentedViewController == nil else { return }
 
         let prompt = LocationPermissionPromptVC()
-        prompt.modalPresentationStyle = .fullScreen
+        prompt.modalPresentationStyle = .overFullScreen
+        prompt.modalTransitionStyle = .crossDissolve
         prompt.onEnable = { [weak self] in
             guard let self else { return }
             self.pendingLocationPurpose = .primary
@@ -439,9 +499,15 @@ private extension NewLandingVC {
         present(prompt, animated: true)
     }
 
+    func dismissLocationPrompt() {
+        locationPromptVC?.dismiss(animated: true)
+        locationPromptVC = nil
+    }
+
     func dismissLocationPromptThenShowManualCity() {
         let completion: () -> Void = { [weak self] in
-            self?.presentManualPrimaryCitySelectionIfNeeded()
+            self?.locationPromptVC = nil
+            self?.presentManualPrimaryCitySelectionIfNeeded(allowsExistingPrimary: true)
         }
 
         if let locationPromptVC {
@@ -451,11 +517,15 @@ private extension NewLandingVC {
         }
     }
 
-    func presentManualPrimaryCitySelectionIfNeeded() {
-        guard !UserDefault.shared.hasPrimaryLocation else { return }
+    func presentManualPrimaryCitySelectionIfNeeded(
+        allowsExistingPrimary: Bool = false
+    ) {
+        guard allowsExistingPrimary || !UserDefault.shared.hasPrimaryLocation else { return }
         guard presentedViewController == nil else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                self?.presentManualPrimaryCitySelectionIfNeeded()
+                self?.presentManualPrimaryCitySelectionIfNeeded(
+                    allowsExistingPrimary: allowsExistingPrimary
+                )
             }
             return
         }
@@ -465,7 +535,7 @@ private extension NewLandingVC {
             bundle: nil
         )
         vc.mode = .updatePrimaryLocation
-        vc.isInitialPrimarySelection = true
+        vc.isInitialPrimarySelection = !UserDefault.shared.hasPrimaryLocation
         vc.persistsFilterSelection = false
         vc.onSelectPrimaryCity = { [weak self] _ in
             self?.refreshCityDrivenScreens()
@@ -490,7 +560,7 @@ private extension NewLandingVC {
 
         case .denied, .restricted:
             if purpose == .primary {
-                presentManualPrimaryCitySelectionIfNeeded()
+                presentManualPrimaryCitySelectionIfNeeded(allowsExistingPrimary: true)
             }
 
         case .notDetermined:
@@ -521,7 +591,7 @@ private extension NewLandingVC {
             guard isSuccess,
                   !cityList.isEmpty else {
                 if purpose == .primary {
-                    self.presentManualPrimaryCitySelectionIfNeeded()
+                    self.presentManualPrimaryCitySelectionIfNeeded(allowsExistingPrimary: true)
                 }
                 return
             }
@@ -559,7 +629,7 @@ private extension NewLandingVC {
             .trimmingCharacters(in: .whitespacesAndNewlines),
               !cityName.isEmpty else {
             if purpose == .primary {
-                presentManualPrimaryCitySelectionIfNeeded()
+                presentManualPrimaryCitySelectionIfNeeded(allowsExistingPrimary: true)
             }
             return
         }
@@ -602,6 +672,7 @@ extension NewLandingVC: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             locationPromptVC?.dismiss(animated: true) { [weak self] in
+                self?.locationPromptVC = nil
                 self?.requestCurrentLocation(for: .primary)
             }
         case .denied, .restricted:
@@ -633,8 +704,26 @@ extension NewLandingVC: CLLocationManagerDelegate {
         pendingLocationPurpose = nil
 
         if purpose == .primary {
-            presentManualPrimaryCitySelectionIfNeeded()
+            presentManualPrimaryCitySelectionIfNeeded(allowsExistingPrimary: true)
         }
+    }
+}
+
+private final class LocationPromptGradientView: UIView {
+    override class var layerClass: AnyClass {
+        CAGradientLayer.self
+    }
+
+    func applyLocationPromptGradient() {
+        guard let gradientLayer = layer as? CAGradientLayer else { return }
+
+        gradientLayer.colors = [
+            AppColor.background.cgColor,
+            AppColor.primaryColor.cgColor
+        ]
+        gradientLayer.locations = [0, 1]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
     }
 }
 
@@ -642,7 +731,9 @@ private final class LocationPermissionPromptVC: UIViewController {
     var onEnable: (() -> Void)?
     var onDismiss: (() -> Void)?
 
-    private let gradientView = UIView()
+    private let dimView = UIView()
+    private let sheetView = UIView()
+    private let gradientView = LocationPromptGradientView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -653,21 +744,30 @@ private final class LocationPermissionPromptVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        gradientView.applyScreenBgGradient(direction: .topToBottom)
+        gradientView.applyLocationPromptGradient()
     }
 
     private func setupUI() {
-        view.backgroundColor = AppColor.primaryBlackColor
+        view.backgroundColor = .clear
+
+        dimView.translatesAutoresizingMaskIntoConstraints = false
+        dimView.backgroundColor = AppColor.primaryBlackColor.withAlphaComponent(0.66)
+        view.addSubview(dimView)
+        dimView.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(onClickDismiss))
+        )
+
+        sheetView.translatesAutoresizingMaskIntoConstraints = false
+        sheetView.backgroundColor = AppColor.background
+        sheetView.layer.cornerRadius = 36
+        sheetView.layer.cornerCurve = .continuous
+        sheetView.layer.borderWidth = 1
+        sheetView.layer.borderColor = UIColor.white.withAlphaComponent(0.07).cgColor
+        sheetView.clipsToBounds = true
+        view.addSubview(sheetView)
 
         gradientView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(gradientView)
-
-        let closeButton = UIButton(type: .system)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.tintColor = .white
-        closeButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
-        view.addSubview(closeButton)
+        sheetView.addSubview(gradientView)
 
         let iconView = UIImageView(image: UIImage(named: "locationPermisionIcon"))
         iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -675,30 +775,23 @@ private final class LocationPermissionPromptVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Find better\nexperiences near you"
+        titleLabel.text = "Find the best\nevents around you"
         titleLabel.textAlignment = .center
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 0
-        titleLabel.font = Constant.Font.geistMedium(size: 32)
+        titleLabel.font = Constant.Font.geistRegular(size: 24)
 
         let bodyLabel = UILabel()
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        bodyLabel.text = "Stay updated on the events, partners, reservations, and live experiences happening near you."
+        bodyLabel.text = "Stay updated on the events, venues, reservations,\nand live experiences happening near you."
         bodyLabel.textAlignment = .center
-        bodyLabel.textColor = UIColor.white.withAlphaComponent(0.58)
+        bodyLabel.textColor = UIColor(hex: "#A1A1A1")
         bodyLabel.numberOfLines = 0
-        bodyLabel.font = Constant.Font.geistRegular(size: 13)
+        bodyLabel.font = Constant.Font.geistRegular(size: 12)
 
-        let centerStack = UIStackView(arrangedSubviews: [
-            iconView,
-            titleLabel,
-            bodyLabel
-        ])
-        centerStack.translatesAutoresizingMaskIntoConstraints = false
-        centerStack.axis = .vertical
-        centerStack.alignment = .center
-        centerStack.spacing = 22
-        view.addSubview(centerStack)
+        sheetView.addSubview(iconView)
+        sheetView.addSubview(titleLabel)
+        sheetView.addSubview(bodyLabel)
 
         let enableButton = UIButton(type: .system)
         enableButton.translatesAutoresizingMaskIntoConstraints = false
@@ -706,57 +799,45 @@ private final class LocationPermissionPromptVC: UIViewController {
         enableButton.setTitleColor(.black, for: .normal)
         enableButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
         enableButton.backgroundColor = .white
-        enableButton.layer.cornerRadius = 28
+        enableButton.layer.cornerRadius = 26
         enableButton.layer.cornerCurve = .continuous
         enableButton.addTarget(self, action: #selector(onClickEnable), for: .touchUpInside)
-
-        let notNowButton = UIButton(type: .system)
-        notNowButton.translatesAutoresizingMaskIntoConstraints = false
-        notNowButton.setTitle("Not now", for: .normal)
-        notNowButton.setTitleColor(.white, for: .normal)
-        notNowButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
-        notNowButton.backgroundColor = UIColor.white.withAlphaComponent(0.10)
-        notNowButton.layer.cornerRadius = 28
-        notNowButton.layer.cornerCurve = .continuous
-        notNowButton.addTarget(self, action: #selector(onClickDismiss), for: .touchUpInside)
-
-        let buttonStack = UIStackView(arrangedSubviews: [
-            enableButton,
-            notNowButton
-        ])
-        buttonStack.translatesAutoresizingMaskIntoConstraints = false
-        buttonStack.axis = .vertical
-        buttonStack.spacing = 14
-        view.addSubview(buttonStack)
+        sheetView.addSubview(enableButton)
 
         NSLayoutConstraint.activate([
-            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            dimView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dimView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 18),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
-            closeButton.widthAnchor.constraint(equalToConstant: 44),
-            closeButton.heightAnchor.constraint(equalToConstant: 44),
+            sheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
+            sheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            sheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            sheetView.heightAnchor.constraint(equalToConstant: 342),
 
-            iconView.widthAnchor.constraint(equalToConstant: 65),
-            iconView.heightAnchor.constraint(equalToConstant: 65),
+            gradientView.topAnchor.constraint(equalTo: sheetView.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: sheetView.bottomAnchor),
 
-            centerStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            centerStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -46),
-            centerStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 34),
-            centerStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
+            iconView.topAnchor.constraint(equalTo: sheetView.topAnchor, constant: 28),
+            iconView.centerXAnchor.constraint(equalTo: sheetView.centerXAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 75),
+            iconView.heightAnchor.constraint(equalToConstant: 75),
 
-            bodyLabel.widthAnchor.constraint(lessThanOrEqualTo: centerStack.widthAnchor),
-            titleLabel.widthAnchor.constraint(lessThanOrEqualTo: centerStack.widthAnchor),
+            titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: 19),
+            titleLabel.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 32),
+            titleLabel.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -32),
 
-            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 18),
+            bodyLabel.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 34),
+            bodyLabel.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -34),
 
-            enableButton.heightAnchor.constraint(equalToConstant: 56),
-            notNowButton.heightAnchor.constraint(equalToConstant: 56)
+            enableButton.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 25),
+            enableButton.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -25),
+            enableButton.bottomAnchor.constraint(equalTo: sheetView.bottomAnchor, constant: -32),
+            enableButton.heightAnchor.constraint(equalToConstant: 52),
+            enableButton.topAnchor.constraint(greaterThanOrEqualTo: bodyLabel.bottomAnchor, constant: 28)
         ])
     }
 
