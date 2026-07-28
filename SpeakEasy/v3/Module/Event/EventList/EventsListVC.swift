@@ -671,9 +671,9 @@ extension EventsListVC: PinterestLayoutDelegate {
 
         let dateText = event.eventCardDateText()
 
-        let titleFont = Constant.Font.geistMedium(size: 15)
-        let venueFont = Constant.Font.geistMedium(size: 13)
-        let dateFont = Constant.Font.geistMedium(size: 14)
+        let titleFont = Constant.Font.geistMedium(size: 14)
+        let venueFont = Constant.Font.geistMedium(size: 12)
+        let dateFont = Constant.Font.geistMedium(size: 12)
 
         let titleHeight = ceil(titleFont.lineHeight * 2)
         let venueHeight = ceil(venueFont.lineHeight)
@@ -684,7 +684,7 @@ extension EventsListVC: PinterestLayoutDelegate {
             + titleHeight
             + 3
             + venueHeight
-            + 10
+            + 4
             + dateHeight
         
         return height

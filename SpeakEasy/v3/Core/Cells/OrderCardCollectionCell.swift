@@ -93,20 +93,20 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         imageView.addSubview(countBadge)
 
         titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 15)
+        titleLabel.font = Constant.Font.geistMedium(size: 14)
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .left
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleLabel)
 
         subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.9)
-        subtitleLabel.font = Constant.Font.geistMedium(size: 13)
+        subtitleLabel.font = Constant.Font.geistMedium(size: 12)
         subtitleLabel.numberOfLines = 1
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(subtitleLabel)
 
         dateLabel.textColor = UIColor(hex: "#A1A1A1")
-        dateLabel.font = Constant.Font.geistMedium(size: 14)
+        dateLabel.font = Constant.Font.geistMedium(size: 12)
         dateLabel.numberOfLines = 1
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
@@ -144,15 +144,15 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             statusBadge.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -6),
             statusBadge.heightAnchor.constraint(equalToConstant: 18),
             
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 3),
+            subtitleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
             subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             subtitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
-            dateLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 3),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             dateLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor)
