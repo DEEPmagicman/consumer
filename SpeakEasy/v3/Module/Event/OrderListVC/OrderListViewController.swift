@@ -131,6 +131,8 @@ final class OrderListViewController: UIViewController {
         ticketTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         applyPromoBtn.indicator = MaterialLoadingIndicator(color: .black)
+        addCodeTextFeild.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
+        updateApplyPromoButtonState()
         applyWhiteLabelTheme()
     }
 
@@ -877,6 +879,7 @@ final class OrderListViewController: UIViewController {
         addCodeTextFeild.isUserInteractionEnabled = false
         addCodeTextFeild.alpha = 1
         pluseBtn.setImage(UIImage(named: "plusIcon"), for: .normal)
+        updateApplyPromoButtonState()
     }
 
     private func updateCheckoutButtonTitle() {
@@ -935,6 +938,17 @@ final class OrderListViewController: UIViewController {
         AppHaptic.primaryAction()
         applyPromoBtn.showLoader(userInteraction: false)
         fetchPaymentIntentAndSetup(promoCode: promo)
+    }
+
+    @objc private func promoCodeValueChanged() {
+        updateApplyPromoButtonState()
+    }
+
+    private func updateApplyPromoButtonState() {
+        let hasPromoCode = !(addCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let isEnabled = hasPromoCode && !isPromoCodeApplied
+        applyPromoBtn.isUserInteractionEnabled = isEnabled
+        applyPromoBtn.alpha = isEnabled ? 1 : 0.5
     }
 
     @IBAction func onClickPluseBtn(_ sender: Any) {
@@ -1131,6 +1145,14 @@ final class OrderListViewController: UIViewController {
 
                 guard isSuccess else {
                     AppHaptic.error()
+                    if !promoCode.isEmpty {
+                        self.isPromoCodeApplied = false
+                        self.appliedPromoCode = ""
+                        self.addCodeTextFeild.text = ""
+                        self.addCodeTextFeild.isUserInteractionEnabled = true
+                        self.addCodeTextFeild.alpha = 1
+                        self.updatePromoCodeUI()
+                    }
                     Alert.showToast(errMsg ?? "Something went wrong")
                     return
                 }
@@ -1283,6 +1305,7 @@ final class OrderListViewController: UIViewController {
             addCodeTextFeild.isUserInteractionEnabled = true
             addCodeTextFeild.alpha = 1
         }
+        updateApplyPromoButtonState()
     }
 
     // MARK: - Event Questions

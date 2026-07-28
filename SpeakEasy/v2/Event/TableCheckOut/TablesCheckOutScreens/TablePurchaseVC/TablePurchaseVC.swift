@@ -87,7 +87,9 @@ final class TablePurchaseVC: UIViewController {
 
         setupUI()
         setupHeaderData()
+        promoCodeTextFeild.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
         updatePromoButtonIcon()
+        updatePromoButtonState()
         showCheckoutShimmer()
         setupSocket()
 
@@ -619,6 +621,18 @@ final class TablePurchaseVC: UIViewController {
             submitPromoCodeBtn.setImage(UIImage(named: imageName), for: .normal)
             submitPromoCodeBtn.tintColor = nil
         }
+        updatePromoButtonState()
+    }
+
+    @objc private func promoCodeValueChanged() {
+        updatePromoButtonState()
+    }
+
+    private func updatePromoButtonState() {
+        let hasPromoCode = !(promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let isEnabled = isPromoCodeApplied || hasPromoCode
+        submitPromoCodeBtn.isUserInteractionEnabled = isEnabled
+        submitPromoCodeBtn.alpha = isEnabled ? 1 : 0.5
     }
 
     @objc private func handleBackSwipe() {
@@ -845,6 +859,12 @@ final class TablePurchaseVC: UIViewController {
                 self.updateUIAfterPromoCode(data)
                 Alert.showToast("Promo code applied")
             } else {
+                self.isPromoCodeApplied = false
+                self.appliedPromoCode = ""
+                self.promoCodeTextFeild.text = ""
+                self.promoCodeTextFeild.isUserInteractionEnabled = true
+                self.promoCodeTextFeild.alpha = 1
+                self.updatePromoButtonIcon()
                 Alert.showToast(message ?? "Failed to apply promo code")
             }
         }

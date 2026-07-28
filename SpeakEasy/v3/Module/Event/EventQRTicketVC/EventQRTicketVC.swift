@@ -55,6 +55,7 @@ class EventQRTicketVC: UIViewController {
     private var hasPlayedPurchaseSuccessHaptic = false
     private var isCheckingInTicket = false
     private var hasResolvedGuestCheckInAvailability = false
+    private var isOrderFeesExpanded = true
     private var introOverlayView: UIView?
     private var introTicketCardView: TicketCardView?
     private var introHideWorkItem: DispatchWorkItem?
@@ -479,7 +480,7 @@ class EventQRTicketVC: UIViewController {
         qrLogoContainerView.addSubview(qrLogoImageView)
 
         qrCodeLabel.translatesAutoresizingMaskIntoConstraints = false
-        qrCodeLabel.font = Constant.Font.geistSemiBold(size: 28)
+        qrCodeLabel.font = Constant.Font.geistSemiBold(size: 42)
         qrCodeLabel.textColor = .black
         qrCodeLabel.textAlignment = .center
         qrCodeLabel.numberOfLines = 2
@@ -1184,10 +1185,9 @@ class EventQRTicketVC: UIViewController {
 
         let fees = booking?.fees
         let subtotal = fees?.subTotal ?? ticketSubtotal
-        let salesTax = fees?.salesTax ?? 0
-        let processingFee = fees?.processingFee ?? 0
-        let customFee = fees?.customFee ?? 0
-        let total = booking?.totalPrice ?? fees?.total ?? subtotal + salesTax + processingFee + customFee
+        let feeItems = buildOrderFeeItems(from: fees)
+        let feesTotal = feeItems.reduce(0.0) { $0 + $1.amount }
+        let total = booking?.totalPrice ?? fees?.total ?? subtotal + feesTotal
 
         orderSummaryStackView.addArrangedSubview(
             makeOrderSummaryRow(
@@ -1196,53 +1196,24 @@ class EventQRTicketVC: UIViewController {
             )
         )
 
-        if salesTax > 0 {
+        if !feeItems.isEmpty {
             orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fees?.salesTaxName?.isEmpty == false ? (fees?.salesTaxName ?? "Sales Tax") : "Sales Tax",
-                    value: "$\(salesTax.decimalFormat(true))"
-                )
+                makeOrderFeesDropdownRow(value: "$\(feesTotal.decimalFormat(true))")
             )
-        }
 
-        if processingFee > 0 {
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: "Processing Fee",
-                    value: "$\(processingFee.decimalFormat(true))"
-                )
-            )
-        }
+            if isOrderFeesExpanded {
+                feeItems.forEach { item in
+                    orderSummaryStackView.addArrangedSubview(
+                        makeOrderSummaryRow(
+                            title: item.title,
+                            value: "$\(item.amount.decimalFormat(true))",
+                            titleLeadingInset: 12
+                        )
+                    )
+                }
 
-        if customFee > 0 {
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fees?.customFeeName?.isEmpty == false ? (fees?.customFeeName ?? "Fee") : "Fee",
-                    value: "$\(customFee.decimalFormat(true))"
-                )
-            )
-        }
-
-        fees?.customFees?.forEach { fee in
-            let amount = fee.amount ?? fee.fee ?? 0
-            guard amount > 0 else { return }
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fee.name,
-                    value: "$\(amount.decimalFormat(true))"
-                )
-            )
-        }
-
-        fees?.additionalFees?.forEach { fee in
-            let amount = fee.amount ?? fee.fee ?? 0
-            guard amount > 0 else { return }
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fee.name,
-                    value: "$\(amount.decimalFormat(true))"
-                )
-            )
+                orderSummaryStackView.addArrangedSubview(makeDivider())
+            }
         }
 
         orderSummaryStackView.addArrangedSubview(
@@ -1254,7 +1225,53 @@ class EventQRTicketVC: UIViewController {
         )
     }
 
-    private func makeOrderSummaryRow(title: String, value: String, isTotal: Bool = false) -> UIView {
+    private func buildOrderFeeItems(from fees: PaymentDetail?) -> [FeeDisplayItem] {
+        guard let fees else { return [] }
+        var items: [FeeDisplayItem] = []
+
+        if fees.customFee > 0 {
+            items.append(
+                FeeDisplayItem(
+                    title: fees.customFeeName?.isEmpty == false ? (fees.customFeeName ?? "Custom Fee") : "Custom Fee",
+                    amount: fees.customFee
+                )
+            )
+        }
+
+        if (fees.salesTax ?? 0) > 0 {
+            items.append(
+                FeeDisplayItem(
+                    title: fees.salesTaxName?.isEmpty == false ? (fees.salesTaxName ?? "Sales Tax") : "Sales Tax",
+                    amount: fees.salesTax ?? 0
+                )
+            )
+        }
+
+        if fees.processingFee > 0 {
+            items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
+        }
+
+        fees.customFees?.forEach { fee in
+            let amount = fee.amount ?? fee.fee ?? 0
+            guard amount > 0 else { return }
+            items.append(FeeDisplayItem(title: fee.name, amount: amount))
+        }
+
+        fees.additionalFees?.forEach { fee in
+            let amount = fee.amount ?? fee.fee ?? 0
+            guard amount > 0 else { return }
+            items.append(FeeDisplayItem(title: fee.name, amount: amount))
+        }
+
+        return items
+    }
+
+    private func makeOrderSummaryRow(
+        title: String,
+        value: String,
+        isTotal: Bool = false,
+        titleLeadingInset: CGFloat = 0
+    ) -> UIView {
         let row = UIStackView()
         row.axis = .horizontal
         row.alignment = .top
@@ -1273,9 +1290,71 @@ class EventQRTicketVC: UIViewController {
         valueLabel.textAlignment = .right
         valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+        if titleLeadingInset > 0 {
+            let spacer = UIView()
+            spacer.translatesAutoresizingMaskIntoConstraints = false
+            spacer.widthAnchor.constraint(equalToConstant: titleLeadingInset).isActive = true
+            row.addArrangedSubview(spacer)
+        }
+
         row.addArrangedSubview(titleLabel)
         row.addArrangedSubview(valueLabel)
         return row
+    }
+
+    private func makeOrderFeesDropdownRow(value: String) -> UIView {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(onClickOrderFeesDropdown), for: .touchUpInside)
+        button.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
+
+        let titleStack = UIStackView()
+        titleStack.axis = .horizontal
+        titleStack.alignment = .center
+        titleStack.spacing = 6
+        titleStack.isUserInteractionEnabled = false
+        titleStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let titleLabel = UILabel()
+        titleLabel.text = "Fees & taxes"
+        titleLabel.font = Constant.Font.geistMedium(size: 14)
+        titleLabel.textColor = UIColor.white.withAlphaComponent(0.76)
+
+        let chevronImageView = UIImageView()
+        chevronImageView.image = UIImage(
+            systemName: "chevron.up",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+        )?.withRenderingMode(.alwaysTemplate)
+        chevronImageView.tintColor = UIColor.white.withAlphaComponent(0.76)
+        chevronImageView.contentMode = .scaleAspectFit
+        chevronImageView.transform = isOrderFeesExpanded ? .identity : CGAffineTransform(rotationAngle: .pi)
+        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+        chevronImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        chevronImageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
+
+        let valueLabel = UILabel()
+        valueLabel.text = value
+        valueLabel.font = Constant.Font.geistMedium(size: 14)
+        valueLabel.textColor = UIColor.white.withAlphaComponent(0.76)
+        valueLabel.textAlignment = .right
+        valueLabel.isUserInteractionEnabled = false
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(chevronImageView)
+        button.addSubview(titleStack)
+        button.addSubview(valueLabel)
+
+        NSLayoutConstraint.activate([
+            titleStack.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            titleStack.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            titleStack.trailingAnchor.constraint(lessThanOrEqualTo: valueLabel.leadingAnchor, constant: -12),
+
+            valueLabel.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            valueLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+        ])
+
+        return button
     }
 
     private func makeDivider() -> UIView {
@@ -1678,6 +1757,12 @@ class EventQRTicketVC: UIViewController {
     @objc private func onClickViewEvent() {
         AppHaptic.cardOpen()
         openEventDetails()
+    }
+
+    @objc private func onClickOrderFeesDropdown() {
+        isOrderFeesExpanded.toggle()
+        AppHaptic.selectionChanged()
+        renderOrderSummary()
     }
 
     @objc private func onClickCheckInTicket(_ sender: UIButton) {
@@ -2101,19 +2186,19 @@ extension EventQRTicketVC: PKAddPassesViewControllerDelegate {
 private extension EventQRTicketVC {
     func openEventDetails() {
         
-        var event = self.booking?.event
+        var event = self.booking?.event ?? sourceEvent
         guard event != nil else {
             Alert.showToast("Event details not available")
             return
         }
-        event?.venue = self.booking?.venueObject
+        event?.venue = self.booking?.venueObject ?? sourceEvent?.venue
 
-        if let eventDetailsVC = navigationController?.viewControllers
-            .last(where: { $0 is EventDetailsVC }) {
-            navigationController?.popToViewController(
-                eventDetailsVC,
-                animated: true
-            )
+        if presentationMode == .modal,
+           let presentingController = presentingViewController ?? navigationController?.presentingViewController {
+            dismiss(animated: true) { [weak self, weak presentingController] in
+                guard let self, let presentingController else { return }
+                self.pushEventDetails(event, from: presentingController)
+            }
             return
         }
 
@@ -2127,6 +2212,34 @@ private extension EventQRTicketVC {
         
         Navigate.eventDetailsVC(
             self,
+            event: event
+        )
+    }
+
+    func pushEventDetails(_ event: Event?, from controller: UIViewController) {
+        let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
+        vc.event = event
+        vc.venueDetails = event?.venue
+        vc.hidesBottomBarWhenPushed = true
+
+        if let navigationController = controller as? UINavigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        if let tabBarController = controller as? UITabBarController,
+           let navigationController = tabBarController.selectedViewController as? UINavigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        if let navigationController = controller.navigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        Navigate.eventDetailsVC(
+            controller,
             event: event
         )
     }

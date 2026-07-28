@@ -469,6 +469,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                         self.promoCodeAppliedLbl.text = errMsg
                         self.promoCodeAppliedLbl.textColor = .red
                         self.isPromoCodeApplied = false
+                        self.promoCodeTF.text = ""
+                        self.promoCodeTF.isUserInteractionEnabled = true
+                        self.promoCodeTF.alpha = 1
+                        self.applyPromoCodeBtn.setTitle("Apply Code", for: .normal)
+                        self.validateBtn(isValid: false)
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
                     }

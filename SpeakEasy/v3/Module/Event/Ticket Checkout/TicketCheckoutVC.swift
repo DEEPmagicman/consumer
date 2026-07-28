@@ -197,7 +197,9 @@ final class TicketCheckoutVC: UIViewController {
                 
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
+        promoCodeTextFeild.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
         updatePromoButtonIcon()
+        updatePromoButtonState()
         purchaseTicketBtn.isEnabled = false
         purchaseTicketBtn.alpha = 0.5
 
@@ -390,6 +392,18 @@ final class TicketCheckoutVC: UIViewController {
             addPromoCodeBtn.setImage(UIImage(named: imageName), for: .normal)
             addPromoCodeBtn.tintColor = nil
         }
+        updatePromoButtonState()
+    }
+
+    @objc private func promoCodeValueChanged() {
+        updatePromoButtonState()
+    }
+
+    private func updatePromoButtonState() {
+        let hasPromoCode = !(promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let isEnabled = isPromoCodeApplied || hasPromoCode
+        addPromoCodeBtn.isUserInteractionEnabled = isEnabled
+        addPromoCodeBtn.alpha = isEnabled ? 1 : 0.5
     }
 
     private func setupInteractionBlocker() {
@@ -885,6 +899,13 @@ final class TicketCheckoutVC: UIViewController {
                     self.appliedPromoCode = promo
                     self.promoCodeTextFeild.isUserInteractionEnabled = false
                     self.promoCodeTextFeild.alpha = 0.5
+                    self.updatePromoButtonIcon()
+                } else {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                    self.promoCodeTextFeild.text = ""
+                    self.promoCodeTextFeild.isUserInteractionEnabled = true
+                    self.promoCodeTextFeild.alpha = 1
                     self.updatePromoButtonIcon()
                 }
             })

@@ -1173,7 +1173,10 @@ extension CoverTicketCheckOutVC {
             } else {
                 self.isPaymentIntentLoaded = true
                 self.setPricingLoading(false, animated: true)
-                if self.isPromoCodeApplied { self.isPromoCodeApplied = false }
+                if !promoCode.isEmpty {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                }
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
