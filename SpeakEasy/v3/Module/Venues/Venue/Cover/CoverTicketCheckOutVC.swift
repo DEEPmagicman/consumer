@@ -1945,8 +1945,12 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
         cell.selectionStyle = .none
-        cell.titleLbl.text  = item.title
-        cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
+        let isProcessingFee = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "processing fee"
+        cell.configure(
+            title: item.title,
+            amount: CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition),
+            infoText: isProcessingFee ? "This covers payment processing fees" : nil
+        )
 
         // Bold the Total row so it reads as a summary
         let isTotal = item.title.lowercased() == "total"

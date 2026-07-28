@@ -26,8 +26,11 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var promoCodeAppliedView: UIView!
 //    @IBOutlet weak var promoCodeLbl: UILabel!
     @IBOutlet weak var promoCodeTitleLbl: UILabel!
+    @IBOutlet weak var orderFeesTitleLbl: UILabel!
     @IBOutlet weak var orderFeesAmountLbl: UILabel!
     @IBOutlet weak var orderTotalAmountLbl: UILabel!
+    @IBOutlet weak var orderTotalTaxIncludedLbl: UILabel!
+    @IBOutlet weak var orderTotalTaxIncludedHeight: NSLayoutConstraint!
     @IBOutlet weak var feesDropDowenIc: UIImageView!
     @IBOutlet weak var applyPromoBtn: LoadingButton!
     @IBOutlet weak var termsAndConditions: UIView!
@@ -88,6 +91,9 @@ final class OrderListViewController: UIViewController {
     private var questionTableViewHeight: NSLayoutConstraint?
     private var questionContentSizeObservation: NSKeyValueObservation?
     private weak var questionSectionView: UIView?
+    private let feesAndTaxesShimmerView = UIView()
+    private var feesAndTaxesShimmerBlocks: [ShimmerViewV3] = []
+    private var isFeesAndTaxesLoading = false
 
     // MARK: - Data state
     private var feesAndTaxes: [FeeDisplayItem] = []
@@ -160,6 +166,7 @@ final class OrderListViewController: UIViewController {
         feesAndTaxesTableView.removeObserver(self, forKeyPath: "contentSize")
         questionContentSizeObservation?.invalidate()
         countdownTimer?.invalidate()
+        feesAndTaxesShimmerBlocks.forEach { $0.releaseResources() }
     }
 
     // MARK: - Setup
@@ -175,10 +182,16 @@ final class OrderListViewController: UIViewController {
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
         feesAndTaxesHiddenView.isHidden = true
+        setupFeesAndTaxesShimmer()
         updateFeesAndTaxesVisibility()
 
         paymentTypeView.isHidden = true
         paymentTypeView.isUserInteractionEnabled = false
+        updateFeesAndTaxesTitle(hasTax: true)
+        orderFeesAmountLbl.textColor = .white
+        feesDropDowenIc.tintColor = .white
+        orderTotalTaxIncludedLbl.text = "Tax included"
+        setTaxIncludedVisible(false)
         updatePaymentMethodUI()
         configureQuestionSection()
 
@@ -841,10 +854,10 @@ final class OrderListViewController: UIViewController {
     }
 
     private func updateFeesAndTaxesVisibility() {
-        let shouldHide = feesAndTaxes.isEmpty
+        let shouldHide = feesAndTaxes.isEmpty && !isFeesAndTaxesLoading
         feesAndTaxesStackView.isHidden = shouldHide
 
-        if shouldHide {
+        if shouldHide || isFeesAndTaxesLoading {
             feesAndTaxesHiddenView.isHidden = true
             feesAndTaxesHiddenView.alpha = 0
             feesAndTaxesHiddenView.transform = .identity
@@ -1079,10 +1092,12 @@ final class OrderListViewController: UIViewController {
             return
         }
 
+        showReturnLoading()
         paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.isCancellingTransaction = false
+                self.hideReturnLoading()
                 self.notifyEventDetailsTransactionCanceled()
                 self.returnToEventDetails(animated: false)
             }
@@ -1130,6 +1145,7 @@ final class OrderListViewController: UIViewController {
         guard let bookingId else { return }
 
         let coverTickets = buildCoverTicketsForPaymentIntent()
+        showFeesAndTaxesShimmer()
 
         paymentService.createPaymentIntent(
             bookingId: bookingId,
@@ -1143,6 +1159,8 @@ final class OrderListViewController: UIViewController {
                 self.applyPromoBtn.hideLoader()
 
                 guard isSuccess else {
+                    self.hideFeesAndTaxesShimmer()
+                    self.updateFeesAndTaxesVisibility()
                     AppHaptic.error()
                     if !promoCode.isEmpty {
                         self.isPromoCodeApplied = false
@@ -1234,11 +1252,15 @@ final class OrderListViewController: UIViewController {
     // MARK: - UI Updates
 
     private func updateUIWithPaymentDetail(_ detail: PaymentDetail?) {
+        hideFeesAndTaxesShimmer()
+
         guard let detail else {
             feesAndTaxes = []
             feesAndTaxesHiddenView.isHidden = true
             feesAndTaxesTableView.reloadData()
             updateFeesAndTaxesVisibility()
+            updateFeesAndTaxesTitle(hasTax: false)
+            setTaxIncludedVisible(false)
             updateFreeTicketUI()
             return
         }
@@ -1246,6 +1268,9 @@ final class OrderListViewController: UIViewController {
         feesAndTaxes = buildFeesArray(from: detail)
         feesAndTaxesTableView.reloadData()
         updateFeesAndTaxesVisibility()
+        let containsTax = hasSalesTax(detail)
+        updateFeesAndTaxesTitle(hasTax: containsTax)
+        setTaxIncludedVisible(containsTax)
 
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         let feesAmount = feesAndTaxes.reduce(0) { $0 + $1.amount }
@@ -1279,6 +1304,76 @@ final class OrderListViewController: UIViewController {
             items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
         }
         return items
+    }
+
+    private func hasSalesTax(_ fees: PaymentDetail) -> Bool {
+        if (fees.salesTax ?? 0) > 0 { return true }
+        return fees.salesTaxes?.contains { ($0.salesTax ?? 0) > 0 } == true
+    }
+
+    private func setTaxIncludedVisible(_ visible: Bool) {
+        orderTotalTaxIncludedLbl.isHidden = !visible
+        orderTotalTaxIncludedHeight.constant = visible ? 12 : 0
+    }
+
+    private func updateFeesAndTaxesTitle(hasTax: Bool) {
+        orderFeesTitleLbl.text = hasTax ? "Fees & taxes" : "Fees"
+    }
+
+    private func setupFeesAndTaxesShimmer() {
+        guard feesAndTaxesShimmerView.superview == nil else { return }
+
+        feesAndTaxesShimmerView.translatesAutoresizingMaskIntoConstraints = false
+        feesAndTaxesShimmerView.isHidden = true
+        feesAndTaxesStackView.insertArrangedSubview(feesAndTaxesShimmerView, at: min(1, feesAndTaxesStackView.arrangedSubviews.count))
+        feesAndTaxesShimmerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        feesAndTaxesShimmerView.addSubview(stack)
+
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: feesAndTaxesShimmerView.topAnchor, constant: 4),
+            stack.leadingAnchor.constraint(equalTo: feesAndTaxesShimmerView.leadingAnchor, constant: 12),
+            stack.trailingAnchor.constraint(equalTo: feesAndTaxesShimmerView.trailingAnchor),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: feesAndTaxesShimmerView.bottomAnchor, constant: -4)
+        ])
+
+        func shimmerBlock(width: CGFloat) -> ShimmerViewV3 {
+            let view = ShimmerViewV3(frame: .zero, lighter: true)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.layer.cornerRadius = 5
+            view.heightAnchor.constraint(equalToConstant: 14).isActive = true
+            view.widthAnchor.constraint(equalToConstant: width).isActive = true
+            feesAndTaxesShimmerBlocks.append(view)
+            return view
+        }
+
+        [(112, 52), (82, 42), (120, 58)].forEach { titleWidth, amountWidth in
+            let row = UIStackView()
+            row.axis = .horizontal
+            row.alignment = .center
+            row.distribution = .equalSpacing
+            row.addArrangedSubview(shimmerBlock(width: CGFloat(titleWidth)))
+            row.addArrangedSubview(shimmerBlock(width: CGFloat(amountWidth)))
+            stack.addArrangedSubview(row)
+        }
+    }
+
+    private func showFeesAndTaxesShimmer() {
+        isFeesAndTaxesLoading = true
+        feesAndTaxesHiddenView.isHidden = true
+        feesAndTaxesShimmerView.isHidden = false
+        feesAndTaxesShimmerBlocks.forEach { $0.startShimmer() }
+        updateFeesAndTaxesVisibility()
+    }
+
+    private func hideFeesAndTaxesShimmer() {
+        isFeesAndTaxesLoading = false
+        feesAndTaxesShimmerBlocks.forEach { $0.stopShimmer() }
+        feesAndTaxesShimmerView.isHidden = true
     }
 
     private func updatePromoCodeUI() {
@@ -1646,6 +1741,16 @@ final class OrderListViewController: UIViewController {
         checkOutView.isUserInteractionEnabled = true
     }
 
+    private func showReturnLoading() {
+        checkOutView.isUserInteractionEnabled = false
+        checkOutView.showLoader()
+    }
+
+    private func hideReturnLoading() {
+        checkOutView.hideLoader()
+        checkOutView.isUserInteractionEnabled = true
+    }
+
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource
@@ -1706,8 +1811,14 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
             let item = feesAndTaxes[indexPath.row]
-            cell.titleLbl.text = item.title
-            cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
+            let isProcessingFee = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "processing fee"
+            cell.configure(
+                title: item.title,
+                amount: CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition),
+                infoText: isProcessingFee ? "This covers payment processing fees" : nil
+            )
+            cell.titleLbl.textColor = UIColor.white.withAlphaComponent(0.82)
+            cell.amountLbl.textColor = UIColor.white.withAlphaComponent(0.82)
             return cell
         }
     }

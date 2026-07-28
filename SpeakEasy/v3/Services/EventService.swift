@@ -985,6 +985,14 @@ final class EventService {
             return id
         }
 
+        if let savedEvent =
+            responseDic["consumerSavedEvents"] as? [String: Any],
+           let id =
+            savedEvent["id"] as? String {
+
+            return id
+        }
+
         return nil
     }
 

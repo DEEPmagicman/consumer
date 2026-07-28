@@ -38,6 +38,7 @@
                 <outlet property="feesAndTaxesParentTableView" destination="keh-Wf-bkf" id="g3c-Ci-XhV"/>
                 <outlet property="feesAndTaxesTableView" destination="W7v-5r-T3I" id="cVh-Vg-0w2"/>
                 <outlet property="feesAndTaxesTableViewHeight" destination="141-L4-XGY" id="qxI-E5-p1z"/>
+                <outlet property="feesAndTaxesTitleLbl" destination="BDd-ap-eBW" id="91m-x1-23S"/>
                 <outlet property="feesAndTaxesTitleView" destination="W7v-5r-T3I" id="6OE-Vh-5bE"/>
                 <outlet property="feesAndTxtTotalAmountLbl" destination="g03-uU-hzy" id="lYT-2U-0Yv"/>
                 <outlet property="feesDropDowenIc" destination="3MK-An-oi6" id="026-1d-bgy"/>
@@ -52,6 +53,8 @@
                 <outlet property="tableViewHeight" destination="GI3-Cl-GBu" id="TE1-eb-H5a"/>
                 <outlet property="timerLbl" destination="QfL-Rh-Z02" id="Lgs-E6-0jh"/>
                 <outlet property="totalAmountLbl" destination="Ncs-xY-ZnY" id="bqF-Tz-8fd"/>
+                <outlet property="totalTaxIncludedHeight" destination="axK-vA-nwl" id="DwT-wC-jqy"/>
+                <outlet property="totalTaxIncludedLbl" destination="7As-A2-3RN" id="NPc-Hs-sWB"/>
                 <outlet property="venueLogoImg" destination="kfc-5y-wiE" id="LEh-1y-gkd"/>
                 <outlet property="venueName" destination="rD7-IB-tui" id="TaI-ua-3IG"/>
                 <outlet property="venueName2" destination="XLo-ac-yiv" id="h1b-Sa-uJb"/>

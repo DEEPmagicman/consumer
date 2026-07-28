@@ -334,9 +334,6 @@
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" text="VIP Tables" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ka-ka-Zwu">
                                                             <rect key="frame" x="55.000000000000007" y="16" width="87.666666666666686" height="20"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="20" id="i8z-PW-f4s"/>
-                                                            </constraints>
                                                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="18"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -396,12 +393,12 @@
                                                     <constraints>
                                                         <constraint firstItem="Of9-XG-WCh" firstAttribute="leading" secondItem="duf-b8-4ip" secondAttribute="leading" constant="17" id="7zk-qh-JZ9"/>
                                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="nmN-gt-tqw" secondAttribute="bottom" constant="20" id="HWF-0c-RTR"/>
-                                                        <constraint firstItem="nmN-gt-tqw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ka-ka-Zwu" secondAttribute="trailing" constant="5" id="QVo-cG-FCL"/>
+                                                        <constraint firstItem="nmN-gt-tqw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ka-ka-Zwu" secondAttribute="trailing" constant="12" id="QVo-cG-FCL"/>
                                                         <constraint firstItem="1ka-ka-Zwu" firstAttribute="top" secondItem="duf-b8-4ip" secondAttribute="top" constant="16" id="XQR-Wh-lOl"/>
                                                         <constraint firstItem="Of9-XG-WCh" firstAttribute="centerY" secondItem="duf-b8-4ip" secondAttribute="centerY" id="YY6-j5-aE9"/>
                                                         <constraint firstAttribute="trailing" secondItem="nmN-gt-tqw" secondAttribute="trailing" constant="17" id="c7D-Da-Wok"/>
                                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="0IA-Hl-A2Y" secondAttribute="bottom" constant="16" id="k4A-Tp-smZ"/>
-                                                        <constraint firstItem="nmN-gt-tqw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0IA-Hl-A2Y" secondAttribute="trailing" constant="1" id="mXx-2H-TfO"/>
+                                                        <constraint firstItem="nmN-gt-tqw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0IA-Hl-A2Y" secondAttribute="trailing" constant="12" id="mXx-2H-TfO"/>
                                                         <constraint firstItem="0IA-Hl-A2Y" firstAttribute="top" secondItem="1ka-ka-Zwu" secondAttribute="bottom" constant="3" id="oPm-60-Ifq"/>
                                                         <constraint firstItem="nmN-gt-tqw" firstAttribute="centerY" secondItem="duf-b8-4ip" secondAttribute="centerY" id="qQt-DG-D5o"/>
                                                         <constraint firstItem="1ka-ka-Zwu" firstAttribute="leading" secondItem="Of9-XG-WCh" secondAttribute="trailing" constant="18" id="sKh-oq-3JZ"/>
@@ -1017,7 +1014,7 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AaO-H4-EUM">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AaO-H4-EUM">
                                                             <rect key="frame" x="136.66666666666666" y="45" width="88" height="88"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="88" id="Vgk-C1-5e8"/>
@@ -1025,7 +1022,7 @@
                                                             </constraints>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="44"/>
+                                                                    <real key="value" value="0.0"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </imageView>
