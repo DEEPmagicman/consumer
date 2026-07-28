@@ -1558,6 +1558,7 @@ final class PremiumPromoRow: UIView {
             appliedCode.text = ""
         }
         updateState(animated: false)
+        updateApplyButtonState()
     }
 
     private func setup() {
@@ -1594,7 +1595,8 @@ final class PremiumPromoRow: UIView {
 
         configureFieldWrapper(textFieldWrapper)
         inputRow.addSubview(textFieldWrapper)
-        configurePromoField(textField, placeholder: "Add code", enabled: true)
+        configurePromoField(textField, placeholder: "Enter promo code", enabled: true)
+        textField.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
         textFieldWrapper.addSubview(textField)
 
         applyButton.setTitle("Apply", for: .normal)
@@ -1603,6 +1605,7 @@ final class PremiumPromoRow: UIView {
         applyButton.backgroundColor = .white
         applyButton.layer.cornerRadius = PremiumTableCornerRadius.field
         applyButton.translatesAutoresizingMaskIntoConstraints = false
+        updateApplyButtonState()
         applyButton.addTarget(self, action: #selector(onApplyTap), for: .touchUpInside)
         inputRow.addSubview(applyButton)
 
@@ -1745,8 +1748,13 @@ final class PremiumPromoRow: UIView {
 
     @objc private func onApplyTap() {
         guard !isSubmitting else { return }
+        guard hasPromoCode else { return }
         AppHaptic.primaryAction()
         submitCurrentCode()
+    }
+
+    @objc private func promoCodeValueChanged() {
+        updateApplyButtonState()
     }
 
     @objc private func onRemoveTap() {
@@ -1758,7 +1766,7 @@ final class PremiumPromoRow: UIView {
 
     func setSubmitting(_ submitting: Bool) {
         isSubmitting = submitting
-        applyButton.isEnabled = !submitting
+        updateApplyButtonState()
         removeButton.isEnabled = !submitting
         titleTapButton.isEnabled = !submitting
         textField.isUserInteractionEnabled = !submitting && !isApplied
@@ -1777,7 +1785,7 @@ final class PremiumPromoRow: UIView {
             applyButton.setTitle("Apply", for: .normal)
             applyLoader.stopAnimating()
         }
-        applyButton.alpha = submitting ? 0.85 : 1
+        applyButton.alpha = submitting ? 0.85 : (hasPromoCode ? 1 : 0.5)
         removeButton.alpha = submitting ? 0.85 : 1
         actionButton.alpha = submitting ? 0.45 : 1
         if !submitting {
@@ -1790,6 +1798,16 @@ final class PremiumPromoRow: UIView {
         guard !code.isEmpty else { return }
         onSubmit?(code)
         textField.resignFirstResponder()
+    }
+
+    private var hasPromoCode: Bool {
+        !(textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private func updateApplyButtonState() {
+        let isEnabled = !isSubmitting && !isApplied && hasPromoCode
+        applyButton.isEnabled = isEnabled
+        applyButton.alpha = isEnabled ? 1 : 0.5
     }
 
     private func updateState(animated: Bool) {

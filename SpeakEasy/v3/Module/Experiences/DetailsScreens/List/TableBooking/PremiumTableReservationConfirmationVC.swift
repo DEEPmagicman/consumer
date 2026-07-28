@@ -1528,12 +1528,15 @@ private final class ReservationOrderRow: UIView {
         titleLineStack.spacing = 7
 
         if showsChevron {
-            let chevron = UIImageView(image: UIImage(named: "arrowTopIcon")?.withRenderingMode(.alwaysTemplate))
-            chevron.tintColor = .white
+            let configuration = UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+            let image = UIImage(systemName: "chevron.up", withConfiguration: configuration)?
+                .withRenderingMode(.alwaysTemplate)
+            let chevron = UIImageView(image: image)
+            chevron.tintColor = UIColor.white.withAlphaComponent(0.76)
             chevron.contentMode = .scaleAspectFit
             chevron.translatesAutoresizingMaskIntoConstraints = false
-            chevron.widthAnchor.constraint(equalToConstant: 9).isActive = true
-            chevron.heightAnchor.constraint(equalToConstant: 6).isActive = true
+            chevron.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            chevron.heightAnchor.constraint(equalToConstant: 12).isActive = true
             titleLineStack.addArrangedSubview(chevron)
             self.chevron = chevron
         }

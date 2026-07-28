@@ -151,6 +151,7 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
+    private let saveLoadingIndicator = UIActivityIndicatorView(style: .medium)
     private var shouldRefreshEventDetailOnReturn = false
     private var hasLoadedSeatingAreas = false
     private var didLoadSeatingAreasSuccessfully = false
@@ -761,10 +762,10 @@ class EventDetailsVC: UIViewController {
     }
     
     private func setupUI() {
-        savedEventId = event?.savedEventId
-        isSaved =
-        event?.hasSavedEvent == true ||
-        savedEventId != nil
+        savedEventId = savedEventIdentifier(from: event)
+        isSaved = eventIsSaved(event)
+        isSaveLoading = !isEventDetailAPICalled && (event?.uniqueId ?? uniqueId) != nil
+        setupSaveLoadingIndicator()
         updateSaveUI()
         setupVenueInfoPanel()
     }
@@ -778,10 +779,44 @@ class EventDetailsVC: UIViewController {
     private func updateSaveUI() {
         let imageName = isSaved ? "savedIcon" : "unSavedIcon"
         
-        saveBtn.setImage(UIImage(named: imageName), for: .normal)
+        saveBtn.setImage(isSaveLoading ? nil : UIImage(named: imageName), for: .normal)
         saveBtn.tintColor =  .white
         saveBtn.alpha = isSaveLoading ? 0.65 : 1
         saveBtn.isUserInteractionEnabled = !isSaveLoading
+        isSaveLoading ? saveLoadingIndicator.startAnimating() : saveLoadingIndicator.stopAnimating()
+    }
+
+    private func setupSaveLoadingIndicator() {
+        guard saveLoadingIndicator.superview == nil else { return }
+
+        saveLoadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        saveLoadingIndicator.color = .white
+        saveLoadingIndicator.hidesWhenStopped = true
+        saveLoadingIndicator.isUserInteractionEnabled = false
+        saveBtn.addSubview(saveLoadingIndicator)
+
+        NSLayoutConstraint.activate([
+            saveLoadingIndicator.centerXAnchor.constraint(equalTo: saveBtn.centerXAnchor),
+            saveLoadingIndicator.centerYAnchor.constraint(equalTo: saveBtn.centerYAnchor)
+        ])
+    }
+
+    private func savedEventIdentifier(from event: Event?) -> String? {
+        if let savedEventId = event?.savedEventId,
+           !savedEventId.isEmpty {
+            return savedEventId
+        }
+
+        if let savedEventId = event?.consumerSavedEvents?.id,
+           !savedEventId.isEmpty {
+            return savedEventId
+        }
+
+        return nil
+    }
+
+    private func eventIsSaved(_ event: Event?) -> Bool {
+        event?.hasSavedEvent == true || savedEventIdentifier(from: event) != nil
     }
 
     private func setupEventDetailsTypography() {
@@ -802,11 +837,9 @@ class EventDetailsVC: UIViewController {
     }
 
     private func updateVenueLogoCornerRadius() {
-        venueLogoImg.layer.cornerRadius = min(
-            venueLogoImg.bounds.width,
-            venueLogoImg.bounds.height
-        ) / 2
-        venueLogoImg.clipsToBounds = true
+        venueLogoImg.layer.cornerRadius = 0
+        venueLogoImg.clipsToBounds = false
+        venueLogoImg.contentMode = .scaleAspectFit
     }
 
     private func enableInteractiveSwipeBack() {
@@ -1121,6 +1154,8 @@ class EventDetailsVC: UIViewController {
                 }
 
                 self.hideSkeleton()
+                self.isSaveLoading = false
+                self.updateSaveUI()
                 return
             }
 
@@ -1195,38 +1230,21 @@ class EventDetailsVC: UIViewController {
         _ detail: EventDetailBundle
     ) {
 
-        let currentSavedEventId =
-        savedEventId ?? event?.savedEventId
-
-        let currentIsSaved =
-        isSaved || event?.hasSavedEvent == true
-
-        let detailHasSavedState =
-        detail.event.hasSavedEvent != nil ||
-        detail.event.savedEventId != nil
-
         event = detail.event
         applyVenueWhiteLabelColorIfNeeded(from: detail.event.venue)
-
-        if !detailHasSavedState,
-           let currentSavedEventId {
-            event?.savedEventId = currentSavedEventId
-        }
-
-        if !detailHasSavedState,
-           currentIsSaved {
-            event?.hasSavedEvent = true
-        }
 
         if let venue = detail.event.venue {
             venueDetails = venue
             WebSocketWrapper.shared.updateSocketContext(venueId: venue.id)
         }
 
-        savedEventId = event?.savedEventId
-        isSaved =
-        event?.hasSavedEvent == true ||
-        savedEventId != nil
+        savedEventId = savedEventIdentifier(from: event)
+        event?.savedEventId = savedEventId
+        if savedEventId != nil {
+            event?.hasSavedEvent = true
+        }
+        isSaved = eventIsSaved(event)
+        isSaveLoading = false
         updateSaveUI()
         setupTicketsButton()
 
@@ -2378,6 +2396,12 @@ class EventDetailsVC: UIViewController {
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let city = venueDetails?.city
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        if !name.isEmpty,
+           !city.isEmpty,
+           name.localizedCaseInsensitiveContains(city) {
+            return name
+        }
 
         return [name, city]
             .filter { !$0.isEmpty }
@@ -3562,13 +3586,13 @@ class EventDetailsVC: UIViewController {
         
         let previousState = isSaved
         let previousSavedEventId = savedEventId
+        let shouldSave = !isSaved
 
         isSaveLoading = true
-        isSaved.toggle()
         updateSaveUI()
         AppHaptic.selectionChanged()
         
-        if isSaved {
+        if shouldSave {
             saveEventAPI(
                 eventUniqueId: eventUniqueId,
                 previousState: previousState,
@@ -3674,6 +3698,11 @@ class EventDetailsVC: UIViewController {
             
             self.unsaveEventAPI(
                 savedEventId: savedEventId,
+                previousState: previousState,
+                previousSavedEventId: previousSavedEventId
+            )
+        } else {
+            rollbackSaveState(
                 previousState: previousState,
                 previousSavedEventId: previousSavedEventId
             )
@@ -4090,9 +4119,6 @@ class EventDetailsVC: UIViewController {
         let googleMapView = configuredGoogleMapView(center: coordinate)
         googleMapView.clear()
         
-        let imageUrl =  "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
-        
-
         let point = EventDetailsMapAnnotation(
             coordinate: coordinate,
             title: title,
@@ -4105,13 +4131,24 @@ class EventDetailsVC: UIViewController {
         let venueLogoURL = venueLogoKey.isEmpty ? nil : venueLogoKey.imageURL
         let marker = GMSMarker(position: point.coordinate)
         marker.title = point.title
-        marker.iconView = EventDetailsLocationMarkerView(
-            backgroundImageURL: imageUrl,
+        let markerView = EventDetailsLocationMarkerView(
+            backgroundImageURL: venueDetails?.venueAttachment?.first?.key.imageURL,
             logoImageURL: venueLogoURL
         )
+        marker.iconView = markerView
         marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
         marker.userData = point
+        markerView.onImageLoaded = { [weak marker] in
+            marker?.tracksViewChanges = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                marker?.tracksViewChanges = false
+            }
+        }
         marker.map = googleMapView
+        marker.tracksViewChanges = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            marker.tracksViewChanges = false
+        }
 
         googleMapView.moveCamera(GMSCameraUpdate.setTarget(coordinate, zoom: 14))
 
@@ -4948,8 +4985,8 @@ private final class EventDetailsLocationMarkerView: UIView {
 
     private let backgroundImageView = UIImageView()
     private let dimView = UIView()
-    private let logoContainerView = UIView()
     private let logoImageView = UIImageView()
+    var onImageLoaded: (() -> Void)?
 
     init(
         backgroundImageURL: String?,
@@ -4977,10 +5014,8 @@ private final class EventDetailsLocationMarkerView: UIView {
 
     private func setup() {
         backgroundColor = .clear
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.35
-        layer.shadowRadius = 8
-        layer.shadowOffset = CGSize(width: 0, height: 4)
+        layer.shadowOpacity = 0
+        layer.shadowPath = nil
 
         backgroundImageView.frame = bounds
         backgroundImageView.clipsToBounds = true
@@ -4995,21 +5030,25 @@ private final class EventDetailsLocationMarkerView: UIView {
         dimView.layer.cornerRadius = Layout.markerSize / 2
         addSubview(dimView)
 
-        logoContainerView.frame = CGRect(
+        logoImageView.frame = CGRect(
             x: (Layout.markerSize - Layout.logoSize) / 2,
             y: (Layout.markerSize - Layout.logoSize) / 2,
             width: Layout.logoSize,
             height: Layout.logoSize
         )
-//        logoContainerView.backgroundColor = UIColor.black.withAlphaComponent(0.34)
-//        logoContainerView.layer.cornerRadius = Layout.logoSize / 2
-//        logoContainerView.clipsToBounds = true
-        addSubview(logoContainerView)
-
-        logoImageView.frame = logoContainerView.bounds.insetBy(dx: 3, dy: 3)
-        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.contentMode = .scaleAspectFill
+        logoImageView.clipsToBounds = true
+        logoImageView.layer.cornerRadius = logoImageView.bounds.height / 2
         logoImageView.image = UIImage(named: "newSpeakeasy")
-        logoContainerView.addSubview(logoImageView)
+        addSubview(logoImageView)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.shadowPath = nil
+        backgroundImageView.layer.cornerRadius = backgroundImageView.bounds.height / 2
+        dimView.layer.cornerRadius = dimView.bounds.height / 2
+        logoImageView.layer.cornerRadius = logoImageView.bounds.height / 2
     }
 
     private func configure(
@@ -5030,14 +5069,20 @@ private final class EventDetailsLocationMarkerView: UIView {
             with: URL(string: backgroundImageURL ?? ""),
             placeholderImage: UIImage(named: "newSpeakeasy"),
             options: [.continueInBackground, .scaleDownLargeImages],
-            context: [.imageThumbnailPixelSize: NSValue(cgSize: backgroundSize)]
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: backgroundSize)], progress: nil,
+            completed: { [weak self] _, _, _, _ in
+                self?.onImageLoaded?()
+            }
         )
 
         logoImageView.sd_setImage(
             with: URL(string: logoImageURL ?? ""),
             placeholderImage: UIImage(named: "newSpeakeasy"),
             options: [.continueInBackground, .scaleDownLargeImages],
-            context: [.imageThumbnailPixelSize: NSValue(cgSize: logoSize)]
+            context: [.imageThumbnailPixelSize: NSValue(cgSize: logoSize)], progress: nil,
+            completed: { [weak self] _, _, _, _ in
+                self?.onImageLoaded?()
+            }
         )
     }
 

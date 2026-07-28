@@ -1173,7 +1173,10 @@ extension CoverTicketCheckOutVC {
             } else {
                 self.isPaymentIntentLoaded = true
                 self.setPricingLoading(false, animated: true)
-                if self.isPromoCodeApplied { self.isPromoCodeApplied = false }
+                if !promoCode.isEmpty {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                }
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1853,14 +1856,24 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
             if isPricingLoading && !selectedCoverTickets.isEmpty {
                 return makeFeeShimmerCell(in: tableView)
             }
-            return makeFeesCell(item: feesAndTaxes[indexPath.row], in: tableView, at: indexPath)
+            return makeFeesCell(
+                item: feesAndTaxes[indexPath.row],
+                in: tableView,
+                at: indexPath,
+                showsTaxIncluded: hasSalesTax(paymentDetail)
+            )
         case upsellTicketTableView:
             return makeUpsellTicketCell(for: indexPath, in: tableView)
         case upsellTicketFeesAndTaxTableView:
             if isPricingLoading && !selectedAddOnsItems.isEmpty {
                 return makeFeeShimmerCell(in: tableView)
             }
-            return makeFeesCell(item: upsellFeesAndTaxes[indexPath.row], in: tableView, at: indexPath)
+            return makeFeesCell(
+                item: upsellFeesAndTaxes[indexPath.row],
+                in: tableView,
+                at: indexPath,
+                showsTaxIncluded: hasSalesTax(addOnsPaymentDetail)
+            )
         default:
             return UITableViewCell()
         }
@@ -1877,6 +1890,31 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch tableView {
+        case coverTicketFeesAndTaxTableView:
+            guard !isPricingLoading else { return 44 }
+            return feeRowHeight(
+                item: feesAndTaxes[indexPath.row],
+                showsTaxIncluded: hasSalesTax(paymentDetail)
+            )
+        case upsellTicketFeesAndTaxTableView:
+            guard !isPricingLoading else { return 44 }
+            return feeRowHeight(
+                item: upsellFeesAndTaxes[indexPath.row],
+                showsTaxIncluded: hasSalesTax(addOnsPaymentDetail)
+            )
+        default:
+            return UITableView.automaticDimension
+        }
+    }
+
+    private func feeRowHeight(item: FeeDisplayItem, showsTaxIncluded: Bool) -> CGFloat {
+        let isTotal = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "total"
+        guard isTotal else { return 32 }
+        return showsTaxIncluded ? 40 : 32
     }
 
     private func makeCoverTicketCell(for indexPath: IndexPath, in tableView: UITableView) -> UITableViewCell {
@@ -1935,22 +1973,110 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
     private func makeFeesCell(
         item: FeeDisplayItem,
         in tableView: UITableView,
-        at indexPath: IndexPath
+        at indexPath: IndexPath,
+        showsTaxIncluded: Bool
     ) -> UITableViewCell {
+        let isTotal = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "total"
+        if isTotal {
+            let cell = TotalFeeSummaryCell(style: .default, reuseIdentifier: nil)
+            cell.configure(
+                amount: CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition),
+                showsTaxIncluded: showsTaxIncluded
+            )
+            return cell
+        }
+
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TicketItemTableViewCell.identifier, for: indexPath
         ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
         cell.selectionStyle = .none
-        cell.titleLbl.text  = item.title
-        cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
+        let isProcessingFee = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "processing fee"
+        cell.configure(
+            title: item.title,
+            amount: CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition),
+            infoText: isProcessingFee ? "This covers payment processing fees" : nil
+        )
 
-        // Bold the Total row so it reads as a summary
-        let isTotal = item.title.lowercased() == "total"
-        let weight: UIFont.Weight = isTotal ? .semibold : .regular
-        cell.titleLbl.font  = .systemFont(ofSize: cell.titleLbl.font.pointSize, weight: weight)
-        cell.amountLbl.font = .systemFont(ofSize: cell.amountLbl.font.pointSize, weight: weight)
+        cell.titleLbl.font = .systemFont(ofSize: cell.titleLbl.font.pointSize, weight: .regular)
+        cell.amountLbl.font = .systemFont(ofSize: cell.amountLbl.font.pointSize, weight: .regular)
         return cell
+    }
+
+    private func hasSalesTax(_ detail: PaymentDetail?) -> Bool {
+        guard let detail else { return false }
+        if (detail.salesTax ?? 0) > 0 { return true }
+        return detail.salesTaxes?.contains { ($0.salesTax ?? 0) > 0 } == true
+    }
+}
+
+private final class TotalFeeSummaryCell: UITableViewCell {
+
+    private let separatorView = UIView()
+    private let titleLabel = UILabel()
+    private let taxIncludedLabel = UILabel()
+    private let amountLabel = UILabel()
+    private let titleStack = UIStackView()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    func configure(amount: String, showsTaxIncluded: Bool) {
+        amountLabel.text = amount
+        taxIncludedLabel.isHidden = !showsTaxIncluded
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        selectionStyle = .none
+
+        separatorView.backgroundColor = UIColor.white.withAlphaComponent(0.18)
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(separatorView)
+
+        titleLabel.text = "Total"
+        titleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        titleLabel.textColor = .white
+
+        taxIncludedLabel.text = "Tax included"
+        taxIncludedLabel.font = .systemFont(ofSize: 10, weight: .regular)
+        taxIncludedLabel.textColor = UIColor.white.withAlphaComponent(0.62)
+
+        titleStack.axis = .vertical
+        titleStack.spacing = 0
+        titleStack.translatesAutoresizingMaskIntoConstraints = false
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(taxIncludedLabel)
+        contentView.addSubview(titleStack)
+
+        amountLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        amountLabel.textColor = .white
+        amountLabel.textAlignment = .right
+        amountLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(amountLabel)
+
+        NSLayoutConstraint.activate([
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            separatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            titleStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            titleStack.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            titleStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
+            titleStack.trailingAnchor.constraint(lessThanOrEqualTo: amountLabel.leadingAnchor, constant: -12),
+
+            amountLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            amountLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
+        ])
     }
 }
 

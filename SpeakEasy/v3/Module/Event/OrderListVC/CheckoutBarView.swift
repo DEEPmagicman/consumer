@@ -64,12 +64,42 @@ class CheckoutBarView: UIView {
 
     func applyAccentColor(_ color: UIColor?) {
         let accentColor = color ?? .white
-        let textColor = accentColor.suitableTextColor()
+        let textColor = preferredButtonTextColor(for: accentColor)
 
         actionBtn.backgroundColor = accentColor
         actionBtn.bgColor = accentColor
-        actionBtn.setTitleColor(textColor, for: .normal)
+        [
+            UIControl.State.normal,
+            .highlighted,
+            .selected,
+            .focused,
+            .disabled
+        ].forEach {
+            actionBtn.setTitleColor(textColor, for: $0)
+        }
+        actionBtn.titleLabel?.textColor = textColor
         actionBtn.indicator = MaterialLoadingIndicator(color: textColor)
+    }
+
+    private func preferredButtonTextColor(for color: UIColor) -> UIColor {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+            return UIColor(hex: "#121212")
+        }
+
+        func linearValue(_ value: CGFloat) -> CGFloat {
+            value <= 0.03928 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)
+        }
+
+        let luminance = 0.2126 * linearValue(red)
+            + 0.7152 * linearValue(green)
+            + 0.0722 * linearValue(blue)
+
+        return luminance > 0.35 ? UIColor(hex: "#121212") : .white
     }
 
     func showLoader() { actionBtn.showLoader(userInteraction: false) }

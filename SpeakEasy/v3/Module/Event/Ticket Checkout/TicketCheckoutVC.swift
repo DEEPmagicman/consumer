@@ -28,6 +28,8 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var eventTitleLbl: UILabel!
     @IBOutlet weak var totalAmountLbl: UILabel!
     @IBOutlet weak var feesAndTxtTotalAmountLbl: UILabel!
+    @IBOutlet weak var totalTaxIncludedLbl: UILabel!
+    @IBOutlet weak var totalTaxIncludedHeight: NSLayoutConstraint!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var feesAndTaxesTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var feesAndTaxesTableView: UITableView!
@@ -38,6 +40,7 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var feesAndTaxesTitleView: UIView!
+    @IBOutlet weak var feesAndTaxesTitleLbl: UILabel!
     @IBOutlet weak var feesAndTaxesContainerView: UIView!
     @IBOutlet weak var discountToalLbl: UILabel!
     @IBOutlet weak var shimmerView: UIView!
@@ -197,9 +200,13 @@ final class TicketCheckoutVC: UIViewController {
                 
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
+        promoCodeTextFeild.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
         updatePromoButtonIcon()
+        updatePromoButtonState()
         purchaseTicketBtn.isEnabled = false
         purchaseTicketBtn.alpha = 0.5
+        updateFeesAndTaxesTitle(hasTax: true)
+        setTaxIncludedVisible(false)
 
         calculateTotal()
         setupTitleMarqueeLabel()
@@ -390,6 +397,18 @@ final class TicketCheckoutVC: UIViewController {
             addPromoCodeBtn.setImage(UIImage(named: imageName), for: .normal)
             addPromoCodeBtn.tintColor = nil
         }
+        updatePromoButtonState()
+    }
+
+    @objc private func promoCodeValueChanged() {
+        updatePromoButtonState()
+    }
+
+    private func updatePromoButtonState() {
+        let hasPromoCode = !(promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let isEnabled = isPromoCodeApplied || hasPromoCode
+        addPromoCodeBtn.isUserInteractionEnabled = isEnabled
+        addPromoCodeBtn.alpha = isEnabled ? 1 : 0.5
     }
 
     private func setupInteractionBlocker() {
@@ -417,6 +436,7 @@ final class TicketCheckoutVC: UIViewController {
         }
 
         totalAmountLbl.text = subtotal == 0 ? "Free" : CurrencyFormatter.amount(subtotal, symbol: currency, position: currencyPosition)
+        setTaxIncludedVisible(false)
         self.isFreeTicket = subtotal == 0
         updatePurchaseButtonTitle()
 
@@ -582,6 +602,8 @@ final class TicketCheckoutVC: UIViewController {
             feesAndTaxesTableView.reloadData()
             totalAmountLbl.text = "Free"
             feesAndTxtTotalAmountLbl.text = ""
+            updateFeesAndTaxesTitle(hasTax: false)
+            setTaxIncludedVisible(false)
             discountView.isHidden = true
             discountToalLbl.isHidden = true
             return
@@ -589,6 +611,9 @@ final class TicketCheckoutVC: UIViewController {
         feesAndTaxes = buildFeesArray(from: detail)
         feesAndTaxesTitleView.isHidden = feesAndTaxes.isEmpty
         feesAndTaxesTableView.reloadData()
+        let containsTax = hasSalesTax(detail)
+        updateFeesAndTaxesTitle(hasTax: containsTax)
+        setTaxIncludedVisible(containsTax)
 
         let total = detail.total
         let subTotal = detail.subTotal   
@@ -613,6 +638,20 @@ final class TicketCheckoutVC: UIViewController {
             discountView.isHidden = true
             discountToalLbl.isHidden = true
         }
+    }
+
+    private func hasSalesTax(_ fees: PaymentDetail) -> Bool {
+        if (fees.salesTax ?? 0) > 0 { return true }
+        return fees.salesTaxes?.contains { ($0.salesTax ?? 0) > 0 } == true
+    }
+
+    private func setTaxIncludedVisible(_ visible: Bool) {
+        totalTaxIncludedLbl.isHidden = !visible
+        totalTaxIncludedHeight.constant = visible ? 12 : 0
+    }
+
+    private func updateFeesAndTaxesTitle(hasTax: Bool) {
+        feesAndTaxesTitleLbl.text = hasTax ? "Fees & taxes" : "Fees"
     }
     
     private func setupStripePaymentSheet(clientSecret: String, ephemeralKey: String) {
@@ -884,6 +923,13 @@ final class TicketCheckoutVC: UIViewController {
                     self.appliedPromoCode = promo
                     self.promoCodeTextFeild.isUserInteractionEnabled = false
                     self.promoCodeTextFeild.alpha = 0.5
+                    self.updatePromoButtonIcon()
+                } else {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                    self.promoCodeTextFeild.text = ""
+                    self.promoCodeTextFeild.isUserInteractionEnabled = true
+                    self.promoCodeTextFeild.alpha = 1
                     self.updatePromoButtonIcon()
                 }
             })
@@ -1173,8 +1219,12 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
             ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
             let item = feesAndTaxes[indexPath.row]
-            cell.titleLbl.text = item.title
-            cell.amountLbl.text = CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition)
+            let isProcessingFee = item.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "processing fee"
+            cell.configure(
+                title: item.title,
+                amount: CurrencyFormatter.amount(item.amount, symbol: currency, position: currencyPosition),
+                infoText: isProcessingFee ? "This covers payment processing fees" : nil
+            )
             cell.selectionStyle = .none
 
             return cell

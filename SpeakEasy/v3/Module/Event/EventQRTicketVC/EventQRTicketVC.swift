@@ -53,6 +53,9 @@ class EventQRTicketVC: UIViewController {
     private var hasSetupActionSection = false
     private var hasPlayedIntro = false
     private var hasPlayedPurchaseSuccessHaptic = false
+    private var isCheckingInTicket = false
+    private var hasResolvedGuestCheckInAvailability = false
+    private var isOrderFeesExpanded = true
     private var introOverlayView: UIView?
     private var introTicketCardView: TicketCardView?
     private var introHideWorkItem: DispatchWorkItem?
@@ -477,7 +480,7 @@ class EventQRTicketVC: UIViewController {
         qrLogoContainerView.addSubview(qrLogoImageView)
 
         qrCodeLabel.translatesAutoresizingMaskIntoConstraints = false
-        qrCodeLabel.font = Constant.Font.geistSemiBold(size: 28)
+        qrCodeLabel.font = Constant.Font.geistSemiBold(size: 42)
         qrCodeLabel.textColor = .black
         qrCodeLabel.textAlignment = .center
         qrCodeLabel.numberOfLines = 2
@@ -530,17 +533,7 @@ class EventQRTicketVC: UIViewController {
         actionRowsStackView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(actionRowsStackView)
 
-        [
-            makePassActionRow(title: "View Event", icon: UIImage(systemName: "info.circle"), action: #selector(onClickViewEvent)),
-            makePassActionRow(title: "Add to Calendar", icon: UIImage(systemName: "calendar"), action: #selector(onClickAddToCalendar)),
-            makePassActionRow(title: "Add to Apple Wallet", icon: UIImage(systemName: "wallet.pass"), action: #selector(onClickAddToWallet)),
-            makePassActionRow(title: "Get Directions", icon: UIImage(systemName: "mappin"), action: #selector(onClickGetDirections))
-        ].enumerated().forEach { index, row in
-            actionRowsStackView.addArrangedSubview(row)
-            if index < 3 {
-                actionRowsStackView.addArrangedSubview(makeDivider())
-            }
-        }
+        renderPassActionRows()
 
         NSLayoutConstraint.activate([
             actionRowsStackView.topAnchor.constraint(equalTo: container.topAnchor),
@@ -550,6 +543,32 @@ class EventQRTicketVC: UIViewController {
         ])
 
         return container
+    }
+
+    private func renderPassActionRows() {
+        actionRowsStackView.arrangedSubviews.forEach {
+            actionRowsStackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        var rows = [
+            makePassActionRow(title: "View Event", icon: UIImage(systemName: "info.circle"), action: #selector(onClickViewEvent)),
+            makePassActionRow(title: "Add to Calendar", icon: UIImage(systemName: "calendar"), action: #selector(onClickAddToCalendar)),
+            makePassActionRow(title: "Get Directions", icon: UIImage(systemName: "mappin"), action: #selector(onClickGetDirections))
+        ]
+//        if shouldShowAppleWalletAction() {
+            rows.insert(
+                makePassActionRow(title: "Add to Apple Wallet", icon: UIImage(systemName: "wallet.pass"), action: #selector(onClickAddToWallet)),
+                at: 2
+            )
+//        }
+
+        rows.enumerated().forEach { index, row in
+            actionRowsStackView.addArrangedSubview(row)
+            if index < rows.count - 1 {
+                actionRowsStackView.addArrangedSubview(makeDivider())
+            }
+        }
     }
 
     private func makePassActionRow(
@@ -701,6 +720,7 @@ class EventQRTicketVC: UIViewController {
         configureEventRows()
         refreshPosterBackground()
         renderTicketPass()
+        renderPassActionRows()
     }
 
     private func currentVenueIdForSocket() -> String? {
@@ -750,12 +770,19 @@ class EventQRTicketVC: UIViewController {
             $0.removeFromSuperview()
         }
 
-        [
+        var rows = [
             makeActionRow(title: "View Event", icon: UIImage(systemName: "info.circle"), action: #selector(onClickViewEvent)),
             makeActionRow(title: "Add to Calendar", icon: UIImage(systemName: "calendar"), action: #selector(onClickAddToCalendar)),
-            makeActionRow(title: "Add to Apple Wallet", icon: UIImage(systemName: "wallet.pass"), action: #selector(onClickAddToWallet)),
             makeActionRow(title: "Get Directions", icon: UIImage(systemName: "mappin"), action: #selector(onClickGetDirections))
-        ].forEach { actionStackView.addArrangedSubview($0) }
+        ]
+//        if shouldShowAppleWalletAction() {
+            rows.insert(
+                makeActionRow(title: "Add to Apple Wallet", icon: UIImage(systemName: "wallet.pass"), action: #selector(onClickAddToWallet)),
+                at: 2
+            )
+//        }
+
+        rows.forEach { actionStackView.addArrangedSubview($0) }
     }
 
     private func makeActionRow(title: String, icon: UIImage?, action: Selector) -> UIView {
@@ -1000,12 +1027,17 @@ class EventQRTicketVC: UIViewController {
         countLabel.textColor = .white
         countLabel.textAlignment = .right
 
+        let checkInButton = makeTicketCheckInButton(for: ticket, checkedIn: checkedIn, total: total)
+
         container.addSubview(titleLabel)
         container.addSubview(quantityLabel)
         container.addSubview(progressView)
         container.addSubview(countLabel)
+        if let checkInButton {
+            container.addSubview(checkInButton)
+        }
 
-        NSLayoutConstraint.activate([
+        var constraints: [NSLayoutConstraint] = [
             container.heightAnchor.constraint(greaterThanOrEqualToConstant: 82),
 
             titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 12),
@@ -1020,23 +1052,97 @@ class EventQRTicketVC: UIViewController {
             progressView.trailingAnchor.constraint(equalTo: countLabel.leadingAnchor, constant: -16),
             progressView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             progressView.heightAnchor.constraint(equalToConstant: 8),
-            progressView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12),
 
             countLabel.centerYAnchor.constraint(equalTo: progressView.centerYAnchor),
             countLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             countLabel.widthAnchor.constraint(equalToConstant: 48)
-        ])
+        ]
+
+        if let checkInButton {
+            constraints.append(contentsOf: [
+                checkInButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 28),
+                checkInButton.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                checkInButton.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                checkInButton.heightAnchor.constraint(equalToConstant: 54),
+                checkInButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12)
+            ])
+        } else {
+            constraints.append(progressView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12))
+        }
+
+        NSLayoutConstraint.activate(constraints)
 
         return container
     }
 
-    private func checkedInQuantity(for ticket: BookingHasItem) -> Int {
-        let checkedItemIds = Set(
+    private func shouldShowGuestCheckInButton() -> Bool {
+        type == .singleTickedEvent
+            && hasResolvedGuestCheckInAvailability
+            && booking?.event?.allowGuestCheckin == true
+    }
+
+    private func shouldShowAppleWalletAction() -> Bool {
+        guard type == .singleTickedEvent else { return true }
+        guard hasResolvedGuestCheckInAvailability else { return false }
+        return booking?.event?.allowGuestCheckin != true
+    }
+
+    private func makeTicketCheckInButton(for ticket: BookingHasItem, checkedIn: Int, total: Int) -> UIButton? {
+        guard shouldShowGuestCheckInButton() else { return nil }
+
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 27
+        button.layer.masksToBounds = true
+        button.titleLabel?.font = Constant.Font.geistSemiBold(size: 15)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.minimumScaleFactor = 0.75
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+
+        let isCheckedIn = total > 0 && checkedIn >= total
+        if isCheckedIn {
+            button.isUserInteractionEnabled = false
+            button.alpha = 0.35
+            button.backgroundColor = ticketCheckInButtonColor()
+            button.layer.borderColor = UIColor.red.cgColor
+            button.layer.borderWidth = 1
+            button.setTitleColor(.red, for: .normal)
+            button.setTitle("ALREADY CHECKED IN", for: .normal)
+        } else {
+            button.alpha = 1
+            button.isUserInteractionEnabled = !isCheckingInTicket
+            button.backgroundColor = ticketCheckInButtonColor()
+            button.setTitleColor(.black, for: .normal)
+            button.setTitle(isCheckingInTicket ? "CHECKING IN..." : "CHECK IN THIS TICKET", for: .normal)
+            button.addTarget(self, action: #selector(onClickCheckInTicket(_:)), for: .touchUpInside)
+            button.accessibilityIdentifier = ticket.ticketId
+        }
+
+        return button
+    }
+
+    private func ticketCheckInButtonColor() -> UIColor {
+        UIColor(hex: "#FFEB3B")
+    }
+
+    private func checkedInBookingItemIds() -> Set<String> {
+        Set(
             booking?.bookingHasCheckIn?
                 .flatMap { $0.bookingItemCheckIn }
                 .filter { !$0.isDeleted }
                 .map { $0.bookingHasItemId } ?? []
         )
+    }
+
+    private func remainingBookingItemIds(for ticketId: String) -> [String] {
+        let checkedItemIds = checkedInBookingItemIds()
+        return booking?.bookingHasItem
+            .filter { $0.ticketId == ticketId && !checkedItemIds.contains($0.id) }
+            .map { $0.id } ?? []
+    }
+
+    private func checkedInQuantity(for ticket: BookingHasItem) -> Int {
+        let checkedItemIds = checkedInBookingItemIds()
 
         guard !checkedItemIds.isEmpty else {
             return ticket.checkedInQuantity ?? 0
@@ -1079,10 +1185,9 @@ class EventQRTicketVC: UIViewController {
 
         let fees = booking?.fees
         let subtotal = fees?.subTotal ?? ticketSubtotal
-        let salesTax = fees?.salesTax ?? 0
-        let processingFee = fees?.processingFee ?? 0
-        let customFee = fees?.customFee ?? 0
-        let total = booking?.totalPrice ?? fees?.total ?? subtotal + salesTax + processingFee + customFee
+        let feeItems = buildOrderFeeItems(from: fees)
+        let feesTotal = feeItems.reduce(0.0) { $0 + $1.amount }
+        let total = booking?.totalPrice ?? fees?.total ?? subtotal + feesTotal
 
         orderSummaryStackView.addArrangedSubview(
             makeOrderSummaryRow(
@@ -1091,53 +1196,24 @@ class EventQRTicketVC: UIViewController {
             )
         )
 
-        if salesTax > 0 {
+        if !feeItems.isEmpty {
             orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fees?.salesTaxName?.isEmpty == false ? (fees?.salesTaxName ?? "Sales Tax") : "Sales Tax",
-                    value: "$\(salesTax.decimalFormat(true))"
-                )
+                makeOrderFeesDropdownRow(value: "$\(feesTotal.decimalFormat(true))")
             )
-        }
 
-        if processingFee > 0 {
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: "Processing Fee",
-                    value: "$\(processingFee.decimalFormat(true))"
-                )
-            )
-        }
+            if isOrderFeesExpanded {
+                feeItems.forEach { item in
+                    orderSummaryStackView.addArrangedSubview(
+                        makeOrderSummaryRow(
+                            title: item.title,
+                            value: "$\(item.amount.decimalFormat(true))",
+                            titleLeadingInset: 12
+                        )
+                    )
+                }
 
-        if customFee > 0 {
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fees?.customFeeName?.isEmpty == false ? (fees?.customFeeName ?? "Fee") : "Fee",
-                    value: "$\(customFee.decimalFormat(true))"
-                )
-            )
-        }
-
-        fees?.customFees?.forEach { fee in
-            let amount = fee.amount ?? fee.fee ?? 0
-            guard amount > 0 else { return }
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fee.name,
-                    value: "$\(amount.decimalFormat(true))"
-                )
-            )
-        }
-
-        fees?.additionalFees?.forEach { fee in
-            let amount = fee.amount ?? fee.fee ?? 0
-            guard amount > 0 else { return }
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: fee.name,
-                    value: "$\(amount.decimalFormat(true))"
-                )
-            )
+                orderSummaryStackView.addArrangedSubview(makeDivider())
+            }
         }
 
         orderSummaryStackView.addArrangedSubview(
@@ -1149,7 +1225,53 @@ class EventQRTicketVC: UIViewController {
         )
     }
 
-    private func makeOrderSummaryRow(title: String, value: String, isTotal: Bool = false) -> UIView {
+    private func buildOrderFeeItems(from fees: PaymentDetail?) -> [FeeDisplayItem] {
+        guard let fees else { return [] }
+        var items: [FeeDisplayItem] = []
+
+        if fees.customFee > 0 {
+            items.append(
+                FeeDisplayItem(
+                    title: fees.customFeeName?.isEmpty == false ? (fees.customFeeName ?? "Custom Fee") : "Custom Fee",
+                    amount: fees.customFee
+                )
+            )
+        }
+
+        if (fees.salesTax ?? 0) > 0 {
+            items.append(
+                FeeDisplayItem(
+                    title: fees.salesTaxName?.isEmpty == false ? (fees.salesTaxName ?? "Sales Tax") : "Sales Tax",
+                    amount: fees.salesTax ?? 0
+                )
+            )
+        }
+
+        if fees.processingFee > 0 {
+            items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
+        }
+
+        fees.customFees?.forEach { fee in
+            let amount = fee.amount ?? fee.fee ?? 0
+            guard amount > 0 else { return }
+            items.append(FeeDisplayItem(title: fee.name, amount: amount))
+        }
+
+        fees.additionalFees?.forEach { fee in
+            let amount = fee.amount ?? fee.fee ?? 0
+            guard amount > 0 else { return }
+            items.append(FeeDisplayItem(title: fee.name, amount: amount))
+        }
+
+        return items
+    }
+
+    private func makeOrderSummaryRow(
+        title: String,
+        value: String,
+        isTotal: Bool = false,
+        titleLeadingInset: CGFloat = 0
+    ) -> UIView {
         let row = UIStackView()
         row.axis = .horizontal
         row.alignment = .top
@@ -1168,9 +1290,71 @@ class EventQRTicketVC: UIViewController {
         valueLabel.textAlignment = .right
         valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+        if titleLeadingInset > 0 {
+            let spacer = UIView()
+            spacer.translatesAutoresizingMaskIntoConstraints = false
+            spacer.widthAnchor.constraint(equalToConstant: titleLeadingInset).isActive = true
+            row.addArrangedSubview(spacer)
+        }
+
         row.addArrangedSubview(titleLabel)
         row.addArrangedSubview(valueLabel)
         return row
+    }
+
+    private func makeOrderFeesDropdownRow(value: String) -> UIView {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(onClickOrderFeesDropdown), for: .touchUpInside)
+        button.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
+
+        let titleStack = UIStackView()
+        titleStack.axis = .horizontal
+        titleStack.alignment = .center
+        titleStack.spacing = 6
+        titleStack.isUserInteractionEnabled = false
+        titleStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let titleLabel = UILabel()
+        titleLabel.text = "Fees & taxes"
+        titleLabel.font = Constant.Font.geistMedium(size: 14)
+        titleLabel.textColor = UIColor.white.withAlphaComponent(0.76)
+
+        let chevronImageView = UIImageView()
+        chevronImageView.image = UIImage(
+            systemName: "chevron.up",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+        )?.withRenderingMode(.alwaysTemplate)
+        chevronImageView.tintColor = UIColor.white.withAlphaComponent(0.76)
+        chevronImageView.contentMode = .scaleAspectFit
+        chevronImageView.transform = isOrderFeesExpanded ? .identity : CGAffineTransform(rotationAngle: .pi)
+        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+        chevronImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        chevronImageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
+
+        let valueLabel = UILabel()
+        valueLabel.text = value
+        valueLabel.font = Constant.Font.geistMedium(size: 14)
+        valueLabel.textColor = UIColor.white.withAlphaComponent(0.76)
+        valueLabel.textAlignment = .right
+        valueLabel.isUserInteractionEnabled = false
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(chevronImageView)
+        button.addSubview(titleStack)
+        button.addSubview(valueLabel)
+
+        NSLayoutConstraint.activate([
+            titleStack.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            titleStack.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            titleStack.trailingAnchor.constraint(lessThanOrEqualTo: valueLabel.leadingAnchor, constant: -12),
+
+            valueLabel.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            valueLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+        ])
+
+        return button
     }
 
     private func makeDivider() -> UIView {
@@ -1205,6 +1389,7 @@ class EventQRTicketVC: UIViewController {
                 }
 
                 self.didFetchFullBookingDetail = true
+                self.hasResolvedGuestCheckInAvailability = true
                 self.applyBooking(booking)
             }
         }
@@ -1215,9 +1400,15 @@ class EventQRTicketVC: UIViewController {
         didFetchFullBookingDetail = true
 
         paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, fetchedBooking in
-            guard let self, isSuccess, let fetchedBooking else { return }
+            guard let self else { return }
             DispatchQueue.main.async {
-                self.applyBooking(fetchedBooking)
+                self.hasResolvedGuestCheckInAvailability = true
+                if isSuccess, let fetchedBooking {
+                    self.applyBooking(fetchedBooking)
+                } else {
+                    self.renderTicketRows()
+                    self.renderPassActionRows()
+                }
             }
         }
     }
@@ -1469,6 +1660,82 @@ class EventQRTicketVC: UIViewController {
         bookingVenueDisplayName(fallback: "Partner")
     }
 
+    private func calendarEventStorageKey(for event: Event, startDate: Date) -> String {
+        let sourceID = booking?.id.isEmpty == false ? booking?.id : event.id
+        return "speakeasy.calendarEvent.\(sourceID ?? event.id).\(Int(startDate.timeIntervalSince1970))"
+    }
+
+    private func hasReadableCalendarAccess() -> Bool {
+        if #available(iOS 17.0, *) {
+            return EKEventStore.authorizationStatus(for: .event) == .fullAccess
+        } else {
+            return EKEventStore.authorizationStatus(for: .event) == .authorized
+        }
+    }
+
+    private func isMatchingCalendarEvent(
+        _ calendarEvent: EKEvent,
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        location: String
+    ) -> Bool {
+        let existingTitle = calendarEvent.title?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+        let eventTitle = title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let existingLocation = calendarEvent.location?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+        let eventLocation = location.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        return existingTitle == eventTitle
+            && abs(calendarEvent.startDate.timeIntervalSince(startDate)) < 60
+            && abs(calendarEvent.endDate.timeIntervalSince(endDate)) < 60
+            && (eventLocation.isEmpty || existingLocation == eventLocation)
+    }
+
+    private func isCalendarEventAlreadyAdded(
+        event: Event,
+        startDate: Date,
+        endDate: Date,
+        location: String
+    ) -> Bool {
+        let storageKey = calendarEventStorageKey(for: event, startDate: startDate)
+
+        if let eventIdentifier = UserDefaults.standard.string(forKey: storageKey),
+           !eventIdentifier.isEmpty {
+            guard hasReadableCalendarAccess() else { return true }
+
+            if eventStore.event(withIdentifier: eventIdentifier) != nil {
+                return true
+            }
+
+            UserDefaults.standard.removeObject(forKey: storageKey)
+        }
+
+        guard hasReadableCalendarAccess() else { return false }
+
+        let searchStart = Calendar.current.date(byAdding: .minute, value: -1, to: startDate) ?? startDate
+        let searchEnd = Calendar.current.date(byAdding: .minute, value: 1, to: endDate) ?? endDate
+        let predicate = eventStore.predicateForEvents(
+            withStart: searchStart,
+            end: searchEnd,
+            calendars: nil
+        )
+
+        return eventStore.events(matching: predicate).contains {
+            isMatchingCalendarEvent(
+                $0,
+                title: event.title,
+                startDate: startDate,
+                endDate: endDate,
+                location: location
+            )
+        }
+    }
+
+    private func storeCalendarEventIdentifier(_ identifier: String?, for event: Event, startDate: Date) {
+        guard let identifier, !identifier.isEmpty else { return }
+        UserDefaults.standard.set(identifier, forKey: calendarEventStorageKey(for: event, startDate: startDate))
+    }
+
     private func bookingVenueDisplayName(fallback: String = "") -> String {
         if let eventVenueName = booking?.event?.displayVenueName,
            !eventVenueName.isEmpty {
@@ -1492,6 +1759,49 @@ class EventQRTicketVC: UIViewController {
         openEventDetails()
     }
 
+    @objc private func onClickOrderFeesDropdown() {
+        isOrderFeesExpanded.toggle()
+        AppHaptic.selectionChanged()
+        renderOrderSummary()
+    }
+
+    @objc private func onClickCheckInTicket(_ sender: UIButton) {
+        guard !isCheckingInTicket else { return }
+        guard let bookingId = booking?.id, !bookingId.isEmpty,
+              let ticketId = sender.accessibilityIdentifier else {
+            AppHaptic.error()
+            Alert.showToast(Constant.String.somethingWrong)
+            return
+        }
+
+        let ticketIds = remainingBookingItemIds(for: ticketId)
+        guard !ticketIds.isEmpty else {
+            AppHaptic.success()
+            renderTicketRows()
+            return
+        }
+
+        isCheckingInTicket = true
+        renderTicketRows()
+
+        eventService.eventTicketCheckIn(bookingId: bookingId, ticketIds: ticketIds) { [weak self] isSuccess, errMsg, checkInData in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.isCheckingInTicket = false
+
+                if isSuccess {
+                    self.booking?.bookingHasCheckIn = checkInData ?? []
+                    AppHaptic.success()
+                    self.renderTicketRows()
+                } else {
+                    AppHaptic.error()
+                    self.renderTicketRows()
+                    Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                }
+            }
+        }
+    }
+
     @objc private func onClickAddToCalendar() {
         guard let event = booking?.event,
               let startDate = eventStartDate() else {
@@ -1508,15 +1818,30 @@ class EventQRTicketVC: UIViewController {
                 return
             }
 
+            let endDate = self.eventEndDate() ?? Calendar.current.date(byAdding: .hour, value: 3, to: startDate) ?? startDate
+            let location = self.eventLocationName()
+
+            if self.isCalendarEventAlreadyAdded(
+                event: event,
+                startDate: startDate,
+                endDate: endDate,
+                location: location
+            ) {
+                AppHaptic.success()
+                self.showTicketToast("Already added to Calendar")
+                return
+            }
+
             let calendarEvent = EKEvent(eventStore: self.eventStore)
             calendarEvent.title = event.title
             calendarEvent.startDate = startDate
-            calendarEvent.endDate = self.eventEndDate() ?? Calendar.current.date(byAdding: .hour, value: 3, to: startDate) ?? startDate
-            calendarEvent.location = self.eventLocationName()
+            calendarEvent.endDate = endDate
+            calendarEvent.location = location
             calendarEvent.calendar = calendar
 
             do {
                 try self.eventStore.save(calendarEvent, span: .thisEvent)
+                self.storeCalendarEventIdentifier(calendarEvent.eventIdentifier, for: event, startDate: startDate)
                 AppHaptic.success()
                 self.showTicketToast("Added to Calendar")
             } catch {
@@ -1861,19 +2186,19 @@ extension EventQRTicketVC: PKAddPassesViewControllerDelegate {
 private extension EventQRTicketVC {
     func openEventDetails() {
         
-        var event = self.booking?.event
+        var event = self.booking?.event ?? sourceEvent
         guard event != nil else {
             Alert.showToast("Event details not available")
             return
         }
-        event?.venue = self.booking?.venueObject
+        event?.venue = self.booking?.venueObject ?? sourceEvent?.venue
 
-        if let eventDetailsVC = navigationController?.viewControllers
-            .last(where: { $0 is EventDetailsVC }) {
-            navigationController?.popToViewController(
-                eventDetailsVC,
-                animated: true
-            )
+        if presentationMode == .modal,
+           let presentingController = presentingViewController ?? navigationController?.presentingViewController {
+            dismiss(animated: true) { [weak self, weak presentingController] in
+                guard let self, let presentingController else { return }
+                self.pushEventDetails(event, from: presentingController)
+            }
             return
         }
 
@@ -1887,6 +2212,34 @@ private extension EventQRTicketVC {
         
         Navigate.eventDetailsVC(
             self,
+            event: event
+        )
+    }
+
+    func pushEventDetails(_ event: Event?, from controller: UIViewController) {
+        let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
+        vc.event = event
+        vc.venueDetails = event?.venue
+        vc.hidesBottomBarWhenPushed = true
+
+        if let navigationController = controller as? UINavigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        if let tabBarController = controller as? UITabBarController,
+           let navigationController = tabBarController.selectedViewController as? UINavigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        if let navigationController = controller.navigationController {
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
+        Navigate.eventDetailsVC(
+            controller,
             event: event
         )
     }

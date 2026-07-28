@@ -114,11 +114,15 @@ enum AgreementTextFormatter {
         }
 
         if needsToggle {
+            removeToggleSuffix(from: attributed)
             attributed.append(NSAttributedString(
                 string: separatesToggleLine ? "\n\(toggleText)" : " \(toggleText)"
             ))
 
-            let toggleRange = (attributed.string as NSString).range(of: toggleText)
+            let toggleRange = (attributed.string as NSString).range(
+                of: toggleText,
+                options: .backwards
+            )
             attributed.addAttributes(toggleAttributes, range: toggleRange)
         }
 
@@ -306,6 +310,23 @@ enum AgreementTextFormatter {
 
         if !separatesToggleLine && !attributed.string.hasSuffix("...") {
             attributed.append(NSAttributedString(string: "...", attributes: bodyAttributes))
+        }
+    }
+
+    private static func removeToggleSuffix(from attributed: NSMutableAttributedString) {
+        let suffixes = [
+            " View More",
+            "\nView More",
+            " View Less",
+            "\nView Less"
+        ]
+
+        for suffix in suffixes where attributed.string.hasSuffix(suffix) {
+            attributed.deleteCharacters(in: NSRange(
+                location: attributed.length - suffix.count,
+                length: suffix.count
+            ))
+            break
         }
     }
 

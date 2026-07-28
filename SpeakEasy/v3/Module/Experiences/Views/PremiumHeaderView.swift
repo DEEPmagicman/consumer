@@ -43,7 +43,7 @@ final class PremiumHeaderView: UIView {
     private let helpButton = UIButton(type: .system)
     
     private let helpGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 16,
+        cornerRadius: 18,
         fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.05),
         borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
         borderWidth: 0.8
@@ -77,6 +77,7 @@ final class PremiumHeaderView: UIView {
         avatarGlassView.layer.cornerRadius = avatarGlassView.bounds.height / 2
         imageView.layer.cornerRadius = imageView.bounds.height / 2
         firstNameLetter.layer.cornerRadius = firstNameLetter.bounds.height / 2
+        applyHelpButtonShape()
     }
     
     // MARK: -
@@ -127,6 +128,7 @@ final class PremiumHeaderView: UIView {
         
         helpButton.translatesAutoresizingMaskIntoConstraints = false
         helpButton.backgroundColor = .clear
+        helpButton.layer.cornerCurve = .continuous
         helpButton.setTitle("?", for: .normal)
         helpButton.setTitleColor(.white, for: .normal)
         helpButton.titleLabel?.font = Constant.Font.geistMedium(size: 14)
@@ -142,6 +144,7 @@ final class PremiumHeaderView: UIView {
         helpGlassView.translatesAutoresizingMaskIntoConstraints = false
         helpGlassView.isUserInteractionEnabled = false
         helpButton.insertSubview(helpGlassView, at: 0)
+        applyHelpButtonShape()
         
         setupConstraints()
         
@@ -320,6 +323,13 @@ final class PremiumHeaderView: UIView {
         imageView.isHidden = true
         firstNameLetter.isHidden = true
         signInIconView.isHidden = false
+    }
+
+    private func applyHelpButtonShape() {
+        let radius = helpButton.bounds.height > 0 ? helpButton.bounds.height / 2 : 18
+        helpButton.layer.cornerRadius = radius
+        helpGlassView.glassCornerRadius = radius
+        helpGlassView.layer.cornerRadius = radius
     }
 }
 

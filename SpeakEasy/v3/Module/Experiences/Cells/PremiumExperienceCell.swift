@@ -128,20 +128,20 @@ final class PremiumExperienceCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1.08),
 
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2),
+            venueLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
+            venueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+            venueLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2),
 
-            venueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 3),
-            venueLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            venueLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: venueLabel.bottomAnchor, constant: 3),
+            titleLabel.leadingAnchor.constraint(equalTo: venueLabel.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: venueLabel.trailingAnchor),
 
-            dateLabel.topAnchor.constraint(equalTo: venueLabel.bottomAnchor, constant: 3),
-            dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            dateLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 3),
+            dateLabel.leadingAnchor.constraint(equalTo: venueLabel.leadingAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: venueLabel.trailingAnchor),
 
             guestIconView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
-            guestIconView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            guestIconView.leadingAnchor.constraint(equalTo: venueLabel.leadingAnchor),
             guestIconView.widthAnchor.constraint(equalToConstant: 10),
             guestIconView.heightAnchor.constraint(equalToConstant: 10),
 

@@ -1943,7 +1943,7 @@ private extension PremiumTableCheckoutVC {
                     Alert.showToast("Promo code applied")
                 } else {
                     self.isPromoApplied = false
-                    self.appliedPromo   = ""
+                    self.appliedPromo = ""
                     self.promoRow.setApplied(false)
                     Alert.showToast(message ?? "Invalid promo code")
                 }
