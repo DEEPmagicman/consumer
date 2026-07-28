@@ -38,7 +38,7 @@ final class SearchVenueCell: UITableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(nameLabel)
 
-        typeLabel.text = "Venue"
+        typeLabel.text = "Partners"
         typeLabel.textColor = .white.withAlphaComponent(0.55)
         typeLabel.font = Constant.Font.geistRegular(size: 12)
         typeLabel.translatesAutoresizingMaskIntoConstraints = false

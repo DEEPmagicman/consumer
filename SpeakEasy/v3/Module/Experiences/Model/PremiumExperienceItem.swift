@@ -389,22 +389,20 @@ private extension PremiumExperienceItem {
         event: Event,
         seatingAreas: [SeatingArea]
     ) -> String {
-        let ranges = (event.eventTicket ?? []).compactMap { ticket -> (Int, Int)? in
-            guard
-                let minGuests = ticket.miniPurchaseQuantity,
-                let maxGuests = ticket.maxPurchaseQuantity,
-                maxGuests > 0
-            else {
-                return nil
-            }
-
-            return (Swift.max(minGuests, 1), maxGuests)
-        }
+//        let ranges = (event.eventTicket ?? []).compactMap { ticket -> (Int, Int)? in
+//            guard
+//                let minGuests = ticket.miniPurchaseQuantity,
+//                let maxGuests = ticket.maxPurchaseQuantity,
+//                maxGuests > 0
+//            else {
+//                return nil
+//            }
+//
+//            return (Swift.max(minGuests, 1), maxGuests)
+//        }
 
         return resolvedGuestText(
-            from: ranges.isEmpty
-            ? guestRanges(from: seatingAreas)
-            : ranges
+            from:  guestRanges(from: seatingAreas)
         )
     }
 

@@ -23,9 +23,9 @@ enum V3EmptyStateStyle {
         case .savedEvents:
             return "No events saved"
         case .venues:
-            return "No venues saved"
+            return "No partners saved"
         case .mapVenues:
-            return "No venues found"
+            return "No partners found"
         case .tickets:
             return "No tickets"
         case .reservations:

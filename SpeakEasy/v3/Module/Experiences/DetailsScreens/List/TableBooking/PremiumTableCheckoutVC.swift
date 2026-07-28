@@ -895,7 +895,7 @@ private extension PremiumTableCheckoutVC {
             items.append(.init(title: "Total", amount: total, isBold: true))
         }
         if let balance = bd.balanceDueAtVenue {
-            items.append(.init(title: "Balance Due at Venue", amount: balance, isBold: true))
+            items.append(.init(title: "Balance Due at Partner", amount: balance, isBold: true))
         }
         return items
     }
@@ -1127,7 +1127,7 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.isChecked = true
         termsAgreementView.isHidden = terms.isEmpty
 
-        let venueName = event?.displayVenueNameOrFallback("the venue") ?? "the venue"
+        let venueName = event?.displayVenueNameOrFallback("the partner") ?? "the partner"
         let fallbackPolicy =
             "I agree to receive marketing related text messages from \(venueName). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
         var policy = cleanAgreementText(settings?.policyText ?? fallbackPolicy)
@@ -1522,7 +1522,7 @@ private extension PremiumTableCheckoutVC {
             .forEach { items.append(.init(title: $0.name, amount: $0.amount, isBold: false)) }
 
         items.append(.init(title: "Total", amount: feeResult.amountChargedToConsumer, isBold: true))
-        items.append(.init(title: "Balance Due at Venue", amount: balanceDue, isBold: true))
+        items.append(.init(title: "Balance Due at Partner", amount: balanceDue, isBold: true))
         return items
     }
 
@@ -2007,7 +2007,7 @@ private extension PremiumTableCheckoutVC {
 
         if !venueMessageView.isHidden && !venueMessageView.isChecked {
             AppHaptic.error()
-            Alert.showToast("Please accept the venue message")
+            Alert.showToast("Please accept the partner message")
             return
         }
 

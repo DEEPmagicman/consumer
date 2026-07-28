@@ -69,7 +69,7 @@ final class SetLocationViewController: UIViewController {
 
         let bodyLabel = UILabel()
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        bodyLabel.text = "Stay updated on the events, venues, reservations, and live experiences happening around you."
+        bodyLabel.text = "Stay updated on the events, partners, reservations, and live experiences happening around you."
         bodyLabel.textAlignment = .center
         bodyLabel.textColor = UIColor.white.withAlphaComponent(0.58)
         bodyLabel.numberOfLines = 0

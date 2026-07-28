@@ -43,7 +43,7 @@ final class VenueEventTVC: UITableViewCell {
             end: event.endDateTime ?? ""
         )
         
-        bottomLbl.text = event.venue?.name ?? "Unknown Venue"
+        bottomLbl.text = event.venue?.name ?? "Unknown Partner"
         
         eventImg.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),

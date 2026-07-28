@@ -734,7 +734,7 @@ class EventQRTicketVC: UIViewController {
         faqs = [
             (
                 question: "Event details.",
-                answer: "View all event information including venue, date, time, and other event-related details."
+                answer: "View all event information including partner, date, time, and other event-related details."
             ),
             (
                 question: "How to use my tickets",
@@ -1657,7 +1657,7 @@ class EventQRTicketVC: UIViewController {
     }
 
     private func eventLocationName() -> String {
-        bookingVenueDisplayName(fallback: "Venue")
+        bookingVenueDisplayName(fallback: "Partner")
     }
 
     private func calendarEventStorageKey(for event: Event, startDate: Date) -> String {
@@ -1935,7 +1935,7 @@ class EventQRTicketVC: UIViewController {
     @objc private func onClickGetDirections() {
         guard let coordinate = eventCoordinate() else {
             AppHaptic.warning()
-            Alert.showToast("Venue location not available")
+            Alert.showToast("Partner location not available")
             return
         }
 

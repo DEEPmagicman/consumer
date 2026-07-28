@@ -891,7 +891,7 @@ final class VenueService {
 
         } catch {
 
-            print("Venue parsing error:", error)
+            print("Partner parsing error:", error)
             return nil
         }
     }

@@ -380,7 +380,7 @@ private extension PremiumInquiryCardView {
 
     func configureTextsFromSettings() {
         let settings = event?.venue?.venueSettings
-        let venueName = event?.displayVenueNameOrFallback("the venue") ?? "the venue"
+        let venueName = event?.displayVenueNameOrFallback("the partner") ?? "the partner"
         let fallbackInformation =
             "Please complete the form to submit your request and a VIP Services Host will contact you. This request form is not a table reservation confirmation and does not guarantee entry."
         let fallbackPolicy =

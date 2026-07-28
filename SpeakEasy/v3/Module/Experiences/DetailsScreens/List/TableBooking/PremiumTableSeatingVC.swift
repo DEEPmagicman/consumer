@@ -607,7 +607,7 @@ private extension PremiumTableSeatingVC {
             .filter { $0.amount > 0 }
             .forEach { items.append(.init(title: $0.name, amount: $0.amount, isBold: false)) }
         items.append(.init(title: "Total", amount: total, isBold: true))
-        items.append(.init(title: "Balance Due at Venue", amount: balanceDue, isBold: true))
+        items.append(.init(title: "Balance Due at Partner", amount: balanceDue, isBold: true))
 
         currentSpendAgreementItems = items
         spendAgreementView.configure(currency: event?.venue?.venueSettings?.currencySymbol ?? "$", currencyPosition: event?.venue?.venueSettings?.currencyPosition, items: items, expanded: true)

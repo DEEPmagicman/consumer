@@ -40,7 +40,7 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
         )
 
         subtitleLabel = Utility.main.makeLabel(
-            "Stay updated on the events, venues,\nreservations, and live experiences\nhappening around you.",
+            "Stay updated on the events, partners,\nreservations, and live experiences\nhappening around you.",
             font: Constant.Font.geistRegular(size: 12)
         )
 

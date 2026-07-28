@@ -175,7 +175,6 @@ private extension DiscoverAllVC {
     }
 
     @objc func onTapPremiumExperiences() {
-        dismissPremiumExperiencePrompt()
 
         NotificationCenter.default.post(
             name: .openPremiumTabFromDiscover,

@@ -352,7 +352,7 @@
 //    case ISSUED_REWARD = "Issued Reward"
 //    
 //    case EVENTS = "Events"
-//    case VENUE_AND_VIP = "Venues & VIP"
+//    case VENUE_AND_VIP = "Partners & VIP"
 //    case HEAT_MAP = "Heat Map"
 //    
 //    case ALL = "All"
@@ -370,8 +370,8 @@
 //    case UPCOMING = "Upcoming"
 //    case GENERAL_ADMISSION = "General Admission"
 //    
-//    case VENUES = "Venues"
-//    case HOT_VENUES = "Hot Venues"
+//    case VENUES = "Partners"
+//    case HOT_VENUES = "Hot Partners"
 //    
 //    case BOOKINGS = "Bookings"
 //    case INVITES = "Invites"
@@ -380,7 +380,7 @@
 //    case MANAGE_FRIENDS = "Manage Friends"
 //    
 //    case VIP_AND_EVENTS = "VIP & Events"
-//    case VENUE_DEAILS = "Venue Details"
+//    case VENUE_DEAILS = "Partner Details"
 //    
 //    case BOOKING_DETAILS = "Booking Details"
 //    case MESSAGES = "Messages"
@@ -397,7 +397,7 @@
 //    case FROM_YOUR_CONTACTS = "From Your Contacts"
 //    case FELLOW_TAO_PEOPLE = "Fellow TAO people"
 //    case CHICAGE_VIPS = "Chicago VIPs"
-//    case NO_VENUE_RESULTS_MATCHING = "No Venue Results Matching"
+//    case NO_VENUE_RESULTS_MATCHING = "No Partner Results Matching"
 //    case NO_EVENT_RESULTS_MATCHING = "No Event Results Matching"
 //    case NO_RESULT_MATCHING = "No Results Matching"
 //    case ACCESS_PASS = "Access Pass"

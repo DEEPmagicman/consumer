@@ -635,7 +635,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private var defaultPurchasePolicyText: String {
-        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the partner dress code. Entry is subject to valid ticket and ID verification at entry."
     }
 
     private func normalizedPurchasePolicy(_ policy: String?) -> NSAttributedString? {
@@ -1065,7 +1065,6 @@ final class OrderListViewController: UIViewController {
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
         AppHaptic.warning()
-        Alert.showToast("Payment canceled.")
     }
 
     private func cancelBookingAndReturnToEventDetails() {

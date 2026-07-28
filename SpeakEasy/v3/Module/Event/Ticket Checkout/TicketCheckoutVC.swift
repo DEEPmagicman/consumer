@@ -69,11 +69,11 @@ final class TicketCheckoutVC: UIViewController {
     private var faqs: [(question: String, answer: String)] = [
         (
             question: "Event details.",
-            answer: "View all event information including venue, date, time, and other event-related details."
+            answer: "View all event information including partner, date, time, and other event-related details."
         ),
         (
             question: "How to use my tickets",
-            answer: "Show your QR ticket at the venue entrance for scanning and entry."
+            answer: "Show your QR ticket at the partner entrance for scanning and entry."
         )
     ]
 
@@ -313,7 +313,7 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private var defaultPurchasePolicyText: String {
-        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the venue dress code. Entry is subject to valid ticket and ID verification at entry."
+        "By purchasing a ticket, you confirm that you are 21 years of age or older and agree to our Terms of Service and Privacy Policy. All sales are final and non-refundable. Patrons must adhere to the partner dress code. Entry is subject to valid ticket and ID verification at entry."
     }
 
     private func normalizedPurchasePolicy(_ policy: String?) -> NSAttributedString? {
@@ -774,7 +774,6 @@ final class TicketCheckoutVC: UIViewController {
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
         AppHaptic.warning()
-        Alert.showToast("Payment canceled.")
         cancelBookingAndReturnToEventDetails()
     }
 

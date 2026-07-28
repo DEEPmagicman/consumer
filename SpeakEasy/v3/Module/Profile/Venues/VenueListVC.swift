@@ -102,7 +102,7 @@ final class VenueListVC: UIViewController {
         searchBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBtn)
 
-        titleLabel.text = "Followed Venues"
+        titleLabel.text = "Followed Partners"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.textAlignment = .center

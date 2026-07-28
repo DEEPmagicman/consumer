@@ -862,7 +862,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         stackView.spacing = 0
         addSubview(stackView)
 
-        venueTitleLabel.text = "Venue"
+        venueTitleLabel.text = "Partner"
         venueTitleLabel.textColor = .white
         venueTitleLabel.font = Constant.Font.geistRegular(size: 18)
         stackView.addArrangedSubview(venueTitleLabel)
@@ -1369,7 +1369,7 @@ private final class PremiumSearchVenueResultView: UIView {
         addSubview(titleLabel)
 
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = "Venue"
+        subtitleLabel.text = "Partner"
         subtitleLabel.textColor = .white.withAlphaComponent(0.55)
         subtitleLabel.font = Constant.Font.geistRegular(size: 10)
         subtitleLabel.isUserInteractionEnabled = true

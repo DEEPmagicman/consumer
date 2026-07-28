@@ -366,7 +366,7 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueDetails?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "Venue", venueDetails?.uniqueId ?? "")) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
+        let msgText = "Check out \(venueDetails?.name ?? "Partner") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueDetails?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "Partner", venueDetails?.uniqueId ?? "")) Download the app to directly connect with your favorite partners & never miss out! \(SharedURL.appStoreURL)"
         Utility.main.shareSocialWith(text: msgText)
     }
 
@@ -766,7 +766,7 @@ private extension VenueVC {
 
     var displayVenueName: String {
         let name = (venueDetails?.name ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        return name.isEmpty ? "Venue" : name
+        return name.isEmpty ? "Partner" : name
     }
 
     var displayVenueCity: String {

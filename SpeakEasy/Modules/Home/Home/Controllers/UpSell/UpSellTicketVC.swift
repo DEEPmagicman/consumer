@@ -342,7 +342,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
                         self.navigationController?.popToViewController(vc, animated: true)
                     }
                 }
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices", actions: [okAction])
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "The partner updated their prices", actions: [okAction])
             }
         }
     }
@@ -361,7 +361,7 @@ extension UpSellTicketVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking", actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Partner you're trying to close booking", actions: [okAction])
         }
     }
 }

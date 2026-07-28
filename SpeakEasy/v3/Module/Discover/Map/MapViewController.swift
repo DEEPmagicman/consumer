@@ -190,7 +190,7 @@ class MapViewController: UIViewController {
     private let discoverService = DiscoverService()
 
     // MARK: - Tab Bar
-    private let segmentedTab = SegmentedTabView(items: ["Venues", "Events"])
+    private let segmentedTab = SegmentedTabView(items: ["Partners", "Events"])
 
     private var selectedIndex: Int = 0
     private var venueList: [ClipVenue] = []
@@ -418,7 +418,7 @@ class MapViewController: UIViewController {
     }
 
     private func updateBrowsingTitle() {
-        let contentType = selectedIndex == 0 ? "venues" : "events"
+        let contentType = selectedIndex == 0 ? "partners" : "events"
         let city = resolvedCity()
 
         selectedCityLbl.text = city

@@ -92,7 +92,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
                 latitude: venueDetails?.latitude ?? 0,
                 longitude: venueDetails?.longitude ?? 0
             ),
-            with: venueDetails?.name ?? "Venue"
+            with: venueDetails?.name ?? "Partner"
         )
         
         let parts = [

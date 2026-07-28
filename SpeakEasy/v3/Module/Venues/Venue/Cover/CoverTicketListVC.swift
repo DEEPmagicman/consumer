@@ -1259,7 +1259,7 @@ extension CoverTicketListVC {
 
     @IBAction func onClickShare(_ sender: Any) {
         AppHaptic.navigation()
-        let venueName = venueDetails?.name ?? "Venue"
+        let venueName = venueDetails?.name ?? "Partner"
         let slug = venueName
             .lowercased()
             .replacingOccurrences(of: " ", with: "-")
@@ -1268,7 +1268,7 @@ extension CoverTicketListVC {
             slug,
             venueDetails?.uniqueId ?? ""
         )
-        let msgText = "Check out \(venueName) on Speakeasy. \(venueUrl) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
+        let msgText = "Check out \(venueName) on Speakeasy. \(venueUrl) Download the app to directly connect with your favorite partners & never miss out! \(SharedURL.appStoreURL)"
         Utility.main.shareSocialWith(text: msgText)
     }
 

@@ -78,34 +78,40 @@ final class SavedVC: UIViewController {
     }
 
     private func openDiscover() {
-        if let landingVC = presentingLandingVC() {
+        if let landingVC = activeLandingVC() {
             landingVC.showDiscoverTab()
-            navigationController?.dismiss(animated: true)
+        } else {
+            NotificationCenter.default.post(name: .openDiscoverTab, object: nil)
+        }
+
+        closeSavedFlow()
+    }
+
+    private func closeSavedFlow() {
+        if let navigationController,
+           navigationController.presentingViewController != nil {
+            navigationController.dismiss(animated: true)
             return
         }
 
-        NotificationCenter.default.post(name: .openDiscoverTab, object: nil)
-
-        if let navigationController {
-            navigationController.popToRootViewController(animated: true)
-        } else {
+        if presentingViewController != nil {
             dismiss(animated: true)
+            return
         }
+
+        navigationController?.popToRootViewController(animated: true)
     }
 
-    private func presentingLandingVC() -> NewLandingVC? {
-        func landingVC(in hierarchy: UIViewController?) -> NewLandingVC? {
-            var current = hierarchy
+    private func activeLandingVC() -> NewLandingVC? {
+        if let landingVC = landingVC(in: self) {
+            return landingVC
+        }
 
-            while let viewController = current {
-                if let landingVC = viewController as? NewLandingVC {
-                    return landingVC
-                }
-
-                current = viewController.parent
-            }
-
-            return nil
+        if let navigationController,
+           let landingVC = navigationController.viewControllers
+            .compactMap({ landingVC(in: $0) })
+            .first {
+            return landingVC
         }
 
         var controller: UIViewController? =
@@ -118,6 +124,45 @@ final class SavedVC: UIViewController {
             }
 
             controller = current.presentingViewController
+        }
+
+        return landingVC(
+            in: view.window?.rootViewController ??
+            AppDelegate.shared.window?.rootViewController
+        )
+    }
+
+    private func landingVC(in viewController: UIViewController?) -> NewLandingVC? {
+        guard let viewController else { return nil }
+
+        if let landingVC = viewController as? NewLandingVC {
+            return landingVC
+        }
+
+        for child in viewController.children {
+            if let landingVC = landingVC(in: child) {
+                return landingVC
+            }
+        }
+
+        if let navigationController = viewController as? UINavigationController {
+            for stackedViewController in navigationController.viewControllers {
+                if let landingVC = landingVC(in: stackedViewController) {
+                    return landingVC
+                }
+            }
+        }
+
+        if let tabBarController = viewController as? UITabBarController {
+            for tabViewController in tabBarController.viewControllers ?? [] {
+                if let landingVC = landingVC(in: tabViewController) {
+                    return landingVC
+                }
+            }
+        }
+
+        if let landingVC = landingVC(in: viewController.presentedViewController) {
+            return landingVC
         }
 
         return nil

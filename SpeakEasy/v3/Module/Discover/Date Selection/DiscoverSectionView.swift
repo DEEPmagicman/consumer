@@ -123,7 +123,7 @@ final class DiscoverSectionView: UIView {
 
         case .venues:
 
-            titleLabel.text = "Venues in \(displayCity)"
+            titleLabel.text = "Partners in \(displayCity)"
 
         case .allEvents:
 
