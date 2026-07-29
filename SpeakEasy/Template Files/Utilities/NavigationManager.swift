@@ -387,6 +387,7 @@ final class Navigate {
         venueId: String = "",
         addOnsBookingId: String,
         venueName: String? = "",
+        venue: ClipVenue? = nil,
         shouldPushFromVenueFlow: Bool = false,
         buyAnotherCoverListTarget: CoverTicketListVC? = nil
     ) {
@@ -396,7 +397,7 @@ final class Navigate {
         vc.booking = booking
         vc.isOnlyAddOnAvailable = isOnlyAddOnAvailable
         vc.venueId = venueId
-        vc.venue = booking?.venueObject
+        vc.venue = booking?.venueObject ?? venue
         vc.delegate = sender as? QRCodeVCNavigationDelegate
         vc.addOnsBookingId = addOnsBookingId
         vc.venueNameText = venueName

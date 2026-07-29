@@ -45,6 +45,8 @@ final class CoverQRCodeVC: UIViewController {
     private let paymentService = PaymentService()
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
+    private let backgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let backgroundDimView = UIView()
     private var dotViews: [UIView] = []
     private let scrollView = UIScrollView()
     private weak var scrollContentView: UIView?
@@ -208,13 +210,13 @@ final class CoverQRCodeVC: UIViewController {
     private func setupUI() {
         setupHeaderLabels()
         setVenueTitle(venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-"))
-        cityLbl.text = venue?.city
+        updateHeaderMetadata()
     }
 
     private func setupHeaderLabels() {
         setupVenueTitleMarquee()
 
-        cityLbl.numberOfLines = 1
+        cityLbl.numberOfLines = 2
         cityLbl.lineBreakMode = .byTruncatingTail
         cityLbl.textAlignment = .center
         cityLbl.adjustsFontSizeToFitWidth = true
@@ -267,6 +269,67 @@ final class CoverQRCodeVC: UIViewController {
         venueNameMarqueeLabel.setText(title)
     }
 
+    private func updateHeaderMetadata() {
+        let city = headerCityText()
+        let dateTime = headerDateTimeText()
+        let lines = [city, dateTime]
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        cityLbl.text = lines.joined(separator: "\n")
+        cityLbl.isHidden = lines.isEmpty
+    }
+
+    private func headerCityText() -> String {
+        let city = booking?.venueObject?.city
+            ?? venue?.city
+        return city?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+
+    private func headerDateTimeText() -> String {
+        let sourceDate: String?
+        let timeZone: String?
+
+        if isOnlyAddOnAvailable || (showsAddOnsPage && currentPage == 1) {
+            sourceDate = addOnsBooking?.createdAt
+            timeZone = addOnsBooking?.venue?.timezone
+                ?? booking?.venueObject?.useTimezone
+                ?? booking?.venueObject?.timezone
+                ?? venue?.useTimezone
+                ?? venue?.timezone
+        } else {
+            sourceDate = booking?.createdAt
+            timeZone = booking?.venueObject?.useTimezone
+                ?? booking?.venueObject?.timezone
+                ?? venue?.useTimezone
+                ?? venue?.timezone
+        }
+
+        guard let sourceDate, !sourceDate.isEmpty else {
+            return fallbackHeaderDateTimeText(timeZone: timeZone)
+        }
+
+        return sourceDate.convertDateFormat(
+            from: .yyyyMMddTHHmmssSSSz,
+            to: .EEEMMMDATHMMA,
+            isUTC: true,
+            customTimeZone: timeZone ?? ""
+        )
+    }
+
+    private func fallbackHeaderDateTimeText(timeZone: String?) -> String {
+        guard shouldReturnToVenueAfterClose, !bookingId.isEmpty else { return "" }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormat.EEEMMMDATHMMA.rawValue
+        if let timeZone,
+           !timeZone.isEmpty,
+           let venueTimeZone = TimeZone(identifier: timeZone) {
+            formatter.timeZone = venueTimeZone
+        }
+        return formatter.string(from: Date())
+    }
+
     private func setupPosterBackground() {
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -278,8 +341,36 @@ final class CoverQRCodeVC: UIViewController {
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
 
+        setupBackgroundReadabilityLayer()
+
         let imageUrlString = "\(SharedURL.amazonStorage)\(venue?.venueAttachment?.first?.key ?? "")"
         posterHeaderView.loadImage(from: imageUrlString)
+    }
+
+    private func setupBackgroundReadabilityLayer() {
+        guard backgroundBlurView.superview == nil else { return }
+
+        backgroundBlurView.alpha = 0.18
+        backgroundBlurView.isUserInteractionEnabled = false
+        backgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundContainerView.addSubview(backgroundBlurView)
+
+        backgroundDimView.backgroundColor = UIColor.black.withAlphaComponent(0.10)
+        backgroundDimView.isUserInteractionEnabled = false
+        backgroundDimView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundContainerView.addSubview(backgroundDimView)
+
+        NSLayoutConstraint.activate([
+            backgroundBlurView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor),
+            backgroundBlurView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor),
+            backgroundBlurView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
+            backgroundBlurView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor),
+
+            backgroundDimView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor),
+            backgroundDimView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor),
+            backgroundDimView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
+            backgroundDimView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
+        ])
     }
 
     private func setupPagerView() {
@@ -427,7 +518,7 @@ final class CoverQRCodeVC: UIViewController {
         self.booking = booking
         venue = booking.venueObject ?? venue
         setVenueTitle(booking.venueObject?.name ?? venueNameText ?? "-")
-        cityLbl.text = booking.venueObject?.city ?? venue?.city
+        updateHeaderMetadata()
 
         if isAddOnsAvailable || !addOnsBookingId.isEmpty || !(booking.addOnsBookingId ?? "").isEmpty {
             isAddOnsAvailable = true
@@ -479,6 +570,7 @@ final class CoverQRCodeVC: UIViewController {
 
         if isOnlyAddOnAvailable || booking == nil {
             setVenueTitle(addOnsBooking.venue?.name ?? venueNameText ?? "-")
+            updateHeaderMetadata()
             let imageUrlString = "\(SharedURL.amazonStorage)\(addOnsBooking.venue?.venueAttachment?.first?.key ?? "")"
             posterHeaderView.loadImage(from: imageUrlString)
         }
@@ -570,6 +662,8 @@ final class CoverQRCodeVC: UIViewController {
         if reloadPager {
             pagerView.reloadData()
         }
+
+        updateHeaderMetadata()
     }
 
     private func updatePagerItemSize(height: CGFloat) {
@@ -1043,6 +1137,7 @@ extension CoverQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         if page != currentPage {
             currentPage = page
             AppHaptic.selectionChanged()
+            updateHeaderMetadata()
         }
         updateProgressDots(activePage: page)
     }

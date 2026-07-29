@@ -1615,6 +1615,7 @@ extension CoverTicketCheckOutVC {
             venueId: venue?.id ?? "",
             addOnsBookingId: addOnsBookingId ?? "",
             venueName: venue?.name ?? "",
+            venue: venue,
             shouldPushFromVenueFlow: true,
             buyAnotherCoverListTarget: qrPresenter as? CoverTicketListVC
         )

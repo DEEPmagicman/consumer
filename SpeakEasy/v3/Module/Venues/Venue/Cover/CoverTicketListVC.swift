@@ -147,7 +147,7 @@ final class CoverTicketListVC: UIViewController {
     private var selectedStepTitle: String {
         switch currentStep {
         case .coverTickets:
-            return "Live Entry Tickets"
+            return Constant.String.liveCoverTickets
         case .addOns:
             let title = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -727,7 +727,7 @@ private extension CoverTicketListVC {
             height: 56
         )
 
-        directUpsellButton.titleLabel?.font = Constant.Font.geistRegular(size: 15)
+        directUpsellButton.titleLabel?.font = Constant.Font.geistMedium(size: 15)
         directUpsellButton.setTitleColor(.white, for: .normal)
         directUpsellButton.contentHorizontalAlignment = .center
         directUpsellButton.addTarget(self, action: #selector(onClickDirectUpsellButton), for: .touchUpInside)
@@ -763,7 +763,7 @@ private extension CoverTicketListVC {
         let attributedTitle = NSAttributedString(
             string: buttonTitle,
             attributes: [
-                .font: Constant.Font.geistRegular(size: 15),
+                .font: Constant.Font.geistMedium(size: 15),
                 .foregroundColor: UIColor.white,
                 .underlineStyle: NSUnderlineStyle.single.rawValue
             ]
@@ -1230,7 +1230,7 @@ extension CoverTicketListVC {
     func resetForFreshPurchase() {
         configureInitialFlowStep()
         coverTicketCount.removeAll()
-        upSellTicketCount.removeAll()
+        clearUpsellSelection()
         expandedIndexSet.removeAll()
         isCheckoutNavigationInProgress = false
         isFreeBookingInProgress = false
@@ -1246,6 +1246,7 @@ extension CoverTicketListVC {
         if currentStep == .addOns && !shouldShowDirectUpsell {
             AppHaptic.navigation()
             currentStep = .coverTickets
+            clearUpsellSelection()
             expandedIndexSet.removeAll()
             updateTicketsTitle()
             tableView.reloadData()
@@ -1255,6 +1256,10 @@ extension CoverTicketListVC {
         navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.shadowImage = nil
         Navigate.to.back(self)
+    }
+
+    private func clearUpsellSelection() {
+        upSellTicketCount.removeAll()
     }
 
     @IBAction func onClickShare(_ sender: Any) {
@@ -1338,6 +1343,7 @@ extension CoverTicketListVC {
                     bookingId: id,
                     addOnsBookingId: "",
                     venueName: venueDetails?.name ?? "",
+                    venue: venueDetails,
                     shouldPushFromVenueFlow: true
                 )
             } else {

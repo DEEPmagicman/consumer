@@ -201,12 +201,16 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     }
 
     private func applyQRCodeBackgroundColor(venue: ClipVenue?) {
+        let venueSettings = booking?.venueObject?.venueSettings ?? venue?.venueSettings
+        let isCompedTicket = booking?.isCompedTicket == true
+
         backgroundColorView.backgroundColor = TicketQRCodeColorResolver.color(
-            venueSettings: booking?.venueObject?.venueSettings ?? venue?.venueSettings,
+            venueSettings: venueSettings,
             ticketType: .cover,
             isFreeTicket: isFreeCoverBooking(),
-            fallbackColor: "#F1CE72"
-        ) ?? UIColor(hex: "#F1CE72")
+            preferredColor: isCompedTicket ? venueSettings?.compedTicketQrCodeBorderColor : nil,
+            fallbackColor: nil
+        ) ?? .clear
     }
 
     private func isFreeCoverBooking() -> Bool {
