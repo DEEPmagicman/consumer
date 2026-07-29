@@ -305,7 +305,16 @@ final class WebSocketWrapper: NSObject {
                              "module": "consumer",
                              "platform": "ios",
                              "app_version": "\(Bundle.main.releaseVersionNumber)"]
-            manager = SocketManager(socketURL: socketUrl, config: [.log(true), .compress, .connectParams(headerDic)])
+            manager = SocketManager(socketURL: socketUrl, config: [
+                .log(false),
+                .compress,
+                .forceWebsockets(true),
+                .forcePolling(false),
+                .connectParams(headerDic),
+                .reconnectAttempts(5),
+                .reconnectWait(2),
+                .reconnectWaitMax(10)
+            ])
             socket = manager.defaultSocket
             addEventListener()
             setArrData()

@@ -1086,6 +1086,39 @@ class TicketSelectionViewController: UIViewController {
         return total <= 0
     }
 
+    private func checkRSVPStock(
+        event: Event,
+        user: User,
+        ticket: EventTicket,
+        completion: @escaping (Bool) -> Void
+    ) {
+        var ticket = ticket
+        ticket.selectedTicketCount = 1
+        let payload = buildTicketsPayload(from: [ticket])
+
+        setCheckoutInProgress(true)
+        paymentService.checkEventTicketStock(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: payload
+        ) { [weak self] isAvailable, errMsg in
+            guard let self else { return }
+            self.setCheckoutInProgress(false)
+
+            guard isAvailable else {
+                AppHaptic.error()
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                completion(false)
+                return
+            }
+
+            completion(true)
+        }
+    }
+
     private func createCheckedBooking(
         event: Event,
         user: User,
@@ -1310,7 +1343,14 @@ class TicketSelectionViewController: UIViewController {
         guard !isTicketDisabledByLink(ticket),
               let event = event,
               let user = UserDefault.shared.user else { return }
-        
+
+        checkRSVPStock(event: event, user: user, ticket: ticket) { [weak self] isAvailable in
+            guard isAvailable else { return }
+            self?.selectRSVP(ticket: ticket, event: event, user: user)
+        }
+    }
+
+    private func selectRSVP(ticket: EventTicket, event: Event, user: User) {
         normalTickets.indices.forEach {
             normalTickets[$0].selectedTicketCount = nil
         }
@@ -1336,7 +1376,12 @@ class TicketSelectionViewController: UIViewController {
         } else {
             continueToCheckOutView.showLoader()
             setCheckoutInProgress(true)
-            createBooking(event: event, user: user, tickets: selectedNormalTickets)
+            createCheckedBooking(
+                event: event,
+                user: user,
+                tickets: selectedNormalTickets,
+                payload: buildTicketsPayload(from: selectedNormalTickets)
+            )
         }
     }
 
@@ -1409,6 +1454,13 @@ class TicketSelectionViewController: UIViewController {
               let ticketId = ticket.id,
               let user = UserDefault.shared.user else { return }
 
+        checkRSVPStock(event: event, user: user, ticket: ticket) { [weak self] isAvailable in
+            guard isAvailable else { return }
+            self?.selectGroupRSVP(ticketId: ticketId, event: event, user: user)
+        }
+    }
+
+    private func selectGroupRSVP(ticketId: String, event: Event, user: User) {
         // Remove all previous selections
         normalTickets.indices.forEach {
             normalTickets[$0].selectedTicketCount = nil
@@ -1444,7 +1496,12 @@ class TicketSelectionViewController: UIViewController {
             } else {
                 continueToCheckOutView.showLoader()
                 setCheckoutInProgress(true)
-                createBooking(event: event, user: user, tickets: selectedNormalTickets)
+                createCheckedBooking(
+                    event: event,
+                    user: user,
+                    tickets: selectedNormalTickets,
+                    payload: buildTicketsPayload(from: selectedNormalTickets)
+                )
             }
 
             return

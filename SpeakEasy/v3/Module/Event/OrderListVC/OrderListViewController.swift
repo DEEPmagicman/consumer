@@ -1365,6 +1365,7 @@ final class OrderListViewController: UIViewController {
     private func showFeesAndTaxesShimmer() {
         isFeesAndTaxesLoading = true
         feesAndTaxesHiddenView.isHidden = true
+        orderFeesAmountLbl.text = ""
         feesAndTaxesShimmerView.isHidden = false
         feesAndTaxesShimmerBlocks.forEach { $0.startShimmer() }
         updateFeesAndTaxesVisibility()
@@ -1785,7 +1786,7 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.selectionStyle = .none
             cell.totalTicketCountLbl.text = "\(quantity)x"
             cell.ticketNameLbl.text = ticket.tierName
-            cell.priceLbl.text = total <= 0 ? "Free" : "\(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
+            cell.priceLbl.text = CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
 //            cell.extraFeesLbl.isHidden = (ticket.extraFees ?? 0) <= 0
 //            if (ticket.extraFees ?? 0) > 0 {
 //                cell.extraFeesLbl.text = "Incl. \(currency)\((ticket.extraFees ?? 0).decimalFormat(true)) fees"

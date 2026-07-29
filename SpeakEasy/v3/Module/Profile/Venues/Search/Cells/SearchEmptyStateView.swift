@@ -41,9 +41,17 @@ final class SearchEmptyStateView: UIView {
 
     private func setupUI() {
 
-        searchIcon.image =  UIImage(resource: .searchIconV3)
+        let symbolConfig = UIImage.SymbolConfiguration(
+            pointSize: 42,
+            weight: .regular,
+            scale: .medium
+        )
+        searchIcon.image = UIImage(systemName: "magnifyingglass", withConfiguration: symbolConfig)
         searchIcon.tintColor = .white
         searchIcon.contentMode = .scaleAspectFit
+        searchIcon.preferredSymbolConfiguration = symbolConfig
+        searchIcon.layer.shouldRasterize = false
+        searchIcon.layer.allowsEdgeAntialiasing = true
 
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         searchIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -69,8 +77,8 @@ final class SearchEmptyStateView: UIView {
 
             searchIcon.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
             searchIcon.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-            searchIcon.widthAnchor.constraint(equalToConstant: 42),
-            searchIcon.heightAnchor.constraint(equalToConstant: 42),
+            searchIcon.widthAnchor.constraint(equalToConstant: 44),
+            searchIcon.heightAnchor.constraint(equalToConstant: 44),
 
             titleLabel.topAnchor.constraint(equalTo: iconContainer.bottomAnchor, constant: 28),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),

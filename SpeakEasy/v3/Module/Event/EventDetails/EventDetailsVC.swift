@@ -3049,7 +3049,6 @@ class EventDetailsVC: UIViewController {
 
         guard !isInlineRSVPStockCheckInProgress else { return }
         isInlineRSVPStockCheckInProgress = true
-        hideCheckoutBarImmediately()
 
         let payload: [[String: Any]] = [
             [
@@ -3073,7 +3072,6 @@ class EventDetailsVC: UIViewController {
                 self.isInlineRSVPStockCheckInProgress = false
 
                 guard isAvailable else {
-                    self.hideCheckoutBarImmediately()
                     Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                     return
                 }

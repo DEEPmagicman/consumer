@@ -128,11 +128,18 @@ class TicketsTVC: UITableViewCell {
         minusBtn.isEnabled = true
         minusView.alpha = 1.0
         rsvpBtn.isEnabled = true
+        configureRSVPButtonStyle()
         rsvpBtnView.isHidden = true
         rsvpBtnView.alpha = 1.0
         inclFeesLbl.isHidden = true
         ticketLeftLbl.isHidden = true
         soldOutView.isHidden = true
+        comingSoonView.isHidden = true
+        comingSoonView.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        comingSoonView.layer.cornerRadius = 18
+        comingSoonView.layer.borderWidth = 1
+        comingSoonView.layer.borderColor = UIColor.white.withAlphaComponent(0.10).cgColor
+        configureComingSoonLabel()
         contentView.alpha = 1.0
 
         discriptionLbl.text = nil
@@ -378,12 +385,25 @@ class TicketsTVC: UITableViewCell {
     }
 
     private func applyComingSoonUI() {
-        quantityLbl.isHidden = false
-        quantityLbl.text = "Coming soon"
-        quantityLbl.font = Constant.Font.geistRegular(size: 12)
+        comingSoonView.isHidden = false
+        configureComingSoonLabel()
+        quantityLbl.isHidden = true
         minusView.isHidden = true
         plusView.isHidden = true
         rsvpBtnView.isHidden = true
+    }
+
+    private func configureComingSoonLabel() {
+        guard let label = comingSoonView.subviews.compactMap({ $0 as? UILabel }).first else {
+            return
+        }
+
+        label.text = "Coming soon"
+        label.font = Constant.Font.geistRegular(size: 13)
+        label.textColor = UIColor.white.withAlphaComponent(0.92)
+        label.numberOfLines = 1
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.8
     }
 
     private func applyNormalUI(
@@ -401,6 +421,7 @@ class TicketsTVC: UITableViewCell {
 
         if price == 0 {
             priceLbl.text = "FREE"
+            configureRSVPButtonStyle()
             rsvpBtnView.isHidden = false
             plusView.isHidden = true
         } else {
@@ -437,6 +458,18 @@ class TicketsTVC: UITableViewCell {
     func hideMinusView() {
         minusView.isHidden = true
         quantityLbl.isHidden = true
+    }
+
+    private func configureRSVPButtonStyle() {
+        rsvpBtn.setTitle("RSVP", for: .normal)
+        rsvpBtn.setTitle("RSVP", for: .highlighted)
+        rsvpBtn.setTitle("RSVP", for: .disabled)
+        rsvpBtn.setTitleColor(.white, for: .normal)
+        rsvpBtn.setTitleColor(.white, for: .highlighted)
+        rsvpBtn.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .disabled)
+        rsvpBtn.titleLabel?.font = Constant.Font.geistRegular(size: 16)
+        rsvpBtn.adjustsImageWhenHighlighted = false
+        rsvpBtn.alpha = 1
     }
 
     // MARK: - IBActions

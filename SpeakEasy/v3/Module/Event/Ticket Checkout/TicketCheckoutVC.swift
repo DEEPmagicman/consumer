@@ -1207,7 +1207,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
             let total = Double(quantity) * price
 
             cell.titleLbl.text = "\(quantity)x \(ticket.tierName)"
-            cell.amountLbl.text = total <= 0 ? "Free" : CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
+            cell.amountLbl.text = CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
 
             return cell
         }

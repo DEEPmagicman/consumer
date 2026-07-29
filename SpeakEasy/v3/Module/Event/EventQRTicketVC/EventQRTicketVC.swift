@@ -89,6 +89,19 @@ class EventQRTicketVC: UIViewController {
         UIColor(hex: Event.normalizedHexColor(booking?.event?.whiteLabelColor, sourceEvent?.whiteLabelColor))
     }
 
+    private var currency: String {
+        booking?.venueObject?.venueSettings?.currencySymbol
+        ?? booking?.event?.venue?.venueSettings?.currencySymbol
+        ?? sourceEvent?.venue?.venueSettings?.currencySymbol
+        ?? "$"
+    }
+
+    private var currencyPosition: String? {
+        booking?.venueObject?.venueSettings?.currencyPosition
+        ?? booking?.event?.venue?.venueSettings?.currencyPosition
+        ?? sourceEvent?.venue?.venueSettings?.currencyPosition
+    }
+
     private var faqs: [(question: String, answer: String)] = []
 
     private var fandQItems: [EventFAQ] = []
@@ -1176,7 +1189,7 @@ class EventQRTicketVC: UIViewController {
             orderSummaryStackView.addArrangedSubview(
                 makeOrderSummaryRow(
                     title: "\(quantity)x \(ticketDisplayName(ticket))",
-                    value: price <= 0 ? "Free" : "$\(price.decimalFormat(true))"
+                    value: formattedAmount(price)
                 )
             )
         }
@@ -1189,16 +1202,18 @@ class EventQRTicketVC: UIViewController {
         let feesTotal = feeItems.reduce(0.0) { $0 + $1.amount }
         let total = booking?.totalPrice ?? fees?.total ?? subtotal + feesTotal
 
-        orderSummaryStackView.addArrangedSubview(
-            makeOrderSummaryRow(
-                title: "Subtotal",
-                value: subtotal <= 0 ? "Free" : "$\(subtotal.decimalFormat(true))"
+        if subtotal > 0.005 {
+            orderSummaryStackView.addArrangedSubview(
+                makeOrderSummaryRow(
+                    title: "Subtotal",
+                    value: formattedAmount(subtotal)
+                )
             )
-        )
+        }
 
         if !feeItems.isEmpty {
             orderSummaryStackView.addArrangedSubview(
-                makeOrderFeesDropdownRow(value: "$\(feesTotal.decimalFormat(true))")
+                makeOrderFeesDropdownRow(value: formattedAmount(feesTotal))
             )
 
             if isOrderFeesExpanded {
@@ -1206,7 +1221,7 @@ class EventQRTicketVC: UIViewController {
                     orderSummaryStackView.addArrangedSubview(
                         makeOrderSummaryRow(
                             title: item.title,
-                            value: "$\(item.amount.decimalFormat(true))",
+                            value: formattedAmount(item.amount),
                             titleLeadingInset: 12
                         )
                     )
@@ -1219,10 +1234,14 @@ class EventQRTicketVC: UIViewController {
         orderSummaryStackView.addArrangedSubview(
             makeOrderSummaryRow(
                 title: "Total",
-                value: total <= 0 ? "Free" : "$\(total.decimalFormat(true))",
+                value: total <= 0 ? "Free" : formattedAmount(total),
                 isTotal: true
             )
         )
+    }
+
+    private func formattedAmount(_ amount: Double) -> String {
+        CurrencyFormatter.amount(amount, symbol: currency, position: currencyPosition)
     }
 
     private func buildOrderFeeItems(from fees: PaymentDetail?) -> [FeeDisplayItem] {

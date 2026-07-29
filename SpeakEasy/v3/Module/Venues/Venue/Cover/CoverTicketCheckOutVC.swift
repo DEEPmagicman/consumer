@@ -1396,7 +1396,7 @@ extension CoverTicketCheckOutVC {
 
         var items: [FeeDisplayItem] = []
 
-        if subTotal > 0 {
+        if subTotal > 0.005 {
             items.append(FeeDisplayItem(title: "Subtotal", amount: subTotal))
         }
 
