@@ -55,7 +55,7 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
         sheetView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sheetView)
 
-        titleLabel.text = "Log out of Speakeasy?"
+        titleLabel.text = "Log Out of Speakeasy?"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 20)
         titleLabel.textAlignment = .center
@@ -75,7 +75,7 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
         cancelBtn.addTarget(self, action: #selector(onClickCancel), for: .touchUpInside)
         sheetView.addSubview(cancelBtn)
 
-        logoutBtn.configure(title: "Log out", fontSize: 17, cornerRadius: 16)
+        logoutBtn.configure(title: "Log Out", fontSize: 17, cornerRadius: 16)
         logoutBtn.addTarget(self, action: #selector(onClickLogout), for: .touchUpInside)
         sheetView.addSubview(logoutBtn)
 

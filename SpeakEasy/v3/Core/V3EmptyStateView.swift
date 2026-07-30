@@ -142,7 +142,7 @@ final class V3EmptyStateView: UIView {
 
         browseEventsButton.translatesAutoresizingMaskIntoConstraints = false
         browseEventsButton.backgroundColor = UIColor(hex: "#FFFFFF")
-        browseEventsButton.setTitle("Browse events", for: .normal)
+        browseEventsButton.setTitle("Browse Events", for: .normal)
         browseEventsButton.setTitleColor(UIColor(hex: "#121212"), for: .normal)
         browseEventsButton.titleLabel?.font = Constant.Font.geistMedium(size: 16)
         browseEventsButton.contentEdgeInsets = UIEdgeInsets(
@@ -279,7 +279,7 @@ final class V3NoInternetView: UIView {
 
         tryAgainButton.translatesAutoresizingMaskIntoConstraints = false
         tryAgainButton.backgroundColor = UIColor(hex: "#FFFFFF")
-        tryAgainButton.setTitle("Try again", for: .normal)
+        tryAgainButton.setTitle("Try Again", for: .normal)
         tryAgainButton.setTitleColor(UIColor(hex: "#121212"), for: .normal)
         tryAgainButton.titleLabel?.font = Constant.Font.geistMedium(size: 16)
         tryAgainButton.layer.cornerRadius = 21

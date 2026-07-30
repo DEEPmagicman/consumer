@@ -134,7 +134,7 @@ final class ProfileInfoVC: UIViewController {
         genderControl.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(genderControl)
 
-        genderLabel.text = "Select gender"
+        genderLabel.text = "Select Gender"
         genderLabel.textColor = AppColor.primaryWhiteColor
         genderLabel.font = Constant.Font.geistRegular(size: 16)
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -243,7 +243,7 @@ final class ProfileInfoVC: UIViewController {
 
         if userGender.isEmpty || userGender == "Unassigned" {
             gender = "MALE"
-            genderLabel.text = "Select gender"
+            genderLabel.text = "Select Gender"
         } else {
             gender = userGender.uppercased()
             genderLabel.text = userGender
@@ -346,7 +346,7 @@ extension ProfileInfoVC {
         let lastName = lastNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let email = emailTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let dob = dobTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let isGenderSelected = genderLabel.text != "Select gender"
+        let isGenderSelected = genderLabel.text != "Select Gender"
         
         clearValidationUI()
         

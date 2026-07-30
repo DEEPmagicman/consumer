@@ -32,6 +32,8 @@ struct EventTicket: Codable {
     var miniPurchaseQuantity: Int?
     var maxPurchaseQuantity: Int?
     var extraFees: Double?
+    var isMembersOnly: Bool? = nil
+    var eventTicketHasMembershipTiers: [EventTicketHasMembershipTier]? = nil
     var remainingQuantity: Int? {
         (issuedUnits ?? 0) - (soldUnits ?? 0)
     }
@@ -78,6 +80,8 @@ struct EventTicket: Codable {
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(eventTicketHasTier, forKey: .eventTicketHasTier)
         try container.encode(extraFees, forKey: .extraFees)
+        try container.encodeIfPresent(isMembersOnly, forKey: .isMembersOnly)
+        try container.encodeIfPresent(eventTicketHasMembershipTiers, forKey: .eventTicketHasMembershipTiers)
         
     }
 }
@@ -112,6 +116,29 @@ struct EventTicketHasPassword: Codable {
     var createdAt: String?
     var updatedAt: String?
     var mongodbId: String?
+}
+
+struct EventTicketHasMembershipTier: Codable {
+    var id: String?
+    var eventTicketId: String?
+    var membershipTierId: String?
+    var status: String?
+    var isDeleted: Bool?
+    var createdAt: String?
+    var updatedAt: String?
+    var membershipTier: EventTicketMembershipTier?
+}
+
+struct EventTicketMembershipTier: Codable {
+    var id: String?
+    var venueId: String?
+    var name: String?
+    var description: String?
+    var color: String?
+    var status: String?
+    var isDeleted: Bool?
+    var createdAt: String?
+    var updatedAt: String?
 }
 
 struct CustomFee: Codable {

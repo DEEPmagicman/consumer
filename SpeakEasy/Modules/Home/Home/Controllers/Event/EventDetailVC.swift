@@ -87,6 +87,11 @@ final class EventDetailVC: UIViewController {
     private var selectedType: TicketPriceType = .FREE
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
+    private enum TicketUnavailableState {
+        case saleEnded
+        case soldOut
+        case salePaused
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,10 +154,43 @@ final class EventDetailVC: UIViewController {
     private func availableTickets(from tickets: [EventTicket]?) -> [EventTicket] {
         tickets?.filter {
             ($0.isDeleted == false) &&
+            ($0.isMembersOnly != true) &&
             ($0.sellingPaused == false) &&
             (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) &&
-            (($0.issuedUnits ?? 0) >= ($0.soldUnits ?? 0))
+            (remainingQuantity(for: $0) > 0)
         } ?? []
+    }
+
+    private func remainingQuantity(for ticket: EventTicket) -> Int {
+        max((ticket.issuedUnits ?? 0) - (ticket.soldUnits ?? 0), 0)
+    }
+
+    private func isSaleEnded(_ ticket: EventTicket) -> Bool {
+        (ticket.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) < Date()
+    }
+
+    private func unavailableState(for tickets: [EventTicket]?) -> TicketUnavailableState? {
+        guard let tickets = tickets?.filter({
+            $0.isDeleted == false &&
+            $0.isMembersOnly != true
+        }), !tickets.isEmpty else {
+            return nil
+        }
+
+        let sellingTickets = tickets.filter { $0.sellingPaused == false }
+        guard !sellingTickets.isEmpty else {
+            return .salePaused
+        }
+
+        let allUnavailable = sellingTickets.allSatisfy {
+            isSaleEnded($0) || remainingQuantity(for: $0) <= 0
+        }
+
+        guard allUnavailable else {
+            return nil
+        }
+
+        return sellingTickets.contains(where: isSaleEnded) ? .saleEnded : .soldOut
     }
 
     private func updateUnlockTicketVisibility() {
@@ -193,23 +231,31 @@ final class EventDetailVC: UIViewController {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
         } else {
-            if event?.isPausedSellingAllTickets == true {
+            if let unavailableState = unavailableState(for: event?.eventTicket) {
+                switch unavailableState {
+                case .salePaused:
+                    continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+                case .saleEnded:
+                    continueBtn.setTitle(Constant.String.saleEnded.uppercased(), for: .normal)
+                case .soldOut:
+                    continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
+                }
+                isNotSellingStage = true
+                updateContinueBtn()
+            } else if event?.isPausedSellingAllTickets == true {
                 continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
                 isNotSellingStage = true
                 updateContinueBtn()
-            } else if event?.isSoldOutAllTickets == true {
-                continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
-                isNotSellingStage = true
-                updateContinueBtn()
-            } else if event?.eventTicket?.count ?? 0 == 0 {
+            } else if event?.eventTicket?.count ?? 0 == 0 || activeTickets?.isEmpty == true {
                 continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
                 isNotSellingStage = true
                 updateContinueBtn()
             } else {
                 let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
                 let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+                let lowestVisiblePrice = activeTickets?.min { ($0.price ?? 0) < ($1.price ?? 0) }?.price ?? 0
                 
-                continueBtn.setTitle("BUY NOW - STARTING AT \(CurrencyFormatter.amount(Double(event?.lowestPriceTicket?.price ?? 0), symbol: currencySymbole, position: currencyPosition))", for: .normal)
+                continueBtn.setTitle("BUY NOW - STARTING AT \(CurrencyFormatter.amount(Double(lowestVisiblePrice), symbol: currencySymbole, position: currencyPosition))", for: .normal)
                 isNotSellingStage = false
                 updateContinueBtn(forceRemove: true)
             }

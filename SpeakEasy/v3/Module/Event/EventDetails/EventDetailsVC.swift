@@ -1161,7 +1161,7 @@ class EventDetailsVC: UIViewController {
 
             self.applyEventDetailBundle(detail)
             if let show = self.event?.showEventAttendees {
-                self.attendeesView.isHidden = !show
+//                self.attendeesView.isHidden = !show
                 if show, self.attendees.isEmpty {
                     self.getEventAttendees()
                 }
@@ -1246,6 +1246,7 @@ class EventDetailsVC: UIViewController {
         isSaved = eventIsSaved(event)
         isSaveLoading = false
         updateSaveUI()
+        ticketLinks = detail.ticketLinks
         setupTicketsButton()
 
         eventTicketId =
@@ -1255,8 +1256,6 @@ class EventDetailsVC: UIViewController {
         if let seatingAreas = detail.seatingAreas {
             applySeatingAreas(seatingAreas)
         }
-
-        ticketLinks = detail.ticketLinks
 
         faqs = detail.faqs
         expandedFAQIndex = nil
@@ -1333,7 +1332,7 @@ class EventDetailsVC: UIViewController {
         isGuestListLoading = loading
 
         if loading {
-            guestListTitleLbl.text = "Guest list"
+            guestListTitleLbl.text = "Guest List"
             attendeesView.isHidden = false
             attendeesView.alpha = 1
             attendeesView.transform = .identity
@@ -1467,13 +1466,12 @@ class EventDetailsVC: UIViewController {
         guard !shouldShowDisabledTicketButton else { return false }
         guard let event else { return false }
 
-        if event.isPausedSellingAllTickets == true ||
-            event.isSaleEndedAllTickets == true ||
-            event.isSoldOutAllTickets == true {
+        switch ticketCTAResult(for: event) {
+        case .status(.saleEnded), .status(.soldOut), .status(.salePaused):
             return true
+        case .status(.paid), .unlock:
+            return false
         }
-
-        return event.eventTicket?.isEmpty != false
     }
 
     private func hideBottomTicketButton() {
@@ -1773,22 +1771,39 @@ class EventDetailsVC: UIViewController {
         }
     }
 
+    private func venueTimezoneIdentifier() -> String {
+        if let timezone = event?.venue?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        if let timezone = event?.venue?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        if let timezone = venueDetails?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        let useTimezone = venueDetails?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let useTimezone, !useTimezone.isEmpty {
+            return useTimezone
+        }
+
+        return TimeZone.current.identifier
+    }
+
     private func venueNow() -> Date {
-        let tz = venueDetails?.useTimezone ?? TimeZone.current.identifier
-        let timeZone = TimeZone(identifier: tz) ?? .current
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
-        formatter.timeZone = timeZone
-
-        return formatter.date(from: formatter.string(from: Date())) ?? Date()
+        Date.venueNow(timezone: venueTimezoneIdentifier())
     }
 
     private func ticketDate(_ value: String?) -> Date? {
         guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
         }
-        return value.toDate(withFormat: .yyyyMMddHHmmss)
+        return value.toVenueDate(timezone: venueTimezoneIdentifier())
     }
 
     private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
@@ -1825,14 +1840,23 @@ class EventDetailsVC: UIViewController {
         return now > endSaleDate
     }
 
+    private func isEventEnded(_ event: Event) -> Bool {
+        guard let endDate = ticketDate(event.endDateTime) else {
+            return false
+        }
+        return venueNow() > endDate
+    }
+
     private func isTicketAvailableForDisplay(_ ticket: EventTicket) -> Bool {
         let isNotDeleted = ticket.isDeleted == false
+        let isNotMembersOnly = ticket.isMembersOnly != true
         let isNotPaused = ticket.sellingPaused == false
         let saleStarted = isTicketSaleStarted(ticket)
         let saleNotEnded = isTicketSaleNotEnded(ticket)
         let hideBecauseSoldOut = shouldHideSoldOutTicket(ticket)
 
         return isNotDeleted &&
+               isNotMembersOnly &&
                isNotPaused &&
                saleStarted &&
                saleNotEnded &&
@@ -1917,6 +1941,126 @@ class EventDetailsVC: UIViewController {
 
             return !state.isHidden
         }
+    }
+
+    private enum TicketCTAStatus: Hashable {
+        case saleEnded
+        case soldOut
+        case salePaused
+        case paid
+    }
+
+    private enum TicketCTAResult {
+        case status(TicketCTAStatus)
+        case unlock
+    }
+
+    private func isTicketLinkedForCTA(_ ticket: EventTicket) -> Bool {
+        guard let ticketId = ticket.id else { return false }
+
+        return ticketLinks.contains {
+            $0.eventTicketId == ticketId &&
+            $0.status == "ENABLED" &&
+            $0.isDeleted == false
+        }
+    }
+
+    private func ticketsForCTAStatus(_ list: [EventTicket]) -> [EventTicket] {
+        list.filter { ticket in
+            ticket.isDeleted == false &&
+            ticket.isMembersOnly != true &&
+            !isTicketLinkedForCTA(ticket)
+        }
+    }
+
+    private func ticketsForCTAPrice(_ list: [EventTicket]) -> [EventTicket] {
+        list.filter { ticket in
+            ticket.isDeleted == false &&
+            ticket.isMembersOnly != true &&
+            !isTicketLinkedForCTA(ticket) &&
+            ticket.sellingPaused == false &&
+            isTicketSaleStarted(ticket) &&
+            isTicketSaleNotEnded(ticket) &&
+            !isTicketSoldOut(ticket)
+        }
+    }
+
+    private func statusForCTA(_ tickets: [EventTicket]) -> TicketCTAStatus {
+        guard !tickets.isEmpty else {
+            return .saleEnded
+        }
+
+        if tickets.allSatisfy({ isTicketSaleEnded($0) }) {
+            return .saleEnded
+        }
+
+        if tickets.allSatisfy({ isTicketSoldOut($0) && !isTicketSaleEnded($0) }) {
+            return .soldOut
+        }
+
+        if tickets.allSatisfy({ $0.sellingPaused == true }) {
+            return .salePaused
+        }
+
+        var endedCount = 0
+        var soldOutCount = 0
+        var pausedCount = 0
+
+        tickets.forEach { ticket in
+            if isTicketSaleEnded(ticket) {
+                endedCount += 1
+            } else if isTicketSoldOut(ticket) {
+                soldOutCount += 1
+            } else if ticket.sellingPaused == true {
+                pausedCount += 1
+            }
+        }
+
+        if endedCount + soldOutCount + pausedCount == tickets.count {
+            if endedCount > 0 {
+                return .saleEnded
+            }
+            if soldOutCount > 0 {
+                return .soldOut
+            }
+            return .salePaused
+        }
+
+        return .paid
+    }
+
+    private func ticketCTAResult(for event: Event) -> TicketCTAResult {
+        let normalTickets = ticketsForCTAStatus(event.eventTicket ?? [])
+        let protectedTickets = ticketsForCTAStatus(event.protectedEventTicket ?? [])
+        let normalExists = !normalTickets.isEmpty
+        let protectedExists = !protectedTickets.isEmpty
+
+        if isEventEnded(event) {
+            return .status(.saleEnded)
+        }
+
+        let normalStatus = normalExists ? statusForCTA(normalTickets) : .saleEnded
+        let protectedStatus = protectedExists ? statusForCTA(protectedTickets) : .saleEnded
+        let inactiveStatuses: Set<TicketCTAStatus> = [.saleEnded, .soldOut, .salePaused]
+
+        if normalExists && protectedExists {
+            if inactiveStatuses.contains(normalStatus) {
+                return inactiveStatuses.contains(protectedStatus)
+                    ? .status(normalStatus)
+                    : .unlock
+            }
+            return .status(normalStatus)
+        }
+
+        if normalExists {
+            return .status(normalStatus)
+        }
+
+        if protectedExists {
+            return .unlock
+        }
+
+        return .status(normalStatus)
     }
     
     private func filterSeatingAreas(_ list: [SeatingArea]) -> (visible: [SeatingArea], filteredOut: [SeatingArea]) {
@@ -2425,18 +2569,10 @@ class EventDetailsVC: UIViewController {
 
       
 
-        if event.isPausedSellingAllTickets == true {
-//            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-            checkOutBtn.setTitle("Check back later", for: .normal)
-            checkOutBtn.isEnabled = false
-            checkOutBtn.isUserInteractionEnabled = false
-            soldOutView.isHidden = false
-            soldOutLbl.text = Constant.String.salePaused.uppercased()
-            applyDisabledBottomTicketButtonVisibility()
-            return
-        }
+        let ctaResult = ticketCTAResult(for: event)
 
-        if event.isSaleEndedAllTickets == true {
+        switch ctaResult {
+        case .status(.saleEnded):
             let title = settings?.isSaleEndedTextEnabled == true
                 ? (settings?.saleEndedText ?? "It was a great time!")
                 : "It was a great time!"
@@ -2447,9 +2583,8 @@ class EventDetailsVC: UIViewController {
             soldOutLbl.text = Constant.String.saleEnded.uppercased()
             applyDisabledBottomTicketButtonVisibility()
             return
-        }
 
-        if event.isSoldOutAllTickets == true {
+        case .status(.soldOut):
             let title = settings?.isSoldOutTextEnabled == true
                 ? (settings?.soldOutText ?? "Sorry, you missed it!")
                 : "Sorry, you missed it!"
@@ -2460,10 +2595,30 @@ class EventDetailsVC: UIViewController {
             soldOutLbl.text = Constant.String.soldOut.uppercased()
             applyDisabledBottomTicketButtonVisibility()
             return
+
+        case .status(.salePaused):
+            checkOutBtn.setTitle("Check Back Later", for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.salePaused.uppercased()
+            applyDisabledBottomTicketButtonVisibility()
+            return
+
+        case .unlock:
+            checkOutBtn.setTitle("Unlock", for: .normal)
+            checkOutBtn.isEnabled = true
+            checkOutBtn.isUserInteractionEnabled = true
+            soldOutView.isHidden = true
+            return
+
+        case .status(.paid):
+            break
         }
         
-        guard let tickets = event.eventTicket, !tickets.isEmpty else {
-            checkOutBtn.setTitle("Check back later", for: .normal)
+        let visibleNormalTickets = ticketsForCTAPrice(event.eventTicket ?? [])
+        guard !visibleNormalTickets.isEmpty else {
+            checkOutBtn.setTitle("Check Back Later", for: .normal)
             checkOutBtn.isEnabled = false
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
@@ -2473,7 +2628,7 @@ class EventDetailsVC: UIViewController {
         }
 
         // Normal — tickets available
-        let lowestPrice = event.lowestPriceTicket?.price ?? 0
+        let lowestPrice = visibleNormalTickets.min { $0.price ?? 0 < $1.price ?? 0 }?.price ?? 0
         let title = lowestPrice == 0
             ? "Tickets from Free"
             : "Tickets from \(CurrencyFormatter.amount(Double(lowestPrice), symbol: currency, position: currencyPosition))"
@@ -2943,10 +3098,28 @@ class EventDetailsVC: UIViewController {
         !filterAvailableTickets(event.protectedeventAddOnTicket ?? []).isEmpty
     }
 
-    private func handleRSVP(ticket: EventTicket) {
+    private func visibleTicketCell(for ticket: EventTicket) -> TicketsTVC? {
+        guard let ticketId = ticket.id else { return nil }
+
+        if let ticketIndex = tickets.firstIndex(where: { $0.id == ticketId }) {
+            return ticketTableView.cellForRow(
+                at: IndexPath(row: ticketIndex, section: 0)
+            ) as? TicketsTVC
+        }
+
+        for case let groupCell as GroupTicketTVC in groupTableView.visibleCells {
+            if let ticketCell = groupCell.visibleTicketCell(for: ticketId) {
+                return ticketCell
+            }
+        }
+
+        return nil
+    }
+
+    private func handleRSVP(ticket: EventTicket, cell: TicketsTVC?) {
         guard !isTicketDisabledByLink(ticket) else { return }
-        checkInlineRSVPStock(ticket: ticket) { [weak self] in
-            self?.continueInlineRSVP(ticket: ticket)
+        checkInlineRSVPStock(ticket: ticket, cell: cell) { [weak self, weak cell] in
+            self?.continueInlineRSVP(ticket: ticket, cell: cell)
         }
     }
 
@@ -3025,20 +3198,26 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    private func handleGroupRSVP(ticket: EventTicket) {
+    private func handleGroupRSVP(ticket: EventTicket, cell: TicketsTVC?) {
         guard !isTicketDisabledByLink(ticket) else { return }
-        checkInlineRSVPStock(ticket: ticket) { [weak self] in
-            self?.continueInlineRSVP(ticket: ticket)
+        checkInlineRSVPStock(ticket: ticket, cell: cell) { [weak self, weak cell] in
+            self?.continueInlineRSVP(ticket: ticket, cell: cell)
         }
     }
 
     private func checkInlineRSVPStock(
         ticket: EventTicket,
+        cell: TicketsTVC?,
         completion: @escaping () -> Void
     ) {
         guard LoginRequiredCoordinator.isAuthenticated else {
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
-                self?.checkInlineRSVPStock(ticket: ticket, completion: completion)
+                guard let self else { return }
+                self.checkInlineRSVPStock(
+                    ticket: ticket,
+                    cell: self.visibleTicketCell(for: ticket),
+                    completion: completion
+                )
             }
             return
         }
@@ -3049,6 +3228,8 @@ class EventDetailsVC: UIViewController {
 
         guard !isInlineRSVPStockCheckInProgress else { return }
         isInlineRSVPStockCheckInProgress = true
+        hideCheckoutBarImmediately()
+        cell?.showRSVPLoader()
 
         let payload: [[String: Any]] = [
             [
@@ -3072,16 +3253,16 @@ class EventDetailsVC: UIViewController {
                 self.isInlineRSVPStockCheckInProgress = false
 
                 guard isAvailable else {
+                    cell?.hideRSVPLoader()
+                    self.hideCheckoutBarImmediately()
                     Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                     return
                 }
-
-                completion()
             }
         }
     }
 
-    private func continueInlineRSVP(ticket: EventTicket) {
+    private func continueInlineRSVP(ticket: EventTicket, cell: TicketsTVC?) {
         guard let event,
               let selectedTicket = selectOnlyInlineTicket(
                 ticket,
@@ -3091,6 +3272,7 @@ class EventDetailsVC: UIViewController {
         shouldClearInlineRSVPSelectionOnReturn = true
 
         if hasVisibleAddOnOptions(for: event) {
+            cell?.hideRSVPLoader()
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -3102,7 +3284,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        createInlineOrderBookingAndCheckout(selectedTickets: [selectedTicket])
+        createInlineOrderBookingAndCheckout(selectedTickets: [selectedTicket], rsvpCell: cell)
     }
 
     private func updateContinueBtnState() {
@@ -3242,10 +3424,24 @@ class EventDetailsVC: UIViewController {
         createInlineOrderBookingAndCheckout(selectedTickets: selected)
     }
 
-    private func createInlineOrderBookingAndCheckout(selectedTickets: [EventTicket]) {
+    private func stopInlineBookingLoader(rsvpCell: TicketsTVC?) {
+        if let rsvpCell {
+            rsvpCell.hideRSVPLoader()
+        } else {
+            checkOutBtnView.hideLoader()
+        }
+    }
+
+    private func createInlineOrderBookingAndCheckout(
+        selectedTickets: [EventTicket],
+        rsvpCell: TicketsTVC? = nil
+    ) {
         guard LoginRequiredCoordinator.isAuthenticated else {
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
-                self?.createInlineOrderBookingAndCheckout(selectedTickets: selectedTickets)
+                self?.createInlineOrderBookingAndCheckout(
+                    selectedTickets: selectedTickets,
+                    rsvpCell: rsvpCell
+                )
             }
             return
         }
@@ -3253,7 +3449,9 @@ class EventDetailsVC: UIViewController {
         guard let user = UserDefault.shared.user,
               let event else { return }
 
-        checkOutBtnView.showLoader()
+        if rsvpCell == nil {
+            checkOutBtnView.showLoader()
+        }
 
         let payload: [[String: Any]] = selectedTickets.map {
             [
@@ -3263,35 +3461,39 @@ class EventDetailsVC: UIViewController {
             ]
         }
 
-        paymentService.createEventBooking(
-            eventId: event.id,
-            code: user.code,
-            phone: user.phone,
-            gender: user.gender,
-            userId: user.id,
-            tickets: payload,
-            promotionLinkId: promoteId,
-            promotionLinkUniqueCode: promotionLinkUniqueCode
-        ) { [weak self] isSuccess, errMsg, bookingId, _ in
+        DispatchQueue.main.async { [weak self, weak rsvpCell] in
             guard let self else { return }
 
-            self.checkOutBtnView.hideLoader()
-            if isSuccess {
-                AppHaptic.success()
-                self.shouldClearInlineRSVPSelectionOnReturn = true
-                Navigate.orderListVC(
-                    self,
-                    event: event,
-                    selectedTickets: selectedTickets,
-                    bookingId: bookingId,
-                    paymentMethod: nil,
-                    venueDetails: self.venueDetails,
-                    promotionLinkId: promoteId,
-                    promotionLinkUniqueCode: promotionLinkUniqueCode
-                )
-            } else {
-                AppHaptic.error()
-                Alert.showToast(errMsg ?? "Something went wrong")
+            self.paymentService.createEventBooking(
+                eventId: event.id,
+                code: user.code,
+                phone: user.phone,
+                gender: user.gender,
+                userId: user.id,
+                tickets: payload,
+                promotionLinkId: promoteId,
+                promotionLinkUniqueCode: promotionLinkUniqueCode
+            ) { [weak self, weak rsvpCell] isSuccess, errMsg, bookingId, _ in
+                guard let self else { return }
+
+                self.stopInlineBookingLoader(rsvpCell: rsvpCell)
+                if isSuccess {
+                    AppHaptic.success()
+                    self.shouldClearInlineRSVPSelectionOnReturn = true
+                    Navigate.orderListVC(
+                        self,
+                        event: event,
+                        selectedTickets: selectedTickets,
+                        bookingId: bookingId,
+                        paymentMethod: nil,
+                        venueDetails: self.venueDetails,
+                        promotionLinkId: promoteId,
+                        promotionLinkUniqueCode: promotionLinkUniqueCode
+                    )
+                } else {
+                    AppHaptic.error()
+                    Alert.showToast(errMsg ?? "Something went wrong")
+                }
             }
         }
     }
@@ -4534,8 +4736,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 self?.handleMinus(ticket: ticket)
             }
 
-            cell.onRSVPTap = { [weak self] ticket in
-                self?.handleRSVP(ticket: ticket)
+            cell.onRSVPTap = { [weak self] ticket, cell in
+                self?.handleRSVP(ticket: ticket, cell: cell)
             }
 
             cell.onDescriptionToggle = { [weak self] in
@@ -4590,8 +4792,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 self?.handleGroupMinus(ticket: ticket)
             }
 
-            cell.onRSVPTap = { [weak self] ticket in
-                self?.handleGroupRSVP(ticket: ticket)
+            cell.onRSVPTap = { [weak self] ticket, cell in
+                self?.handleGroupRSVP(ticket: ticket, cell: cell)
             }
 
             cell.onRowTap = { [weak self] ticket in

@@ -62,7 +62,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
         // Title
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "How Premium\nExperiences work"
+        titleLabel.text = "How Premium\nExperiences Work"
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistMedium(size: 24)
         titleLabel.numberOfLines = 0

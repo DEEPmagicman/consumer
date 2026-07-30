@@ -45,12 +45,13 @@ class TicketSelectionViewController: UIViewController {
     private var expandedTicketDescriptions: Set<String> = []
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
+    private var hasVisibleAddOnOptionsCache = false
     private var isLoading = true
     private var isCheckoutInProgress = false
     private let shimmerRowCount = 3
     private lazy var emptyStateView: V3EmptyStateView = {
         let view = V3EmptyStateView(style: .tickets)
-        view.setTitle("No tickets available")
+        view.setTitle("No Tickets Available")
         return view
     }()
     private let posterHeaderView = EventPosterHeaderView()
@@ -424,7 +425,11 @@ class TicketSelectionViewController: UIViewController {
 
     private func ticketDate(_ value: String?) -> Date? {
         guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
-        return value.toDate(withFormat: .yyyyMMddHHmmss)
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        return formatter.date(from: value)
     }
 
     private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
@@ -438,21 +443,22 @@ class TicketSelectionViewController: UIViewController {
 
     private func isTicketSaleStarted(_ ticket: EventTicket) -> Bool {
         guard let startSaleDate = ticketDate(ticket.beginSale) else { return true }
-        return Date.venueNow(timezone: venueDetails?.useTimezone) >= startSaleDate
+        return Date() >= startSaleDate
     }
 
     private func isTicketSaleNotEnded(_ ticket: EventTicket) -> Bool {
         guard let endSaleDate = ticketDate(ticket.endSale) else { return true }
-        return Date.venueNow(timezone: venueDetails?.useTimezone) <= endSaleDate
+        return Date() <= endSaleDate
     }
 
     private func isTicketSaleEnded(_ ticket: EventTicket) -> Bool {
         guard let endSaleDate = ticketDate(ticket.endSale) else { return false }
-        return Date.venueNow(timezone: venueDetails?.useTimezone) > endSaleDate
+        return Date() > endSaleDate
     }
 
     private func isTicketAvailableForDisplay(_ ticket: EventTicket) -> Bool {
         ticket.isDeleted == false &&
+        ticket.isMembersOnly != true &&
         ticket.sellingPaused == false &&
         isTicketSaleStarted(ticket) &&
         isTicketSaleNotEnded(ticket) &&
@@ -499,7 +505,7 @@ class TicketSelectionViewController: UIViewController {
 
             let conditionMatched: Bool
             switch link.linkAction ?? "" {
-            case "SELLS_OUT": conditionMatched = isTicketSoldOut(targetTicket)
+            case "SELLS_OUT": conditionMatched = isTicketSoldOut(targetTicket) && !isTicketSaleEnded(targetTicket)
             case "SALE_END":  conditionMatched = isTicketSaleEnded(targetTicket)
             default:          conditionMatched = false
             }
@@ -541,6 +547,7 @@ class TicketSelectionViewController: UIViewController {
             normalTickets.removeAll()
             addOnTickets.removeAll()
             groupedNormalTickets.removeAll()
+            hasVisibleAddOnOptionsCache = false
             protectedTicketView.isHidden = true
             updateTicketOptionsLayout()
             ticketTableView.reloadData()
@@ -558,6 +565,7 @@ class TicketSelectionViewController: UIViewController {
 
         let filteredNormal = filterAvailableTickets(event.eventTicket ?? [])
         let filteredAddOn = filterAvailableTickets(event.eventAddOnTicket ?? [])
+        let filteredProtectedAddOn = filterAvailableTickets(event.protectedeventAddOnTicket ?? [])
         let split = makeGroupedTickets(from: filteredNormal)
 
         normalTickets = split.nonGrouped
@@ -565,6 +573,7 @@ class TicketSelectionViewController: UIViewController {
         let validGroupIds = Set(groupedNormalTickets.map { $0.groupId })
         expandedGroupIds = expandedGroupIds.intersection(validGroupIds)
         addOnTickets = filteredAddOn
+        hasVisibleAddOnOptionsCache = !filteredAddOn.isEmpty || !filteredProtectedAddOn.isEmpty
 
         groupTableView.reloadData()
         ticketTableView.reloadData()
@@ -733,7 +742,7 @@ class TicketSelectionViewController: UIViewController {
         case .addOn:
             let anySelected = addOnTickets.contains(where: { ($0.selectedTicketCount ?? 0) > 0 })
             continueToCheckOutView.setButtonTitle(
-                anySelected ? "Continue to Checkout" : "Skip this & Continue to Checkout"
+                anySelected ? "Continue to Checkout" : "No Thanks"
             )
         }
     }
@@ -799,9 +808,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func hasVisibleAddOnOptions() -> Bool {
-        guard let event else { return false }
-        return !filterAvailableTickets(event.eventAddOnTicket ?? []).isEmpty ||
-            !filterAvailableTickets(event.protectedeventAddOnTicket ?? []).isEmpty
+        hasVisibleAddOnOptionsCache
     }
 
     private func getTicketByPassWord() {
@@ -1013,22 +1020,63 @@ class TicketSelectionViewController: UIViewController {
             if hasVisibleAddOnOptions() {
                 switchToAddOnMode()
             } else {
-                continueToCheckOutView.showLoader()
-                setCheckoutInProgress(true)
-                createBooking(event: event, user: user, tickets: selectedNormalTickets)
+                beginBookingAfterUIUpdate(
+                    event: event,
+                    user: user,
+                    tickets: selectedNormalTickets
+                )
             }
 
         case .addOn:
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let finalSelected = selectedNormalTickets + selectedAddOns
             AppHaptic.primaryAction()
-            continueToCheckOutView.showLoader()
-            setCheckoutInProgress(true)
-            createBooking(event: event, user: user, tickets: finalSelected)
+            beginBookingAfterUIUpdate(
+                event: event,
+                user: user,
+                tickets: finalSelected
+            )
         }
     }
 
-    private func createBooking(event: Event, user: User, tickets: [EventTicket]) {
+    private func beginBookingAfterUIUpdate(
+        event: Event,
+        user: User,
+        tickets: [EventTicket],
+        rsvpCell: TicketsTVC? = nil
+    ) {
+        if let rsvpCell {
+            rsvpCell.showRSVPLoader()
+        } else {
+            continueToCheckOutView.showLoader()
+        }
+
+        setCheckoutInProgress(true)
+
+        DispatchQueue.main.async { [weak self, weak rsvpCell] in
+            self?.createBooking(
+                event: event,
+                user: user,
+                tickets: tickets,
+                rsvpCell: rsvpCell
+            )
+        }
+    }
+
+    private func stopBookingLoader(rsvpCell: TicketsTVC?) {
+        if let rsvpCell {
+            rsvpCell.hideRSVPLoader()
+        } else {
+            continueToCheckOutView.hideLoader()
+        }
+    }
+
+    private func createBooking(
+        event: Event,
+        user: User,
+        tickets: [EventTicket],
+        rsvpCell: TicketsTVC?
+    ) {
         let payload = buildTicketsPayload(from: tickets)
 
         checkFreeTicketStockIfNeeded(
@@ -1040,7 +1088,7 @@ class TicketSelectionViewController: UIViewController {
             guard let self else { return }
 
             guard isAvailable else {
-                self.continueToCheckOutView.hideLoader()
+                self.stopBookingLoader(rsvpCell: rsvpCell)
                 self.setCheckoutInProgress(false)
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                 return
@@ -1331,12 +1379,31 @@ class TicketSelectionViewController: UIViewController {
         }
     }
 
-    private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
+    private func visibleTicketCell(for ticket: EventTicket) -> TicketsTVC? {
+        guard let ticketId = ticket.id else { return nil }
+
+        if let ticketIndex = tickets.firstIndex(where: { $0.id == ticketId }) {
+            return ticketTableView.cellForRow(
+                at: IndexPath(row: ticketIndex, section: 0)
+            ) as? TicketsTVC
+        }
+
+        for case let groupCell as GroupTicketTVC in groupTableView.visibleCells {
+            if let ticketCell = groupCell.visibleTicketCell(for: ticketId) {
+                return ticketCell
+            }
+        }
+
+        return nil
+    }
+
+    private func handleRSVP(ticket: EventTicket, cell: TicketsTVC?) {
 
         guard !isCheckoutInProgress else { return }
         guard LoginRequiredCoordinator.isAuthenticated else {
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
-                self?.handleRSVP(ticket: ticket, cell: cell)
+                guard let self else { return }
+                self.handleRSVP(ticket: ticket, cell: self.visibleTicketCell(for: ticket))
             }
             return
         }
@@ -1440,12 +1507,13 @@ class TicketSelectionViewController: UIViewController {
         }
     }
 
-    private func handleGroupRSVP(ticket: EventTicket) {
+    private func handleGroupRSVP(ticket: EventTicket, cell: TicketsTVC?) {
 
         guard !isCheckoutInProgress else { return }
         guard LoginRequiredCoordinator.isAuthenticated else {
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
-                self?.handleGroupRSVP(ticket: ticket)
+                guard let self else { return }
+                self.handleGroupRSVP(ticket: ticket, cell: self.visibleTicketCell(for: ticket))
             }
             return
         }
@@ -1623,7 +1691,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         cell.onPlusTap = { [weak self] ticket in self?.handlePlus(ticket: ticket) }
         cell.onMinusTap = { [weak self] ticket in self?.handleMinus(ticket: ticket) }
-        cell.onRSVPTap = { [weak self] ticket in self?.handleRSVP(ticket: ticket, cell: cell) }
+        cell.onRSVPTap = { [weak self] ticket, cell in self?.handleRSVP(ticket: ticket, cell: cell) }
         cell.onDescriptionToggle = { [weak self] in
             guard let self, let id = ticket.id else { return }
             if self.expandedTicketDescriptions.contains(id) {
@@ -1668,7 +1736,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         cell.onPlusTap = { [weak self] ticket in self?.handleGroupPlus(ticket: ticket) }
         cell.onMinusTap = { [weak self] ticket in self?.handleGroupMinus(ticket: ticket) }
-        cell.onRSVPTap = { [weak self] ticket in self?.handleGroupRSVP(ticket: ticket) }
+        cell.onRSVPTap = { [weak self] ticket, cell in self?.handleGroupRSVP(ticket: ticket, cell: cell) }
         cell.onRowTap = { [weak self] ticket in self?.handleGroupPlus(ticket: ticket) }
 
         cell.onDescriptionToggle = { [weak self] ticket in

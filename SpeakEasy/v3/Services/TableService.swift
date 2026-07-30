@@ -227,6 +227,70 @@ final class TableService {
         }
     }
 
+    // MARK: - Reservation Questions
+
+    func getReservationRequestQuestions(
+        eventId: String,
+        venueId: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ questions: [Questions]?
+        ) -> Void
+    ) {
+
+        let params: [String: Any] = [
+            "questionFor": "RESERVATION_REQUEST",
+            "eventId": eventId,
+            "orderBy": "order|asc",
+            "include": "reservationQuestionHasOption"
+        ]
+
+        var headers = Header.header()
+        if !venueId.isEmpty {
+            headers["venue"] = venueId
+        }
+
+        AFWrapper.getRequest(
+            APIBuilder.reservationQuestionsURL(),
+            params: params,
+            headers: headers
+        ) { response in
+
+            let questionObjects: [[String: Any]]?
+
+            if let list = response as? [[String: Any]] {
+                questionObjects = list
+            } else if let dict = response as? [String: Any] {
+                questionObjects = dict["list"] as? [[String: Any]]
+            } else {
+                questionObjects = nil
+            }
+
+            guard let questionObjects else {
+                completion(false, nil, [])
+                return
+            }
+
+            if let questions = [Questions].parse(questionObjects) {
+                completion(true, nil, questions)
+            } else {
+                completion(false, "Internal Error", [])
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain, [])
+                return
+            }
+
+            completion(false, "Something went wrong", [])
+        }
+    }
+
     // MARK: - Reservation Request
 
     func createReservationRequest(
@@ -337,6 +401,7 @@ final class TableService {
     func fetchConsumerLayout(
         date: String,
         venueId: String,
+        eventUniqueId: String? = nil,
         completion: @escaping (
             _ success: Bool,
             _ message: String?,
@@ -348,7 +413,7 @@ final class TableService {
         headers["venue"] = venueId
 
         AFWrapper.getRequest(
-            APIBuilder.layoutURL(date: date),
+            APIBuilder.layoutURL(date: date, eventUniqueId: eventUniqueId),
             params: nil,
             headers: headers
         ) { response in

@@ -64,7 +64,7 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
         view.addSubview(enableBtn)
 
         skipBtn.configure(
-            title: "Not now",
+            title: "Not Now",
             fontSize: 18,
             cornerRadius: 18
         )
@@ -184,7 +184,7 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
             preferredStyle: .alert
         )
 
-        alert.addAction(UIAlertAction(title: "Not now", style: .cancel) { _ in
+        alert.addAction(UIAlertAction(title: "Not Now", style: .cancel) { _ in
             AppDelegate.shared.setRootVC()
         })
         alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in

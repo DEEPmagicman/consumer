@@ -56,7 +56,7 @@ final class DeleteAccountBottomSheetVC: UIViewController {
         sheetView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sheetView)
 
-        titleLabel.text = "Delete account?"
+        titleLabel.text = "Delete Account?"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.textAlignment = .center
@@ -78,7 +78,7 @@ final class DeleteAccountBottomSheetVC: UIViewController {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         sheetView.addSubview(subtitleLabel)
 
-        contactBtn.setTitle("Contact us", for: .normal)
+        contactBtn.setTitle("Contact Us", for: .normal)
         contactBtn.setTitleColor(.systemBlue, for: .normal)
         contactBtn.titleLabel?.font = Constant.Font.geistMedium(size: 15)
         contactBtn.translatesAutoresizingMaskIntoConstraints = false

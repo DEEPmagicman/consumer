@@ -79,7 +79,7 @@ final class VerifyNumberVC: BaseAuthViewController {
         otpFieldView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         contentStack.addArrangedSubview(otpFieldView)
 
-        resendBtn.setTitle("Resend code", for: .normal)
+        resendBtn.setTitle("Resend Code", for: .normal)
         resendBtn.setTitleColor(AuthTheme.link, for: .normal)
         resendBtn.titleLabel?.font = Constant.Font.interRegular(size: 14)
         resendBtn.bgColor = .clear

@@ -44,7 +44,7 @@ final class SelectLocationVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No cities found"
+        titleLabel.text = "No Cities Found"
         titleLabel.textAlignment = .center
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistMedium(size: 16)
@@ -250,7 +250,7 @@ private extension SelectLocationVC {
             editBtnView.isHidden = true
             discriptionLbl.isHidden = false
             updateLocationBtn.setTitle(
-                isInitialPrimarySelection ? "Continue" : "Update location",
+                isInitialPrimarySelection ? "Continue" : "Update Location",
                 for: .normal
             )
 

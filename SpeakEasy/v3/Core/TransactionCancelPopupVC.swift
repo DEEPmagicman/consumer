@@ -16,10 +16,10 @@ final class TransactionCancelPopupVC: UIViewController {
     private let onCancelTransaction: () -> Void
 
     init(
-        title: String = "Cancel transaction?",
+        title: String = "Cancel Transaction?",
         subtitle: String = "Your reserved tickets will be released and this checkout will close.",
-        keepTitle: String = "Continue to checkout",
-        cancelTitle: String = "Cancel transaction",
+        keepTitle: String = "Continue to Checkout",
+        cancelTitle: String = "Cancel Transaction",
         onCancelTransaction: @escaping () -> Void
     ) {
         self.titleText = title
@@ -178,7 +178,7 @@ final class TransactionCancelPopupVC: UIViewController {
 extension UIViewController {
 
     func presentTransactionCancelConfirmation(
-        title: String = "Cancel transaction?",
+        title: String = "Cancel Transaction?",
         subtitle: String = "Your reserved tickets will be released and this checkout will close.",
         onCancelTransaction: @escaping () -> Void
     ) {

@@ -51,6 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        UINavigationController.installDuplicatePushGuard()
+        UIViewController.installDuplicatePresentationGuard()
         configureGoogleMaps()
         self.application = application
 

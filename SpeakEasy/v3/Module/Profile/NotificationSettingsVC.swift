@@ -78,7 +78,7 @@ final class NotificationSettingsVC: UIViewController {
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backBtn)
 
-        titleLabel.text = "Notification settings"
+        titleLabel.text = "Notification Settings"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -239,7 +239,7 @@ final class NotificationSettingsVC: UIViewController {
             preferredStyle: .alert
         )
 
-        alert.addAction(UIAlertAction(title: "Not now", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Not Now", style: .cancel))
         alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { [weak self] _ in
             self?.shouldEnablePushAfterSettings = true
             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }

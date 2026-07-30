@@ -215,7 +215,7 @@ final class AllVenueVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No partners found"
+        titleLabel.text = "No Partners Found"
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistMedium(size: 18)
         titleLabel.textAlignment = .center

@@ -96,7 +96,7 @@ final class DateOfBirthSelectionVC: UIViewController {
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backBtn)
 
-        titleLabel.text = "Your date of birth"
+        titleLabel.text = "Your Date of Birth"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 21)
         titleLabel.textAlignment = .center

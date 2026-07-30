@@ -54,7 +54,7 @@ class MapEventsTableViewCell: UITableViewCell {
         venueLabel.text = event.displayVenueName.uppercased()
         titleLabel.text = event.title
         dateLabel.text = event.eventCardDateText()
-        actionLabel.text = "View event"
+        actionLabel.text = "View Event"
         badgeLabel.text = "PREMIUM AVAILABLE"
         badgeView.isHidden = event.isPremium != true
     }

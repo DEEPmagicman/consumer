@@ -279,17 +279,21 @@ extension Tables3DMapVC {
         setupBuyNowButton()
         tableService.fetchConsumerLayout(
             date: dateText,
-            venueId: event?.venue?.id ?? ""
+            venueId: event?.venue?.id ?? "",
+            eventUniqueId: event?.uniqueId
         ) { [weak self] ok, msg, layout in
             guard let self else { return }
             DispatchQueue.main.async {
                 if ok, let layout {
                     let items = layout.layoutHistories?.first?.layoutHistoryHas3DMaps ?? []
-                    self.roomItems = items.sorted {
+                    self.roomItems = items.filter(self.shouldShowRoomItem).sorted {
                         ($0.order ?? Int.max) < ($1.order ?? Int.max)
                     }
-                    if self.roomItems.count > 1 {
-                        self.zoneSelector.isHidden = false
+                    self.zoneSelector.isHidden = self.roomItems.count <= 1
+                    guard !self.roomItems.isEmpty else {
+                        self.zoneSelector.setItems([])
+                        self.hideAdvancedLoader()
+                        return
                     }
                     self.selectedGlobalRoomIndex = 0
                     self.applyRoomItems(animated: false)
@@ -338,6 +342,18 @@ extension Tables3DMapVC {
             return dict
         }
         return [:]
+    }
+
+    func shouldShowRoomItem(_ item: Layout3DMap) -> Bool {
+        let status = item.status?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .uppercased()
+
+        return status == "ENABLED"
+    }
+
+    func shouldShowZoneSelector() -> Bool {
+        roomItems.count > 1
     }
 
     private func resolveSeatingArea(from extras: [String: Any]) -> SeatingAreaDTO? {
@@ -427,25 +443,6 @@ extension Tables3DMapVC {
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
         )
-//        Navigate.to.tableSeatingVC(self, seatingArea: item, event: event) { [weak self] time, guestCount, _, _ in
-//            guard let self = self else { return }
-//            let uuid    = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
-//            let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
-//            TablePresenter.createSeatingAreaBooking(
-//                eventId: self.event?.id ?? "",
-//                seatingAreaId: item.id ?? "",
-//                timeSlotId: item.bookingType == .default ? nil : time,
-//                venueId: event?.venue?.id ?? "",
-//                guests: guestCount,
-//                queueId: queueId
-//            ) { isSuccess, errMsg, _ in
-//                if isSuccess {
-//                    if let event = self.event {
-//                        Navigate.to.tablePurchaseVC(self, queueId: queueId, event: event, seatingAreas: self.seatingAreas)
-//                    }
-//                } else { print(errMsg ?? "Booking failed") }
-//            }
-//        }
     }
 
     func loadSelectedRoomModel() {
@@ -824,10 +821,10 @@ private extension Tables3DMapVC {
     }
 
     private func hideCheckoutMode() {
-        zoneSelector.isHidden = false
+        zoneSelector.isHidden = !shouldShowZoneSelector()
         UIView.animate(withDuration: 0.25) {
             self.buyNowBtnView.alpha = 0
-            self.zoneSelector.alpha = 1
+            self.zoneSelector.alpha = self.shouldShowZoneSelector() ? 1 : 0
         } completion: { _ in self.buyNowBtnView.isHidden = true }
     }
 
@@ -1009,7 +1006,7 @@ private extension Tables3DMapVC {
         resetPinColor(seatingAreaId: previousId, in: sceneView.scene)
         selectedSeatingId = nil
         buyNowBtnView.isHidden = true
-        if self.roomItems.count > 1 {
+        if self.shouldShowZoneSelector() {
             self.zoneSelector.isHidden = false
         }
     }

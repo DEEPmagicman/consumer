@@ -221,7 +221,7 @@ final class PaymentVC: UIViewController {
         innerStack.addArrangedSubview(makeDivider())
 
         // ── Pay with card row ────────────────────────────────────────────────
-        cardLabel.text = "Pay with card"
+        cardLabel.text = "Pay with Card"
         cardLabel.textColor = AppColor.primaryWhiteColor
         cardLabel.font = Constant.Font.geistMedium(size: 18)
         cardLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -295,7 +295,7 @@ final class PaymentVC: UIViewController {
             saveCardCheckbox.heightAnchor.constraint(equalToConstant: 18)
         ])
 
-        saveCardLabel.text = "Save card to my profile"
+        saveCardLabel.text = "Save Card to My Profile"
         saveCardLabel.textColor = AppColor.primaryWhiteColor
         saveCardLabel.font = Constant.Font.geistRegular(size: 14)
         saveCardLabel.translatesAutoresizingMaskIntoConstraints = false

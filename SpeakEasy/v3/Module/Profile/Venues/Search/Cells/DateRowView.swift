@@ -47,7 +47,7 @@ final class DateRowView: UIControl {
     private let valueLabel = UILabel()
     private let arrowImageView = UIImageView()
 
-    var value: String = "Add date" {
+    var value: String = "Add Date" {
         didSet {
             valueLabel.text = value
         }

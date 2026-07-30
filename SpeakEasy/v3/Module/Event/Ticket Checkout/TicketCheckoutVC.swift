@@ -33,7 +33,7 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var feesAndTaxesTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var feesAndTaxesTableView: UITableView!
-    @IBOutlet weak var purchaseTicketBtn: UIButton!
+    @IBOutlet weak var purchaseTicketBtn: LoadingButton!
     @IBOutlet weak var timerLbl: UILabel!
     @IBOutlet weak var promoCodeTextFeild: UITextField!
     @IBOutlet weak var submitPromoBtn: UIButton!
@@ -71,7 +71,7 @@ final class TicketCheckoutVC: UIViewController {
     
     private var faqs: [(question: String, answer: String)] = [
         (
-            question: "Event details.",
+            question: "Event Details.",
             answer: "View all event information including partner, date, time, and other event-related details."
         ),
         (
@@ -199,6 +199,7 @@ final class TicketCheckoutVC: UIViewController {
         }
                 
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
+        purchaseTicketBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
         promoCodeTextFeild.addTarget(self, action: #selector(promoCodeValueChanged), for: .editingChanged)
         updatePromoButtonIcon()
@@ -474,8 +475,10 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func updatePurchaseButtonTitle() {
+        let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        let ticketText = totalTickets == 1 ? "Ticket" : "Tickets"
         purchaseTicketBtn.setTitle(
-            hasOnlyFreeSelectedTickets ? "Redeem Ticket" : "Purchase Tickets",
+            hasOnlyFreeSelectedTickets ? "Redeem \(ticketText)" : "Purchase \(ticketText)",
             for: .normal
         )
     }
@@ -708,6 +711,7 @@ final class TicketCheckoutVC: UIViewController {
     private func createFreeEventBookingAndNavigate() {
         guard let eventId = event?.id else {
             isPaymentInitiated = false
+            hidePurchaseButtonLoader()
             setScreenInteractionBlocked(false)
             return
         }
@@ -734,6 +738,7 @@ final class TicketCheckoutVC: UIViewController {
 
             guard isAvailable else {
                 self.isPaymentInitiated = false
+                self.hidePurchaseButtonLoader()
                 self.setScreenInteractionBlocked(false)
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                 return
@@ -751,6 +756,7 @@ final class TicketCheckoutVC: UIViewController {
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }
                 if isSuccess, let id = id {
+                    self.hidePurchaseButtonLoader()
                     AppHaptic.success()
                     self.countdownTimer?.invalidate()
                     NotificationCenter.default.postOrdersRefresh(.tickets)
@@ -764,6 +770,7 @@ final class TicketCheckoutVC: UIViewController {
                     )
                 } else {
                     self.isPaymentInitiated = false
+                    self.hidePurchaseButtonLoader()
                     self.setScreenInteractionBlocked(false)
                     AppHaptic.error()
                     Alert.showToast(message ?? errMsg ?? Constant.String.somethingWrong)
@@ -974,7 +981,10 @@ final class TicketCheckoutVC: UIViewController {
 
         AppHaptic.primaryAction()
         if isFreeTicket {
-            createFreeEventBookingAndNavigate()
+            showPurchaseButtonLoader()
+            DispatchQueue.main.async { [weak self] in
+                self?.createFreeEventBookingAndNavigate()
+            }
             return
         }
 
@@ -1001,6 +1011,14 @@ final class TicketCheckoutVC: UIViewController {
                 AppHaptic.error()
             }
         }
+    }
+
+    private func showPurchaseButtonLoader() {
+        purchaseTicketBtn.showLoader(userInteraction: false)
+    }
+
+    private func hidePurchaseButtonLoader() {
+        purchaseTicketBtn.hideLoader()
     }
 
     private func validateQuestionsAndProceed() -> Bool {

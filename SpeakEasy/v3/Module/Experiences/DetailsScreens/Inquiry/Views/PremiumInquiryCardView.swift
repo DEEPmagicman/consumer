@@ -578,10 +578,35 @@ private extension PremiumInquiryCardView {
                     self.resetForm()
                     self.onRequestSuccess?()
                 } else {
-                    Alert.showToast(message ?? Constant.String.somethingWrong)
+                    self.showReservationRequestError(message)
                 }
             }
         }
+    }
+
+    func showReservationRequestError(_ message: String?) {
+        let duplicateErrorCode = "DUPLICATE_RESERVATION_REQUEST"
+        let duplicateReservationMessage = "You've already submitted a reservation request for this date. Duplicate reservation requests for the same guest on the same business day are not allowed. Please wait for the venue to respond before submitting another request."
+
+        guard let message,
+              !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            Alert.showToast(Constant.String.somethingWrong)
+            return
+        }
+
+        if message.localizedCaseInsensitiveContains(duplicateErrorCode) {
+            Alert.showAlertSheet(
+                style: .alert,
+                title: nil,
+                message: duplicateReservationMessage,
+                actions: [
+                    UIAlertAction(title: "OK", style: .default)
+                ]
+            )
+            return
+        }
+
+        Alert.showToast(message)
     }
 
     func resetForm() {
@@ -620,7 +645,7 @@ private extension PremiumInquiryCardView {
 
         loadedQuestionsEventId = eventId
 
-        TablePresenter.getReservationRequestQuestions(
+        tableService.getReservationRequestQuestions(
             eventId: eventId,
             venueId: event?.venue?.id ?? ""
         ) { [weak self] isSuccess, _, questions in

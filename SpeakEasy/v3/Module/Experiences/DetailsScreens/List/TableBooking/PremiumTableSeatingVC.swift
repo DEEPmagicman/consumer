@@ -68,6 +68,7 @@ final class PremiumTableSeatingVC: UIViewController {
     private var contentBottomToSpendConstraint: NSLayoutConstraint?
     private var lastDepositProcessingFees: Double = 0
     private var currentSpendAgreementItems: [SpendLineItem] = []
+    private let tableService = TableService()
 
     // MARK: - Life Cycle
 
@@ -751,7 +752,7 @@ private extension PremiumTableSeatingVC {
 
         setCheckoutLoading(true)
 
-        TablePresenter.createSeatingAreaBooking(
+        tableService.createSeatingAreaBooking(
             eventId: event.id,
             seatingAreaId: area.id ?? "",
             timeSlotId: selectedTimeSlot?.id,

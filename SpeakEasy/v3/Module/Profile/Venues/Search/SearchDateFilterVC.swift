@@ -24,7 +24,7 @@ final class SearchDateFilterVC: BaseSearchSheetVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        titleLabel.text = "Search by date"
+        titleLabel.text = "Search by Date"
         closeBtn.iconTypeValue = AppIconType.close.rawValue
         closeBtn.iconSize = 14
         closeBtn.buttonSize = 40
@@ -91,8 +91,8 @@ final class SearchDateFilterVC: BaseSearchSheetVC {
     }
 
     private func reloadDates() {
-        fromRow.value = fromDate?.dateFilterDisplay() ?? "Add date"
-        toRow.value = toDate?.dateFilterDisplay() ?? "Add date"
+        fromRow.value = fromDate?.dateFilterDisplay() ?? "Add Date"
+        toRow.value = toDate?.dateFilterDisplay() ?? "Add Date"
     }
 
     @objc private func onClickFrom() {

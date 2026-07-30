@@ -55,7 +55,7 @@ final class AccountInfoVC: UIViewController {
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backBtn)
 
-        titleLabel.text = "Account info"
+        titleLabel.text = "Account Info"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ final class AccountInfoVC: UIViewController {
     }
     
     private func setupButton() {
-        saveBtn.configure(title: "Save changes", fontSize: 18, cornerRadius: 16)
+        saveBtn.configure(title: "Save Changes", fontSize: 18, cornerRadius: 16)
            saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
 
            view.addSubview(saveBtn)

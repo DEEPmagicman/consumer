@@ -280,10 +280,20 @@ struct APIBuilder {
         return SharedURL.tableBaseURL + route + event + "/\(encoded)" + redirect + ticketBooking
     }
 
-    static func layoutURL(date: String) -> String {
+    static func layoutURL(date: String, eventUniqueId: String? = nil) -> String {
         let base = SharedURL.tableBaseURL + "/consumer/layout"
-        let qry = "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-        return base + "?" + qry
+        var queryItems = [
+            "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        ]
+
+        let trimmedEventUniqueId = eventUniqueId?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !trimmedEventUniqueId.isEmpty {
+            let encodedEventUniqueId = trimmedEventUniqueId
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            queryItems.append("eventUniqueId=\(encodedEventUniqueId)")
+        }
+
+        return base + "?" + queryItems.joined(separator: "&")
     }
     
     static func ticketLinksURL(eventId: String) -> String {

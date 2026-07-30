@@ -112,11 +112,11 @@ final class SearchEventVC: BaseSearchSheetVC {
         dateButton.addTarget(self, action: #selector(onClickDate), for: .touchUpInside)
         dateButton.translatesAutoresizingMaskIntoConstraints = false
 
-        leftDateLabel.text = "Search by date"
+        leftDateLabel.text = "Search by Date"
         leftDateLabel.textColor = UIColor(hex: "#737373")
         leftDateLabel.font = Constant.Font.geistRegular(size: 16)
 
-        rightDateLabel.text = "Add dates"
+        rightDateLabel.text = "Add Dates"
         rightDateLabel.textColor = .white
         rightDateLabel.font = Constant.Font.geistMedium(size: 16)
 
@@ -199,10 +199,10 @@ final class SearchEventVC: BaseSearchSheetVC {
 
         guard let fromDate, let toDate else {
 
-            leftDateLabel.text = "Search by date"
+            leftDateLabel.text = "Search by Date"
             leftDateLabel.textColor = UIColor(hex: "#737373")
 
-            rightDateLabel.text = "Add dates"
+            rightDateLabel.text = "Add Dates"
             rightDateLabel.textColor = .white
             return
         }

@@ -350,7 +350,7 @@ final class PremiumArrivalTimeView: UIView {
         selectedTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         selectedTimeView.addSubview(selectedTimeLabel)
 
-        availableLabel.text = "Available times"
+        availableLabel.text = "Available Times"
         availableLabel.font = Constant.Font.geistMedium(size: 14)
         availableLabel.textColor = UIColor.white.withAlphaComponent(0.8)
         availableLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -709,7 +709,7 @@ final class PremiumNoteInputView: UIView {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(iconView)
 
-        titleLabel.text = "Add a note"
+        titleLabel.text = "Add a Note"
         titleLabel.font = Constant.Font.geistRegular(size: 15)
         titleLabel.textColor = UIColor.white.withAlphaComponent(0.85)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -1577,7 +1577,7 @@ final class PremiumPromoRow: UIView {
         titleTapButton.addTarget(self, action: #selector(onActionTap), for: .touchUpInside)
         titleRow.addSubview(titleTapButton)
 
-        promoLabel.text = "I have a promo code"
+        promoLabel.text = "I Have a Promo Code"
         promoLabel.font = Constant.Font.geistRegular(size: 16)
         promoLabel.textColor = .white
         promoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -1848,7 +1848,14 @@ final class PremiumPromoRow: UIView {
 }
 
 extension PremiumPromoRow: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        textField === self.textField && !isApplied && !isSubmitting
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard textField === self.textField else {
+            return false
+        }
         submitCurrentCode()
         return true
     }

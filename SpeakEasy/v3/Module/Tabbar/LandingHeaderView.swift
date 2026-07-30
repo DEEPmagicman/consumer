@@ -186,7 +186,7 @@ final class LandingHeaderView: UIView {
             imageView.isHidden = true
             firstNameLetter.isHidden = true
             signInIconView.isHidden = false
-            titleLabel.text = "Sign in"
+            titleLabel.text = "Sign In"
             return
         }
 

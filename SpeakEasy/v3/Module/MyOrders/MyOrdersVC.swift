@@ -120,7 +120,7 @@ final class MyOrdersVC: UIViewController {
         emptyIcon.contentMode = .scaleAspectFit
         emptyIconContainer.addSubview(emptyIcon)
 
-        emptyTitle.text = "Keep track of every booking"
+        emptyTitle.text = "Keep Track of Every Booking"
         emptyTitle.textColor = .white
         emptyTitle.font = Constant.Font.geistMedium(size: 20)
         emptyTitle.textAlignment = .center
@@ -295,7 +295,7 @@ final class MyOrdersVC: UIViewController {
         view.addSubview(backBtn)
 
         // Title styling
-        titleLabel.text = "My orders"
+        titleLabel.text = "My Orders"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.textAlignment = .center

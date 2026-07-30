@@ -29,13 +29,13 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var comingSoonView: UIView!
     @IBOutlet weak var topSapraterView: UIView!
     @IBOutlet weak var shimmerView: ShimmerView!
-    @IBOutlet weak var rsvpBtn: UIButton!
+    @IBOutlet weak var rsvpBtn: LoadingButton!
 
     // MARK: - Event Ticket Callbacks
 
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
-    var onRSVPTap: ((EventTicket) -> Void)?
+    var onRSVPTap: ((EventTicket, TicketsTVC) -> Void)?
     var onDescriptionToggle: (() -> Void)?
     var isFromGroupTicket: Bool = false
 
@@ -60,6 +60,7 @@ class TicketsTVC: UITableViewCell {
         super.awakeFromNib()
 
         setupTicketBackgroundGradient()
+        rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
     }
 
     override func layoutSubviews() {
@@ -129,6 +130,7 @@ class TicketsTVC: UITableViewCell {
         minusView.alpha = 1.0
         rsvpBtn.isEnabled = true
         configureRSVPButtonStyle()
+        rsvpBtn.hideLoader()
         rsvpBtnView.isHidden = true
         rsvpBtnView.alpha = 1.0
         inclFeesLbl.isHidden = true
@@ -448,7 +450,7 @@ class TicketsTVC: UITableViewCell {
         let remaining = remainingQuantity(for: ticket)
         if shouldShowLeftLabel && remaining > 0 && remaining < 20 {
             ticketLeftLbl.isHidden = false
-            ticketLeftLbl.text = "Only \(remaining) left"
+            ticketLeftLbl.text = "Only \(remaining) Left"
             ticketLeftLbl.textColor = UIColor(hex: Event.normalizedHexColor(whiteLabelColor))
         } else {
             ticketLeftLbl.isHidden = true
@@ -471,6 +473,15 @@ class TicketsTVC: UITableViewCell {
         rsvpBtn.adjustsImageWhenHighlighted = false
         rsvpBtn.alpha = 1
     }
+    
+    func showRSVPLoader() {
+        rsvpBtn.showLoader(userInteraction: false)
+    }
+
+    func hideRSVPLoader() {
+        rsvpBtn.hideLoader()
+    }
+
 
     // MARK: - IBActions
 
@@ -511,7 +522,7 @@ class TicketsTVC: UITableViewCell {
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
         AppHaptic.primaryAction()
-        onRSVPTap?(ticket)
+        onRSVPTap?(ticket, self)
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {

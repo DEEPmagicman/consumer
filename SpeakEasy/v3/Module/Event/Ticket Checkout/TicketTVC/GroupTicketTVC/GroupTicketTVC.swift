@@ -27,7 +27,7 @@ class GroupTicketTVC: UITableViewCell {
 
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
-    var onRSVPTap: ((EventTicket) -> Void)?
+    var onRSVPTap: ((EventTicket, TicketsTVC) -> Void)?
     var onRowTap: ((EventTicket) -> Void)?
     var onDescriptionToggle: ((EventTicket) -> Void)?
     var onExpandChanged: ((Bool) -> Void)?
@@ -156,6 +156,16 @@ class GroupTicketTVC: UITableViewCell {
         tableViewHeight.constant = ticketListTableView.contentSize.height
     }
 
+    func visibleTicketCell(for ticketId: String) -> TicketsTVC? {
+        guard let ticketIndex = tickets.firstIndex(where: { $0.id == ticketId }) else {
+            return nil
+        }
+
+        return ticketListTableView.cellForRow(
+            at: IndexPath(row: ticketIndex, section: 0)
+        ) as? TicketsTVC
+    }
+
     @IBAction func onClickExpandBtn(_ sender: Any) {
         AppHaptic.selectionChanged()
         isExpanded.toggle()
@@ -211,8 +221,8 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
             self?.onMinusTap?(ticket)
         }
 
-        cell.onRSVPTap = { [weak self] ticket in
-            self?.onRSVPTap?(ticket)
+        cell.onRSVPTap = { [weak self] ticket, cell in
+            self?.onRSVPTap?(ticket, cell)
         }
 
         cell.onDescriptionToggle = { [weak self] in

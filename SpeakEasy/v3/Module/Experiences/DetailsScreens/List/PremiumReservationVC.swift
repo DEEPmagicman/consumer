@@ -34,6 +34,7 @@ final class PremiumReservationVC: UIViewController {
     }
     var promotionLinkId = ""
     var promotionLinkUniqueCode = ""
+    private let tableService = TableService()
 
     var seatingAreas: [SeatingArea] = [] {
         didSet {
@@ -929,7 +930,7 @@ private extension PremiumReservationVC {
         let queueId =
             "TABLE_BOOKING_QUEUE_\(uuid)"
 
-        TablePresenter.createSeatingAreaBooking(
+        tableService.createSeatingAreaBooking(
 
             eventId: event.id,
 

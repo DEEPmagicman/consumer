@@ -582,6 +582,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         isPricingLoading = isLoading
         reloadFeeTables()
         applyFeeBreakdownState(animated: animated)
+        updateCheckoutButtonState()
     }
 
     private func reloadFeeTables() {
@@ -845,7 +846,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
         if isFreeTicket || totalPrice <= 0 {
             checkOutBtnView.showLoader()
-            createFreeBookingIfNeeded()
+            DispatchQueue.main.async { [weak self] in
+                self?.createFreeBookingIfNeeded()
+            }
             return
         }
 
@@ -862,7 +865,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             switch result {
             case .completed:
                 self.checkOutBtnView.showLoader()
-                self.handleSuccessfulCardPayment()
+                DispatchQueue.main.async { [weak self] in
+                    self?.handleSuccessfulCardPayment()
+                }
             case .canceled:
                 self.handlePaymentCanceled()
             case .failed:
@@ -882,12 +887,18 @@ extension CoverTicketCheckOutVC {
         let hasData =
             selectedCoverTickets.contains { ($0.selectedQuantity ?? 0) > 0 } ||
             selectedAddOnsItems.contains { ($0.selectedQuantity ?? 0) > 0 }
-        let shouldShow = hasData && isBookingLoaded && isPaymentIntentLoaded
-        let enabled = shouldShow && !isPaymentInitiated
+        let isReady = isBookingLoaded && isPaymentIntentLoaded && !isPricingLoading
+        let shouldShow = hasData && (isPricingLoading || isReady)
+        let enabled = hasData && isReady && !isPaymentInitiated
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.setCheckoutButton(visible: shouldShow, enabled: enabled, animated: true)
             self.refreshCheckoutBarSummary()
+            if self.isPricingLoading {
+                self.checkOutBtnView.showLoader()
+            } else if !self.isPaymentInitiated {
+                self.checkOutBtnView.hideLoader()
+            }
         }
     }
 
@@ -965,13 +976,20 @@ extension CoverTicketCheckOutVC {
     }
 
     private var initialCheckoutButtonTitle: String {
-        hasOnlyFreeSelection ? "Redeem Ticket" : "Pay Now"
+        hasOnlyFreeSelection ? redeemButtonTitle : "Pay Now"
     }
 
     private func checkoutButtonTitle(for total: Double) -> String {
         hasOnlyFreeSelection && total <= 0
-            ? "Redeem Ticket"
+            ? redeemButtonTitle
             : "Pay \(CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition))"
+    }
+
+    private var redeemButtonTitle: String {
+        let coverCount = selectedCoverTickets.reduce(0) { $0 + ($1.selectedQuantity ?? 0) }
+        let addOnCount = selectedAddOnsItems.reduce(0) { $0 + ($1.selectedQuantity ?? 0) }
+        let ticketText = (coverCount + addOnCount) == 1 ? "Ticket" : "Tickets"
+        return "Redeem \(ticketText)"
     }
 
     private var hasOnlyFreeSelection: Bool {
@@ -1110,7 +1128,9 @@ extension CoverTicketCheckOutVC {
                 switch status {
                 case "succeeded", "requires_capture":
                     self.checkOutBtnView.showLoader()
-                    self.handleSuccessfulCardPayment()
+                    DispatchQueue.main.async { [weak self] in
+                        self?.handleSuccessfulCardPayment()
+                    }
                 case "requires_action":
                     self.resetPaymentInteractionAfterFailure()
                     Alert.showToast("Additional authentication required. Please use Apple Pay.")
@@ -1765,7 +1785,9 @@ extension CoverTicketCheckOutVC {
         switch status {
         case .success:
             checkOutBtnView.showLoader()
-            handleSuccessfulCardPayment()
+            DispatchQueue.main.async { [weak self] in
+                self?.handleSuccessfulCardPayment()
+            }
         case .error:
             isFromApplePay = true
             resetPaymentInteractionAfterFailure()
@@ -2047,7 +2069,7 @@ private final class TotalFeeSummaryCell: UITableViewCell {
         titleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         titleLabel.textColor = .white
 
-        taxIncludedLabel.text = "Tax included"
+        taxIncludedLabel.text = "Tax Included"
         taxIncludedLabel.font = .systemFont(ofSize: 10, weight: .regular)
         taxIncludedLabel.textColor = UIColor.white.withAlphaComponent(0.62)
 

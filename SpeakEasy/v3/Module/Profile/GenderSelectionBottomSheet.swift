@@ -75,7 +75,7 @@ final class GenderSelectionBottomSheetVC: UIViewController {
         sheetView.addSubview(backBtn)
         backBtn.translatesAutoresizingMaskIntoConstraints = false
 
-        titleLabel.text = "Select gender"
+        titleLabel.text = "Select Gender"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 20)
         titleLabel.textAlignment = .center

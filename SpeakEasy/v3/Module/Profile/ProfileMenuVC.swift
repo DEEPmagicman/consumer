@@ -212,14 +212,14 @@ final class ProfileMenuVC: UIViewController {
             to: settingsCard,
             rows: [
                 ProfileMenuRow(title: "Help", icon: UIImage(resource: .helpIc), action: #selector(onClickHelp)),
-                ProfileMenuRow(title: "Notification settings", icon: UIImage(resource: .notificationIc), action: #selector(onClickNotificationSettings))
+                ProfileMenuRow(title: "Notification Settings", icon: UIImage(resource: .notificationIc), action: #selector(onClickNotificationSettings))
             ]
         )
 
         addRows(
             to: logoutCard,
             rows: [
-                ProfileMenuRow(title: "Log out", icon: UIImage(resource: .logOutIc), action: #selector(onClickLogOut)),
+                ProfileMenuRow(title: "Log Out", icon: UIImage(resource: .logOutIc), action: #selector(onClickLogOut)),
                 ProfileMenuRow(title: "Delete Account", icon: UIImage(systemName: "trash"), action: #selector(onClickDelete))
             ]
         )
@@ -408,7 +408,7 @@ final class ProfileMenuVC: UIViewController {
         guard let user = UserDefault.shared.user else {
             imageView.isHidden = true
             firstNameLetter.isHidden = false
-            nameLabel.text = "Sign in"
+            nameLabel.text = "Sign In"
             firstNameLetter.text = "P"
             return
         }

@@ -81,7 +81,7 @@ final class EditProfileVC: UIViewController {
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backBtn)
         
-        titleLabel.text = "Edit profile"
+        titleLabel.text = "Edit Profile"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -210,7 +210,7 @@ final class EditProfileVC: UIViewController {
     }
     
     private func setupSaveButton() {
-        saveBtn.configure(title: "Save changes", fontSize: 18, cornerRadius: 16)
+        saveBtn.configure(title: "Save Changes", fontSize: 18, cornerRadius: 16)
         saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
         view.addSubview(saveBtn)
 
@@ -342,7 +342,7 @@ final class EditProfileVC: UIViewController {
     
     private func setGenderEmpty() {
         genderTitleLabel.isHidden = true
-        genderValueLabel.text = "Select gender"
+        genderValueLabel.text = "Select Gender"
         genderValueLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.35)
 
         genderValueLabelBottomConstraint?.isActive = false

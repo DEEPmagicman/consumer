@@ -556,7 +556,7 @@ private final class PremiumExperiencesHeaderView: UICollectionReusableView {
         iconView.contentMode = .scaleAspectFit
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
-        titleLabel.text = "Premium experiences"
+        titleLabel.text = "Premium Experiences"
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistRegular(size: 16)
         titleLabel.numberOfLines = 1

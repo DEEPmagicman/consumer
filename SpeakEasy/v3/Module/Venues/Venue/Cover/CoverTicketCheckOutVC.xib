@@ -178,7 +178,7 @@
                                                 <constraint firstItem="BaZ-pN-YFG" firstAttribute="leading" secondItem="4V2-dX-l8F" secondAttribute="leading" id="w7g-bT-G0n"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your tickets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4o-tJ-o5a">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Tickets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4o-tJ-o5a">
                                             <rect key="frame" x="20" y="119.99999999999997" width="353" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="f8r-zr-sdL"/>

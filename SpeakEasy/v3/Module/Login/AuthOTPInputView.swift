@@ -102,7 +102,7 @@ final class AuthOTPInputView: UIView {
         otpFieldView.heightAnchor.constraint(equalToConstant: otpSize + 10).isActive = true
         stack.addArrangedSubview(otpFieldView)
 
-        resendBtn.setTitle("Resend code", for: .normal)
+        resendBtn.setTitle("Resend Code", for: .normal)
         resendBtn.setTitleColor(AuthTheme.link, for: .normal)
         resendBtn.titleLabel?.font = Constant.Font.geistRegular(size: 14)
         resendBtn.bgColor = .clear

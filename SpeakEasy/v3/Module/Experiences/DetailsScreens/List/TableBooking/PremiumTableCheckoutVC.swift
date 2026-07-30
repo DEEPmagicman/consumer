@@ -454,7 +454,7 @@ private extension PremiumTableCheckoutVC {
         stack.spacing = 2
         stack.translatesAutoresizingMaskIntoConstraints = false
 
-        buyBtn.setTitle("Buy now", for: .normal)
+        buyBtn.setTitle("Buy Now", for: .normal)
         buyBtn.titleLabel?.font        = Constant.Font.geistMedium(size: 16)
         applyBuyButtonTheme()
         buyBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -2109,7 +2109,7 @@ private extension PremiumTableCheckoutVC {
 
     func setBuyLoading(_ isLoading: Bool) {
         buyBtn.isUserInteractionEnabled = !isLoading
-        buyBtn.setTitle(isLoading ? nil : "Buy now", for: .normal)
+        buyBtn.setTitle(isLoading ? nil : "Buy Now", for: .normal)
         isLoading ? buyLoader.startAnimating() : buyLoader.stopAnimating()
     }
 }

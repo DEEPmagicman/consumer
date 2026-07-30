@@ -190,7 +190,9 @@ final class OrderListViewController: UIViewController {
         updateFeesAndTaxesTitle(hasTax: true)
         orderFeesAmountLbl.textColor = .white
         feesDropDowenIc.tintColor = .white
-        orderTotalTaxIncludedLbl.text = "Tax included"
+        addedPromoCodeFeild.isUserInteractionEnabled = false
+        addedPromoCodeFeild.alpha = 1
+        orderTotalTaxIncludedLbl.text = "Tax Included"
         setTaxIncludedVisible(false)
         updatePaymentMethodUI()
         configureQuestionSection()
@@ -421,7 +423,7 @@ final class OrderListViewController: UIViewController {
     private func updateTimerLabel() {
         let minutes = remainingSeconds / 60
         let seconds = remainingSeconds % 60
-        holdTimerLabel.text = "Tickets held for \(minutes) mins \(seconds) secs"
+        holdTimerLabel.text = "Tickets Held For \(minutes) mins \(seconds) secs"
     }
 
     private func timerExpired() {
@@ -896,8 +898,10 @@ final class OrderListViewController: UIViewController {
     }
 
     private func updateCheckoutButtonTitle() {
+        let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        let ticketText = totalTickets == 1 ? "Ticket" : "Tickets"
         checkOutView.setButtonTitle(
-            hasOnlyFreeSelectedTickets ? "Redeem Ticket" : "Purchase Tickets"
+            isFreeTicket || hasOnlyFreeSelectedTickets ? "Redeem \(ticketText)" : "Purchase \(ticketText)"
         )
     }
 
@@ -1390,6 +1394,8 @@ final class OrderListViewController: UIViewController {
         if isPromoCodeApplied {
             addedPromoCodeFeild.text = appliedPromoCode.isEmpty ? addCodeTextFeild.text : appliedPromoCode
             addCodeTextFeild.isUserInteractionEnabled = false
+            addedPromoCodeFeild.isUserInteractionEnabled = false
+            addedPromoCodeFeild.alpha = 1
             let discount = paymentDetail?.discount ?? 0
             promoCodeTitleLbl.text = "Discount Applied"
             discountAmountLbl.text = "-\(CurrencyFormatter.amount(discount, symbol: currency, position: currencyPosition))"

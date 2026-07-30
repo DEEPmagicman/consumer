@@ -938,7 +938,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
             artistShimmerStackView.addArrangedSubview(PremiumSearchArtistShimmerItemView())
         }
 
-        titleLabel.text = "Upcoming events"
+        titleLabel.text = "Upcoming Events"
         titleLabel.textColor = .white
         titleLabel.font = Constant.Font.geistRegular(size: 18)
         stackView.addArrangedSubview(titleLabel)
@@ -1051,7 +1051,7 @@ private final class PremiumSearchHeaderSupplementaryView: UICollectionReusableVi
         )
 
         titleLabel.isHidden = !showsEventTitle
-        titleLabel.text = "Upcoming events"
+        titleLabel.text = "Upcoming Events"
         stackView.setCustomSpacing(
             showsEventTitle ? PremiumSearchHeaderMetrics.titleContentSpacing : 0,
             after: titleLabel

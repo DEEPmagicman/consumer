@@ -758,7 +758,7 @@ private extension CoverTicketListVC {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let buttonTitle = title?.isEmpty == false
             ? "Buy \(title!)"
-            : "Buy upsell tickets"
+            : "Buy Upsell Tickets"
 
         let attributedTitle = NSAttributedString(
             string: buttonTitle,
@@ -1114,6 +1114,9 @@ private extension CoverTicketListVC {
         applyWhiteLabelTheme()
 
         bookingType = hasPaidCoverTicket ? .PAID : .FREE
+        if isFreeBookingInProgress {
+            continueToCheckoutBtn.showLoader()
+        }
 
         animateCheckoutBar(show: shouldShow)
     }
@@ -1132,9 +1135,12 @@ private extension CoverTicketListVC {
         case .coverTickets:
             return "Continue to Checkout"
         case .addOns:
-            return selectedAddOns.isEmpty
-                ? "Skip this & Continue to Checkout"
-                : "Continue to Checkout"
+            guard selectedAddOns.isEmpty else {
+                return "Continue to Checkout"
+            }
+            return hasPaidCoverTicket
+                ? "Skip This & Continue to Checkout"
+                : "Skip This and Get My Free Ticket"
         }
     }
 
@@ -1201,7 +1207,7 @@ private extension CoverTicketListVC {
                 doormanId: doormanId
             )
         } else {
-            createFreeBooking()
+            beginFreeBookingAfterUIUpdate()
         }
     }
 
@@ -1232,6 +1238,7 @@ extension CoverTicketListVC {
         coverTicketCount.removeAll()
         clearUpsellSelection()
         expandedIndexSet.removeAll()
+        continueToCheckoutBtn.hideLoader()
         isCheckoutNavigationInProgress = false
         isFreeBookingInProgress = false
         view.isUserInteractionEnabled = true
@@ -1336,6 +1343,7 @@ extension CoverTicketListVC {
             guard let self else { return }
 
             if isSuccess, let id {
+                self.continueToCheckoutBtn.hideLoader()
                 NotificationCenter.default.postOrdersRefresh(.tickets)
                 self.resetForFreshPurchase()
                 Navigate.to.scanQR(
@@ -1347,6 +1355,7 @@ extension CoverTicketListVC {
                     shouldPushFromVenueFlow: true
                 )
             } else {
+                self.continueToCheckoutBtn.hideLoader()
                 self.isCheckoutNavigationInProgress = false
                 self.isFreeBookingInProgress = false
                 self.view.isUserInteractionEnabled = true
@@ -1356,6 +1365,13 @@ extension CoverTicketListVC {
                     message: ""
                 )
             }
+        }
+    }
+
+    private func beginFreeBookingAfterUIUpdate() {
+        continueToCheckoutBtn.showLoader()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            self?.createFreeBooking()
         }
     }
 

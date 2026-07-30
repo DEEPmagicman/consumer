@@ -329,7 +329,7 @@ final class NewLandingVC: UIViewController {
             imageView.isHidden = true
             firstNameLetter.isHidden = true
             signInIconView.isHidden = false
-            pageTitleLbl.text = "Sign in"
+            pageTitleLbl.text = "Sign In"
             return
         }
 
@@ -775,7 +775,7 @@ private final class LocationPermissionPromptVC: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "Find the best\nevents around you"
+        titleLabel.text = "Find the Best\nEvents Around You"
         titleLabel.textAlignment = .center
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 0
@@ -795,7 +795,7 @@ private final class LocationPermissionPromptVC: UIViewController {
 
         let enableButton = UIButton(type: .system)
         enableButton.translatesAutoresizingMaskIntoConstraints = false
-        enableButton.setTitle("Enable location", for: .normal)
+        enableButton.setTitle("Enable Location", for: .normal)
         enableButton.setTitleColor(.black, for: .normal)
         enableButton.titleLabel?.font = Constant.Font.geistMedium(size: 17)
         enableButton.backgroundColor = .white

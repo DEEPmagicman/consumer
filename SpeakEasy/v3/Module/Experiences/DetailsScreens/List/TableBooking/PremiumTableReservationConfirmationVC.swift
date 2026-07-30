@@ -203,7 +203,7 @@ private extension PremiumTableReservationConfirmationVC {
         guestTagView.translatesAutoresizingMaskIntoConstraints = false
         timeTagView.translatesAutoresizingMaskIntoConstraints = false
 
-        confirmationTitleLabel.text = "Confirmation number"
+        confirmationTitleLabel.text = "Confirmation Number"
         confirmationTitleLabel.font = Constant.Font.geistMedium(size: 16)
         confirmationTitleLabel.textColor = .white
         confirmationTitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -264,7 +264,7 @@ private extension PremiumTableReservationConfirmationVC {
         orderCard.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(orderCard)
 
-        orderTitleLabel.text = "Your order"
+        orderTitleLabel.text = "Your Order"
         orderTitleLabel.font = Constant.Font.geistRegular(size: 16)
         orderTitleLabel.textColor = .white
         orderTitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -705,7 +705,7 @@ private extension PremiumTableReservationConfirmationVC {
         let separator = makeOrderSeparator()
         let totalRow = ReservationOrderRow(
             title: "Total",
-            subtitle: "Tax included",
+            subtitle: "Tax Included",
             amount: formatMoney(total),
             titleFont: Constant.Font.geistMedium(size: 16),
             amountFont: Constant.Font.geistMedium(size: 16)

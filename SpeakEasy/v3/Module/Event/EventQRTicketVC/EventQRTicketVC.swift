@@ -746,7 +746,7 @@ class EventQRTicketVC: UIViewController {
     private func configureEventRows() {
         faqs = [
             (
-                question: "Event details.",
+                question: "Event Details.",
                 answer: "View all event information including partner, date, time, and other event-related details."
             ),
             (
@@ -1173,7 +1173,7 @@ class EventQRTicketVC: UIViewController {
         }
 
         let titleLabel = UILabel()
-        titleLabel.text = "Your order"
+        titleLabel.text = "Your Order"
         titleLabel.font = Constant.Font.geistSemiBold(size: 18)
         titleLabel.textColor = .white
         orderSummaryStackView.addArrangedSubview(titleLabel)
@@ -1201,12 +1201,13 @@ class EventQRTicketVC: UIViewController {
         let feeItems = buildOrderFeeItems(from: fees)
         let feesTotal = feeItems.reduce(0.0) { $0 + $1.amount }
         let total = booking?.totalPrice ?? fees?.total ?? subtotal + feesTotal
+        let shouldHideSubtotal = total <= 0
 
-        if subtotal > 0.005 {
+        if !shouldHideSubtotal && subtotal > 0.005 {
             orderSummaryStackView.addArrangedSubview(
                 makeOrderSummaryRow(
                     title: "Subtotal",
-                    value: formattedAmount(subtotal)
+                    value: subtotal <= 0 ? "Free" : "$\(subtotal.decimalFormat(true))"
                 )
             )
         }
@@ -1335,7 +1336,7 @@ class EventQRTicketVC: UIViewController {
         titleStack.translatesAutoresizingMaskIntoConstraints = false
 
         let titleLabel = UILabel()
-        titleLabel.text = "Fees & taxes"
+        titleLabel.text = "Fees & Taxes"
         titleLabel.font = Constant.Font.geistMedium(size: 14)
         titleLabel.textColor = UIColor.white.withAlphaComponent(0.76)
 

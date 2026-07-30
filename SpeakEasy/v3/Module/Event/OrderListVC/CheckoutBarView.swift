@@ -47,6 +47,7 @@ class CheckoutBarView: UIView {
 
         addSubview(containerView)
         applyAccentColor(.white)
+        configureActionButtonText()
     }
 
     // MARK: - Public API
@@ -59,6 +60,7 @@ class CheckoutBarView: UIView {
     }
 
     func setButtonTitle(_ title: String) {
+        applyActionButtonFont(for: title)
         actionBtn.setTitle(title, for: .normal)
     }
 
@@ -107,5 +109,28 @@ class CheckoutBarView: UIView {
 
     @IBAction private func buttonTapped(_ sender: Any) {
         delegate?.checkoutBarDidTapButton()
+    }
+
+    private func configureActionButtonText() {
+        actionBtn.titleLabel?.adjustsFontSizeToFitWidth = true
+        actionBtn.titleLabel?.minimumScaleFactor = 0.72
+        actionBtn.titleLabel?.numberOfLines = 1
+        actionBtn.titleLabel?.lineBreakMode = .byClipping
+        actionBtn.titleLabel?.baselineAdjustment = .alignCenters
+        applyActionButtonFont(for: actionBtn.title(for: .normal) ?? "")
+    }
+
+    private func applyActionButtonFont(for title: String) {
+        let fontSize: CGFloat
+        switch title.count {
+        case 0...24:
+            fontSize = 18
+        case 25...34:
+            fontSize = 16
+        default:
+            fontSize = 15
+        }
+
+        actionBtn.titleLabel?.font = Constant.Font.geistMedium(size: fontSize)
     }
 }

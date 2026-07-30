@@ -245,7 +245,7 @@ final class PremiumExpVC: UIViewController {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(separatorView)
 
-        sectionTitleLabel.text = "Top picks for you"
+        sectionTitleLabel.text = "Top Picks for You"
         sectionTitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.94)
         sectionTitleLabel.font = Constant.Font.geistMedium(size: 16)
         sectionTitleLabel.translatesAutoresizingMaskIntoConstraints = false
