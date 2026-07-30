@@ -884,105 +884,11 @@ private extension PremiumReservationVC {
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
         )
-
-/// * ff */  Navigate.to.premiumTableSeatingVC(
-//            self,
-//            seatingArea: item,
-//            event: event
-//        ) { [weak self] timeSlotId,
-//            guestCount,
-//            _,
-//            _ in
-//
-//            guard let self else {
-//                return
-//            }
-//
-//            createQueue(
-//                area: item,
-//                timeSlotId: timeSlotId,
-//                guestCount: guestCount
-//            )
-//        }
     }
 }
 
 private extension PremiumReservationVC {
 
-    func createQueue(
-        area: SeatingArea,
-        timeSlotId: String?,
-        guestCount: Int
-    ) {
-
-        guard let event else {
-            return
-        }
-
-        let uuid = UUID()
-            .uuidString
-            .replacingOccurrences(
-                of: "-",
-                with: ""
-            )
-            .lowercased()
-
-        let queueId =
-            "TABLE_BOOKING_QUEUE_\(uuid)"
-
-        tableService.createSeatingAreaBooking(
-
-            eventId: event.id,
-
-            seatingAreaId: area.id ?? "",
-
-            timeSlotId:
-                area.bookingType == .default
-                ? nil
-                : timeSlotId,
-
-            venueId: event.venue?.id ?? "",
-
-            guests: guestCount,
-
-            queueId: queueId,
-
-            consumerUserId: UserDefault.shared.user?.id ?? "",
-
-            mininumSpend: bookingCreateMinimum(
-                for: area,
-                timeSlotId: timeSlotId,
-                guestCount: guestCount
-            ),
-
-            promotionLinkId: promotionLinkId,
-
-            promotionLinkUniqueCode: promotionLinkUniqueCode
-
-        ) { [weak self] success, message, _ in
-
-            guard let self else {
-                return
-            }
-
-            if success {
-
-                Navigate.to.tablePurchaseVC(
-                    self,
-                    queueId: queueId,
-                    event: event,
-                    seatingAreas: seatingAreas
-                )
-
-            } else {
-
-                Alert.showToast(
-                    message ??
-                    Constant.String.somethingWrong
-                )
-            }
-        }
-    }
 
     func bookingCreateMinimum(
         for area: SeatingArea,

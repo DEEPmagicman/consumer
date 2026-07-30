@@ -292,7 +292,7 @@
                                 <constraint firstAttribute="height" constant="40" id="jk6-Ir-sbV"/>
                             </constraints>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" image="shareIconV2"/>
+                            <state key="normal" image="shareIconV3"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="share"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
@@ -338,7 +338,7 @@
     </objects>
     <resources>
         <image name="logo.xbox" catalog="system" width="128" height="123"/>
-        <image name="shareIconV2" width="20" height="20"/>
+        <image name="shareIconV3" width="20" height="20"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

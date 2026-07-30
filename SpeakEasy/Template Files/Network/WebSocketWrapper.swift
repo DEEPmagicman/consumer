@@ -36,6 +36,10 @@ protocol WebSocketCallBackDelegate: AnyObject {
     func uncheckBarBooking(barItems: [BarTabHasItem])
 }
 
+protocol BookingQueueSocketDelegate: AnyObject {
+    func didUpdateQueue(seatingAreaBooking: SeatingAreaBookingResponse?)
+}
+
 private final class WeakDelegateBox {
     weak var value: AnyObject?
 
@@ -54,14 +58,24 @@ final class WebSocketWrapper: NSObject {
     private var isSocketSetupDone = false
     var isSocketConnected = false
     private var currentVenueId: String?
+    private var currentTableBookingQueueId: String?
+    private var registeredTableBookingQueueId: String?
     
     private var _delegates: [WeakDelegateBox] = []
+    private var _bookingQueueDelegates: [WeakDelegateBox] = []
     
     var delegate: [WebSocketCallBackDelegate] {
         get {
             // Auto-purge dead entries on every access
             _delegates = _delegates.filter { $0.value != nil }
             return _delegates.compactMap { $0.value as? WebSocketCallBackDelegate }
+        }
+    }
+
+    private var bookingQueueDelegates: [BookingQueueSocketDelegate] {
+        get {
+            _bookingQueueDelegates = _bookingQueueDelegates.filter { $0.value != nil }
+            return _bookingQueueDelegates.compactMap { $0.value as? BookingQueueSocketDelegate }
         }
     }
     
@@ -77,6 +91,51 @@ final class WebSocketWrapper: NSObject {
     
     func removeDelegate(_ delegate: WebSocketCallBackDelegate) {
         _delegates.removeAll { $0.value === (delegate as AnyObject) }
+    }
+
+    func addBookingQueueDelegate(_ delegate: BookingQueueSocketDelegate) {
+        guard !_bookingQueueDelegates.contains(where: { $0.value === (delegate as AnyObject) }) else { return }
+        _bookingQueueDelegates.append(WeakDelegateBox(delegate as AnyObject))
+    }
+
+    func removeBookingQueueDelegate(_ delegate: BookingQueueSocketDelegate) {
+        _bookingQueueDelegates.removeAll { $0.value === (delegate as AnyObject) }
+    }
+
+    func connectTableBookingQueue(queueId: String, venueId: String? = nil, delegate: BookingQueueSocketDelegate? = nil) {
+        let normalizedQueueId = queueId.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedQueueId.isEmpty else { return }
+
+        if let delegate {
+            addBookingQueueDelegate(delegate)
+        }
+
+        currentTableBookingQueueId = normalizedQueueId
+
+        if let venueId, !venueId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            updateSocketContext(venueId: venueId)
+        } else {
+            connect()
+        }
+
+        addTableBookingQueueListeners()
+
+        if isSocketConnected {
+            reconnectTableBookingQueue()
+        }
+    }
+
+    func disconnectTableBookingQueue(delegate: BookingQueueSocketDelegate? = nil) {
+        if let delegate {
+            removeBookingQueueDelegate(delegate)
+        } else {
+            _bookingQueueDelegates.removeAll()
+        }
+
+        guard bookingQueueDelegates.isEmpty else { return }
+
+        currentTableBookingQueueId = nil
+        removeTableBookingQueueListeners()
     }
     
     func setUpWebSocket() {
@@ -277,6 +336,7 @@ final class WebSocketWrapper: NSObject {
     private func addEventListener() {
         socket?.on(clientEvent: .connect) { [weak self] _, _ in
             self?.isSocketConnected = true
+            self?.reconnectTableBookingQueue()
         }
         
         socket?.on(clientEvent: .disconnect) { [weak self] _, _ in
@@ -297,14 +357,18 @@ final class WebSocketWrapper: NSObject {
             return
         }
         
-        guard let venueId = UserDefaults.standard.string(forKey: "selectedVenueId") else {
-            return
-        }
         if let socketUrl = URL(string: SharedURL.baseURL) {
-            let headerDic = ["venue": venueId,
-                             "module": "consumer",
-                             "platform": "ios",
-                             "app_version": "\(Bundle.main.releaseVersionNumber)"]
+            let venueId = UserDefaults.standard.string(forKey: "selectedVenueId")?.trimmingCharacters(in: .whitespacesAndNewlines)
+            var headerDic: [String: Any] = [
+                "module": "consumer",
+                "platform": "ios",
+                "app_version": "\(Bundle.main.releaseVersionNumber)"
+            ]
+
+            if let venueId, !venueId.isEmpty {
+                headerDic["venue"] = venueId
+            }
+
             manager = SocketManager(socketURL: socketUrl, config: [
                 .log(false),
                 .compress,
@@ -318,7 +382,8 @@ final class WebSocketWrapper: NSObject {
             socket = manager.defaultSocket
             addEventListener()
             setArrData()
-            print("-1-1 Connect: -\(venueId) ")
+            addTableBookingQueueListeners()
+            print("-1-1 Connect: -\(venueId ?? "") ")
             socket?.connect()
         }
     }
@@ -337,6 +402,115 @@ final class WebSocketWrapper: NSObject {
 }
 
 private extension WebSocketWrapper {
+
+    enum TableBookingQueueEvent {
+        static let reconnect = "reconnect-event-table-booking-queue"
+    }
+
+    func addTableBookingQueueListeners() {
+        guard let queueId = currentTableBookingQueueId,
+              let socket
+        else { return }
+
+        if let registeredTableBookingQueueId, registeredTableBookingQueueId != queueId {
+            socket.off(registeredTableBookingQueueId)
+        }
+
+        socket.off(queueId)
+        socket.off(TableBookingQueueEvent.reconnect)
+
+        socket.on(queueId) { [weak self] data, _ in
+            self?.handleTableBookingQueueUpdate(data)
+        }
+
+        socket.on(TableBookingQueueEvent.reconnect) { [weak self] data, _ in
+            self?.handleTableBookingQueueUpdate(data)
+        }
+
+        registeredTableBookingQueueId = queueId
+    }
+
+    func removeTableBookingQueueListeners() {
+        if let registeredTableBookingQueueId {
+            socket?.off(registeredTableBookingQueueId)
+        }
+
+        socket?.off(TableBookingQueueEvent.reconnect)
+        registeredTableBookingQueueId = nil
+    }
+
+    func reconnectTableBookingQueue() {
+        guard let queueId = currentTableBookingQueueId else { return }
+
+        socket?.emit(TableBookingQueueEvent.reconnect, [
+            "id": queueId
+        ])
+    }
+
+    func handleTableBookingQueueUpdate(_ data: [Any]) {
+        guard let booking = decodeTableBookingQueueUpdate(from: data) else {
+            print("Queue parsing failed")
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.bookingQueueDelegates.forEach {
+                $0.didUpdateQueue(seatingAreaBooking: booking)
+            }
+        }
+    }
+
+    func decodeTableBookingQueueUpdate(from data: [Any]) -> SeatingAreaBookingResponse? {
+        for item in data {
+            if let booking = decodeTableBookingQueue(from: item) {
+                return booking
+            }
+        }
+
+        return nil
+    }
+
+    func decodeTableBookingQueue(from item: Any) -> SeatingAreaBookingResponse? {
+        if let dict = item as? [String: Any] {
+            if isTableBookingQueueWrapper(dict),
+               let content = dict["content"],
+               let booking = decodeTableBookingQueue(from: content) {
+                return booking
+            }
+
+            return decode(dict, as: SeatingAreaBookingResponse.self)
+        }
+
+        if let dictArray = item as? [[String: Any]] {
+            for dict in dictArray {
+                if let booking = decodeTableBookingQueue(from: dict) {
+                    return booking
+                }
+            }
+        }
+
+        return nil
+    }
+
+    func isTableBookingQueueWrapper(_ dict: [String: Any]) -> Bool {
+        dict["content"] != nil
+            && dict["id"] == nil
+            && dict["status"] == nil
+            && dict["items"] == nil
+    }
+
+    func decode<T: Decodable>(_ object: Any, as type: T.Type) -> T? {
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object)
+        else { return nil }
+
+        do {
+            return try JSONDecoder().decode(type, from: data)
+        } catch {
+            print("Parsing error:", error)
+            return nil
+        }
+    }
 
     func eventIdentifier(from data: [Any]) -> String? {
         guard let arr = data as? [[String: Any]],

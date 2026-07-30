@@ -29,8 +29,8 @@ final class VerifyNumberVC: BaseAuthViewController {
     var isForEmail = false
     var onOtpSuccess: (() -> Void)?
 
-    private var onBoardingDelegate = OnBoardingPresenter()
-    private var settingDelegate = SettingPresenter()
+    private let authService = AuthService()
+    private let settingsService = SettingsService()
 
     private var timer = Timer()
     private var count = 60
@@ -205,22 +205,22 @@ final class VerifyNumberVC: BaseAuthViewController {
         }
 
         if isFromLogin {
-            onBoardingDelegate.loginResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errorMsg in
+            authService.resendLoginOTP(otpRef: otpRef) { otp, otpRef, isSuccess, errorMsg in
                 finishResend(otp, otpRef, isSuccess, errorMsg)
             }
         } else {
             if isFromSettings {
                 if isForEmail {
-                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errMsg in
+                    settingsService.resendPhoneOrEmailOTP(otpRef: otpRef) { otp, otpRef, isSuccess, errMsg in
                         finishResend(otp, otpRef, isSuccess, errMsg)
                     }
                 } else {
-                    settingDelegate.changeEmailPhoneResendOtpApi(otpref: otpRef, isForPhone: true) { otp, otpRef, isSuccess, errMsg in
+                    settingsService.resendPhoneOrEmailOTP(otpRef: otpRef, isPhone: true) { otp, otpRef, isSuccess, errMsg in
                         finishResend(otp, otpRef, isSuccess, errMsg)
                     }
                 }
             } else {
-                onBoardingDelegate.signUpResendOtpApi(otpref: otpRef) { otp, otpRef, isSuccess, errorMsg in
+                authService.resendSignupOTP(otpRef: otpRef) { otp, otpRef, isSuccess, errorMsg in
                     finishResend(otp, otpRef, isSuccess, errorMsg)
                 }
             }
@@ -261,7 +261,7 @@ final class VerifyNumberVC: BaseAuthViewController {
         continueBtn.showLoader(userInteraction: false)
 
         if isFromLogin {
-            onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+            authService.verifyLoginOTP(otp: otpText, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
                 guard let self else { return }
                 self.continueBtn.hideLoader()
                 self.isVerifyingOtp = false
@@ -280,7 +280,7 @@ final class VerifyNumberVC: BaseAuthViewController {
 
         if isFromSettings {
             if isForEmail {
-                settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: otpText, otpRef: otpRef) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -293,7 +293,7 @@ final class VerifyNumberVC: BaseAuthViewController {
                     }
                 }
             } else {
-                settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: otpText, otpRef: otpRef, isPhone: true) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -309,7 +309,7 @@ final class VerifyNumberVC: BaseAuthViewController {
             return
         }
 
-        onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+        authService.verifySignupOTP(otp: otpText, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
             self.continueBtn.hideLoader()
             self.isVerifyingOtp = false

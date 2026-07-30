@@ -221,7 +221,7 @@ final class OrderListViewController: UIViewController {
             return
         }
 
-        PaymentPresenter.getUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
+        paymentService.fetchUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
             guard let self else { return }
 
             DispatchQueue.main.async {
@@ -1417,7 +1417,7 @@ final class OrderListViewController: UIViewController {
             return
         }
 
-        PaymentPresenter.getEventBookingQuestion(eventUniqueId: eventUniqueId) { [weak self] isSuccess, _, questions in
+        paymentService.fetchEventBookingQuestions(eventUniqueId: eventUniqueId) { [weak self] isSuccess, _, questions in
             DispatchQueue.main.async {
                 guard let self else { return }
                 if isSuccess {
@@ -1518,7 +1518,7 @@ final class OrderListViewController: UIViewController {
             ["eventQuestionId": $0.key, "answer": $0.value] as [String: Any]
         }
 
-        PaymentPresenter.postEventBookingQueAns(
+        paymentService.submitEventBookingAnswers(
             eventUniqueId: eventUniqueId,
             answers: answers,
             bookingId: bookingId

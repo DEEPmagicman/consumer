@@ -1398,7 +1398,7 @@ class EventQRTicketVC: UIViewController {
     private func getBooking(id: String) {
         setQRLoading(true)
 
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
+        paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
 
             DispatchQueue.main.async {

@@ -64,6 +64,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     weak var updateDelegate: UpdateDetailDelegate?
 
     // MARK: - Payment
+    private let paymentService = PaymentService()
     private var paymentSheet: PaymentSheet?
     private var paymentIntent: String = ""
     private var paymentHistoryId: String = ""
@@ -888,15 +889,13 @@ extension CoverTicketCheckOutVC {
             selectedCoverTickets.contains { ($0.selectedQuantity ?? 0) > 0 } ||
             selectedAddOnsItems.contains { ($0.selectedQuantity ?? 0) > 0 }
         let isReady = isBookingLoaded && isPaymentIntentLoaded && !isPricingLoading
-        let shouldShow = hasData && (isPricingLoading || isReady)
+        let shouldShow = hasData && isReady
         let enabled = hasData && isReady && !isPaymentInitiated
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.setCheckoutButton(visible: shouldShow, enabled: enabled, animated: true)
             self.refreshCheckoutBarSummary()
-            if self.isPricingLoading {
-                self.checkOutBtnView.showLoader()
-            } else if !self.isPaymentInitiated {
+            if !self.isPaymentInitiated {
                 self.checkOutBtnView.hideLoader()
             }
         }
@@ -1070,62 +1069,22 @@ extension CoverTicketCheckOutVC {
     }
 
     private func confirmIntentViaREST(paymentMethodId: String) {
-        let intentId = paymentIntent.components(separatedBy: "_secret_").first ?? ""
-
-        guard !intentId.isEmpty,
-              let url = URL(string: "https://api.stripe.com/v1/payment_intents/\(intentId)/confirm") else {
-            DispatchQueue.main.async {
-                self.checkOutBtnView.hideLoader()
-                self.resetPaymentInteractionAfterFailure()
-                Alert.showToast("Invalid payment intent.")
-            }
-            return
-        }
-
-        let bodyString = [
-            "payment_method=\(paymentMethodId)",
-            "client_secret=\(paymentIntent)"
-        ].joined(separator: "&")
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue(
-            "Bearer \(STPAPIClient.shared.publishableKey ?? "")",
-            forHTTPHeaderField: "Authorization"
-        )
-        request.setValue(
-            "application/x-www-form-urlencoded",
-            forHTTPHeaderField: "Content-Type"
-        )
-        request.httpBody = bodyString.data(using: .utf8)
-
-        URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
+        paymentService.confirmStripePaymentIntent(
+            clientSecret: paymentIntent,
+            paymentMethodId: paymentMethodId,
+            publishableKey: STPAPIClient.shared.publishableKey
+        ) { [weak self] isSuccess, errMsg, status in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.checkOutBtnView.hideLoader()
 
-                if let error {
+                guard isSuccess else {
                     self.resetPaymentInteractionAfterFailure()
-                    Alert.showToast(error.localizedDescription)
+                    Alert.showToast(errMsg ?? "Payment failed. Please try again.")
                     return
                 }
 
-                guard let data,
-                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    self.resetPaymentInteractionAfterFailure()
-                    Alert.showToast("Payment failed. Please try again.")
-                    return
-                }
-
-                if let errorObj = json["error"] as? [String: Any],
-                   let message = errorObj["message"] as? String {
-                    self.resetPaymentInteractionAfterFailure()
-                    Alert.showToast(message)
-                    return
-                }
-
-                let status = json["status"] as? String ?? ""
-                switch status {
+                switch status ?? "" {
                 case "succeeded", "requires_capture":
                     self.checkOutBtnView.showLoader()
                     DispatchQueue.main.async { [weak self] in
@@ -1136,17 +1095,17 @@ extension CoverTicketCheckOutVC {
                     Alert.showToast("Additional authentication required. Please use Apple Pay.")
                 default:
                     self.resetPaymentInteractionAfterFailure()
-                    Alert.showToast("Payment status: \(status). Please try again.")
+                    Alert.showToast("Payment status: \(status ?? ""). Please try again.")
                 }
             }
-        }.resume()
+        }
     }
 
     private func createBooking() {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "", doormanId: doormanId) {
+        paymentService.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "", doormanId: doormanId) {
             [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             if isSuccess, let id {
@@ -1168,7 +1127,7 @@ extension CoverTicketCheckOutVC {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "quantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.getPaymentIntent(
+        paymentService.createPaymentIntent(
             bookingId: bookingId,
             selectedTickets: tickets,
             promoCode: promoCode,
@@ -1206,7 +1165,7 @@ extension CoverTicketCheckOutVC {
         let addOnsItems: [[String: Any]] = selectedAddOnsItems.map {
             ["id": $0.id, "addOnsId": $0.addOns?.id ?? "", "quantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.addOnsPaymentIntent(
+        paymentService.createAddOnsPaymentIntent(
             bookingId: bookingId,
             venueId: venue?.id ?? "",
             addOnsItems: addOnsItems,
@@ -1245,7 +1204,7 @@ extension CoverTicketCheckOutVC {
             returnToCoverFlow(animated: false)
             return
         }
-        PaymentPresenter.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
+        paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.isCancellingTransaction = false
@@ -1626,9 +1585,9 @@ extension CoverTicketCheckOutVC {
         countdownTimer?.invalidate()
         NotificationCenter.default.postOrdersRefresh(.tickets)
         AppHaptic.success()
-        let qrPresenter = resetCoverListForFreshPurchaseIfNeeded() ?? self
+        let qrSourceController = resetCoverListForFreshPurchaseIfNeeded() ?? self
         Navigate.to.scanQR(
-            qrPresenter,
+            qrSourceController,
             isAddOnsAvailable: isAddOnsAvailable,
             bookingId: bookingId,
             isOnlyAddOnAvailable: isOnlyAddOn,
@@ -1637,7 +1596,7 @@ extension CoverTicketCheckOutVC {
             venueName: venue?.name ?? "",
             venue: venue,
             shouldPushFromVenueFlow: true,
-            buyAnotherCoverListTarget: qrPresenter as? CoverTicketListVC
+            buyAnotherCoverListTarget: qrSourceController as? CoverTicketListVC
         )
     }
 
@@ -1654,7 +1613,7 @@ extension CoverTicketCheckOutVC {
         optedEmailPolicy: Bool? = nil,
         completion: @escaping () -> Void
     ) {
-        PaymentPresenter.successPayment(
+        paymentService.confirmPaymentSuccess(
             paymentHistoryId: paymentHistoryId,
             bookingId: bookingId,
             optedPolicy: optedPolicy,
@@ -1674,7 +1633,7 @@ extension CoverTicketCheckOutVC {
 
     private func addOnsPaymentSuccess(completion: @escaping () -> Void) {
         let mainBookingId = bookingType == .FREE && !selectedCoverTickets.isEmpty ? bookingId : ""
-        PaymentPresenter.successAddOnsPayment(
+        paymentService.confirmAddOnsPaymentSuccess(
             bookingId: addOnsBookingId ?? "",
             mainBookingId: mainBookingId,
             doormanId: doormanId
@@ -1694,7 +1653,7 @@ extension CoverTicketCheckOutVC {
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
-        PaymentPresenter.createCoverFreeBooking(
+        paymentService.createCoverFreeBooking(
             coverTickets: tickets,
             venueId: venue?.id ?? "",
             optedPolicy: selectedVenueMessageOptIn,
@@ -2164,11 +2123,7 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
                 navigationController?.popToViewController(vc, animated: true)
             } else if let vc = navigationController?.viewControllers.first(where: { $0 is VenueVC }) {
                 navigationController?.popToViewController(vc, animated: true)
-            } else if let vc = navigationController?.viewControllers.first(where: { $0 is MVPVenueListVc }) {
-                navigationController?.popToViewController(vc, animated: true)
-            } else if let vc = navigationController?.viewControllers.first(where: { $0 is MVPVenueDetailVc }) {
-                navigationController?.popToViewController(vc, animated: true)
-            } else {
+            }  else {
                 navigationController?.popViewController(animated: true)
             }
         }

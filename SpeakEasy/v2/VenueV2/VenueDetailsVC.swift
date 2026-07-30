@@ -52,6 +52,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     private var isExpanded = false
     private let collapsedLines = 3
     private let locationManager = CLLocationManager()
+    private let venueService = VenueService()
     private var userLocation: CLLocation?
     
     private var ticketListHeightObservation: NSKeyValueObservation?
@@ -222,7 +223,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
         
         isLoading = true
         
-        VenuePresenter.getEventVenues(
+        venueService.fetchVenueEvents(
             venueId: venueDetails?.id ?? "",
             skip: page, time: "PAST"
         ) { [weak self] isSuccess, errMsg, list, hasMore in

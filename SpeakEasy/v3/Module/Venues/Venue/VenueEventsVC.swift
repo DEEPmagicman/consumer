@@ -18,6 +18,7 @@ final class VenueEventsVC: UIViewController,
 
     private let emptyStateView = V3EmptyStateView(style: .venueEvents)
     private let noInternetView = V3NoInternetView()
+    private let venueService = VenueService()
     private var events: [Event] = []
 
     private var skip = 0
@@ -214,7 +215,7 @@ extension VenueEventsVC {
             reloadUI()
         }
 
-        VenuePresenter.getEventVenues(
+        venueService.fetchVenueEvents(
             venueId: venueId,
             skip: skip,
             time: "UPCOMING"

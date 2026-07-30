@@ -116,7 +116,7 @@ final class TablePurchaseVC: UIViewController {
     deinit {
         tableView.removeObserver(self, forKeyPath: "contentSize")
         feesAndTaxesTableView.removeObserver(self, forKeyPath: "contentSize")
-        BookingQueueSocketManager.shared.disconnect()
+        WebSocketWrapper.shared.disconnectTableBookingQueue(delegate: self)
     }
 
     private func setupUI() {
@@ -439,9 +439,11 @@ final class TablePurchaseVC: UIViewController {
     }
 
     private func setupSocket() {
-        BookingQueueSocketManager.shared.delegate = self
         if let queueId = queueId {
-            BookingQueueSocketManager.shared.connect(queueId: queueId)
+            WebSocketWrapper.shared.connectTableBookingQueue(
+                queueId: queueId,
+                delegate: self
+            )
         }
     }
 
@@ -637,7 +639,7 @@ final class TablePurchaseVC: UIViewController {
 
     @objc private func handleBackSwipe() {
         navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
-        BookingQueueSocketManager.shared.disconnect()
+        WebSocketWrapper.shared.disconnectTableBookingQueue(delegate: self)
     }
 
     private func showCheckoutShimmer() {
@@ -778,7 +780,7 @@ final class TablePurchaseVC: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        BookingQueueSocketManager.shared.disconnect()
+        WebSocketWrapper.shared.disconnectTableBookingQueue(delegate: self)
         Navigate.to.back(self)
     }
 

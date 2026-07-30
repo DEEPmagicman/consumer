@@ -866,6 +866,118 @@ final class VenueService {
         }
     }
 
+    // MARK: - Venue Events
+
+    func fetchVenueEvents(
+        venueId: String,
+        skip: Int,
+        time: String,
+        isPremium: Bool = false,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ events: [Event],
+            _ hasMore: Bool
+        ) -> Void
+    ) {
+
+        let url = APIBuilder.venueEvents(
+            venueId: venueId,
+            includes: [
+                "venue.venueAttachment",
+                "flyer",
+                "eventTicketLinks",
+                "eventTicket"
+            ],
+            take: 5,
+            skip: skip,
+            timeVersion: time,
+            isPremium: isPremium,
+            orderBy: "startDateTime|asc"
+        )
+
+        AFWrapper.getRequest(
+            url,
+            params: nil,
+            headers: Header.header()
+        ) { response in
+
+            do {
+                let data = try JSONSerialization.data(withJSONObject: response)
+                let decoded = try JSONDecoder().decode(EventResponse.self, from: data)
+                completion(true, nil, decoded.list, decoded.hasMany)
+            } catch {
+                completion(false, error.localizedDescription, [], false)
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, [], false)
+                return
+            }
+
+            completion(false, nil, [], false)
+        }
+    }
+
+    // MARK: - Add-ons
+
+    func fetchUpSellItems(
+        skip: Int,
+        doormanId: String = "",
+        venueId: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ upSellItems: [UpSellTicket],
+            _ hasMore: Bool,
+            _ total: Int
+        ) -> Void
+    ) {
+
+        let params: [String: Any] = [
+            "skip": skip,
+            "include": "addOns.venue.venueSettings.addOnsBookingSettings"
+        ]
+
+        AFWrapper.getRequest(
+            APIBuilder.getAddOnsAPI,
+            params: params,
+            headers: Header.header(
+                doormanId: doormanId,
+                venueId: venueId
+            )
+        ) { response in
+
+            guard let responseDic = response as? [String: Any],
+                  let list = responseDic["list"] as? [[String: Any]],
+                  let hasMore = responseDic["hasMany"] as? Bool,
+                  let total = responseDic["total"] as? Int
+            else {
+                completion(false, nil, [], false, 0)
+                return
+            }
+
+            if let items = [UpSellTicket].parse(list) {
+                completion(true, nil, items, hasMore, total)
+            } else {
+                completion(false, "internal error", [], false, 0)
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, [], false, 0)
+                return
+            }
+
+            completion(false, nil, [], false, 0)
+        }
+    }
+
     private func decode<T: Decodable>(
         _ type: T.Type,
         from object: Any?

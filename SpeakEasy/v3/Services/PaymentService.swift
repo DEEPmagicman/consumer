@@ -16,6 +16,7 @@ final class PaymentService {
         selectedTickets: [[String: Any]],
         promoCode: String? = "",
         type: PaymentIntentType,
+        doormanId: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,
@@ -54,7 +55,7 @@ final class PaymentService {
         AFWrapper.postRequest(
             url,
             params: params,
-            headers: Header.header()
+            headers: Header.header(doormanId: doormanId)
         ) { response in
 
             guard let responseDic =
@@ -152,6 +153,7 @@ final class PaymentService {
         bookingId: String,
         optedPolicy: Bool? = nil,
         optedEmailPolicy: Bool? = nil,
+        doormanId: String = "",
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?
@@ -176,7 +178,7 @@ final class PaymentService {
                 bookingId
             ),
             params: params,
-            headers: Header.header()
+            headers: Header.header(doormanId: doormanId)
         ) { _ in
 
             completion(
@@ -202,6 +204,110 @@ final class PaymentService {
                 nil
             )
         }
+    }
+
+    func confirmAddOnsPaymentSuccess(
+        bookingId: String,
+        mainBookingId: String,
+        doormanId: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?
+        ) -> Void
+    ) {
+
+        var params = [
+            "bookingId": bookingId
+        ]
+
+        if !mainBookingId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            params["mainBookingId"] = mainBookingId
+        }
+
+        AFWrapper.postRequest(
+            APIBuilder.successAddOnsPaymentURL(bookingId),
+            params: params,
+            headers: Header.header(doormanId: doormanId)
+        ) { _ in
+
+            completion(true, nil)
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+
+                completion(false, err.domain)
+                return
+            }
+
+            completion(false, nil)
+        }
+    }
+
+    func confirmStripePaymentIntent(
+        clientSecret: String,
+        paymentMethodId: String,
+        publishableKey: String?,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ status: String?
+        ) -> Void
+    ) {
+
+        let intentId =
+            clientSecret
+            .components(separatedBy: "_secret_")
+            .first ?? ""
+
+        guard !intentId.isEmpty,
+              let url = URL(
+                string: "https://api.stripe.com/v1/payment_intents/\(intentId)/confirm"
+              )
+        else {
+            completion(false, "Invalid payment intent.", nil)
+            return
+        }
+
+        let bodyString = [
+            "payment_method=\(paymentMethodId)",
+            "client_secret=\(clientSecret)"
+        ].joined(separator: "&")
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(
+            "Bearer \(publishableKey ?? "")",
+            forHTTPHeaderField: "Authorization"
+        )
+        request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.httpBody = bodyString.data(using: .utf8)
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error {
+                completion(false, error.localizedDescription, nil)
+                return
+            }
+
+            guard let data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            else {
+                completion(false, "Payment failed. Please try again.", nil)
+                return
+            }
+
+            if let errorObj = json["error"] as? [String: Any],
+               let message = errorObj["message"] as? String {
+                completion(false, message, nil)
+                return
+            }
+
+            completion(true, nil, json["status"] as? String ?? "")
+        }.resume()
     }
 
     // MARK: - Booking
@@ -462,6 +568,191 @@ final class PaymentService {
             )
         }
     }
+
+    func createCoverBooking(
+        coverTickets: [[String: Any]],
+        venueId: String,
+        doormanId: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ bookingId: String?,
+            _ message: String?
+        ) -> Void
+    ) {
+
+        let params: [String: Any] = [
+            "coverTicket": coverTickets,
+            "venueId": venueId
+        ]
+
+        AFWrapper.postRequest(
+            APIBuilder.createCoverBookingURL,
+            params: params,
+            headers: Header.header(doormanId: doormanId)
+        ) { response in
+
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "")
+                return
+            }
+
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id, "")
+            } else if let booking = responseDic["booking"] as? [String: Any],
+                      let id = booking["id"] as? String {
+                completion(true, nil, id, "")
+            } else if let error = responseDic["error"] as? String,
+                      let message = responseDic["message"] as? String {
+                completion(false, error, "", message)
+            } else {
+                completion(false, "Alert", "", "Booking failed")
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, "", "")
+                return
+            }
+
+            completion(false, nil, "", "")
+        }
+    }
+
+    func createCoverFreeBooking(
+        coverTickets: [[String: Any]],
+        venueId: String,
+        optedPolicy: Bool? = nil,
+        optedEmailPolicy: Bool? = nil,
+        doormanId: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ bookingId: String?,
+            _ message: String?
+        ) -> Void
+    ) {
+
+        var params: [String: Any] = [
+            "coverTicket": coverTickets,
+            "venueId": venueId,
+            "optedPolicy": optedPolicy ?? false
+        ]
+
+        if let optedEmailPolicy {
+            params["optedEmailPolicy"] = optedEmailPolicy
+        }
+
+        AFWrapper.postRequest(
+            APIBuilder.createCoverFreeBooing,
+            params: params,
+            headers: Header.header(doormanId: doormanId)
+        ) { response in
+
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "")
+                return
+            }
+
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id, "")
+            } else if let booking = responseDic["booking"] as? [String: Any],
+                      let id = booking["id"] as? String {
+                completion(true, nil, id, "")
+            } else if let error = responseDic["error"] as? String,
+                      let message = responseDic["message"] as? String {
+                completion(false, error, "", message)
+            } else {
+                completion(false, "Alert", "", "Booking failed")
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, "", "")
+                return
+            }
+
+            completion(false, nil, "", "")
+        }
+    }
+
+    func createAddOnsPaymentIntent(
+        bookingId: String?,
+        venueId: String,
+        addOnsItems: [[String: Any]],
+        doormanId: String = "",
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ clientSecret: String?,
+            _ ephemeralKey: String,
+            _ paymentDetail: PaymentDetail?,
+            _ bookingId: String
+        ) -> Void
+    ) {
+
+        var params: [String: Any] = [
+            "addOnsItems": addOnsItems,
+            "venueId": venueId
+        ]
+
+        params["phone"] = UserDefault.shared.user?.phone
+        params["code"] = UserDefault.shared.user?.code
+
+        if let bookingId,
+           !bookingId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            params["bookingId"] = bookingId
+        }
+
+        AFWrapper.postRequest(
+            APIBuilder.addOnsPaymentIntent,
+            params: params,
+            headers: Header.header(doormanId: doormanId)
+        ) { response in
+
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "", nil, "")
+                return
+            }
+
+            guard let clientSecret = responseDic["clientSecret"] as? String,
+                  let ephemeralKey = responseDic["ephemeralKey"] as? String,
+                  let responseBookingId = responseDic["bookingId"] as? String
+            else {
+                completion(false, "internal error", "", "", nil, "")
+                return
+            }
+
+            let paymentDetail =
+                (responseDic["payment_detail"] as? [String: Any])
+                .flatMap {
+                    PaymentDetail.parse($0)
+                }
+
+            completion(
+                true,
+                nil,
+                clientSecret,
+                ephemeralKey,
+                paymentDetail,
+                responseBookingId
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, "", "", nil, "")
+                return
+            }
+
+            completion(false, nil, "", "", nil, "")
+        }
+    }
     
     func fetchBookingDetail(
         bookingId: String,
@@ -546,6 +837,53 @@ final class PaymentService {
             )
         }
     }
+
+    func fetchAddOnsBooking(
+        addOnsBookingId: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ booking: AddOnsBooking?
+        ) -> Void
+    ) {
+
+        let params: [String: Any] = [
+            "include": [
+                "addOnsBookingHasItem.addOns",
+                "venue.venueAttachment",
+                "venue.venueSettings",
+                "addOnsBookingHasCheckIn.addOnsBookingItemCheckIn"
+            ]
+        ]
+
+        AFWrapper.getRequest(
+            APIBuilder.addOnBookingAPI(addOnsBookingId),
+            params: params,
+            headers: Header.header()
+        ) { response in
+
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, nil)
+                return
+            }
+
+            if let booking = AddOnsBooking.parse(responseDic) {
+                completion(true, nil, booking)
+            } else {
+                completion(false, "internal error", nil)
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, nil, nil)
+        }
+    }
     
     func cancelBooking(
         bookingId: String,
@@ -582,6 +920,43 @@ final class PaymentService {
                 false,
                 nil
             )
+        }
+    }
+
+    func fetchUserSavedMethods(
+        customerId: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ paymentMethods: [PaymentMethod]
+        ) -> Void
+    ) {
+
+        AFWrapper.getRequest(
+            APIBuilder.customerMethod(customerId),
+            params: nil,
+            headers: Header.header()
+        ) { response in
+
+            if let responseArray = response as? [[String: Any]] {
+                if let paymentMethods = [PaymentMethod].parse(responseArray) {
+                    completion(true, nil, paymentMethods)
+                } else {
+                    completion(false, "Internal error", [])
+                }
+            } else {
+                completion(true, nil, [])
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+
+            completion(false, nil, [])
         }
     }
     

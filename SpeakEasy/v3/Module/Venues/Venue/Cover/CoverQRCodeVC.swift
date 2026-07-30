@@ -553,7 +553,7 @@ final class CoverQRCodeVC: UIViewController {
         let resolvedAddOnsBookingId = resolvedAddOnsBookingID()
         guard !resolvedAddOnsBookingId.isEmpty else { return }
 
-        PaymentPresenter.getAddOnsBooking(addOnsBookingId: resolvedAddOnsBookingId) { [weak self] isSuccess, _, fetchedAddOnsBooking in
+        paymentService.fetchAddOnsBooking(addOnsBookingId: resolvedAddOnsBookingId) { [weak self] isSuccess, _, fetchedAddOnsBooking in
             guard let self else { return }
             guard isSuccess, let fetchedAddOnsBooking else { return }
 
@@ -777,8 +777,6 @@ final class CoverQRCodeVC: UIViewController {
 
     private func popPresenterToVenue(in navigationController: UINavigationController, animated: Bool) {
         if let venueVC = navigationController.viewControllers.last(where: { $0 is VenueVC }) {
-            navigationController.popToViewController(venueVC, animated: animated)
-        } else if let venueVC = navigationController.viewControllers.last(where: { $0 is MVPVenueDetailVc }) {
             navigationController.popToViewController(venueVC, animated: animated)
         } else if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) as? CoverTicketListVC {
             coverListVC.resetForFreshPurchase()

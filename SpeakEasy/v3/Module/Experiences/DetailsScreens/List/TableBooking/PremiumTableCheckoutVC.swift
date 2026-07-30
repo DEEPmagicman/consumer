@@ -55,6 +55,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var timerSeconds         = 300
     private var timer: Timer?
     private let tableService         = TableService()
+    private let paymentService       = PaymentService()
 
     private var currency: String {
         event?.venue?.venueSettings?.currencySymbol ?? "$"
@@ -175,7 +176,7 @@ final class PremiumTableCheckoutVC: UIViewController {
             || navigationController?.isBeingDismissed == true
         if isClosing || didFinishBooking {
             timer?.invalidate()
-            BookingQueueSocketManager.shared.disconnect()
+            WebSocketWrapper.shared.disconnectTableBookingQueue(delegate: self)
         }
         if isClosing, !didFinishBooking, !isPaymentInitiated {
             cancelCurrentBooking(returnToPrevious: false)
@@ -909,7 +910,7 @@ private extension PremiumTableCheckoutVC {
         let customerId = UserDefault.shared.user?.stripeCusId ?? ""
         guard !customerId.isEmpty else { return }
 
-        PaymentPresenter.getUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
+        paymentService.fetchUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
             guard let self else { return }
 
             DispatchQueue.main.async {
@@ -1696,11 +1697,11 @@ private extension PremiumTableCheckoutVC {
 private extension PremiumTableCheckoutVC {
 
     func setupSocket() {
-        BookingQueueSocketManager.shared.delegate = self
         if let q = queueId {
-            BookingQueueSocketManager.shared.connect(
+            WebSocketWrapper.shared.connectTableBookingQueue(
                 queueId: q,
-                venueId: event?.venue?.id
+                venueId: event?.venue?.id,
+                delegate: self
             )
         }
     }

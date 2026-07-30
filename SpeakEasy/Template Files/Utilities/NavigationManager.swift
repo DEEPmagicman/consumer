@@ -732,6 +732,20 @@ final class Navigate {
         sender.pushVC(vc)
     }
 
+    func venueVC(
+        _ sender: UIViewController,
+        venueId: String,
+        venueUniqueId: String,
+        venueTimeZone: String
+    ) {
+        let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+        vc.uniqueId = venueUniqueId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? venueId
+            : venueUniqueId
+        vc.venueTimeZone = venueTimeZone
+        sender.pushVC(vc)
+    }
+
     func premiumVenueVC(
         _ sender: UIViewController,
         venueDetails: ClipVenue?,

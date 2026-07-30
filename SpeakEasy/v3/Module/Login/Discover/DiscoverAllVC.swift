@@ -39,7 +39,8 @@ final class DiscoverAllVC: UIViewController {
     private var allEvents     = [Event]()
     private var allEventHasMore = false
     
-    private var presenter    = MVPPresenter()
+    private let eventService = EventService()
+    private let venueService = VenueService()
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
@@ -85,7 +86,7 @@ final class DiscoverAllVC: UIViewController {
     // MARK: - API Calls
     
     private func getTonightEvent() {
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: tonightEventSkip,
             venueId: "",
             time: "UPCOMING",
@@ -106,7 +107,7 @@ final class DiscoverAllVC: UIViewController {
     }
     
     private func getAllEvents() {
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: allEventSkip,
             venueId: "",
             time: "UPCOMING",
@@ -128,7 +129,11 @@ final class DiscoverAllVC: UIViewController {
     }
     
     private func fetchAllOpenVenueForMVP() {
-        presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, venues, hasMore in
+        venueService.fetchVenuesForDiscover(
+            skip: openFrom,
+            bookingStatus: VenueStatus.open.rawValue,
+            city: UserDefault.shared.localCity
+        ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self else { return }
             
             if isSuccess {
@@ -156,7 +161,11 @@ final class DiscoverAllVC: UIViewController {
     }
     
     private func fetchAllCloseVenueForMVP() {
-        presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, venues, hasMore in
+        venueService.fetchVenuesForDiscover(
+            skip: closeFrom,
+            bookingStatus: VenueStatus.close.rawValue,
+            city: UserDefault.shared.localCity
+        ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self else { return }
             
             if isSuccess {

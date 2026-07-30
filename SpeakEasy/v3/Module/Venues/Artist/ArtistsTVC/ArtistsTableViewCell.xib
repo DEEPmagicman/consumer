@@ -25,7 +25,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oHX-wl-zWZ">
                         <rect key="frame" x="0.0" y="0.0" width="374" height="93"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="Wg0-1O-pnp">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Wg0-1O-pnp">
                                 <rect key="frame" x="0.0" y="14" width="66" height="66"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="66" id="CLE-Qb-Dor"/>
@@ -124,7 +124,4 @@
             <point key="canvasLocation" x="195.41984732824426" y="155.98591549295776"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="demo venue" width="156" height="156"/>
-    </resources>
 </document>

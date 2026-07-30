@@ -28,7 +28,6 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var venueCityLbl: UILabel!
         
-    var presenter = MVPPresenter()
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
     private let navTitleStackView = UIStackView()
@@ -65,6 +64,7 @@ final class VenueVC: UIViewController {
 
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
+    var venueTimeZone = ""
     var doormanId = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
     var isPresentedPremium = false
@@ -79,6 +79,11 @@ final class VenueVC: UIViewController {
     private var isCoverTicketNavigationInProgress = false
     private var followedVenueId: String?
     private var hasLocalFollowState = false
+    private var resolvedVenueTimeZone: String {
+        venueTimeZone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? TimeZone.current.identifier
+            : venueTimeZone
+    }
     private lazy var leftEdgeBackGesture: UIScreenEdgePanGestureRecognizer = {
         let gesture = UIScreenEdgePanGestureRecognizer(
             target: self,
@@ -143,7 +148,7 @@ final class VenueVC: UIViewController {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier,
+            venueTimeZone: resolvedVenueTimeZone,
             doormanId: doormanId
         ) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else { return }
@@ -500,7 +505,7 @@ private extension VenueVC {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier,
+            venueTimeZone: resolvedVenueTimeZone,
             doormanId: doormanId
         ) { [weak self] isSuccess, _, venueDetail in
             guard let self else { return }
@@ -571,7 +576,7 @@ private extension VenueVC {
 
         venueService.fetchCoverVenueDetail(
             uniqueId: venueUniqueId,
-            venueTimeZone: TimeZone.current.identifier,
+            venueTimeZone: resolvedVenueTimeZone,
             doormanId: doormanId
         ) { [weak self] isSuccess, _, venueDetail in
             guard let self,
@@ -813,7 +818,7 @@ private extension VenueVC {
         upsellAvailabilityVenueId = venueId
         updateCoverTicketViewVisibility()
 
-        MVPPresenter.getUpSellItem(skip: 0, venueId: venueId) { [weak self] isSuccess, _, upSellItems, _, _ in
+        venueService.fetchUpSellItems(skip: 0, venueId: venueId) { [weak self] isSuccess, _, upSellItems, _, _ in
             guard let self else { return }
             guard self.venueDetails?.id == venueId else { return }
 

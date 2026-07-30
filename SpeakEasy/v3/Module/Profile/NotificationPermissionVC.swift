@@ -173,8 +173,12 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
 
     private func finishNotificationPermissionFlow() {
         enableBtn.hideLoader()
-        Navigate.to.setLocationVc(self)
-        AppDelegate.shared.setRootVC()
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.mode = .updatePrimaryLocation
+        vc.isInitialPrimarySelection = true
+        vc.onSelectPrimaryCity = { _ in
+            AppDelegate.shared.setRootVC()
+        }
     }
 
     private func presentNotificationSettingsPrompt() {

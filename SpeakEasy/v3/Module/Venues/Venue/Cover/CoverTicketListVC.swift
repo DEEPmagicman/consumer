@@ -41,6 +41,7 @@ final class CoverTicketListVC: UIViewController {
     private let directUpsellFooterView = UIView()
     private let directUpsellButton = UIButton(type: .system)
     private let venueService = VenueService()
+    private let paymentService = PaymentService()
     private let coverTicketCellBackgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.25)
     private let headerFadeStartProgress: CGFloat = 0.12
     private let headerFadeEndProgress: CGFloat = 0.42
@@ -228,6 +229,10 @@ final class CoverTicketListVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isCheckoutNavigationInProgress = false
+        if !isFreeBookingInProgress {
+            continueToCheckoutBtn.hideLoader()
+            updateCheckoutState()
+        }
         registerSocketDelegate()
     }
 
@@ -1032,7 +1037,7 @@ private extension CoverTicketListVC {
             return
         }
 
-        MVPPresenter.getUpSellItem(
+        venueService.fetchUpSellItems(
             skip: 0,
             doormanId: doormanId,
             venueId: venueId
@@ -1197,6 +1202,7 @@ private extension CoverTicketListVC {
 
         isCheckoutNavigationInProgress = true
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
+            continueToCheckoutBtn.showLoader()
             Navigate.to.coverCheckOutVC(
                 self,
                 venue: venueDetails,
@@ -1335,7 +1341,7 @@ extension CoverTicketListVC {
         isFreeBookingInProgress = true
         view.isUserInteractionEnabled = false
 
-        PaymentPresenter.createCoverFreeBooking(
+        paymentService.createCoverFreeBooking(
             coverTickets: tickets,
             venueId: venueDetails?.id ?? "",
             doormanId: doormanId

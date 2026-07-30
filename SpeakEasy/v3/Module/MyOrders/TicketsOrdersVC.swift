@@ -170,7 +170,7 @@ final class TicketsOrdersVC: BaseOrdersGridVC {
 extension TicketsOrdersVC: QRCodeVCNavigationDelegate {
 
     func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) {
-        Navigate.to.MVPVenueDetailViewController(
+        Navigate.to.venueVC(
             self,
             venueId: venueId,
             venueUniqueId: venueUniqueId,
