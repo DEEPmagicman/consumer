@@ -100,6 +100,7 @@ final class TableService {
         guests: Int,
         queueId: String,
         consumerUserId: String = "",
+        stripeCustomerId: String = "",
         mininumSpend: Double? = nil,
         promotionLinkId: String = "",
         promotionLinkUniqueCode: String = "",
@@ -135,6 +136,12 @@ final class TableService {
         consumerUserId.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmedConsumerUserId.isEmpty {
             params["consumerUserId"] = trimmedConsumerUserId
+        }
+
+        let trimmedStripeCustomerId =
+        stripeCustomerId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedStripeCustomerId.isEmpty {
+            params["customer"] = trimmedStripeCustomerId
         }
 
         if let mininumSpend {
@@ -339,9 +346,14 @@ final class TableService {
             "time": time,
             "optedPolicy": optedPolicy,
             "optedEmailPolicy": optedEmailPolicy,
-            "eventId": eventId,
-            "seatingArea": seatingArea
+            "eventId": eventId
         ]
+
+        let trimmedSeatingArea =
+        seatingArea?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !trimmedSeatingArea.isEmpty {
+            params["seatingArea"] = trimmedSeatingArea
+        }
 
         if !answers.isEmpty {
             params["answers"] = answers

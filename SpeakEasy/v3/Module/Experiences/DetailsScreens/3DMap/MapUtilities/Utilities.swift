@@ -18,6 +18,7 @@ struct SeatingAreaDTO {
     let maxGuest: Int?
     let isDJBoot: Bool
     let minimum: Double?
+    let hidePricing: Bool
     let allowActions: Bool
 }
 
@@ -27,6 +28,7 @@ struct SeatingMeta {
     let parentId: String
     let maxGuest: Int
     let minimum: Double?
+    let hidePricing: Bool
     let allowActions: Bool
     weak var sourceNode: SCNNode?
     let uniqueId: String

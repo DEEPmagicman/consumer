@@ -59,6 +59,7 @@ final class PremiumEventContainerVC: UIViewController {
     private lazy var inquiryVC = PremiumInquiryVC()
 
     private var currentVC: UIViewController?
+    private var selectedSegment: Segment = .list
 
     private let tableService = TableService()
     private let venueService = VenueService()
@@ -72,6 +73,7 @@ final class PremiumEventContainerVC: UIViewController {
     private(set) var bookableSeatingAreas: [SeatingArea] = []
     
     private var hasLoadedSeatingAreas = false
+    private var appliedPremiumGradientBounds: CGRect = .zero
         
     var event: Event?
     
@@ -93,13 +95,18 @@ final class PremiumEventContainerVC: UIViewController {
         loadSeatingAreas()
         hydrateVenueSettingsIfNeeded()
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyPremiumBackgroundIfNeeded()
+    }
 }
 
 private extension PremiumEventContainerVC {
 
     func setupUI() {
 
-        view.backgroundColor = AppColor.primaryBlackColor
+        view.backgroundColor = UIColor(hex: "#070808")
 
         setupBackground()
 
@@ -117,7 +124,8 @@ private extension PremiumEventContainerVC {
 
     func setupBackground() {
 
-        bgImageView.image = UIImage(resource: .premiumExpBg)
+        bgImageView.image = nil
+        bgImageView.backgroundColor = .clear
         bgImageView.contentMode = .scaleAspectFill
         bgImageView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -127,14 +135,22 @@ private extension PremiumEventContainerVC {
         blurView.colorTint = AppColor.primaryBlackColor
         blurView.colorTintAlpha = 0.14
         blurView.alpha = 0.70
+        blurView.isHidden = true
         blurView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(blurView)
 
         dimView.backgroundColor = AppColor.primaryBlackColor.withAlphaComponent(0.42)
+        dimView.isHidden = true
         dimView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(dimView)
+    }
+
+    func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 }
 
@@ -250,7 +266,8 @@ private extension PremiumEventContainerVC {
         hiddenSeatingAreas = filtered.filteredOut
         bookableSeatingAreas =
         filtered.visible.filter {
-            $0.hideCheckout != true
+            $0.hideCheckout != true ||
+            $0.inquiryEnabled == true
         }
         hasLoadedSeatingAreas = true
 
@@ -266,6 +283,9 @@ private extension PremiumEventContainerVC {
         mapVC.event = event
         mapVC.promotionLinkId = promotionLinkId
         mapVC.promotionLinkUniqueCode = promotionLinkUniqueCode
+        mapVC.onInquiryTap = { [weak self] area in
+            self?.showInquiry(for: area)
+        }
         mapVC.seatingAreas = bookableSeatingAreas
         mapVC.seatingAreasFilteredOut = hiddenSeatingAreas
         if event?.isEnable3DMap == true {
@@ -275,10 +295,24 @@ private extension PremiumEventContainerVC {
         listVC.event = event
         listVC.promotionLinkId = promotionLinkId
         listVC.promotionLinkUniqueCode = promotionLinkUniqueCode
+        listVC.onInquiryTap = { [weak self] area in
+            self?.showInquiry(for: area)
+        }
         listVC.seatingAreas = bookableSeatingAreas
 
         inquiryVC.event = event
-        inquiryVC.seatingAreas = hiddenSeatingAreas
+        inquiryVC.seatingAreas = inquirySeatingAreas()
+    }
+
+    func inquirySeatingAreas() -> [SeatingArea] {
+        var seenIds: Set<String> = []
+        return (hiddenSeatingAreas + seatingAreas.filter { $0.inquiryEnabled == true })
+            .filter { area in
+                let id = area.id ?? area.parentSeatingAreaId ?? area.name ?? UUID().uuidString
+                guard !seenIds.contains(id) else { return false }
+                seenIds.insert(id)
+                return true
+            }
     }
     
     private func filterSeatingAreas(
@@ -492,7 +526,9 @@ private extension PremiumEventContainerVC {
     func updateAvailableSegments() {
         
         let segments = availableSegments()
-        let selected = segments.first ?? .list
+        let selected = segments.contains(selectedSegment)
+            ? selectedSegment
+            : (segments.first ?? .list)
         let shouldShowSegment = segments.count > 1
         
         segmentHeightConstraint.constant = shouldShowSegment ? 46 : 0
@@ -519,7 +555,8 @@ private extension PremiumEventContainerVC {
         !bookableSeatingAreas.isEmpty
         
         let hasInquiry =
-        event?.isEnableReservationRequest == true
+        event?.isEnableReservationRequest == true ||
+        seatingAreas.contains { $0.inquiryEnabled == true }
         
         var segments: [Segment] = []
         
@@ -551,6 +588,8 @@ private extension PremiumEventContainerVC {
         _ segment: Segment,
         animated: Bool
     ) {
+
+        selectedSegment = segment
 
         mapVC.view.isHidden = segment != .map
         listVC.view.isHidden = segment != .list
@@ -585,6 +624,14 @@ private extension PremiumEventContainerVC {
             self.currentVC?.view.alpha = 1
 
         }
+    }
+
+    func showInquiry(for seatingArea: SeatingArea) {
+        inquiryVC.selectedSeatingArea = seatingArea
+        inquiryVC.seatingAreas = inquirySeatingAreas()
+        selectedSegment = .inquiry
+        segmentView.select(.inquiry, animated: true)
+        switchTo(.inquiry, animated: true)
     }
 }
 

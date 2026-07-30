@@ -20,6 +20,7 @@ final class PremiumExperienceIntroVC: UIViewController {
     private let iconImageView = UIImageView()
     private let subtitleLabel = UILabel()
     private let exploreBtn = PrimaryButton()
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +29,15 @@ final class PremiumExperienceIntroVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        applyPremiumBackgroundIfNeeded()
         cardView.cornerRadius = 28
     }
 
     private func setupUI() {
-        view.backgroundColor = AppColor.primaryBlackColor
+        view.backgroundColor = UIColor(hex: "#070808")
 
-        bgImageView.image = UIImage(resource: .premiumExpBg)
+        bgImageView.image = nil
+        bgImageView.backgroundColor = .clear
         bgImageView.contentMode = .scaleAspectFill
         bgImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bgImageView)
@@ -101,6 +104,12 @@ final class PremiumExperienceIntroVC: UIViewController {
             exploreBtn.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18),
             exploreBtn.heightAnchor.constraint(equalToConstant: 48)
         ])
+    }
+
+    private func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     @objc private func onClickExplore() {

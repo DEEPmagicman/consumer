@@ -266,11 +266,10 @@ extension VenueExperiencesVC {
             reloadUI()
         }
 
-        venueService.fetchVenueEvents(
+        venueService.fetchVenuePremiumExperiences(
             venueId: venueId,
             skip: skip,
             time: "UPCOMING",
-            isPremium: true
         ) { [weak self] isSuccess,
             errMsg,
             list,
@@ -287,7 +286,6 @@ extension VenueExperiencesVC {
                     self.showsNoInternetView = false
 
                     let newItems = list
-                        .map { PremiumExperienceItem(event: $0) }
                         .filter { newItem in
                             !self.items.contains(where: {
                                 $0.id == newItem.id

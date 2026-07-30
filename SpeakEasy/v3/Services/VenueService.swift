@@ -922,6 +922,64 @@ final class VenueService {
         }
     }
 
+    func fetchVenuePremiumExperiences(
+        venueId: String,
+        skip: Int,
+        time: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ items: [PremiumExperienceItem],
+            _ hasMore: Bool
+        ) -> Void
+    ) {
+
+        let url = APIBuilder.venueEvents(
+            venueId: venueId,
+            includes: [
+                "venue.venueAttachment",
+                "flyer",
+                "eventTicketLinks",
+                "eventTicket"
+            ],
+            take: 5,
+            skip: skip,
+            timeVersion: time,
+            isPremium: true,
+            orderBy: "startDateTime|asc"
+        )
+
+        AFWrapper.getRequest(
+            url,
+            params: nil,
+            headers: Header.header()
+        ) { response in
+
+            guard let dict = response as? [String: Any],
+                  let list = dict["list"] as? [[String: Any]] else {
+                completion(false, "Invalid response", [], false)
+                return
+            }
+
+            completion(
+                true,
+                nil,
+                list.compactMap(PremiumExperienceItem.init(dictionary:)),
+                dict["hasMany"] as? Bool ?? false
+            )
+
+        } failure: { error in
+
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, [], false)
+                return
+            }
+
+            completion(false, nil, [], false)
+        }
+    }
+
     // MARK: - Add-ons
 
     func fetchUpSellItems(

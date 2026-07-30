@@ -22,6 +22,7 @@ final class Tables3DMapVC: UIViewController {
     var event: Event?
     var promotionLinkId = ""
     var promotionLinkUniqueCode = ""
+    var onInquiryTap: ((_ seatingArea: SeatingArea) -> Void)?
 
     private let sceneView = SCNView()
 
@@ -141,9 +142,9 @@ final class Tables3DMapVC: UIViewController {
 
     @IBAction func onClickBuyNow(_ sender: Any) {
         guard let selectedId = selectedSeatingId else { return }
-        guard let selectedArea = seatingAreas.first(where: { $0.parentSeatingAreaId == selectedId }) else { return }
+        guard let selectedArea = selectedSeatingArea(for: selectedId) else { return }
         openSeatingArea(selectedArea)
-        setupBuyNowButton()
+        setupBuyNowButton(for: selectedArea)
     }
 }
 
@@ -172,10 +173,14 @@ private extension Tables3DMapVC {
         mapView.addSubview(sceneView)
     }
 
-    func setupBuyNowButton() {
+    func setupBuyNowButton(for seatingArea: SeatingArea? = nil) {
         let color = UIColor(hex: "#D99935")
         let textColor = color.suitableTextColor()
+        let title = seatingArea?.inquiryEnabled == true && seatingArea?.hideCheckout == true
+            ? "Inquiry Now"
+            : "Book Now"
 
+        buyNowBtn.setTitle(title, for: .normal)
         buyNowBtn.backgroundColor = color
         buyNowBtn.bgColor = color
         buyNowBtn.setTitleColor(textColor, for: .normal)
@@ -370,7 +375,8 @@ extension Tables3DMapVC {
                 highlight: area.highlight,
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
-                minimum: area.minimum,
+                minimum: displayMinimum(for: area),
+                hidePricing: area.hidePricing == true,
                 allowActions: false
             )
         }
@@ -383,7 +389,8 @@ extension Tables3DMapVC {
                 highlight: area.highlight,
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
-                minimum: area.minimum,
+                minimum: displayMinimum(for: area),
+                hidePricing: area.hidePricing == true,
                 allowActions: false
             )
         }
@@ -396,7 +403,8 @@ extension Tables3DMapVC {
                 highlight: area.highlight,
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
-                minimum: area.minimum,
+                minimum: displayMinimum(for: area),
+                hidePricing: area.hidePricing == true,
                 allowActions: true
             )
         }
@@ -409,7 +417,8 @@ extension Tables3DMapVC {
                 highlight: area.highlight,
                 maxGuest: area.maxGuest,
                 isDJBoot: false,
-                minimum: area.minimum,
+                minimum: displayMinimum(for: area),
+                hidePricing: area.hidePricing == true,
                 allowActions: true
             )
         }
@@ -431,8 +440,8 @@ extension Tables3DMapVC {
     }
 
     private func openSeatingArea(_ item: SeatingArea) {
-        guard item.hideCheckout != true else {
-            print("Inquire tapped for:", item.name ?? "")
+        guard item.hideCheckout != true ||
+              item.inquiryEnabled == true else {
             return
         }
 
@@ -441,8 +450,46 @@ extension Tables3DMapVC {
             event: event,
             seatingArea: item,
             promotionLinkId: promotionLinkId,
-            promotionLinkUniqueCode: promotionLinkUniqueCode
+            promotionLinkUniqueCode: promotionLinkUniqueCode,
+            onInquiry: onInquiryTap
         )
+    }
+
+    private func selectedSeatingArea(for selectedId: String) -> SeatingArea? {
+        seatingAreas.first {
+            $0.parentSeatingAreaId == selectedId ||
+            $0.id == selectedId
+        }
+    }
+
+    private func displayMinimum(for area: SeatingArea) -> Double? {
+        guard area.bookingType == .timeWise else {
+            return area.minimum
+        }
+
+        return sortedBookableTimeSlots(for: area).first?.minimum ?? area.minimum
+    }
+
+    private func sortedBookableTimeSlots(for area: SeatingArea) -> [TableTimeSlot] {
+        TableTimeSlot.sortedByBusinessStart(
+            (area.timeSlots ?? []).filter { $0.isBookable },
+            timezone: venueTimezoneIdentifier(),
+            businessStartTime: event?.venue?.businessStartTime
+        )
+    }
+
+    private func venueTimezoneIdentifier() -> String {
+        if let timezone = event?.venue?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        let useTimezone = event?.venue?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let useTimezone, !useTimezone.isEmpty {
+            return useTimezone
+        }
+
+        return TimeZone.current.identifier
     }
 
     func loadSelectedRoomModel() {
@@ -610,7 +657,7 @@ private extension Tables3DMapVC {
                 let dto = SeatingAreaDTO(
                     id: nil, parentSeatingAreaId: nil, name: "DJ",
                     highlight: nil, maxGuest: nil, isDJBoot: true,
-                    minimum: nil, allowActions: false
+                    minimum: nil, hidePricing: true, allowActions: false
                 )
                 if !nodeName.isEmpty { seatingAreaByMeshName[nodeName] = dto }
                 if !meshName.isEmpty { seatingAreaByMeshName[meshName] = dto }
@@ -766,7 +813,9 @@ private extension Tables3DMapVC {
 
         let label = makeLabelCard(
             title: seating.name ?? "", guests: seating.maxGuest ?? 0,
-            minAmount: seating.minimum, dotColor: dotColor, scale: scale
+            minAmount: seating.hidePricing ? nil : seating.minimum,
+            dotColor: dotColor,
+            scale: scale
         )
         label.name = "label"
         label.position = SCNVector3(0, Float(0.9 * scale), 0)
@@ -777,7 +826,10 @@ private extension Tables3DMapVC {
         uiNode.seatingMeta = SeatingMeta(
             seatingAreaId: seating.parentSeatingAreaId ?? seating.id ?? "",
             name: seating.name ?? "", parentId: seating.parentSeatingAreaId ?? "",
-            maxGuest: seating.maxGuest ?? 0, minimum: seating.minimum, allowActions: seating.allowActions,
+            maxGuest: seating.maxGuest ?? 0,
+            minimum: seating.minimum,
+            hidePricing: seating.hidePricing,
+            allowActions: seating.allowActions,
             sourceNode: sourceNode, uniqueId: UUID().uuidString
         )
         root.addChildNode(uiNode)
@@ -1019,7 +1071,7 @@ private extension Tables3DMapVC {
         let highlightColor = UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
         updatePinColor(seatingAreaId: meta.seatingAreaId, color: highlightColor, in: sceneView.scene)
 
-        setupBuyNowButton()
+        setupBuyNowButton(for: selectedSeatingArea(for: meta.seatingAreaId))
         buyNowBtnView.isHidden = false
         zoneSelector.isHidden = true
     }

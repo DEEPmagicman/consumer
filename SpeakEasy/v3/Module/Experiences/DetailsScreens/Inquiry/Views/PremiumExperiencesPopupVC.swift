@@ -17,10 +17,12 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
     private let dimmedView = UIView()
     private let popupView = GradientBorderCardView()
+    private let popupBackgroundView = UIView()
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let dismissButton = UIButton(type: .system)
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     // MARK: - Lifecycle
 
@@ -28,6 +30,11 @@ final class PremiumExperiencesPopupVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         animateIn()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyPremiumPopupBackgroundIfNeeded()
     }
 
     // MARK: - Setup
@@ -46,18 +53,24 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
         // Popup card
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.fillColor = AppColor.primaryColor.withAlphaComponent(0.4).cgColor
-        popupView.showsBlur = true
-        popupView.blurAlpha = 0.9
+        popupView.fillColor = UIColor(hex: "#070808", alpha: 0.98).cgColor
+        popupView.showsBlur = false
+        popupView.blurAlpha = 0
         popupView.cornerRadius = 34
         popupView.layer.cornerCurve = .continuous
         popupView.clipsToBounds = true
         view.addSubview(popupView)
 
+        popupBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        popupBackgroundView.backgroundColor = UIColor(hex: "#070808")
+        popupBackgroundView.isUserInteractionEnabled = false
+        popupBackgroundView.layer.masksToBounds = true
+        popupView.insertSubview(popupBackgroundView, at: 0)
+
         // Icon
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "premiumExperienceIcon")
+        iconImageView.image = UIImage(named: "extraPremiumIcon")
         popupView.addSubview(iconImageView)
 
         // Title
@@ -78,7 +91,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
         let kern = -0.01 * 12.0
 
         let attributedDesc = NSAttributedString(
-            string: "Your direct connection to the world’s most coveted live experiences. Secure access, reservations, and curated packages in seconds. By powering the world’s leading live experience brands, we eliminate third-party friction and deliver unparalleled access to extraordinary moments.",
+            string: "Your direct connection to your city’s most coveted live experiences. Unlock exclusive access, reservations, and curated packages in seconds.",
             attributes: [
                 .font: Constant.Font.geistRegular(size: 12),
                 .foregroundColor: UIColor.white.withAlphaComponent(0.75),
@@ -134,11 +147,16 @@ final class PremiumExperiencesPopupVC: UIViewController {
             popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             popupView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -28),
 
+            popupBackgroundView.topAnchor.constraint(equalTo: popupView.topAnchor),
+            popupBackgroundView.leadingAnchor.constraint(equalTo: popupView.leadingAnchor),
+            popupBackgroundView.trailingAnchor.constraint(equalTo: popupView.trailingAnchor),
+            popupBackgroundView.bottomAnchor.constraint(equalTo: popupView.bottomAnchor),
+
             // Icon
-            iconImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 36),
+            iconImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 30),
             iconImageView.centerXAnchor.constraint(equalTo: popupView.centerXAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 50),
-            iconImageView.heightAnchor.constraint(equalToConstant: 50),
+            iconImageView.widthAnchor.constraint(equalToConstant: 72),
+            iconImageView.heightAnchor.constraint(equalToConstant: 72),
 
             // Title
             titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 20),
@@ -157,6 +175,26 @@ final class PremiumExperiencesPopupVC: UIViewController {
             dismissButton.heightAnchor.constraint(equalToConstant: 50),
             dismissButton.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -12)
         ])
+    }
+
+    private func applyPremiumPopupBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != popupBackgroundView.bounds else { return }
+        appliedPremiumGradientBounds = popupBackgroundView.bounds
+        popupBackgroundView.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        let gradient = CAGradientLayer()
+        gradient.colors = [
+            UIColor(hex: "#3E2C01").cgColor,
+            UIColor(hex: "#362702").cgColor,
+            UIColor(hex: "#171104").cgColor,
+            UIColor(hex: "#070808").cgColor
+        ]
+        gradient.locations = [0.0, 0.34, 0.62, 1.0]
+        gradient.startPoint = CGPoint(x: 0.5, y: 0)
+        gradient.endPoint = CGPoint(x: 0.5, y: 1)
+        gradient.frame = popupBackgroundView.bounds
+        gradient.masksToBounds = true
+        popupBackgroundView.layer.insertSublayer(gradient, at: 0)
     }
 
     // MARK: - Animation

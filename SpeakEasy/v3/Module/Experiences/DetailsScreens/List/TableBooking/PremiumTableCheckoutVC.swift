@@ -56,6 +56,7 @@ final class PremiumTableCheckoutVC: UIViewController {
     private var timer: Timer?
     private let tableService         = TableService()
     private let paymentService       = PaymentService()
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     private var currency: String {
         event?.venue?.venueSettings?.currencySymbol ?? "$"
@@ -160,7 +161,7 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "#111111")
+        view.backgroundColor = UIColor(hex: "#070808")
         navigationItem.title = ""
         primeBooking(initialBooking)
         setupUI()
@@ -185,6 +186,7 @@ final class PremiumTableCheckoutVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        applyPremiumBackgroundIfNeeded()
         bottomContainer.layer.cornerRadius = 30
         buyBtn.layer.cornerRadius = buyBtn.bounds.height / 2
         updateAgreementHeights(animated: false)
@@ -230,6 +232,12 @@ private extension PremiumTableCheckoutVC {
         setupBottomBar()
         setupConstraints()
         showInitialContent()
+    }
+
+    func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     func setupScroll() {
@@ -427,7 +435,7 @@ private extension PremiumTableCheckoutVC {
     }
 
     func setupBottomBar() {
-        bottomBar.backgroundColor = UIColor(hex: "#111111")
+        bottomBar.backgroundColor = UIColor(hex: "#070808")
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
 
         let sep = UIView()
@@ -896,7 +904,7 @@ private extension PremiumTableCheckoutVC {
             items.append(.init(title: "Total", amount: total, isBold: true))
         }
         if let balance = bd.balanceDueAtVenue {
-            items.append(.init(title: "Balance Due at Partner", amount: balance, isBold: true))
+            items.append(.init(title: "Balance Due at Partner", amount: abs(balance), isBold: true))
         }
         return items
     }
@@ -1518,7 +1526,7 @@ private extension PremiumTableCheckoutVC {
             .forEach { items.append(.init(title: $0.name, amount: $0.amount, isBold: false)) }
 
         items.append(.init(title: "Total", amount: feeResult.amountChargedToConsumer, isBold: true))
-        items.append(.init(title: "Balance Due at Partner", amount: balanceDue, isBold: true))
+        items.append(.init(title: "Balance Due at Partner", amount: abs(balanceDue), isBold: true))
         return items
     }
 

@@ -13,6 +13,7 @@ final class PremiumInquiryCardView: UIView {
 
     var event: Event?
     var seatingAreas: [SeatingArea] = []
+    var selectedSeatingArea: SeatingArea?
     var onRequestSuccess: (() -> Void)?
     private let tableService = TableService()
 
@@ -26,6 +27,7 @@ final class PremiumInquiryCardView: UIView {
     private let dateField         = PremiumTextField()
     private let timeField         = PremiumTextField()
     private let partySizeRow      = PartySizeFieldRow()
+    private let seatingAreaField  = PremiumTextField()
     private let commentView       = PremiumTextView()
     private let questionSectionView = UIView()
     private let questionStackView   = UIStackView()
@@ -128,12 +130,14 @@ private extension PremiumInquiryCardView {
         setupDateField()
         setupTimeField()
         setupPartySizeRow()
+        setupSeatingAreaField()
         setupCommentView()
         setupQuestionSection()
 
         stackView.addArrangedSubview(dateField)
         stackView.addArrangedSubview(timeField)
         stackView.addArrangedSubview(partySizeRow)
+        stackView.addArrangedSubview(seatingAreaField)
         stackView.addArrangedSubview(questionSectionView)
         stackView.addArrangedSubview(commentView)
     }
@@ -187,6 +191,15 @@ private extension PremiumInquiryCardView {
             self?.selectedWomenCount = women
         }
         partySizeRow.viewCornerRadius = 14
+    }
+
+    func setupSeatingAreaField() {
+        seatingAreaField.title = "Seating area name"
+        seatingAreaField.leftImage = UIImage(systemName: "mappin.and.ellipse")
+        seatingAreaField.textField.tintColor = .clear
+        seatingAreaField.textField.isUserInteractionEnabled = false
+        seatingAreaField.viewCornerRadius = 14
+        seatingAreaField.isHidden = true
     }
 
     func setupCommentView() {
@@ -382,6 +395,7 @@ extension PremiumInquiryCardView {
         configureTextsFromSettings()
         configureDefaultDateTime()
         configurePartySize()
+        configureSeatingArea()
         fetchReservationQuestionsIfNeeded()
         updateButtonState()
     }
@@ -468,6 +482,16 @@ private extension PremiumInquiryCardView {
         selectedMenCount = 0
         selectedWomenCount = 0
         partySizeRow.configure(max: maxGuest, showsGenderCounts: isGuestListByGenderEnabled)
+    }
+
+    func configureSeatingArea() {
+        let areaName = selectedSeatingAreaName()
+        seatingAreaField.text = areaName
+        seatingAreaField.isHidden = areaName.isEmpty
+    }
+
+    func selectedSeatingAreaName() -> String {
+        selectedSeatingArea?.name?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
     func cleanHTMLText(_ text: String) -> String {
@@ -561,7 +585,7 @@ private extension PremiumInquiryCardView {
             time: payload.time,
             optedPolicy: payload.marketingOptIn,
             eventId: event.id ?? "",
-            seatingArea: nil,
+            seatingArea: selectedSeatingAreaName().isEmpty ? nil : selectedSeatingAreaName(),
             venueId: event.venue?.id ?? "",
             token: UserDefault.shared.accessToken ?? "",
             optedEmailPolicy: emailCheckboxView.isHidden || emailCheckboxView.isChecked,

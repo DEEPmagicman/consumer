@@ -1202,7 +1202,6 @@ private extension CoverTicketListVC {
 
         isCheckoutNavigationInProgress = true
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
-            continueToCheckoutBtn.showLoader()
             Navigate.to.coverCheckOutVC(
                 self,
                 venue: venueDetails,
@@ -1340,6 +1339,7 @@ extension CoverTicketListVC {
 
         isFreeBookingInProgress = true
         view.isUserInteractionEnabled = false
+        continueToCheckoutBtn.showLoader()
 
         paymentService.createCoverFreeBooking(
             coverTickets: tickets,
@@ -1375,7 +1375,6 @@ extension CoverTicketListVC {
     }
 
     private func beginFreeBookingAfterUIUpdate() {
-        continueToCheckoutBtn.showLoader()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
             self?.createFreeBooking()
         }

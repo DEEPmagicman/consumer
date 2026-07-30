@@ -375,6 +375,30 @@ extension UIView {
         layer.masksToBounds = true
         layer.insertSublayer(gradient, at: 0)
     }
+
+    func applyPremiumScreenBgGradient(
+        direction: GradientDirection = .topToBottom,
+        colorAlpha: Double = 1.0
+    ) {
+        layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        let gradient = CAGradientLayer()
+        gradient.colors = [
+            UIColor(hex: "#3E2C01").withAlphaComponent(colorAlpha).cgColor,
+            UIColor(hex: "#3E2C01").withAlphaComponent(colorAlpha).cgColor,
+            UIColor(hex: "#241A04").withAlphaComponent(colorAlpha).cgColor,
+            UIColor(hex: "#070808").withAlphaComponent(colorAlpha).cgColor,
+            UIColor(hex: "#070808").withAlphaComponent(colorAlpha).cgColor,
+            UIColor(hex: "#070808").withAlphaComponent(colorAlpha).cgColor
+        ]
+        gradient.locations = [0.0, 0.16, 0.22, 0.46, 0.78, 1.0]
+        gradient.startPoint = direction.startPoint
+        gradient.endPoint = direction.endPoint
+        gradient.frame = bounds
+        gradient.masksToBounds = true
+        layer.masksToBounds = true
+        layer.insertSublayer(gradient, at: 0)
+    }
     
 }
 

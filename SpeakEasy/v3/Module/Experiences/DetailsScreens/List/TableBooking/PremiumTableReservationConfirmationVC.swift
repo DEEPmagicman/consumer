@@ -106,12 +106,13 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
     private var orderCollapsedHeightConstraint: NSLayoutConstraint?
     private var orderTitleTopConstraint: NSLayoutConstraint?
     private var orderTitleCenterYConstraint: NSLayoutConstraint?
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(hex: "#070808")
         setupUI()
         configure()
         fetchReservationIfNeeded()
@@ -120,6 +121,7 @@ final class PremiumTableReservationConfirmationVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        applyPremiumBackgroundIfNeeded()
         eventImageView.layer.cornerRadius = 8
     }
 }
@@ -143,7 +145,8 @@ private extension PremiumTableReservationConfirmationVC {
 
     func setupBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
-        backgroundImageView.image = UIImage(resource: .premiumExpBg)
+        backgroundImageView.image = nil
+        backgroundImageView.backgroundColor = .clear
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundImageView)
 
@@ -151,12 +154,20 @@ private extension PremiumTableReservationConfirmationVC {
         backgroundBlurView.colorTint = AppColor.primaryBlackColor
         backgroundBlurView.colorTintAlpha = 0.14
         backgroundBlurView.alpha = 0.70
+        backgroundBlurView.isHidden = true
         backgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundBlurView)
 
         backgroundDimView.backgroundColor = AppColor.primaryBlackColor.withAlphaComponent(0.42)
+        backgroundDimView.isHidden = true
         backgroundDimView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundDimView)
+    }
+
+    func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     func setupScroll() {

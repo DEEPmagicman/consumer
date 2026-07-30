@@ -169,6 +169,8 @@ final class PremiumExperienceCell: UICollectionViewCell {
         venueLabel.text = item.venueName.uppercased()
         dateLabel.text = item.dateText
         guestLabel.text = item.guestText
+        guestIconView.isHidden = item.isInquiryAction
+        guestLabel.isHidden = item.isInquiryAction
 
         if item.isInquiryAction {
 

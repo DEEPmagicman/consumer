@@ -30,6 +30,12 @@ final class PremiumInquiryVC: UIViewController {
         }
     }
 
+    var selectedSeatingArea: SeatingArea? {
+        didSet {
+            configureDefaultValues()
+        }
+    }
+
     // MARK: - State
 
     private var isLoading = true
@@ -186,6 +192,7 @@ private extension PremiumInquiryVC {
         cardView.event = event
 
         cardView.seatingAreas = seatingAreas
+        cardView.selectedSeatingArea = selectedSeatingArea
 
         cardView.configure()
     }

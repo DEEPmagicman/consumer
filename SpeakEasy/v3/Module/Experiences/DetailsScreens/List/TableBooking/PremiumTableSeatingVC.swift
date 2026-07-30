@@ -18,6 +18,7 @@ final class PremiumTableSeatingVC: UIViewController {
 
     /// Called when user taps Checkout
     var onCheckout: ((_ guestCount: Int, _ seatingArea: SeatingArea, _ event: Event) -> Void)?
+    var onInquiry: ((_ seatingArea: SeatingArea) -> Void)?
 
     // MARK: - State
 
@@ -55,6 +56,7 @@ final class PremiumTableSeatingVC: UIViewController {
     private let bottomCheckoutCard = UIView()
     private let bottomPriceLabel  = UILabel()
     private let bottomSubLabel    = UILabel()
+    private let inquiryBtn        = UIButton(type: .system)
     private let checkoutBtn       = UIButton(type: .system)
     private let checkoutLoader    = UIActivityIndicatorView(style: .medium)
     
@@ -62,29 +64,38 @@ final class PremiumTableSeatingVC: UIViewController {
 
     private var priceTopToArrivalConstraint: NSLayoutConstraint?
     private var priceTopToGuestConstraint: NSLayoutConstraint?
+    private var priceCardHeightConstraint: NSLayoutConstraint?
     private var spendTopToPriceConstraint: NSLayoutConstraint?
     private var spendAgreementHeightConstraint: NSLayoutConstraint?
     private var contentBottomToPriceConstraint: NSLayoutConstraint?
     private var contentBottomToSpendConstraint: NSLayoutConstraint?
+    private var bottomBarHeightConstraint: NSLayoutConstraint?
+    private var inquiryButtonHeightConstraint: NSLayoutConstraint?
+    private var checkoutTopToInquiryConstraint: NSLayoutConstraint?
+    private var checkoutTopToSeparatorConstraint: NSLayoutConstraint?
     private var lastDepositProcessingFees: Double = 0
     private var currentSpendAgreementItems: [SpendLineItem] = []
     private let tableService = TableService()
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "#111111")
+        view.backgroundColor = UIColor(hex: "#070808")
         setupUI()
         configureData()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        applyPremiumBackgroundIfNeeded()
         bottomCheckoutCard.layer.cornerRadius = 30
         bottomCheckoutCard.layer.masksToBounds = true
         checkoutBtn.layer.cornerRadius = 24
         checkoutBtn.layer.masksToBounds = true
+        inquiryBtn.layer.cornerRadius = 26
+        inquiryBtn.layer.masksToBounds = true
         updateArrivalTimeHeight()
     }
 }
@@ -105,6 +116,12 @@ private extension PremiumTableSeatingVC {
         setupSpendAgreementView()
         setupBottomBar()
         setupConstraints()
+    }
+
+    func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     func setupScroll() {
@@ -236,7 +253,7 @@ private extension PremiumTableSeatingVC {
     }
 
     func setupBottomBar() {
-        bottomBar.backgroundColor = UIColor(hex: "#111111")
+        bottomBar.backgroundColor = UIColor(hex: "#070808")
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
 
         let sep = UIView()
@@ -281,15 +298,36 @@ private extension PremiumTableSeatingVC {
         checkoutBtn.translatesAutoresizingMaskIntoConstraints = false
         checkoutBtn.addTarget(self, action: #selector(onCheckoutTapped), for: .touchUpInside)
 
+        inquiryBtn.setTitle("INQUIRE", for: .normal)
+        inquiryBtn.setTitleColor(.white, for: .normal)
+        inquiryBtn.titleLabel?.font = Constant.Font.geistMedium(size: 15)
+        inquiryBtn.backgroundColor = .clear
+        inquiryBtn.layer.cornerRadius = 26
+        inquiryBtn.layer.cornerCurve = .continuous
+        inquiryBtn.layer.borderWidth = 1
+        inquiryBtn.layer.borderColor = UIColor.white.withAlphaComponent(0.95).cgColor
+        inquiryBtn.layer.masksToBounds = true
+        inquiryBtn.clipsToBounds = true
+        inquiryBtn.translatesAutoresizingMaskIntoConstraints = false
+        inquiryBtn.addTarget(self, action: #selector(onInquiryTapped), for: .touchUpInside)
+
         checkoutLoader.color = checkoutTextColor
         checkoutLoader.hidesWhenStopped = true
         checkoutLoader.translatesAutoresizingMaskIntoConstraints = false
 
+        bottomBar.addSubview(inquiryBtn)
         bottomCheckoutCard.addSubview(labelStack)
         bottomCheckoutCard.addSubview(checkoutBtn)
         checkoutBtn.addSubview(checkoutLoader)
         bottomBar.addSubview(bottomCheckoutCard)
         view.addSubview(bottomBar)
+
+        let inquiryHeight = inquiryBtn.heightAnchor.constraint(equalToConstant: 0)
+        let checkoutTopToInquiry = bottomCheckoutCard.topAnchor.constraint(equalTo: inquiryBtn.bottomAnchor, constant: 12)
+        let checkoutTopToSep = bottomCheckoutCard.topAnchor.constraint(equalTo: sep.bottomAnchor, constant: 22)
+        self.inquiryButtonHeightConstraint = inquiryHeight
+        self.checkoutTopToInquiryConstraint = checkoutTopToInquiry
+        self.checkoutTopToSeparatorConstraint = checkoutTopToSep
 
         NSLayoutConstraint.activate([
             sep.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 22),
@@ -297,7 +335,12 @@ private extension PremiumTableSeatingVC {
             sep.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
             sep.heightAnchor.constraint(equalToConstant: 0.5),
 
-            bottomCheckoutCard.topAnchor.constraint(equalTo: sep.bottomAnchor, constant: 22),
+            inquiryBtn.topAnchor.constraint(equalTo: sep.bottomAnchor, constant: 22),
+            inquiryBtn.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
+            inquiryBtn.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
+            inquiryHeight,
+
+            checkoutTopToSep,
             bottomCheckoutCard.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 20),
             bottomCheckoutCard.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor, constant: -20),
             bottomCheckoutCard.bottomAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: -20),
@@ -334,11 +377,13 @@ private extension PremiumTableSeatingVC {
     func setupConstraints() {
 
         let safe = view.safeAreaLayoutGuide
+        let bottomHeight = bottomBar.heightAnchor.constraint(equalToConstant: 128)
         let priceTopToArrival = priceCard.topAnchor.constraint(equalTo: arrivalTimeView.bottomAnchor, constant: 10)
         let priceTopToGuest = priceCard.topAnchor.constraint(equalTo: guestRow.bottomAnchor, constant: 10)
         let spendTopToPrice = spendAgreementView.topAnchor.constraint(equalTo: priceCard.bottomAnchor, constant: 10)
         let bottomToPrice = priceCard.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
         let bottomToSpend = spendAgreementView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
+        let priceCardHeight = priceCard.heightAnchor.constraint(equalToConstant: 68)
         priceTopToGuest.isActive = false
         bottomToSpend.isActive = false
         self.priceTopToArrivalConstraint = priceTopToArrival
@@ -346,6 +391,7 @@ private extension PremiumTableSeatingVC {
         self.spendTopToPriceConstraint = spendTopToPrice
         self.contentBottomToPriceConstraint = bottomToPrice
         self.contentBottomToSpendConstraint = bottomToSpend
+        self.bottomBarHeightConstraint = bottomHeight
         
         NSLayoutConstraint.activate([
 
@@ -374,7 +420,7 @@ private extension PremiumTableSeatingVC {
             bottomBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomBar.heightAnchor.constraint(equalToConstant: 128),
+            bottomHeight,
 
             // MARK: Scroll
             scrollView.topAnchor.constraint(equalTo: titleRow.bottomAnchor, constant: 20),
@@ -432,7 +478,7 @@ private extension PremiumTableSeatingVC {
             priceTopToArrival,
             priceCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             priceCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            priceCard.heightAnchor.constraint(equalToConstant: 68),
+            priceCardHeight,
 
             // Spend agreement
             spendTopToPrice,
@@ -446,6 +492,7 @@ private extension PremiumTableSeatingVC {
 
         spendAgreementHeightConstraint = spendAgreementView.heightAnchor.constraint(equalToConstant: 0)
         spendAgreementHeightConstraint?.isActive = true
+        priceCardHeightConstraint = priceCardHeight
     }
 }
 
@@ -455,6 +502,8 @@ private extension PremiumTableSeatingVC {
 
     func configureData() {
         guard let area = seatingArea else { return }
+
+        updateInquiryButtonState(for: area)
 
         let areaName = area.name?.trimmingCharacters(in: .whitespacesAndNewlines)
         titleLabel.text = areaName?.isEmpty == false ? areaName : "Table seating"
@@ -485,10 +534,23 @@ private extension PremiumTableSeatingVC {
         descLabel.isHidden = description.isEmpty
 
         // Guest stepper
-        currentGuestCount = area.defaultGuest ?? 1
-        guestRow.setValue(currentGuestCount, min: 1, max: area.maxGuest ?? 100)
+        let minGuest = max(area.defaultGuest ?? 1, 1)
+        let maxGuest = max(area.maxGuest ?? minGuest, minGuest)
+        currentGuestCount = minGuest
+        guestRow.setValue(currentGuestCount, min: minGuest, max: maxGuest)
 
         updatePricing()
+    }
+
+    func updateInquiryButtonState(for area: SeatingArea) {
+        let showsInquiry = area.inquiryEnabled == true
+        let hidesCheckout = area.hideCheckout == true
+        inquiryBtn.isHidden = !showsInquiry
+        bottomCheckoutCard.isHidden = hidesCheckout
+        inquiryButtonHeightConstraint?.constant = showsInquiry ? 52 : 0
+        bottomBarHeightConstraint?.constant = showsInquiry && !hidesCheckout ? 192 : 128
+        checkoutTopToSeparatorConstraint?.isActive = !showsInquiry || hidesCheckout
+        checkoutTopToInquiryConstraint?.isActive = showsInquiry && !hidesCheckout
     }
 
     func updatePricing() {
@@ -496,7 +558,14 @@ private extension PremiumTableSeatingVC {
         let deposit = calculateDeposit()
         let currency = event?.venue?.venueSettings?.currencySymbol ?? "$"
         let currencyPosition = event?.venue?.venueSettings?.currencyPosition ?? "$"
-        priceCard.configure(minimum: minVal, deposit: deposit, currency: currency, currencyPosition: currencyPosition)
+        let hidePricing = seatingArea?.hidePricing == true
+        priceCard.isHidden = hidePricing
+        priceCardHeightConstraint?.constant = hidePricing ? 0 : 68
+        bottomPriceLabel.isHidden = hidePricing
+        bottomSubLabel.isHidden = hidePricing
+        if !hidePricing {
+            priceCard.configure(minimum: minVal, deposit: deposit, currency: currency, currencyPosition: currencyPosition)
+        }
         bottomPriceLabel.text = CurrencyFormatter.amount(deposit, symbol: currency, position: currencyPosition)
         configureSpendAgreement(minimum: minVal, deposit: deposit)
     }
@@ -720,7 +789,7 @@ private extension PremiumTableSeatingVC {
     }
 
     func arrivalTimeAccentColor() -> UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: "#D99935")
     }
 }
 
@@ -760,6 +829,7 @@ private extension PremiumTableSeatingVC {
             guests: currentGuestCount,
             queueId: queueId,
             consumerUserId: UserDefault.shared.user?.id ?? "",
+            stripeCustomerId: UserDefault.shared.user?.stripeCusId ?? "",
             mininumSpend: activeMinimum(),
             promotionLinkId: promotionLinkId,
             promotionLinkUniqueCode: promotionLinkUniqueCode
@@ -785,6 +855,15 @@ private extension PremiumTableSeatingVC {
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }
             }
+        }
+    }
+
+    @objc func onInquiryTapped() {
+        guard let area = seatingArea else { return }
+        AppHaptic.primaryAction()
+        let onInquiry = onInquiry
+        dismiss(animated: true) {
+            onInquiry?(area)
         }
     }
 

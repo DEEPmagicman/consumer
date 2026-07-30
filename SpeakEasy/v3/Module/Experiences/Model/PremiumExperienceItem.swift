@@ -19,6 +19,7 @@ struct PremiumExperienceItem {
     let event: Event?
     let seatingAreas: [SeatingArea]
     let minimumSpend: Double?
+    let minimumDeposit: Double?
     let isEnquiryOnly: Bool
 
     var isInquiryAction: Bool {
@@ -51,6 +52,7 @@ struct PremiumExperienceItem {
         event: Event?,
         seatingAreas: [SeatingArea] = [],
         minimumSpend: Double? = nil,
+        minimumDeposit: Double? = nil,
         isEnquiryOnly: Bool = false
     ) {
         self.id = id
@@ -63,6 +65,7 @@ struct PremiumExperienceItem {
         self.event = event
         self.seatingAreas = seatingAreas
         self.minimumSpend = minimumSpend
+        self.minimumDeposit = minimumDeposit
         self.isEnquiryOnly = isEnquiryOnly
     }
 }
@@ -73,6 +76,7 @@ extension PremiumExperienceItem {
         event: Event,
         seatingAreas: [SeatingArea] = [],
         minimumSpend: Double? = nil,
+        minimumDeposit: Double? = nil,
         isEnquiryOnly: Bool = false
     ) {
         self.init(
@@ -92,6 +96,7 @@ extension PremiumExperienceItem {
             event: event,
             seatingAreas: seatingAreas,
             minimumSpend: minimumSpend,
+            minimumDeposit: minimumDeposit,
             isEnquiryOnly: isEnquiryOnly
         )
     }
@@ -101,17 +106,33 @@ extension PremiumExperienceItem {
         let eventSeatingAreas = Self.resolvedSeatingAreas(
             dictionary: eventDictionary
         )
-        let seatingAreas = eventSeatingAreas.isEmpty
+        let apiSeatingAreas = eventSeatingAreas.isEmpty
             ? Self.resolvedSeatingAreas(dictionary: dictionary)
             : eventSeatingAreas
         let minimumSpend = Self.resolvedMinimumSpend(from: dictionary)
+        let minimumDeposit = Self.resolvedMinimumDeposit(from: dictionary)
         let isEnquiryOnly = Self.resolvedIsEnquiryOnly(from: dictionary)
+        let seatingAreas = apiSeatingAreas.isEmpty
+            ? Self.resolvedFallbackSeatingAreas(
+                from: dictionary,
+                eventDictionary: eventDictionary,
+                minimumSpend: minimumSpend,
+                minimumDeposit: minimumDeposit,
+                isEnquiryOnly: isEnquiryOnly
+            )
+            : apiSeatingAreas
 
-        if let event = Self.decodeEvent(from: eventDictionary) {
+        if let event = Self.decodeEvent(
+            from: eventDictionary,
+            isEnquiryOnly: isEnquiryOnly,
+            hasAPISeatingAreas: !apiSeatingAreas.isEmpty,
+            hasUsableSeatingAreas: !seatingAreas.isEmpty
+        ) {
             self.init(
                 event: event,
                 seatingAreas: seatingAreas,
                 minimumSpend: minimumSpend,
+                minimumDeposit: minimumDeposit,
                 isEnquiryOnly: isEnquiryOnly
             )
             return
@@ -144,6 +165,7 @@ extension PremiumExperienceItem {
             event: nil,
             seatingAreas: seatingAreas,
             minimumSpend: minimumSpend,
+            minimumDeposit: minimumDeposit,
             isEnquiryOnly: isEnquiryOnly
         )
     }
@@ -151,14 +173,33 @@ extension PremiumExperienceItem {
 
 private extension PremiumExperienceItem {
 
-    static func decodeEvent(from dictionary: [String: Any]) -> Event? {
+    static func decodeEvent(
+        from dictionary: [String: Any],
+        isEnquiryOnly: Bool,
+        hasAPISeatingAreas: Bool,
+        hasUsableSeatingAreas: Bool
+    ) -> Event? {
         guard dictionary["startDateTime"] != nil else { return nil }
 
         do {
             let data = try JSONSerialization.data(
                 withJSONObject: eventPayloadForDecoding(dictionary)
             )
-            return try JSONDecoder().decode(Event.self, from: data)
+            var event = try JSONDecoder().decode(Event.self, from: data)
+
+            event.isPremium = true
+            if isEnquiryOnly {
+                event.isEnableReservationRequest = true
+                event.isEnableOnlineTables = false
+                event.isEnable3DMap = false
+            } else if hasUsableSeatingAreas {
+                event.isEnableOnlineTables = true
+                if !hasAPISeatingAreas {
+                    event.isEnable3DMap = false
+                }
+            }
+
+            return event
         } catch {
             return nil
         }
@@ -209,6 +250,22 @@ private extension PremiumExperienceItem {
         firstPositiveDouble(
             in: [dictionary, eventDictionary],
             keys: ["minimumDeposit"]
+        )
+    }
+
+    static func resolvedMinimumDeposit(
+        from dictionary: [String: Any]
+    ) -> Double? {
+
+        let eventDictionary = resolvedEventDictionary(from: dictionary)
+
+        return firstPositiveDouble(
+            in: [dictionary, eventDictionary],
+            keys: ["minimumDeposit", "minimum_deposit", "minDeposit"]
+        ) ??
+        firstPositiveDouble(
+            in: [dictionary, eventDictionary],
+            keys: ["deposit", "depositAmount"]
         )
     }
 
@@ -325,6 +382,71 @@ private extension PremiumExperienceItem {
         }
 
         return area
+    }
+
+    static func resolvedFallbackSeatingAreas(
+        from dictionary: [String: Any],
+        eventDictionary: [String: Any],
+        minimumSpend: Double?,
+        minimumDeposit: Double?,
+        isEnquiryOnly: Bool
+    ) -> [SeatingArea] {
+
+        let minGuests =
+        firstPositiveInt(
+            in: [dictionary, eventDictionary],
+            keys: ["minGuests", "minimumGuests", "minGuest"]
+        )
+
+        let maxGuests =
+        firstPositiveInt(
+            in: [dictionary, eventDictionary],
+            keys: ["maxGuests", "maximumGuests", "maxGuest", "capacity"]
+        )
+
+        guard minGuests != nil ||
+              maxGuests != nil ||
+              minimumSpend != nil ||
+              minimumDeposit != nil ||
+              isEnquiryOnly else {
+            return []
+        }
+
+        let eventId = firstString(
+            in: eventDictionary,
+            keys: ["id", "eventId", "_id", "uniqueId"]
+        ) ?? firstString(
+            in: dictionary,
+            keys: ["id", "eventId", "_id", "uniqueId"]
+        ) ?? ""
+
+        var area: [String: Any] = [
+            "id": "premium-\(eventId)",
+            "eventId": eventId,
+            "name": "Table seating",
+            "defaultGuest": minGuests ?? 1,
+            "maxGuest": maxGuests ?? minGuests ?? 1,
+            "minimum": minimumSpend ?? 0,
+            "deposit": minimumDeposit ?? 0,
+            "depositWithFees": minimumDeposit ?? 0,
+            "bookingType": BookingType.default.rawValue,
+            "inquiryEnabled": isEnquiryOnly,
+            "hideCheckout": isEnquiryOnly,
+            "hidePricing": isEnquiryOnly,
+            "isDeleted": false,
+            "status": "ENABLED"
+        ]
+
+        if let venueId = firstString(
+            in: eventDictionary,
+            keys: ["venueId"]
+        ) ?? (eventDictionary["venue"] as? [String: Any]).flatMap({
+            firstString(in: $0, keys: ["id"])
+        }) {
+            area["venueId"] = venueId
+        }
+
+        return [SeatingArea].parse([area]) ?? []
     }
 
     static func resolvedVenueName(event: Event) -> String {
@@ -700,6 +822,25 @@ private extension PremiumExperienceItem {
         for dictionary in dictionaries {
             for key in keys {
                 guard let value = doubleValue(dictionary[key]),
+                      value > 0 else {
+                    continue
+                }
+
+                return value
+            }
+        }
+
+        return nil
+    }
+
+    static func firstPositiveInt(
+        in dictionaries: [[String: Any]],
+        keys: [String]
+    ) -> Int? {
+
+        for dictionary in dictionaries {
+            for key in keys {
+                guard let value = intValue(dictionary[key]),
                       value > 0 else {
                     continue
                 }

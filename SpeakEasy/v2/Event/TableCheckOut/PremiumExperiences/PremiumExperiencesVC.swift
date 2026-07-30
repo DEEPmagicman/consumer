@@ -1,5 +1,4 @@
 import UIKit
-import AVFoundation
 
 class PremiumExperiencesVC: UIViewController {
 
@@ -14,9 +13,8 @@ class PremiumExperiencesVC: UIViewController {
     @IBOutlet weak var premuimExperiencesView: UIView!
     @IBOutlet weak var rightBtn: UIButton!
     
-    var player: AVPlayer?
-    var playerLayer: AVPlayerLayer?
     private var shimmerView: VenueEventsShimmerView?
+    private var appliedPremiumGradientBounds: CGRect = .zero
 
     var isShimmerLoading: Bool = true
     var events: [String] = []
@@ -25,8 +23,7 @@ class PremiumExperiencesVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackgroundVideo()
-        setupLoop()
+        setupPremiumBackground()
         scrollView.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
@@ -49,7 +46,7 @@ class PremiumExperiencesVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        playerLayer?.frame = backGroundVideoView.bounds
+        applyPremiumBackgroundIfNeeded()
         shimmerView?.frame = tableView.bounds
         updateTableHeight()
     }
@@ -73,33 +70,18 @@ class PremiumExperiencesVC: UIViewController {
             : .clear
     }
 
-    // MARK: - Video
+    // MARK: - Premium Background
 
-    func setupBackgroundVideo() {
-        guard let path = Bundle.main.path(forResource: "PremiumExperience", ofType: "mp4") else { return }
-        let url = URL(fileURLWithPath: path)
-        player = AVPlayer(url: url)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer?.videoGravity = .resizeAspectFill
-        playerLayer?.frame = backGroundVideoView.bounds
-        if let layer = playerLayer {
-            backGroundVideoView.layer.insertSublayer(layer, at: 0)
-        }
-        player?.isMuted = true
-        player?.play()
+    private func setupPremiumBackground() {
+        view.backgroundColor = UIColor(hex: "#070808")
+        scrollView.backgroundColor = .clear
+        backGroundVideoView.backgroundColor = .clear
     }
 
-    func setupLoop() {
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(loopVideo),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: player?.currentItem
-        )
-    }
-
-    @objc func loopVideo() {
-        player?.seek(to: .zero)
-        player?.play()
+    private func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     private func showShimmer() {

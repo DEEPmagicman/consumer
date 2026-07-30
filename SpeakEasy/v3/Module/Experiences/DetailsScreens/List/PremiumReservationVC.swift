@@ -34,6 +34,7 @@ final class PremiumReservationVC: UIViewController {
     }
     var promotionLinkId = ""
     var promotionLinkUniqueCode = ""
+    var onInquiryTap: ((_ seatingArea: SeatingArea) -> Void)?
     private let tableService = TableService()
 
     var seatingAreas: [SeatingArea] = [] {
@@ -811,7 +812,6 @@ private extension PremiumReservationVC {
             item.hideCheckout == true
 
         let hidePricing =
-            isInquiry &&
             item.hidePricing == true
 
         let guestText = formatGuestCount(
@@ -854,7 +854,7 @@ private extension PremiumReservationVC {
             description: item.highlight?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             depositText: depositText,
             minimumText: minimumText,
-            buttonTitle: isInquiry ? "Inquire" : "Book now",
+            buttonTitle: isInquiry ? "Inquiry" : "Book now",
             hidePricing: hidePricing
         )
 
@@ -870,10 +870,8 @@ private extension PremiumReservationVC {
         _ item: SeatingArea
     ) {
 
-        guard item.hideCheckout != true else {
-
-            print("Inquiry tapped")
-
+        guard item.hideCheckout != true ||
+              item.inquiryEnabled == true else {
             return
         }
         
@@ -882,7 +880,8 @@ private extension PremiumReservationVC {
             event: event,
             seatingArea: item,
             promotionLinkId: promotionLinkId,
-            promotionLinkUniqueCode: promotionLinkUniqueCode
+            promotionLinkUniqueCode: promotionLinkUniqueCode,
+            onInquiry: onInquiryTap
         )
     }
 }

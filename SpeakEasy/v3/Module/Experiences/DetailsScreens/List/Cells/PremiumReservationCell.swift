@@ -32,6 +32,11 @@ final class PremiumReservationCell: UITableViewCell {
     private let depositLabel = UILabel()
     
     private let bookButton = UIButton(type: .system)
+
+    private var minimumBottomConstraint: NSLayoutConstraint?
+    private var bookButtonCenterToDepositConstraint: NSLayoutConstraint?
+    private var priceHiddenButtonTopConstraint: NSLayoutConstraint?
+    private var priceHiddenButtonBottomConstraint: NSLayoutConstraint?
     
     // MARK:
     
@@ -219,6 +224,17 @@ final class PremiumReservationCell: UITableViewCell {
     }
     
     func setupConstraints() {
+        let minimumBottom = minimumLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18)
+        let buttonCenterToDeposit = bookButton.centerYAnchor.constraint(equalTo: depositLabel.centerYAnchor, constant: 6)
+        let hiddenButtonTop = bookButton.topAnchor.constraint(greaterThanOrEqualTo: descriptionLabel.bottomAnchor, constant: 18)
+        let hiddenButtonBottom = bookButton.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18)
+
+        minimumBottomConstraint = minimumBottom
+        bookButtonCenterToDepositConstraint = buttonCenterToDeposit
+        priceHiddenButtonTopConstraint = hiddenButtonTop
+        priceHiddenButtonBottomConstraint = hiddenButtonBottom
+        hiddenButtonTop.isActive = false
+        hiddenButtonBottom.isActive = false
         
         NSLayoutConstraint.activate([
             
@@ -263,12 +279,12 @@ final class PremiumReservationCell: UITableViewCell {
             
             minimumLabel.topAnchor.constraint(equalTo: depositLabel.bottomAnchor, constant: 4),
             minimumLabel.leadingAnchor.constraint(equalTo: depositLabel.leadingAnchor),
-            minimumLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18),
+            minimumBottom,
             
             // MARK: Book Button
             
             bookButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -18),
-            bookButton.centerYAnchor.constraint(equalTo: depositLabel.centerYAnchor, constant: 6),
+            buttonCenterToDeposit,
             
             bookButton.widthAnchor.constraint(equalToConstant: 94),
             bookButton.heightAnchor.constraint(equalToConstant: 36),
@@ -319,13 +335,17 @@ final class PremiumReservationCell: UITableViewCell {
         
         depositLabel.isHidden = hidePricing
         minimumLabel.isHidden = hidePricing
+        minimumBottomConstraint?.isActive = !hidePricing
+        bookButtonCenterToDepositConstraint?.isActive = !hidePricing
+        priceHiddenButtonTopConstraint?.isActive = hidePricing
+        priceHiddenButtonBottomConstraint?.isActive = hidePricing
         
         bookButton.setTitle(
             buttonTitle,
             for: .normal
         )
         
-        if buttonTitle == "Inquire" {
+        if buttonTitle == "Inquiry" {
             
             configureInquiryButton()
             

@@ -955,12 +955,13 @@ final class Navigate {
         sender.pushVC(vc)
     }
    
-    func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil, promotionLinkId: String = "", promotionLinkUniqueCode: String = "") {
+    func premiumTableSeatingVC(_ sender: UIViewController, event: Event?, seatingArea: SeatingArea? = nil, promotionLinkId: String = "", promotionLinkUniqueCode: String = "", onInquiry: ((_ seatingArea: SeatingArea) -> Void)? = nil) {
         let vc = PremiumTableSeatingVC()
         vc.seatingArea = seatingArea
         vc.event       = event
         vc.promotionLinkId = promotionLinkId
         vc.promotionLinkUniqueCode = promotionLinkUniqueCode
+        vc.onInquiry = onInquiry
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.isHidden = true
         sender.present(nav, animated: true)

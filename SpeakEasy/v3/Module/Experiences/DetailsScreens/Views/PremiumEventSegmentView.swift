@@ -23,7 +23,7 @@ final class PremiumEventSegmentView: UIView {
 
     private let glassView = LiquidGlassBackgroundView(
         cornerRadius: 24,
-        fillColor: UIColor.black.withAlphaComponent(0.18),
+        fillColor: UIColor(hex: "#FFFFFF", alpha: 0.07),
         borderColor: UIColor.white.withAlphaComponent(0.2),
         borderWidth: 0.8
     )
@@ -94,8 +94,8 @@ private extension PremiumEventSegmentView {
         glassView.addSubview(selectedView)
 
         selectedGradientLayer.colors = [
-            UIColor.white.withAlphaComponent(0.18).cgColor,
-            UIColor.white.withAlphaComponent(0.08).cgColor
+            UIColor(hex: "#FFFDFD", alpha: 0.16).cgColor,
+            UIColor(hex: "#FFFDFD", alpha: 0.16).cgColor
         ]
 
         selectedGradientLayer.locations = [0, 1]

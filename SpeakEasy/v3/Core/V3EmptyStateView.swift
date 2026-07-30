@@ -37,7 +37,7 @@ enum V3EmptyStateStyle {
         case .venueEvents:
             return "No events yet"
         case .premiumEvents:
-            return "No premium events yet"
+            return "No premium experiences"
         }
     }
 
@@ -47,8 +47,10 @@ enum V3EmptyStateStyle {
             return "savedEmptyIcon"
         case .venues, .mapVenues:
             return "venueEmptyIcon"
-        case .tickets, .events, .venueEvents, .premiumEvents:
+        case .tickets, .events, .venueEvents:
             return "ticketsEmptyIcon"
+        case .premiumEvents:
+            return "noPremiumEvents"
         case .reservations:
             return "reservationEmptyIcon"
         case .artists:
@@ -62,8 +64,10 @@ enum V3EmptyStateStyle {
             return CGSize(width: 100, height: 100)
         case .venues, .mapVenues:
             return CGSize(width: 80, height: 80)
-        case .tickets, .reservations, .events, .venueEvents, .premiumEvents:
+        case .tickets, .reservations, .events, .venueEvents:
             return CGSize(width: 60, height: 60)
+        case .premiumEvents:
+            return CGSize(width: 84, height: 84)
         case .artists:
             return CGSize(width: 75, height: 75)
         }

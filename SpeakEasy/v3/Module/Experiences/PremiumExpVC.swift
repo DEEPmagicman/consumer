@@ -41,6 +41,7 @@ final class PremiumExpVC: UIViewController {
     private var showsNoInternetView = false
     private var hasAppearedOnce = false
     private var needsCollectionLayoutRefreshOnAppear = false
+    private var appliedPremiumGradientBounds: CGRect = .zero
     
     init() {
         let layout = PinterestLayout()
@@ -104,6 +105,7 @@ final class PremiumExpVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        applyPremiumBackgroundIfNeeded()
         applyScrollableHeaderInsetIfNeeded()
         updateScrollableHeader()
         refreshCollectionLayoutIfNeeded()
@@ -203,7 +205,7 @@ final class PremiumExpVC: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = AppColor.primaryBlackColor
+        view.backgroundColor = UIColor(hex: "#070808")
 
         setupBackground()
         setupHeader()
@@ -213,7 +215,8 @@ final class PremiumExpVC: UIViewController {
     }
 
     private func setupBackground() {
-        bgImageView.image = UIImage(resource: .premiumExpBg)
+        bgImageView.image = nil
+        bgImageView.backgroundColor = .clear
         bgImageView.contentMode = .scaleAspectFill
         bgImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bgImageView)
@@ -222,12 +225,20 @@ final class PremiumExpVC: UIViewController {
         blurView.colorTint = AppColor.primaryBlackColor
         blurView.colorTintAlpha = 0.18
         blurView.alpha = 0.80
+        blurView.isHidden = true
         blurView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(blurView)
 
         dimView.backgroundColor = AppColor.primaryBlackColor.withAlphaComponent(0.42)
+        dimView.isHidden = true
         dimView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dimView)
+    }
+
+    private func applyPremiumBackgroundIfNeeded() {
+        guard appliedPremiumGradientBounds != view.bounds else { return }
+        appliedPremiumGradientBounds = view.bounds
+        view.applyPremiumScreenBgGradient()
     }
 
     private func setupHeader() {
