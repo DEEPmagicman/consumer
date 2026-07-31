@@ -33,10 +33,8 @@ final class DeleteAccountViewController: UIViewController {
         OnBoardingPresenter.deleteUser { isSuccess, errorMsg in
             Loader.hide()
             if isSuccess {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    UserDefault.shared.emptyData()
-                    AppDelegate.shared.changeRootViewController()
-                }
+                UserDefault.shared.emptyData()
+                AppDelegate.shared.changeRootViewController()
             } else {
                 Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
             }

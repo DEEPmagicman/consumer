@@ -829,20 +829,19 @@ final class CoverQRCodeVC: UIViewController {
             return
         }
 
-        guard let url = URL(string: APIBuilder.coverAppleWallet(bookingID)) else { return }
-
         addToWalletBtn.isUserInteractionEnabled = false
         addToWalletBtn.alpha = 0.65
-        URLSession.shared.fetchData(at: url) { [weak self] data, _ in
+        paymentService.fetchCoverAppleWalletPass(bookingId: bookingID) { [weak self] isSuccess, errMsg, data in
             guard let self else { return }
             DispatchQueue.main.async {
                 self.addToWalletBtn.isUserInteractionEnabled = true
                 self.addToWalletBtn.alpha = 1
             }
-            guard let data else {
+            guard isSuccess,
+                  let data else {
                 DispatchQueue.main.async {
                     AppHaptic.error()
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }
                 return
             }

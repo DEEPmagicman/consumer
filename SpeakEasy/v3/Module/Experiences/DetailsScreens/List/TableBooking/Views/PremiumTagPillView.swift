@@ -808,6 +808,14 @@ final class PremiumAgreementView: UIView {
         didSet { updateCheckboxVisibility() }
     }
 
+    var showsInlineToggleWithCheckbox: Bool = false {
+        didSet { updateText() }
+    }
+
+    var separatesInlineToggleLine: Bool = false {
+        didSet { updateText() }
+    }
+
     var bodyText: String = "" {
         didSet {
             isExpanded = false
@@ -840,6 +848,9 @@ final class PremiumAgreementView: UIView {
         }
     }
     var preservesLinks = false {
+        didSet { updateText() }
+    }
+    var bodyFontOverride: UIFont? {
         didSet { updateText() }
     }
 
@@ -1048,15 +1059,55 @@ final class PremiumAgreementView: UIView {
             return
         }
 
+        if let bodyFontOverride {
+            applyBodyFontOverride(bodyFontOverride)
+            return
+        }
+
         _ = AgreementTextFormatter.apply(
             to: bodyLabel,
             text: bodyText,
             isExpanded: isExpanded,
             widthFallback: bodyWidthFallback(),
-            allowsViewMore: !showsCheckbox,
+            allowsViewMore: !showsCheckbox || showsInlineToggleWithCheckbox,
+            separatesToggleLine: separatesInlineToggleLine,
             expandedAttributedText: bodyAttributedText,
             preservesLinks: preservesLinks || style != .plain
         )
+        applyTextColor()
+        updateToggleButton(isVisible: false, title: nil)
+        invalidateIntrinsicContentSize()
+        reportHeightIfNeeded(animated: false)
+        superview?.setNeedsLayout()
+    }
+
+    private func applyBodyFontOverride(_ font: UIFont) {
+        let attributed = NSMutableAttributedString(
+            attributedString: bodyAttributedText ?? NSAttributedString(string: bodyText)
+        )
+        attributed.trimTrailingWhitespaceAndNewlines()
+        guard attributed.length > 0 else {
+            bodyLabel.attributedText = nil
+            bodyLabel.text = ""
+            bodyLabel.numberOfLines = 0
+            updateToggleButton(isVisible: false, title: nil)
+            reportHeightIfNeeded(animated: false)
+            return
+        }
+
+        let fullRange = NSRange(location: 0, length: attributed.length)
+        attributed.enumerateAttribute(.font, in: fullRange, options: []) { value, range, _ in
+            let sourceFont = value as? UIFont
+            let isBold = sourceFont?.fontDescriptor.symbolicTraits.contains(.traitBold) == true
+            attributed.addAttribute(
+                .font,
+                value: isBold ? Constant.Font.geistSemiBold(size: font.pointSize) : font,
+                range: range
+            )
+        }
+        bodyLabel.numberOfLines = 0
+        bodyLabel.lineBreakMode = .byWordWrapping
+        bodyLabel.attributedText = attributed
         applyTextColor()
         updateToggleButton(isVisible: false, title: nil)
         invalidateIntrinsicContentSize()
@@ -1096,7 +1147,7 @@ final class PremiumAgreementView: UIView {
 
         if !body.isEmpty {
             if !title.isEmpty { height += 6 }
-            let bodyFont = Constant.Font.geistRegular(size: 10)
+            let bodyFont = bodyFontOverride ?? Constant.Font.geistRegular(size: 10)
             let needsToggle = shouldShowToggle()
             let bodyHeight = bodyLabel.attributedText?.boundingRect(
                 with: CGSize(width: width, height: .greatestFiniteMagnitude),
@@ -1190,7 +1241,10 @@ final class PremiumAgreementView: UIView {
     }
 
     private func collapsedHeight(for font: UIFont) -> CGFloat {
-        AgreementTextFormatter.collapsedHeight()
+        let toggleLineHeight = separatesInlineToggleLine
+            ? ceil(Constant.Font.geistMedium(size: 10).lineHeight)
+            : 0
+        return AgreementTextFormatter.collapsedHeight() + toggleLineHeight
     }
 
     @objc private func onCheckTap() {

@@ -346,7 +346,11 @@ final class OnBoardingPresenter {
     }
     
     static func deleteUser(completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
-        AFWrapper.deleteRequest(APIBuilder.deleteUserURL, headers: Header.header()) { _ in
+        AFWrapper.deleteRequest(
+            APIBuilder.deleteUserURL,
+            headers: Header.header(),
+            shouldForceLogout: false
+        ) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {

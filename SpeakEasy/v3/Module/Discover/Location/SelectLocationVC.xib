@@ -59,7 +59,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick a City" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61G-xF-YOf">
-                            <rect key="frame" x="134.33333333333334" y="7" width="96.666666666666657" height="26"/>
+                            <rect key="frame" x="133" y="7" width="99.666666666666686" height="26"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -149,7 +149,7 @@
                                     </constraints>
                                 </imageView>
                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Cities" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="KNh-Bj-FTs">
-                                    <rect key="frame" x="35" y="13" width="292" height="22"/>
+                                    <rect key="frame" x="35" y="13" width="288" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
@@ -218,10 +218,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K4g-Re-bjJ" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                                    <rect key="frame" x="161.33333333333334" y="17" width="91" height="21"/>
+                                    <rect key="frame" x="161.33333333333334" y="17" width="100.00000000000003" height="21"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary Location" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQs-qN-An1">
-                                            <rect key="frame" x="8" y="4" width="75" height="13"/>
+                                            <rect key="frame" x="8" y="4" width="84" height="13"/>
                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="10"/>
                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -229,7 +229,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="glassWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="91" id="1mV-dq-QtM"/>
+                                        <constraint firstAttribute="width" constant="100" id="1mV-dq-QtM"/>
                                         <constraint firstAttribute="height" constant="21" id="9jR-0K-AwS"/>
                                         <constraint firstItem="ZQs-qN-An1" firstAttribute="top" secondItem="K4g-Re-bjJ" secondAttribute="top" constant="4" id="Dyi-vw-a4y"/>
                                         <constraint firstItem="ZQs-qN-An1" firstAttribute="leading" secondItem="K4g-Re-bjJ" secondAttribute="leading" constant="8" id="Nb0-6i-YxG"/>
@@ -327,7 +327,7 @@
                                     </constraints>
                                 </imageView>
                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Cities" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="Ekl-Lr-G0Z">
-                                    <rect key="frame" x="34" y="7.6666666666666856" width="293" height="22"/>
+                                    <rect key="frame" x="34" y="7.6666666666666856" width="289" height="22"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="14"/>

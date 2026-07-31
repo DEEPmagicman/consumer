@@ -94,6 +94,7 @@ final class OrderListViewController: UIViewController {
     private let feesAndTaxesShimmerView = UIView()
     private var feesAndTaxesShimmerBlocks: [ShimmerViewV3] = []
     private var isFeesAndTaxesLoading = false
+    private var hasAutoExpandedFeesAndTaxes = false
 
     // MARK: - Data state
     private var feesAndTaxes: [FeeDisplayItem] = []
@@ -868,6 +869,18 @@ final class OrderListViewController: UIViewController {
         }
     }
 
+    private func autoExpandFeesAndTaxesIfNeeded() {
+        guard !hasAutoExpandedFeesAndTaxes, !feesAndTaxes.isEmpty else { return }
+
+        hasAutoExpandedFeesAndTaxes = true
+        feesAndTaxesHiddenView.isHidden = false
+        feesAndTaxesHiddenView.alpha = 1
+        feesAndTaxesHiddenView.transform = .identity
+        feesDropDowenIc.transform = CGAffineTransform(rotationAngle: .pi)
+        feesAndTaxesTableView.layoutIfNeeded()
+        feesAndTaxesTableViewHeight.constant = feesAndTaxesTableView.contentSize.height
+    }
+
     private func updateFreeTicketUI() {
         paymentTypeView.isHidden = true
         paymentTypeView.isUserInteractionEnabled = !isFreeTicket && paymentSheet != nil
@@ -1074,8 +1087,12 @@ final class OrderListViewController: UIViewController {
 
     private func showCancelTransactionPrompt() {
         guard !isPaymentInitiated, !isCancellingTransaction else { return }
-        presentTransactionCancelConfirmation { [weak self] in
-            self?.cancelBookingAndReturnToEventDetails()
+        presentTransactionCancelConfirmation { [weak self] cancelPrompt in
+            guard let self else {
+                cancelPrompt.finishCancelTransaction()
+                return
+            }
+            self.cancelBookingAndReturnToEventDetails(cancelPrompt: cancelPrompt)
         }
     }
 
@@ -1084,26 +1101,42 @@ final class OrderListViewController: UIViewController {
         AppHaptic.warning()
     }
 
-    private func cancelBookingAndReturnToEventDetails() {
+    private func cancelBookingAndReturnToEventDetails(
+        cancelPrompt: TransactionCancelPopupVC? = nil
+    ) {
         guard !isCancellingTransaction else { return }
         isCancellingTransaction = true
         countdownTimer?.invalidate()
 
+        let finishAndReturn: () -> Void = { [weak self] in
+            guard let self else { return }
+            self.isCancellingTransaction = false
+            let returnAction = { [weak self] in
+                guard let self else { return }
+                self.notifyEventDetailsTransactionCanceled()
+                self.returnToEventDetails(animated: false)
+            }
+
+            if let cancelPrompt {
+                cancelPrompt.finishCancelTransaction(afterDismiss: returnAction)
+            } else {
+                self.hideReturnLoading()
+                returnAction()
+            }
+        }
+
         guard let bookingId, !bookingId.isEmpty else {
-            isCancellingTransaction = false
-            notifyEventDetailsTransactionCanceled()
-            returnToEventDetails(animated: false)
+            finishAndReturn()
             return
         }
 
-        showReturnLoading()
+        if cancelPrompt == nil {
+            showReturnLoading()
+        }
         paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
-                self.isCancellingTransaction = false
-                self.hideReturnLoading()
-                self.notifyEventDetailsTransactionCanceled()
-                self.returnToEventDetails(animated: false)
+                finishAndReturn()
             }
         }
     }
@@ -1149,7 +1182,10 @@ final class OrderListViewController: UIViewController {
         guard let bookingId else { return }
 
         let coverTickets = buildCoverTicketsForPaymentIntent()
-        showFeesAndTaxesShimmer()
+        let shouldShowFeesShimmer = promoCode.isEmpty && paymentDetail == nil && feesAndTaxes.isEmpty
+        if shouldShowFeesShimmer {
+            showFeesAndTaxesShimmer()
+        }
 
         paymentService.createPaymentIntent(
             bookingId: bookingId,
@@ -1272,6 +1308,7 @@ final class OrderListViewController: UIViewController {
         feesAndTaxes = buildFeesArray(from: detail)
         feesAndTaxesTableView.reloadData()
         updateFeesAndTaxesVisibility()
+        autoExpandFeesAndTaxesIfNeeded()
         let containsTax = hasSalesTax(detail)
         updateFeesAndTaxesTitle(hasTax: containsTax)
         setTaxIncludedVisible(containsTax)

@@ -798,8 +798,12 @@ final class TicketCheckoutVC: UIViewController {
 
     private func showCancelTransactionPrompt() {
         guard !isPaymentInitiated, !isPromoRequestInProgress, !isCancellingTransaction else { return }
-        presentTransactionCancelConfirmation { [weak self] in
-            self?.cancelBookingAndReturnToEventDetails()
+        presentTransactionCancelConfirmation { [weak self] cancelPrompt in
+            guard let self else {
+                cancelPrompt.finishCancelTransaction()
+                return
+            }
+            self.cancelBookingAndReturnToEventDetails(cancelPrompt: cancelPrompt)
         }
     }
 
@@ -809,7 +813,9 @@ final class TicketCheckoutVC: UIViewController {
         cancelBookingAndReturnToEventDetails()
     }
 
-    private func cancelBookingAndReturnToEventDetails() {
+    private func cancelBookingAndReturnToEventDetails(
+        cancelPrompt: TransactionCancelPopupVC? = nil
+    ) {
         guard !isCancellingTransaction else { return }
         isCancellingTransaction = true
         setScreenInteractionBlocked(true)
@@ -818,8 +824,18 @@ final class TicketCheckoutVC: UIViewController {
             guard let self else { return }
             self.isCancellingTransaction = false
             self.setScreenInteractionBlocked(false)
-            self.notifyEventDetailsTransactionCanceled()
-            self.returnToEventDetails(animated: false)
+
+            let returnAction = { [weak self] in
+                guard let self else { return }
+                self.notifyEventDetailsTransactionCanceled()
+                self.returnToEventDetails(animated: false)
+            }
+
+            if let cancelPrompt {
+                cancelPrompt.finishCancelTransaction(afterDismiss: returnAction)
+            } else {
+                returnAction()
+            }
         }
     }
 

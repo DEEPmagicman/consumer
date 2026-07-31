@@ -167,9 +167,8 @@ final class DeleteAccountBottomSheetVC: UIViewController {
             self.deleteBtn.stopLoading()
             if isSuccess {
                 AppHaptic.success()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.dismissSheet()
-                    UserDefault.shared.emptyData()
+                UserDefault.shared.emptyData()
+                self.dismissSheet {
                     AppDelegate.shared.changeRootViewController()
                 }
             } else {

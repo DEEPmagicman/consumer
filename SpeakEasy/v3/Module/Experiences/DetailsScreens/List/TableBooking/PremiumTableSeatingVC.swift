@@ -820,6 +820,10 @@ private extension PremiumTableSeatingVC {
         let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
 
         setCheckoutLoading(true)
+        WebSocketWrapper.shared.connectTableBookingQueue(
+            queueId: queueId,
+            venueId: event.venue?.id
+        )
 
         tableService.createSeatingAreaBooking(
             eventId: event.id,
@@ -851,6 +855,7 @@ private extension PremiumTableSeatingVC {
                     vc.promotionLinkUniqueCode = self.promotionLinkUniqueCode
                     self.navigationController?.pushViewController(vc, animated: false)
                 } else {
+                    WebSocketWrapper.shared.disconnectTableBookingQueue()
                     AppHaptic.error()
                     Alert.showToast(message ?? Constant.String.somethingWrong)
                 }

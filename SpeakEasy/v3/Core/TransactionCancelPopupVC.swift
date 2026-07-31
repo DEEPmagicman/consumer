@@ -13,14 +13,14 @@ final class TransactionCancelPopupVC: UIViewController {
     private let subtitleText: String
     private let keepTitle: String
     private let cancelTitle: String
-    private let onCancelTransaction: () -> Void
+    private let onCancelTransaction: (TransactionCancelPopupVC) -> Void
 
     init(
         title: String = "Cancel Transaction?",
         subtitle: String = "Your reserved tickets will be released and this checkout will close.",
         keepTitle: String = "Continue to Checkout",
         cancelTitle: String = "Cancel Transaction",
-        onCancelTransaction: @escaping () -> Void
+        onCancelTransaction: @escaping (TransactionCancelPopupVC) -> Void
     ) {
         self.titleText = title
         self.subtitleText = subtitle
@@ -166,12 +166,15 @@ final class TransactionCancelPopupVC: UIViewController {
         dismissSheet()
     }
 
+    func finishCancelTransaction(afterDismiss: (() -> Void)? = nil) {
+        dismissSheet(completion: afterDismiss)
+    }
+
     @objc private func onClickCancelTransaction() {
         AppHaptic.destructive()
         keepCheckoutBtn.isUserInteractionEnabled = false
         cancelTransactionBtn.showLoader(userInteraction: false)
-        let completion = onCancelTransaction
-        dismissSheet(completion: completion)
+        onCancelTransaction(self)
     }
 }
 
@@ -180,7 +183,7 @@ extension UIViewController {
     func presentTransactionCancelConfirmation(
         title: String = "Cancel Transaction?",
         subtitle: String = "Your reserved tickets will be released and this checkout will close.",
-        onCancelTransaction: @escaping () -> Void
+        onCancelTransaction: @escaping (TransactionCancelPopupVC) -> Void
     ) {
         let vc = TransactionCancelPopupVC(
             title: title,

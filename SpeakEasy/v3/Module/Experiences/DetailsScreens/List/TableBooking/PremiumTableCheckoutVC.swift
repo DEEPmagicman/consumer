@@ -400,6 +400,8 @@ private extension PremiumTableCheckoutVC {
         termsAgreementView.style = .whiteCard
         termsAgreementView.titleText = nil
         termsAgreementView.showsCheckbox = true
+        termsAgreementView.showsInlineToggleWithCheckbox = true
+        termsAgreementView.separatesInlineToggleLine = true
         termsAgreementView.isChecked = true
         termsAgreementView.translatesAutoresizingMaskIntoConstraints = false
         termsAgreementView.isHidden = true
@@ -800,15 +802,23 @@ private extension PremiumTableCheckoutVC {
 
     func configureAfterBooking(_ b: SeatingAreaBookingResponse) {
         configureSelectedTableData(from: b)
-        configureSummaryPrice(total: nil)
         if !paymentIntentSecret.isEmpty {
             setupStripe(secret: paymentIntentSecret, ephemeralKey: ephemeralKey)
         }
 
         let spendAgreement = b.content?.tableBooking?.spendAgreement
         guard let breakdown = b.content?.tableBooking?.tableBookingPriceBreakdown else {
+            let backendDeposit = backendDepositForDisplay(from: b)
+            if let deposit = backendDeposit {
+                configureSummaryPrice(total: deposit)
+            } else {
+                showPendingPriceState()
+            }
             configureSpendAgreementCard(spendAgreement, depositBreakdown: nil)
             updatePriceSectionVisibility(hasDepositBreakdown: false)
+            if backendDeposit == nil && backendSpendAgreementItems.isEmpty {
+                summaryPriceCard.isHidden = true
+            }
             showContent()
             return
         }
@@ -946,18 +956,22 @@ private extension PremiumTableCheckoutVC {
             :  CurrencyFormatter.amount(total, symbol: currency, position: currencyPosition)
     }
 
+    func showPendingPriceState() {
+        bottomPrice.text = "--"
+        summaryPriceCard.isHidden = true
+    }
+
     func showInitialContent() {
         configureHeader()
         configureGuest()
 
         if let booking,
-           booking.status.lowercased() == "payment" ||
-           booking.content?.tableBooking?.tableBookingPriceBreakdown != nil ||
-           booking.content?.tableBooking?.spendAgreement != nil {
+           booking.status.lowercased() == "payment" {
             configureAfterBooking(booking)
             return
         }
 
+        showPendingPriceState()
         setPriceLoadingVisible(true)
         guestDisplayRow.isHidden = false
         noteRow.isHidden         = false
@@ -1080,6 +1094,16 @@ private extension PremiumTableCheckoutVC {
         if spendCard.isHidden {
             updatePriceSectionVisibility(hasDepositBreakdown: false)
         }
+    }
+
+    func backendDepositForDisplay(from booking: SeatingAreaBookingResponse) -> Double? {
+        if let total = booking.content?.tableBooking?.tableBookingPriceBreakdown?.total {
+            return total
+        }
+
+        let calculatedDeposits = booking.items.compactMap(\.calculatedDeposit)
+        guard !calculatedDeposits.isEmpty else { return nil }
+        return calculatedDeposits.reduce(0, +)
     }
 
     func updatePriceSectionVisibility(hasDepositBreakdown: Bool) {

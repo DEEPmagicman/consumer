@@ -76,7 +76,6 @@ final class CoverTicketListVC: UIViewController {
     private var currentStep: FlowStep = .coverTickets
     private var tableViewHeightObserver: NSKeyValueObservation?
     private var lastTableContentHeight: CGFloat = 0
-    private var isCheckoutNavigationInProgress = false
     private var isFreeBookingInProgress = false
     private var isSocketRefreshInProgress = false
 
@@ -228,11 +227,8 @@ final class CoverTicketListVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        isCheckoutNavigationInProgress = false
-        if !isFreeBookingInProgress {
-            continueToCheckoutBtn.hideLoader()
-            updateCheckoutState()
-        }
+        resetCheckoutButtonLoadingIfNeeded()
+        updateCheckoutState()
         registerSocketDelegate()
     }
 
@@ -1018,6 +1014,7 @@ private extension CoverTicketListVC {
             self.setupScreen()
 
             if clearSelection {
+                self.resetCheckoutButtonLoadingIfNeeded()
                 self.coverTicketCount.removeAll()
                 self.upSellTicketCount.removeAll()
                 self.configureInitialFlowStep()
@@ -1121,6 +1118,8 @@ private extension CoverTicketListVC {
         bookingType = hasPaidCoverTicket ? .PAID : .FREE
         if isFreeBookingInProgress {
             continueToCheckoutBtn.showLoader()
+        } else {
+            continueToCheckoutBtn.isUserInteractionEnabled = true
         }
 
         animateCheckoutBar(show: shouldShow)
@@ -1197,10 +1196,8 @@ private extension CoverTicketListVC {
     }
 
     func proceedToFinalCheckout() {
-        guard !isCheckoutNavigationInProgress else { return }
         guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else { return }
 
-        isCheckoutNavigationInProgress = true
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
             Navigate.to.coverCheckOutVC(
                 self,
@@ -1212,7 +1209,7 @@ private extension CoverTicketListVC {
                 doormanId: doormanId
             )
         } else {
-            beginFreeBookingAfterUIUpdate()
+            createFreeBooking()
         }
     }
 
@@ -1239,12 +1236,13 @@ extension CoverTicketListVC {
     }
 
     func resetForFreshPurchase() {
+        resetCheckoutButtonLoadingIfNeeded()
         configureInitialFlowStep()
         coverTicketCount.removeAll()
         clearUpsellSelection()
         expandedIndexSet.removeAll()
         continueToCheckoutBtn.hideLoader()
-        isCheckoutNavigationInProgress = false
+        continueToCheckoutBtn.isUserInteractionEnabled = true
         isFreeBookingInProgress = false
         view.isUserInteractionEnabled = true
         tableView.reloadData()
@@ -1274,6 +1272,13 @@ extension CoverTicketListVC {
         upSellTicketCount.removeAll()
     }
 
+    private func resetCheckoutButtonLoadingIfNeeded() {
+        guard !isFreeBookingInProgress else { return }
+        view.isUserInteractionEnabled = true
+        continueToCheckoutBtn.hideLoader()
+        continueToCheckoutBtn.isUserInteractionEnabled = true
+    }
+
     @IBAction func onClickShare(_ sender: Any) {
         AppHaptic.navigation()
         let venueName = venueDetails?.name ?? "Partner"
@@ -1290,7 +1295,7 @@ extension CoverTicketListVC {
     }
 
     private func onClickContinueBtn() {
-        guard !isCheckoutNavigationInProgress else { return }
+        guard !isFreeBookingInProgress else { return }
 
         AppHaptic.primaryAction()
         LoginRequiredCoordinator.perform(from: self) { [weak self] in
@@ -1319,8 +1324,6 @@ extension CoverTicketListVC {
             }
         case .addOns:
             guard !selectedCoverTickets.isEmpty || !selectedAddOns.isEmpty else {
-                navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-                navigationController?.navigationBar.shadowImage = nil
                 Navigate.to.back(self)
                 return
             }
@@ -1362,7 +1365,6 @@ extension CoverTicketListVC {
                 )
             } else {
                 self.continueToCheckoutBtn.hideLoader()
-                self.isCheckoutNavigationInProgress = false
                 self.isFreeBookingInProgress = false
                 self.view.isUserInteractionEnabled = true
                 Alert.showAlertSheet(
@@ -1371,12 +1373,6 @@ extension CoverTicketListVC {
                     message: ""
                 )
             }
-        }
-    }
-
-    private func beginFreeBookingAfterUIUpdate() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
-            self?.createFreeBooking()
         }
     }
 

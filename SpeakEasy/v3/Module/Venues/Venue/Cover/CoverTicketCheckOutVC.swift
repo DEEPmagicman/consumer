@@ -99,6 +99,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
     private var hasPlayedTicketCardEntryAnimation = false
+    private var hasStartedInitialPricingLoad = false
     private var didInstallVenueAgreementRow = false
     private var loadedHeaderImageURLString: String?
     private var loadedLogoURLString: String?
@@ -177,13 +178,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         setupInteractionBlocker()
         hideScrollIndicators(in: view)
         setPricingLoading(true, animated: false)
-
-        if !selectedCoverTickets.isEmpty && hasPaidCoverSelection {
-            createBooking()
-        } else {
-            isBookingLoaded = true
-            getAddOnsPaymentIntent(bookingId: "")
-        }
         setupTermsText()
     }
     
@@ -201,6 +195,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         playTicketCardEntryAnimationIfNeeded()
         WebSocketWrapper.shared.addDelegate(self) 
+        startInitialPricingLoadIfNeeded()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -312,6 +307,18 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         guard !hasPlayedTicketCardEntryAnimation else { return }
         hasPlayedTicketCardEntryAnimation = true
         imageParentView.playEntryAnimation()
+    }
+
+    private func startInitialPricingLoadIfNeeded() {
+        guard !hasStartedInitialPricingLoad else { return }
+        hasStartedInitialPricingLoad = true
+
+        if !selectedCoverTickets.isEmpty && hasPaidCoverSelection {
+            createBooking()
+        } else {
+            isBookingLoaded = true
+            getAddOnsPaymentIntent(bookingId: "")
+        }
     }
 
     private func setupCheckoutBar() {
@@ -1192,32 +1199,49 @@ extension CoverTicketCheckOutVC {
         }
     }
 
-    private func cancelBooking() {
+    private func cancelBooking(cancelPrompt: TransactionCancelPopupVC? = nil) {
         guard !isCancellingTransaction else { return }
         countdownTimer?.invalidate()
         isCancellingTransaction = true
         setScreenInteractionBlocked(true)
 
+        let finishAndReturn: () -> Void = { [weak self] in
+            guard let self else { return }
+            self.isCancellingTransaction = false
+            self.setScreenInteractionBlocked(false)
+
+            let returnAction = { [weak self] in
+                guard let self else { return }
+                self.returnToCoverFlow(animated: false)
+            }
+
+            if let cancelPrompt {
+                cancelPrompt.finishCancelTransaction(afterDismiss: returnAction)
+            } else {
+                returnAction()
+            }
+        }
+
         guard !bookingId.isEmpty else {
-            isCancellingTransaction = false
-            setScreenInteractionBlocked(false)
-            returnToCoverFlow(animated: false)
+            finishAndReturn()
             return
         }
         paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
                 guard let self else { return }
-                self.isCancellingTransaction = false
-                self.setScreenInteractionBlocked(false)
-                self.returnToCoverFlow(animated: false)
+                finishAndReturn()
             }
         }
     }
 
     private func showCancelTransactionPrompt() {
         guard !isPaymentInitiated, !isCancellingTransaction else { return }
-        presentTransactionCancelConfirmation { [weak self] in
-            self?.cancelBooking()
+        presentTransactionCancelConfirmation { [weak self] cancelPrompt in
+            guard let self else {
+                cancelPrompt.finishCancelTransaction()
+                return
+            }
+            self.cancelBooking(cancelPrompt: cancelPrompt)
         }
     }
 

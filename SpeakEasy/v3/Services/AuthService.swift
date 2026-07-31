@@ -338,7 +338,8 @@ final class AuthService {
         
         AFWrapper.deleteRequest(
             APIBuilder.deleteUserURL,
-            headers: Header.header()
+            headers: Header.header(),
+            shouldForceLogout: false
         ) { _ in
             
             completion(true, nil)

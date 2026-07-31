@@ -22,6 +22,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let dismissButton = UIButton(type: .system)
+    private let premiumPopupGradientLayer = CAGradientLayer()
     private var appliedPremiumGradientBounds: CGRect = .zero
 
     // MARK: - Lifecycle
@@ -53,19 +54,21 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
         // Popup card
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.fillColor = UIColor(hex: "#070808", alpha: 0.98).cgColor
+        popupView.fillColor = UIColor.clear.cgColor
         popupView.showsBlur = false
         popupView.blurAlpha = 0
         popupView.cornerRadius = 34
+        popupView.glassCornerRadius = 34
         popupView.layer.cornerCurve = .continuous
         popupView.clipsToBounds = true
         view.addSubview(popupView)
 
         popupBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        popupBackgroundView.backgroundColor = UIColor(hex: "#070808")
+        popupBackgroundView.backgroundColor = .clear
         popupBackgroundView.isUserInteractionEnabled = false
-        popupBackgroundView.layer.masksToBounds = true
+        popupBackgroundView.clipsToBounds = true
         popupView.insertSubview(popupBackgroundView, at: 0)
+        popupBackgroundView.layer.insertSublayer(premiumPopupGradientLayer, at: 0)
 
         // Icon
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -180,21 +183,20 @@ final class PremiumExperiencesPopupVC: UIViewController {
     private func applyPremiumPopupBackgroundIfNeeded() {
         guard appliedPremiumGradientBounds != popupBackgroundView.bounds else { return }
         appliedPremiumGradientBounds = popupBackgroundView.bounds
-        popupBackgroundView.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
 
-        let gradient = CAGradientLayer()
-        gradient.colors = [
+        premiumPopupGradientLayer.colors = [
             UIColor(hex: "#3E2C01").cgColor,
             UIColor(hex: "#362702").cgColor,
             UIColor(hex: "#171104").cgColor,
+            UIColor(hex: "#070808").cgColor,
             UIColor(hex: "#070808").cgColor
         ]
-        gradient.locations = [0.0, 0.34, 0.62, 1.0]
-        gradient.startPoint = CGPoint(x: 0.5, y: 0)
-        gradient.endPoint = CGPoint(x: 0.5, y: 1)
-        gradient.frame = popupBackgroundView.bounds
-        gradient.masksToBounds = true
-        popupBackgroundView.layer.insertSublayer(gradient, at: 0)
+        premiumPopupGradientLayer.locations = [0.0, 0.24, 0.40, 0.70, 1.0]
+        premiumPopupGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        premiumPopupGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        premiumPopupGradientLayer.frame = popupBackgroundView.bounds
+        premiumPopupGradientLayer.cornerRadius = popupView.glassCornerRadius
+        premiumPopupGradientLayer.masksToBounds = true
     }
 
     // MARK: - Animation

@@ -310,6 +310,60 @@ final class PaymentService {
         }.resume()
     }
 
+    // MARK: - Apple Wallet
+
+    func fetchEventAppleWalletPass(
+        bookingId: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ data: Data?
+        ) -> Void
+    ) {
+        fetchAppleWalletPass(
+            url: APIBuilder.eventAppleWallet(bookingId),
+            completion: completion
+        )
+    }
+
+    func fetchCoverAppleWalletPass(
+        bookingId: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ data: Data?
+        ) -> Void
+    ) {
+        fetchAppleWalletPass(
+            url: APIBuilder.coverAppleWallet(bookingId),
+            completion: completion
+        )
+    }
+
+    private func fetchAppleWalletPass(
+        url: String,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ data: Data?
+        ) -> Void
+    ) {
+        AFWrapper.getDataRequest(
+            url,
+            headers: Header.header()
+        ) { data in
+            completion(true, nil, data)
+        } failure: { error in
+            if let err = error as NSError?,
+               err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, nil, nil)
+        }
+    }
+
     // MARK: - Booking
 
     func checkEventTicketStock(

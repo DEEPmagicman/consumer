@@ -60,6 +60,8 @@ final class WebSocketWrapper: NSObject {
     private var currentVenueId: String?
     private var currentTableBookingQueueId: String?
     private var registeredTableBookingQueueId: String?
+    private var lastTableBookingQueueId: String?
+    private var lastTableBookingQueueUpdate: SeatingAreaBookingResponse?
     
     private var _delegates: [WeakDelegateBox] = []
     private var _bookingQueueDelegates: [WeakDelegateBox] = []
@@ -106,6 +108,11 @@ final class WebSocketWrapper: NSObject {
         let normalizedQueueId = queueId.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normalizedQueueId.isEmpty else { return }
 
+        if currentTableBookingQueueId != normalizedQueueId {
+            lastTableBookingQueueId = nil
+            lastTableBookingQueueUpdate = nil
+        }
+
         if let delegate {
             addBookingQueueDelegate(delegate)
         }
@@ -123,6 +130,14 @@ final class WebSocketWrapper: NSObject {
         if isSocketConnected {
             reconnectTableBookingQueue()
         }
+
+        if let delegate,
+           lastTableBookingQueueId == normalizedQueueId,
+           let lastTableBookingQueueUpdate {
+            DispatchQueue.main.async {
+                delegate.didUpdateQueue(seatingAreaBooking: lastTableBookingQueueUpdate)
+            }
+        }
     }
 
     func disconnectTableBookingQueue(delegate: BookingQueueSocketDelegate? = nil) {
@@ -135,6 +150,8 @@ final class WebSocketWrapper: NSObject {
         guard bookingQueueDelegates.isEmpty else { return }
 
         currentTableBookingQueueId = nil
+        lastTableBookingQueueId = nil
+        lastTableBookingQueueUpdate = nil
         removeTableBookingQueueListeners()
     }
     
@@ -421,10 +438,12 @@ private extension WebSocketWrapper {
 
         socket.on(queueId) { [weak self] data, _ in
             self?.handleTableBookingQueueUpdate(data)
+            print(data)
         }
 
         socket.on(TableBookingQueueEvent.reconnect) { [weak self] data, _ in
             self?.handleTableBookingQueueUpdate(data)
+            print(data)
         }
 
         registeredTableBookingQueueId = queueId
@@ -452,6 +471,9 @@ private extension WebSocketWrapper {
             print("Queue parsing failed")
             return
         }
+
+        lastTableBookingQueueId = currentTableBookingQueueId
+        lastTableBookingQueueUpdate = booking
 
         DispatchQueue.main.async {
             self.bookingQueueDelegates.forEach {

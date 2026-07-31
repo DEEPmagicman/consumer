@@ -458,8 +458,73 @@ final class AFWrapper: NSObject {
             debugPrint(req)
         }
     }
+
+    static func getDataRequest(
+        _ strURL: String,
+        params: [String: Any]? = nil,
+        headers: [String: String]?,
+        success: @escaping (Data) -> Void,
+        failure: @escaping DefaultAPIFailureClosure
+    ) {
+        if !Connectivity.isConnectedToInternet {
+            failure(noInternetError)
+            return
+        }
+
+        let req = Alamofire.request(
+            strURL,
+            method: .get,
+            parameters: params,
+            headers: Header.updateToken(headers)
+        ).responseData { response in
+            if let responseCode = response.response?.statusCode {
+                if responseCode == 200 || responseCode == 201,
+                   let data = response.data,
+                   !data.isEmpty {
+                    success(data)
+                } else if responseCode == 401 {
+                    TokenManager.shared.addPendingRequest {
+                        self.getDataRequest(
+                            strURL,
+                            params: params,
+                            headers: headers,
+                            success: success,
+                            failure: failure
+                        )
+                    }
+                    TokenManager.shared.refreshToken { success in
+                        if !success {
+                            forceLogout()
+                        }
+                    }
+                } else if let value = response.data,
+                          let responseObject = try? JSONSerialization.jsonObject(with: value) {
+                    let errorResponse = errorHandling(responseObject)
+                    failure(
+                        NSError(
+                            domain: errorResponse.1,
+                            code: errorResponse.0 == true ? 0 : 1,
+                            userInfo: [:]
+                        )
+                    )
+                } else {
+                    failure(networkFailureError(response.result.error))
+                }
+            } else {
+                failure(networkFailureError(response.result.error))
+            }
+        }
+        debugPrint(req)
+    }
     
-    static func deleteRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func deleteRequest(
+        _ strURL: String,
+        params: [String: Any]? = nil,
+        headers: [String: String]?,
+        shouldForceLogout: Bool = true,
+        success: @escaping DefaultAPISuccessClosure,
+        failure: @escaping DefaultAPIFailureClosure
+    ) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
@@ -479,15 +544,17 @@ final class AFWrapper: NSObject {
                         }
                         let decryptedResponse = encryptedResponse.decrypted()
                         success(decryptedResponse)
-                    } else if responseCode == 401 {
+                    } else if shouldForceLogout && responseCode == 401 {
                         TokenManager.shared.addPendingRequest( {
-                            self.deleteRequest(strURL, params: encryptedParams, headers: headers, success: success, failure: failure)
+                            self.deleteRequest(strURL, params: encryptedParams, headers: headers, shouldForceLogout: shouldForceLogout, success: success, failure: failure)
                         })
                         TokenManager.shared.refreshToken { success in
                             if !success {
                                 forceLogout()
                             }
                         }
+                    } else if responseCode == 401 {
+                        failure(networkFailureError(response.result.error))
                     } else {
                         failure(networkFailureError(response.result.error))
                     }
@@ -607,6 +674,10 @@ final class AFWrapper: NSObject {
     }
     
     static func forceLogout() {
+        guard UserDefault.shared.user != nil ||
+              !(UserDefault.shared.accessToken ?? "").isEmpty else {
+            return
+        }
         Loader.hide()
         Utility.main.showAlert(message: Constant.String.sessionTimeOut, title: "") {
             UserDefault.shared.emptyData()

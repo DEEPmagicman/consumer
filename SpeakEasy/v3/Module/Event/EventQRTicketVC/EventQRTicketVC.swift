@@ -1201,16 +1201,6 @@ class EventQRTicketVC: UIViewController {
         let feeItems = buildOrderFeeItems(from: fees)
         let feesTotal = feeItems.reduce(0.0) { $0 + $1.amount }
         let total = booking?.totalPrice ?? fees?.total ?? subtotal + feesTotal
-        let shouldHideSubtotal = total <= 0
-
-        if !shouldHideSubtotal && subtotal > 0.005 {
-            orderSummaryStackView.addArrangedSubview(
-                makeOrderSummaryRow(
-                    title: "Subtotal",
-                    value: subtotal <= 0 ? "Free" : "$\(subtotal.decimalFormat(true))"
-                )
-            )
-        }
 
         if !feeItems.isEmpty {
             orderSummaryStackView.addArrangedSubview(
@@ -1223,6 +1213,7 @@ class EventQRTicketVC: UIViewController {
                         makeOrderSummaryRow(
                             title: item.title,
                             value: formattedAmount(item.amount),
+                            infoText: isProcessingFeeTitle(item.title) ? "This covers payment processing fees" : nil,
                             titleLeadingInset: 12
                         )
                     )
@@ -1286,10 +1277,15 @@ class EventQRTicketVC: UIViewController {
         return items
     }
 
+    private func isProcessingFeeTitle(_ title: String) -> Bool {
+        title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "processing fee"
+    }
+
     private func makeOrderSummaryRow(
         title: String,
         value: String,
         isTotal: Bool = false,
+        infoText: String? = nil,
         titleLeadingInset: CGFloat = 0
     ) -> UIView {
         let row = UIStackView()
@@ -1302,6 +1298,26 @@ class EventQRTicketVC: UIViewController {
         titleLabel.font = isTotal ? Constant.Font.geistSemiBold(size: 15) : Constant.Font.geistMedium(size: 14)
         titleLabel.textColor = isTotal ? .white : UIColor.white.withAlphaComponent(0.76)
         titleLabel.numberOfLines = 0
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        let titleStack = UIStackView()
+        titleStack.axis = .horizontal
+        titleStack.alignment = .center
+        titleStack.spacing = 6
+        titleStack.addArrangedSubview(titleLabel)
+
+        if let infoText = infoText?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !infoText.isEmpty {
+            let infoButton = UIButton(type: .system)
+            infoButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
+            infoButton.tintColor = UIColor.white.withAlphaComponent(0.85)
+            infoButton.accessibilityLabel = infoText
+            infoButton.addTarget(self, action: #selector(onClickProcessingFeeInfo), for: .touchUpInside)
+            infoButton.translatesAutoresizingMaskIntoConstraints = false
+            infoButton.widthAnchor.constraint(equalToConstant: 18).isActive = true
+            infoButton.heightAnchor.constraint(equalToConstant: 18).isActive = true
+            titleStack.addArrangedSubview(infoButton)
+        }
 
         let valueLabel = UILabel()
         valueLabel.text = value
@@ -1317,7 +1333,7 @@ class EventQRTicketVC: UIViewController {
             row.addArrangedSubview(spacer)
         }
 
-        row.addArrangedSubview(titleLabel)
+        row.addArrangedSubview(titleStack)
         row.addArrangedSubview(valueLabel)
         return row
     }
@@ -1785,6 +1801,10 @@ class EventQRTicketVC: UIViewController {
         renderOrderSummary()
     }
 
+    @objc private func onClickProcessingFeeInfo(_ sender: UIButton) {
+        Alert.showToast(sender.accessibilityLabel ?? "This covers payment processing fees")
+    }
+
     @objc private func onClickCheckInTicket(_ sender: UIButton) {
         guard !isCheckingInTicket else { return }
         guard let bookingId = booking?.id, !bookingId.isEmpty,
@@ -1912,8 +1932,7 @@ class EventQRTicketVC: UIViewController {
     }
 
     @objc private func onClickAddToWallet() {
-        guard let bookingId = booking?.id, !bookingId.isEmpty,
-              let url = URL(string: APIBuilder.eventAppleWallet(bookingId)) else {
+        guard let bookingId = booking?.id, !bookingId.isEmpty else {
             AppHaptic.error()
             Alert.showAlertSheet(style: .alert, title: "Booking not found", message: "")
             return
@@ -1931,12 +1950,13 @@ class EventQRTicketVC: UIViewController {
             return
         }
 
-        URLSession.shared.fetchData(at: url) { [weak self] data, _ in
+        paymentService.fetchEventAppleWalletPass(bookingId: bookingId) { [weak self] isSuccess, errMsg, data in
             guard let self else { return }
             DispatchQueue.main.async {
-                guard let data else {
+                guard isSuccess,
+                      let data else {
                     AppHaptic.error()
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     return
                 }
 

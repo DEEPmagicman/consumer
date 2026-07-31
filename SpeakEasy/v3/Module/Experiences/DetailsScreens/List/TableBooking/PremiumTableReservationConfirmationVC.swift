@@ -245,6 +245,7 @@ private extension PremiumTableReservationConfirmationVC {
         confirmationMessageView.preservesLinks = true
         confirmationMessageView.titleText = nil
         confirmationMessageView.showsCheckbox = false
+        confirmationMessageView.bodyFontOverride = Constant.Font.geistRegular(size: 14)
         confirmationMessageView.isChecked = true
         confirmationMessageView.translatesAutoresizingMaskIntoConstraints = false
         confirmationMessageView.onHeightChanged = { [weak self] height, animated in
@@ -666,7 +667,8 @@ private extension PremiumTableReservationConfirmationVC {
                     amountFont: Constant.Font.geistRegular(size: 14),
                     titleColor: UIColor.white.withAlphaComponent(0.75),
                     amountColor: UIColor.white.withAlphaComponent(0.75),
-                    leftInset: 18
+                    leftInset: 18,
+                    infoText: "This covers payment processing fees"
                 )
                 row.isHidden = !isFeesExpanded
                 feeDetailRows.append(row)
@@ -754,9 +756,69 @@ private extension PremiumTableReservationConfirmationVC {
     }
 
     func priceBreakdownCustomFees() -> [(title: String, amount: Double)] {
-        let fees = priceBreakdown?.tableBookingPriceBreakdownHasCustomFees?.isEmpty == false
-            ? priceBreakdown?.tableBookingPriceBreakdownHasCustomFees
-            : priceBreakdown?.customFees
+        guard let priceBreakdown else { return [] }
+        return customFees(from: priceBreakdown)
+    }
+
+    func spendAgreementRows(_ spendAgreement: PriceBreakdown) -> [ReservationOrderRow] {
+        var rows: [ReservationOrderRow] = []
+
+        if let base = spendAgreement.base {
+            rows.append(spendAgreementRow(
+                title: "Subtotal",
+                amount: base,
+                isBold: false
+            ))
+        }
+
+        if let gratuity = spendAgreement.gratuity, gratuity > 0 {
+            rows.append(spendAgreementRow(
+                title: spendAgreement.gratuityName?.isEmpty == false ? spendAgreement.gratuityName! : "Gratuity",
+                amount: gratuity,
+                isBold: false
+            ))
+        }
+
+        if let tax = spendAgreement.salesTax, tax > 0 {
+            rows.append(spendAgreementRow(
+                title: spendAgreement.salesTaxName?.isEmpty == false ? spendAgreement.salesTaxName! : "Sales Tax",
+                amount: tax,
+                isBold: false
+            ))
+        }
+
+        customFees(from: spendAgreement).forEach { fee in
+            rows.append(spendAgreementRow(
+                title: fee.title,
+                amount: fee.amount,
+                isBold: false
+            ))
+        }
+
+        if let total = spendAgreement.total {
+            rows.append(spendAgreementRow(
+                title: "Total",
+                amount: total,
+                isBold: true
+            ))
+        }
+
+        if let balance = spendAgreement.balanceDueAtVenue {
+            rows.append(spendAgreementRow(
+                title: "Balance Due at Partner",
+                amount: abs(balance),
+                isBold: true
+            ))
+        }
+
+        return rows
+    }
+
+    func customFees(from breakdown: PriceBreakdown) -> [(title: String, amount: Double)] {
+        let fees = breakdown.tableBookingPriceBreakdownHasCustomFees?.isEmpty == false
+            ? breakdown.tableBookingPriceBreakdownHasCustomFees
+            : breakdown.customFees
+
         return (fees ?? []).compactMap { fee in
             let amount = fee.fee ?? fee.customFee ?? 0
             guard amount > 0 else { return nil }
@@ -764,34 +826,21 @@ private extension PremiumTableReservationConfirmationVC {
         }
     }
 
-    func spendAgreementRows(_ spendAgreement: PriceBreakdown) -> [ReservationOrderRow] {
-        var rows: [ReservationOrderRow] = []
-        rows.append(
-            ReservationOrderRow(
-                title: "Subtotal",
-                amount: formatMoney(spendAgreement.base ?? 0),
-                titleFont: Constant.Font.geistRegular(size: 14),
-                amountFont: Constant.Font.geistRegular(size: 12)
-            )
+    func spendAgreementRow(
+        title: String,
+        amount: Double,
+        isBold: Bool,
+        infoText: String? = nil
+    ) -> ReservationOrderRow {
+        ReservationOrderRow(
+            title: title,
+            amount: formatMoney(amount),
+            titleFont: isBold ? Constant.Font.geistMedium(size: 14) : Constant.Font.geistRegular(size: 14),
+            amountFont: isBold ? Constant.Font.geistMedium(size: 14) : Constant.Font.geistRegular(size: 14),
+            titleColor: isBold ? .white : UIColor.white.withAlphaComponent(0.75),
+            amountColor: isBold ? .white : UIColor.white.withAlphaComponent(0.75),
+            infoText: infoText
         )
-        rows.append(
-            ReservationOrderRow(
-                title: "Total",
-                amount: formatMoney(spendAgreement.total ?? 0),
-                titleFont: Constant.Font.geistMedium(size: 14),
-                amountFont: Constant.Font.geistMedium(size: 14)
-            )
-        )
-        rows.append(
-            ReservationOrderRow(
-                title: "Balance Due at Partner",
-                amount: formatMoney(spendAgreement.balanceDueAtVenue ?? 0),
-                titleFont: Constant.Font.geistMedium(size: 14),
-                amountFont: Constant.Font.geistMedium(size: 14)
-            )
-        )
-
-        return rows
     }
 
     func shouldShowSpendAgreement(_ spendAgreement: PriceBreakdown) -> Bool {
@@ -1492,7 +1541,8 @@ private final class ReservationOrderRow: UIView {
         titleColor: UIColor = .white,
         amountColor: UIColor = .white,
         leftInset: CGFloat = 0,
-        showsChevron: Bool = false
+        showsChevron: Bool = false,
+        infoText: String? = nil
     ) {
         super.init(frame: .zero)
         setup(
@@ -1504,14 +1554,15 @@ private final class ReservationOrderRow: UIView {
             titleColor: titleColor,
             amountColor: amountColor,
             leftInset: leftInset,
-            showsChevron: showsChevron
+            showsChevron: showsChevron,
+            infoText: infoText
         )
     }
 
     required init?(coder: NSCoder) { fatalError() }
 
     func setChevronExpanded(_ isExpanded: Bool) {
-        chevron?.transform = isExpanded ? .identity : CGAffineTransform(rotationAngle: .pi)
+        chevron?.transform = isExpanded ? CGAffineTransform(rotationAngle: .pi / 2) : .identity
     }
 
     private func setup(
@@ -1523,7 +1574,8 @@ private final class ReservationOrderRow: UIView {
         titleColor: UIColor,
         amountColor: UIColor,
         leftInset: CGFloat,
-        showsChevron: Bool
+        showsChevron: Bool,
+        infoText: String?
     ) {
         rowTitle = title
 
@@ -1532,22 +1584,49 @@ private final class ReservationOrderRow: UIView {
         titleLabel.font = titleFont
         titleLabel.textColor = titleColor
         titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
         let titleLineStack = UIStackView(arrangedSubviews: [titleLabel])
         titleLineStack.axis = .horizontal
         titleLineStack.alignment = .center
-        titleLineStack.spacing = 7
+        titleLineStack.spacing = 6
+        titleLineStack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLineStack.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
+        let cleanInfoText = infoText?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !cleanInfoText.isEmpty {
+            let infoButton = UIButton(type: .system)
+            infoButton.setImage(
+                UIImage(
+                    systemName: "info.circle",
+                    withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .regular)
+                ),
+                for: .normal
+            )
+            infoButton.tintColor = UIColor.white.withAlphaComponent(0.78)
+            infoButton.accessibilityLabel = cleanInfoText
+            infoButton.contentEdgeInsets = .zero
+            infoButton.addTarget(self, action: #selector(onInfoTap), for: .touchUpInside)
+            infoButton.translatesAutoresizingMaskIntoConstraints = false
+            infoButton.setContentHuggingPriority(.required, for: .horizontal)
+            infoButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+            infoButton.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            infoButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            titleLineStack.addArrangedSubview(infoButton)
+        }
 
         if showsChevron {
             let configuration = UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
-            let image = UIImage(systemName: "chevron.up", withConfiguration: configuration)?
+            let image = UIImage(systemName: "chevron.right", withConfiguration: configuration)?
                 .withRenderingMode(.alwaysTemplate)
             let chevron = UIImageView(image: image)
             chevron.tintColor = UIColor.white.withAlphaComponent(0.76)
             chevron.contentMode = .scaleAspectFit
             chevron.translatesAutoresizingMaskIntoConstraints = false
-            chevron.widthAnchor.constraint(equalToConstant: 16).isActive = true
-            chevron.heightAnchor.constraint(equalToConstant: 12).isActive = true
+            chevron.widthAnchor.constraint(equalToConstant: 8).isActive = true
+            chevron.heightAnchor.constraint(equalToConstant: 13).isActive = true
             titleLineStack.addArrangedSubview(chevron)
             self.chevron = chevron
         }
@@ -1562,6 +1641,8 @@ private final class ReservationOrderRow: UIView {
         textStack.axis = .vertical
         textStack.spacing = 3
         textStack.translatesAutoresizingMaskIntoConstraints = false
+        textStack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        textStack.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
         let amountLabel = UILabel()
         amountLabel.text = amount
@@ -1570,6 +1651,8 @@ private final class ReservationOrderRow: UIView {
         amountLabel.textAlignment = .right
         amountLabel.isHidden = amount == nil
         amountLabel.translatesAutoresizingMaskIntoConstraints = false
+        amountLabel.setContentHuggingPriority(.required, for: .horizontal)
+        amountLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         addSubview(textStack)
         addSubview(amountLabel)
@@ -1592,6 +1675,12 @@ private final class ReservationOrderRow: UIView {
         }
 
         NSLayoutConstraint.activate(constraints)
+    }
+
+    @objc private func onInfoTap(_ sender: UIButton) {
+        guard let message = sender.accessibilityLabel,
+              !message.isEmpty else { return }
+        Alert.showToast(message)
     }
 }
 
@@ -1618,7 +1707,10 @@ private final class ReservationActionRow: UIControl {
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        chevron.image = UIImage(named: "arrowTopIcon")?.withRenderingMode(.alwaysTemplate)
+        chevron.image = UIImage(
+            systemName: "chevron.right",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+        )?.withRenderingMode(.alwaysTemplate)
         chevron.tintColor = UIColor.white.withAlphaComponent(0.65)
         chevron.contentMode = .scaleAspectFit
         chevron.translatesAutoresizingMaskIntoConstraints = false
@@ -1637,8 +1729,8 @@ private final class ReservationActionRow: UIControl {
 
             chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -22),
             chevron.centerYAnchor.constraint(equalTo: centerYAnchor),
-            chevron.widthAnchor.constraint(equalToConstant: 9),
-            chevron.heightAnchor.constraint(equalToConstant: 7)
+            chevron.widthAnchor.constraint(equalToConstant: 8),
+            chevron.heightAnchor.constraint(equalToConstant: 13)
         ])
     }
 }
