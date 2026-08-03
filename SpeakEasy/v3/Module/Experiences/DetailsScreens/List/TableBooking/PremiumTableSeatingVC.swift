@@ -23,7 +23,12 @@ final class PremiumTableSeatingVC: UIViewController {
     // MARK: - State
 
     private var currentGuestCount: Int = 1
-    private var isExpanded = false
+    private var isDescriptionExpanded = false
+    private var currentDescriptionText = ""
+    private var lastDescriptionMeasurementWidth: CGFloat = 0
+    private var lastDescriptionMeasurementText = ""
+    private var needsDescriptionMeasurement = false
+    private var cachedDescriptionNeedsToggle = false
     private var availableTimeSlots: [TableTimeSlot] = []
     private var selectedTimeSlot: TableTimeSlot?
     private var selectedTimeIndex = 0
@@ -46,6 +51,7 @@ final class PremiumTableSeatingVC: UIViewController {
 
     private let highlightLabel    = UILabel()
     private let descLabel         = UILabel()
+    private let descToggleButton  = UIButton(type: .system)
 
     private let guestRow          = PremiumStepperRow()
     private let arrivalTimeView   = PremiumArrivalTimeView()
@@ -73,10 +79,16 @@ final class PremiumTableSeatingVC: UIViewController {
     private var inquiryButtonHeightConstraint: NSLayoutConstraint?
     private var checkoutTopToInquiryConstraint: NSLayoutConstraint?
     private var checkoutTopToSeparatorConstraint: NSLayoutConstraint?
+    private var descToggleTopConstraint: NSLayoutConstraint?
+    private var descToggleHeightConstraint: NSLayoutConstraint?
+    private var guestRowTopConstraint: NSLayoutConstraint?
     private var lastDepositProcessingFees: Double = 0
     private var currentSpendAgreementItems: [SpendLineItem] = []
     private let tableService = TableService()
     private var appliedPremiumGradientBounds: CGRect = .zero
+    private let descriptionPreviewLimitLines = 2
+    private let collapsedDescriptionVisibleLines = 3
+    private let descriptionFadeMaskLayer = CAGradientLayer()
 
     // MARK: - Life Cycle
 
@@ -97,6 +109,8 @@ final class PremiumTableSeatingVC: UIViewController {
         inquiryBtn.layer.cornerRadius = 26
         inquiryBtn.layer.masksToBounds = true
         updateArrivalTimeHeight()
+        updateDescriptionToggleVisibilityIfNeeded()
+        updateDescriptionFadeMaskFrame()
     }
 }
 
@@ -192,10 +206,29 @@ private extension PremiumTableSeatingVC {
 
         descLabel.font      = Constant.Font.geistRegular(size: 12)
         descLabel.textColor = UIColor.white.withAlphaComponent(0.8)
-        descLabel.numberOfLines = 0
+        descLabel.numberOfLines = collapsedDescriptionVisibleLines
+        descLabel.lineBreakMode = .byTruncatingTail
         descLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(descLabel)
 
+        descToggleButton.setTitle("View more", for: .normal)
+        descToggleButton.setTitleColor(UIColor(hex: "#D2D5DB"), for: .normal)
+        descToggleButton.titleLabel?.font = Constant.Font.geistMedium(size: 12)
+        descToggleButton.contentHorizontalAlignment = .leading
+        descToggleButton.contentEdgeInsets = .zero
+        descToggleButton.isHidden = true
+        descToggleButton.translatesAutoresizingMaskIntoConstraints = false
+        descToggleButton.addTarget(self, action: #selector(toggleDesc), for: .touchUpInside)
+        contentView.addSubview(descToggleButton)
+
+        descriptionFadeMaskLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        descriptionFadeMaskLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        descriptionFadeMaskLayer.colors = [
+            UIColor.black.cgColor,
+            UIColor.black.cgColor,
+            UIColor.black.withAlphaComponent(0).cgColor
+        ]
+        descriptionFadeMaskLayer.locations = [0, 0.72, 1]
     }
 
     func setupGuestRow() {
@@ -384,6 +417,9 @@ private extension PremiumTableSeatingVC {
         let bottomToPrice = priceCard.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
         let bottomToSpend = spendAgreementView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
         let priceCardHeight = priceCard.heightAnchor.constraint(equalToConstant: 68)
+        let descToggleTop = descToggleButton.topAnchor.constraint(equalTo: descLabel.bottomAnchor)
+        let descToggleHeight = descToggleButton.heightAnchor.constraint(equalToConstant: 0)
+        let guestTop = guestRow.topAnchor.constraint(equalTo: descToggleButton.bottomAnchor, constant: 16)
         priceTopToGuest.isActive = false
         bottomToSpend.isActive = false
         self.priceTopToArrivalConstraint = priceTopToArrival
@@ -392,6 +428,9 @@ private extension PremiumTableSeatingVC {
         self.contentBottomToPriceConstraint = bottomToPrice
         self.contentBottomToSpendConstraint = bottomToSpend
         self.bottomBarHeightConstraint = bottomHeight
+        self.descToggleTopConstraint = descToggleTop
+        self.descToggleHeightConstraint = descToggleHeight
+        self.guestRowTopConstraint = guestTop
         
         NSLayoutConstraint.activate([
 
@@ -463,8 +502,14 @@ private extension PremiumTableSeatingVC {
             descLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             descLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 
+            // Description Toggle
+            descToggleTop,
+            descToggleButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            descToggleButton.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -20),
+            descToggleHeight,
+
             // Guest
-            guestRow.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 16),
+            guestTop,
             guestRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             guestRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             guestRow.heightAnchor.constraint(equalToConstant: 56),
@@ -500,6 +545,148 @@ private extension PremiumTableSeatingVC {
 
 private extension PremiumTableSeatingVC {
 
+    func configureDescription(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        currentDescriptionText = trimmed
+        isDescriptionExpanded = false
+        lastDescriptionMeasurementWidth = 0
+        lastDescriptionMeasurementText = ""
+        needsDescriptionMeasurement = !trimmed.isEmpty
+        cachedDescriptionNeedsToggle = false
+
+        guard !trimmed.isEmpty else {
+            descLabel.text = nil
+            descLabel.isHidden = true
+            descLabel.layer.mask = nil
+            descToggleButton.isHidden = true
+            updateDescriptionToggleSpacing(isVisible: false)
+            return
+        }
+
+        descLabel.isHidden = false
+        descLabel.text = trimmed
+        applyDescriptionExpansionState()
+        descToggleButton.isHidden = true
+        updateDescriptionToggleSpacing(isVisible: false)
+        view.setNeedsLayout()
+        updateDescriptionToggleVisibilityIfNeeded(force: true)
+    }
+
+    func applyDescriptionExpansionState() {
+        descLabel.numberOfLines = isDescriptionExpanded
+            ? 0
+            : collapsedDescriptionVisibleLines
+        descLabel.lineBreakMode = isDescriptionExpanded
+            ? .byWordWrapping
+            : .byTruncatingTail
+        descToggleButton.setTitle(
+            isDescriptionExpanded ? "View less" : "View more",
+            for: .normal
+        )
+        updateDescriptionFadeMask()
+    }
+
+    func updateDescriptionToggleVisibilityIfNeeded(force: Bool = false) {
+        guard !currentDescriptionText.isEmpty,
+              !descLabel.isHidden else {
+            return
+        }
+
+        let width = descLabel.bounds.width
+        guard width > 1 else {
+            needsDescriptionMeasurement = true
+            return
+        }
+
+        if !force,
+           !needsDescriptionMeasurement,
+           abs(width - lastDescriptionMeasurementWidth) < 0.5,
+           lastDescriptionMeasurementText == currentDescriptionText {
+            return
+        }
+
+        let needsToggle = descriptionNeedsToggle(
+            text: currentDescriptionText,
+            width: width
+        )
+
+        cachedDescriptionNeedsToggle = needsToggle
+        needsDescriptionMeasurement = false
+        lastDescriptionMeasurementWidth = width
+        lastDescriptionMeasurementText = currentDescriptionText
+
+        descToggleButton.isHidden = !needsToggle
+        updateDescriptionToggleSpacing(isVisible: needsToggle)
+
+        if needsToggle {
+            applyDescriptionExpansionState()
+        } else {
+            descLabel.numberOfLines = 0
+            descLabel.lineBreakMode = .byWordWrapping
+            descToggleButton.setTitle("View more", for: .normal)
+            updateDescriptionFadeMask()
+        }
+    }
+
+    func updateDescriptionToggleSpacing(isVisible: Bool) {
+        descToggleTopConstraint?.constant = isVisible ? 4 : 0
+        descToggleHeightConstraint?.constant = isVisible ? 20 : 0
+        guestRowTopConstraint?.constant = isVisible ? 12 : 16
+    }
+
+    func updateDescriptionFadeMask() {
+        let shouldFade =
+            cachedDescriptionNeedsToggle &&
+            !isDescriptionExpanded &&
+            !descLabel.isHidden
+
+        guard shouldFade else {
+            descLabel.layer.mask = nil
+            return
+        }
+
+        if descLabel.layer.mask !== descriptionFadeMaskLayer {
+            descLabel.layer.mask = descriptionFadeMaskLayer
+        }
+        updateDescriptionFadeMaskFrame()
+    }
+
+    func updateDescriptionFadeMaskFrame() {
+        guard descLabel.layer.mask === descriptionFadeMaskLayer else { return }
+        descriptionFadeMaskLayer.frame = descLabel.bounds
+    }
+
+    func descriptionNeedsToggle(
+        text: String,
+        width: CGFloat
+    ) -> Bool {
+        let font = descLabel.font ?? Constant.Font.geistRegular(size: 12)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakMode = .byWordWrapping
+
+        let rect = (text as NSString).boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: font,
+                .paragraphStyle: paragraphStyle
+            ],
+            context: nil
+        )
+
+        let previewLimitHeight = ceil(
+            font.lineHeight * CGFloat(descriptionPreviewLimitLines)
+        )
+        return ceil(rect.height) > previewLimitHeight + 0.5
+    }
+
     func configureData() {
         guard let area = seatingArea else { return }
 
@@ -530,8 +717,7 @@ private extension PremiumTableSeatingVC {
         highlightLabel.isHidden = highlight.isEmpty
 
         let description = area.description?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        descLabel.text = description
-        descLabel.isHidden = description.isEmpty
+        configureDescription(description)
 
         // Guest stepper
         let minGuest = max(area.defaultGuest ?? 1, 1)
@@ -798,10 +984,16 @@ private extension PremiumTableSeatingVC {
 private extension PremiumTableSeatingVC {
 
     @objc func toggleDesc() {
+        guard cachedDescriptionNeedsToggle || !descToggleButton.isHidden else { return }
         AppHaptic.selectionChanged()
-        isExpanded.toggle()
-        descLabel.numberOfLines = 0
-        UIView.animate(withDuration: 0.22) { self.view.layoutIfNeeded() }
+        isDescriptionExpanded.toggle()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        UIView.performWithoutAnimation {
+            applyDescriptionExpansionState()
+            view.layoutIfNeeded()
+        }
+        CATransaction.commit()
     }
 
     @objc func onCheckoutTapped() {

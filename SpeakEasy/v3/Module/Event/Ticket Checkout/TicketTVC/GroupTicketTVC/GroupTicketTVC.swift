@@ -225,9 +225,21 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
             self?.onRSVPTap?(ticket, cell)
         }
 
-        cell.onDescriptionToggle = { [weak self] in
+        cell.onDescriptionToggle = { [weak self, weak cell] in
             guard let self = self else { return }
 
+            cell?.removeDescriptionToggleControlAnimations()
+            let animationsEnabled = UIView.areAnimationsEnabled
+            UIView.setAnimationsEnabled(false)
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            tableView.beginUpdates()
+            tableView.endUpdates()
+            tableView.layoutIfNeeded()
+            self.tableViewHeight.constant = tableView.contentSize.height
+            CATransaction.commit()
+            UIView.setAnimationsEnabled(animationsEnabled)
+            cell?.removeDescriptionToggleControlAnimations()
             self.onDescriptionToggle?(ticket)
             self.onHeightChanged?()
         }

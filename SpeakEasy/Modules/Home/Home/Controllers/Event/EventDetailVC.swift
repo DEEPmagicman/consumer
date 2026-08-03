@@ -55,6 +55,7 @@ final class EventDetailVC: UIViewController {
     var promoteId = ""
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
+    private var isTicketListLayoutUpdateInProgress = false
     private var isNotSellingStage = false
     private var maxTicket = 20
     private var activeTickets: [EventTicket]?
@@ -106,8 +107,8 @@ final class EventDetailVC: UIViewController {
         ticketListTableView.register(UINib(nibName: "TicketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "TicketTypeTableViewCell")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
-            self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
-            self.ticketListTableView.layoutIfNeeded()
+            guard !self.isTicketListLayoutUpdateInProgress else { return }
+            self.updateTicketListHeightWithoutAnimation()
         }
         artistTableView.register(UINib(nibName: "ArtistListTVC", bundle: nil), forCellReuseIdentifier: "ArtistListTVC")
         artistHeightObservation = artistTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
@@ -149,6 +150,37 @@ final class EventDetailVC: UIViewController {
         unLockBtn.alpha = isEnabled ? 1 : 0.5
         unLockBtn.isEnabled = isEnabled
         unLockBtn.isUserInteractionEnabled = isEnabled
+    }
+
+    private func updateTicketListHeightWithoutAnimation() {
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        ticketListHeight.constant = ticketListTableView.contentSize.height
+        ticketListTableView.layoutIfNeeded()
+        ticketListTableView.visibleCells
+            .compactMap { $0 as? TicketTypeTableViewCell }
+            .forEach { $0.removeTicketControlAnimations() }
+        CATransaction.commit()
+        UIView.setAnimationsEnabled(animationsEnabled)
+    }
+
+    private func reloadTicketListWithoutAnimation() {
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        isTicketListLayoutUpdateInProgress = true
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        ticketListTableView.reloadData()
+        ticketListTableView.layoutIfNeeded()
+        ticketListHeight.constant = ticketListTableView.contentSize.height
+        ticketListTableView.visibleCells
+            .compactMap { $0 as? TicketTypeTableViewCell }
+            .forEach { $0.removeTicketControlAnimations() }
+        CATransaction.commit()
+        isTicketListLayoutUpdateInProgress = false
+        UIView.setAnimationsEnabled(animationsEnabled)
     }
 
     private func availableTickets(from tickets: [EventTicket]?) -> [EventTicket] {
@@ -309,7 +341,7 @@ final class EventDetailVC: UIViewController {
                 self.event = eventDetail
                 if let venue = eventDetail?.venue {
                     self.venueDetails = venue
-                    self.ticketListTableView.reloadData()
+                    self.reloadTicketListWithoutAnimation()
                 }
                 
                 self.eventTicketId.removeAll()
@@ -411,7 +443,7 @@ final class EventDetailVC: UIViewController {
                 self.unLockTF.text = ""
                 self.unLockPassword()
                 self.setupData()
-                self.ticketListTableView.reloadData()
+                self.reloadTicketListWithoutAnimation()
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
@@ -506,7 +538,7 @@ final class EventDetailVC: UIViewController {
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 30
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
-                self.ticketListTableView.reloadData()
+                self.reloadTicketListWithoutAnimation()
                 return
             }
             self.continueBtn.isHidden = false
@@ -523,11 +555,11 @@ final class EventDetailVC: UIViewController {
         if let totalTicket = activeTickets?[sender.tag].selectedTicketCount {
             if totalTicket > 1 {
                 activeTickets?[sender.tag].selectedTicketCount = totalTicket - 1
-                ticketListTableView.reloadData()
+                reloadTicketListWithoutAnimation()
                 updateContinueBtn()
             } else if totalTicket == 1 {
                 activeTickets?[sender.tag].selectedTicketCount = nil
-                ticketListTableView.reloadData()
+                reloadTicketListWithoutAnimation()
                 updateContinueBtn(forceRemove: (activeTickets?.firstIndex(where: { $0.selectedTicketCount != nil })) == nil)
             }
         }
@@ -542,7 +574,7 @@ final class EventDetailVC: UIViewController {
             if totalTicket < maxTicket {
                 if let remaining = activeTickets?[sender.tag].remainingQuantity, remaining > totalTicket {
                     activeTickets?[sender.tag].selectedTicketCount = totalTicket + 1
-                    ticketListTableView.reloadData()
+                    reloadTicketListWithoutAnimation()
                     updateContinueBtn()
                 }
             } else {
@@ -686,7 +718,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             } else {
                 forceRemoveFreeTicket()
             }
-            ticketListTableView.reloadData()
+            reloadTicketListWithoutAnimation()
             if totalSelectedTickets == 0 {
                 updateContinueBtn(forceRemove: true)
             } else {

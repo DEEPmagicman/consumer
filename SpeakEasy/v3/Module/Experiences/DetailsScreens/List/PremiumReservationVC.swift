@@ -48,11 +48,13 @@ final class PremiumReservationVC: UIViewController {
 
             refreshControl.endRefreshing()
 
+            pruneExpandedDescriptionIds()
             reloadUI()
         }
     }
     
     private var filteredAreas: [SeatingArea] = []
+    private var expandedDescriptionIds: Set<String> = []
 
     // MARK: Loading
 
@@ -802,6 +804,55 @@ private extension PremiumReservationVC {
 
 private extension PremiumReservationVC {
 
+    func updateDescriptionRowHeight() {
+
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        tableView.layoutIfNeeded()
+        CATransaction.commit()
+        UIView.setAnimationsEnabled(animationsEnabled)
+    }
+
+    func descriptionStateId(
+        for item: SeatingArea
+    ) -> String {
+
+        if let id = item.id,
+           !id.isEmpty {
+            return id
+        }
+
+        if let parentId = item.parentSeatingAreaId,
+           !parentId.isEmpty {
+            return parentId
+        }
+
+        return [
+            item.name,
+            item.venueId,
+            item.eventId,
+            item.order.map { String($0) }
+        ]
+        .compactMap { $0 }
+        .joined(separator: "|")
+    }
+
+    func pruneExpandedDescriptionIds() {
+
+        let validIds = Set(
+            filteredAreas.map {
+                descriptionStateId(for: $0)
+            }
+        )
+
+        expandedDescriptionIds =
+            expandedDescriptionIds.intersection(validIds)
+    }
+
     func configure(
         cell: PremiumReservationCell,
         with item: SeatingArea
@@ -847,6 +898,8 @@ private extension PremiumReservationVC {
                 : ""
             )
 
+        let descriptionId = descriptionStateId(for: item)
+
         cell.configure(
             title: item.name ?? "",
             guestText: guestText,
@@ -855,8 +908,21 @@ private extension PremiumReservationVC {
             depositText: depositText,
             minimumText: minimumText,
             buttonTitle: isInquiry ? "Inquiry" : "Book now",
-            hidePricing: hidePricing
+            hidePricing: hidePricing,
+            isDescriptionExpanded: expandedDescriptionIds.contains(descriptionId)
         )
+
+        cell.onDescriptionToggle = { [weak self] in
+            guard let self else { return }
+
+            if self.expandedDescriptionIds.contains(descriptionId) {
+                self.expandedDescriptionIds.remove(descriptionId)
+            } else {
+                self.expandedDescriptionIds.insert(descriptionId)
+            }
+
+            self.updateDescriptionRowHeight()
+        }
 
         cell.onBookTap = { [weak self] in
             self?.openSeatingArea(item)
