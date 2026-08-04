@@ -229,7 +229,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         eventType: EventType
     ) -> (text: String?, textColor: UIColor?, backgroundColor: UIColor?) {
         if eventType == .premiumEvent {
-            return ("Premium Available", UIColor(hex: "#FFF3E0"), UIColor(hex: "#D99935"))
+            return ("PREMIUM AVAILABLE", UIColor(hex: "#FFF3E0"), UIColor(hex: "#D99935"))
         } else if eventType == .pastEvent {
             return ("PAST EVENT", .black, .white)
         } else {

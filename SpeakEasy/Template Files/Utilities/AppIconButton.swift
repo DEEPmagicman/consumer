@@ -18,6 +18,7 @@ enum AppIconType: String {
     case filter
     case share
     case map
+    case calendar
     case search
     case questionMark
 
@@ -37,6 +38,8 @@ enum AppIconType: String {
             return UIImage(named: "shareIcon")
         case .map:
             return UIImage(named: "mapIcon")
+        case .calendar:
+            return UIImage(named: "discoverCaledarIcon") ?? UIImage(named: "calendarIcon")
         case .search:
             return UIImage(resource: .searchIconV3)
         case .questionMark:
@@ -48,7 +51,7 @@ enum AppIconType: String {
         switch self {
         case .leftSideBack, .back, .filter:
             return 50
-        case .close, .share, .map, .search:
+        case .close, .share, .map, .calendar, .search:
             return 40
         case .seeAll:
             return 36
@@ -64,46 +67,85 @@ private struct GlassButtonView: View {
     let iconSize: CGFloat
     let buttonSize: CGFloat
     let tintColor: UIColor
+    let fillColor: UIColor?
     let action: () -> Void
 
     var body: some View {
-
-        Group {
-            if AppDesign.useModernIOS26Design {
-                if #available(iOS 26.0, *) {
-                    
-                    Button(action: action) {
-                        if let image = iconType.image {
-                            Image(uiImage: image)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: iconSize, height: iconSize)
-                                .foregroundStyle(Color(tintColor))
-                        }
-                    }
-                    .frame(width: buttonSize, height: buttonSize)
-                    .background(
-                        Circle()
-                            .fill(Color.white.opacity(0.08))
-                    )
-                    .glassEffect(.regular.interactive(), in: .circle)
-                    
-                }
+        if AppDesign.useModernIOS26Design {
+            if #available(iOS 26.0, *) {
+                modernButton
             } else {
+                fallbackButton
+            }
+        } else {
+            fallbackButton
+        }
+    }
 
+    @available(iOS 26.0, *)
+    private var modernButton: some View {
+        Group {
+            if let fillColor {
                 Button(action: action) {
-                    if let image = iconType.image {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: iconSize, height: iconSize)
-                            .foregroundStyle(Color(tintColor))
-                    }
+                    iconImage
                 }
                 .frame(width: buttonSize, height: buttonSize)
-                .glassFallback()
+                .background(
+                    Circle()
+                        .fill(Color(fillColor))
+                )
+            } else {
+                Button(action: action) {
+                    iconImage
+                }
+                .frame(width: buttonSize, height: buttonSize)
+                .background(
+                    Circle()
+                        .fill(Color.white.opacity(0.08))
+                )
+                .glassEffect(.regular.interactive(), in: .circle)
+            }
+        }
+    }
+
+    private var fallbackButton: some View {
+        Button(action: action) {
+            iconImage
+        }
+        .frame(width: buttonSize, height: buttonSize)
+        .background(
+            ZStack {
+                if let fillColor {
+                    Circle()
+                        .fill(Color(fillColor))
+                } else {
+                    Circle()
+                        .fill(.ultraThinMaterial)
+
+                    Circle()
+                        .fill(Color.white.opacity(0.02))
+                }
+            }
+        )
+        .overlay(
+            Circle()
+                .stroke(
+                    Color.white.opacity(fillColor == nil ? 0.6 : 0),
+                    lineWidth: 0.2
+                )
+        )
+        .shadow(radius: fillColor == nil ? 10 : 0, y: fillColor == nil ? 4 : 0)
+    }
+
+    private var iconImage: some View {
+        Group {
+            if let image = iconType.image {
+                Image(uiImage: image)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: iconSize, height: iconSize)
+                    .foregroundStyle(Color(tintColor))
             }
         }
     }
@@ -138,6 +180,12 @@ final class AppIconButton: UIButton {
 
     @IBInspectable
     var iconTintColor: UIColor = .label {
+        didSet {
+            updateHostingView()
+        }
+    }
+
+    var buttonFillColor: UIColor? {
         didSet {
             updateHostingView()
         }
@@ -226,7 +274,8 @@ final class AppIconButton: UIButton {
             iconType: iconType,
             iconSize: iconSize,
             buttonSize: resolvedButtonSize,
-            tintColor: iconTintColor
+            tintColor: iconTintColor,
+            fillColor: buttonFillColor
         ) { [weak self] in
             AppHaptic.navigation()
             self?.sendActions(for: .touchUpInside)

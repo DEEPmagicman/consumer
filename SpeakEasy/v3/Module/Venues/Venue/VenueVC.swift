@@ -52,6 +52,15 @@ final class VenueVC: UIViewController {
     private var childPanTranslations: [ObjectIdentifier: CGFloat] = [:]
     private var registeredPanScrollIDs = Set<ObjectIdentifier>()
     private var isUpdatingChildScrollOffset = false
+    private lazy var shortContentPanGesture: UIPanGestureRecognizer = {
+        let gesture = UIPanGestureRecognizer(
+            target: self,
+            action: #selector(handleShortContentPan(_:))
+        )
+        gesture.cancelsTouchesInView = false
+        gesture.delegate = self
+        return gesture
+    }()
     private let stickySegmentTopSpacing: CGFloat = 64
     private let headerExpansionDragMultiplier: CGFloat = 2.0
     private let headerExpansionStartTolerance: CGFloat = 12
@@ -306,6 +315,7 @@ final class VenueVC: UIViewController {
 
         pageVC.dataSource = self
         pageVC.delegate = self
+        pageVC.view.addGestureRecognizer(shortContentPanGesture)
 
         pageVC.setViewControllers(
             [firstVC],
@@ -987,6 +997,9 @@ private extension VenueVC {
     func resetTrackedOffset(for viewController: UIViewController) {
         guard let scrollView = observedScrollView(for: viewController) else { return }
         let scrollID = ObjectIdentifier(scrollView)
+        if !hasVerticallyScrollableContent(scrollView) {
+            set(scrollView, contentOffsetY: topContentOffsetY(for: scrollView), scrollID: scrollID)
+        }
         childScrollOffsets[scrollID] = scrollView.contentOffset.y
         childPanTranslations.removeValue(forKey: scrollID)
         registerPanHandlerIfNeeded(for: scrollView, scrollID: scrollID)
@@ -1008,6 +1021,25 @@ private extension VenueVC {
         }
 
         return nil
+    }
+
+    func currentObservedScrollView() -> UIScrollView? {
+        guard tabControllers.indices.contains(selectedIndex) else { return nil }
+        return observedScrollView(for: tabControllers[selectedIndex])
+    }
+
+    func shouldBeginShortContentPan(_ gesture: UIPanGestureRecognizer) -> Bool {
+        guard maxHeaderCollapseOffset > 0,
+              let scrollView = currentObservedScrollView(),
+              !hasVerticallyScrollableContent(scrollView)
+        else {
+            return false
+        }
+
+        let velocity = gesture.velocity(in: view)
+        guard abs(velocity.y) > abs(velocity.x) else { return false }
+
+        return velocity.y > 0 && headerCollapseOffset > 0.5
     }
 }
 
@@ -1031,6 +1063,13 @@ extension VenueVC: ChildScrollDelegate {
         let topOffsetY = topContentOffsetY(for: scrollView)
 
         childScrollOffsets[scrollID] = currentOffsetY
+
+        guard hasVerticallyScrollableContent(scrollView) else {
+            if abs(currentOffsetY - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+            return
+        }
 
         guard abs(deltaY) > 0.1 else { return }
 
@@ -1084,6 +1123,11 @@ extension VenueVC: ChildScrollDelegate {
 
     private func topContentOffsetY(for scrollView: UIScrollView) -> CGFloat {
         return -scrollView.adjustedContentInset.top
+    }
+
+    private func hasVerticallyScrollableContent(_ scrollView: UIScrollView) -> Bool {
+        let verticalInset = scrollView.adjustedContentInset.top + scrollView.adjustedContentInset.bottom
+        return scrollView.contentSize.height + verticalInset > scrollView.bounds.height + 1
     }
 
     private func settleHeaderAfterScrollEnds(
@@ -1144,26 +1188,39 @@ extension VenueVC: ChildScrollDelegate {
 
         let currentTranslationY = gesture.translation(in: view).y
         let topOffsetY = topContentOffsetY(for: scrollView)
+        let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
+        let deltaY = currentTranslationY - previousTranslationY
+
+        childPanTranslations[scrollID] = currentTranslationY
+
+        guard hasVerticallyScrollableContent(scrollView) else {
+            if abs(scrollView.contentOffset.y - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+
+            if deltaY > 0, headerCollapseOffset > 0 {
+                consumeDownwardScroll(
+                    deltaY * headerExpansionDragMultiplier,
+                    from: scrollView,
+                    scrollID: scrollID,
+                    topOffsetY: topOffsetY
+                )
+            }
+            return
+        }
 
         guard headerCollapseOffset > 0 else {
-            childPanTranslations[scrollID] = currentTranslationY
             return
         }
 
         switch gesture.state {
         case .began:
-            childPanTranslations[scrollID] = currentTranslationY
+            break
 
         case .changed:
             guard scrollView.contentOffset.y <= topOffsetY + headerExpansionStartTolerance else {
-                childPanTranslations[scrollID] = currentTranslationY
                 return
             }
-
-            let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
-            let deltaY = currentTranslationY - previousTranslationY
-
-            childPanTranslations[scrollID] = currentTranslationY
 
             guard deltaY > 0 else { return }
 
@@ -1176,6 +1233,48 @@ extension VenueVC: ChildScrollDelegate {
 
         default:
             childPanTranslations.removeValue(forKey: scrollID)
+        }
+    }
+
+    @objc func handleShortContentPan(_ gesture: UIPanGestureRecognizer) {
+        guard let scrollView = currentObservedScrollView() else { return }
+
+        let scrollID = ObjectIdentifier(scrollView)
+        let topOffsetY = topContentOffsetY(for: scrollView)
+
+        if gesture.state == .ended ||
+            gesture.state == .cancelled ||
+            gesture.state == .failed {
+            settleHeaderAfterScrollEnds(
+                for: scrollView,
+                scrollID: scrollID,
+                velocityY: gesture.velocity(in: view).y
+            )
+            childPanTranslations.removeValue(forKey: scrollID)
+            return
+        }
+
+        guard !isUpdatingChildScrollOffset else { return }
+
+        if abs(scrollView.contentOffset.y - topOffsetY) > 0.5 {
+            set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+        }
+
+        let currentTranslationY = gesture.translation(in: view).y
+        let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
+        let deltaY = currentTranslationY - previousTranslationY
+
+        childPanTranslations[scrollID] = currentTranslationY
+
+        guard gesture.state == .changed else { return }
+
+        if deltaY > 0, headerCollapseOffset > 0 {
+            consumeDownwardScroll(
+                deltaY * headerExpansionDragMultiplier,
+                from: scrollView,
+                scrollID: scrollID,
+                topOffsetY: topOffsetY
+            )
         }
     }
 }
@@ -1236,7 +1335,20 @@ extension VenueVC: UIGestureRecognizerDelegate {
             return isPresentedPremium
         }
 
+        if gestureRecognizer === shortContentPanGesture,
+           let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            return shouldBeginShortContentPan(panGesture)
+        }
+
         return true
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return gestureRecognizer === shortContentPanGesture ||
+            otherGestureRecognizer === shortContentPanGesture
     }
 }
 

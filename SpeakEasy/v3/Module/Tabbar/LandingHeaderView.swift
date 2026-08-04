@@ -16,6 +16,7 @@ protocol LandingHeaderViewDelegate: AnyObject {
 final class LandingHeaderView: UIView {
 
     weak var delegate: LandingHeaderViewDelegate?
+    var onCalendarTap: (() -> Void)?
 
     private let avatarContainer = UIView()
     private let imageView = UIImageView()
@@ -24,9 +25,12 @@ final class LandingHeaderView: UIView {
     private let titleLabel = UILabel()
 
     private let mapButton = AppIconButton()
+    private let calendarButton = AppIconButton()
     private let profileButton = UIButton(type: .system)
 
     private var currentVC = UIViewController()
+    private var titleToMapTrailingConstraint: NSLayoutConstraint?
+    private var titleToCalendarTrailingConstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,6 +100,27 @@ final class LandingHeaderView: UIView {
         mapButton.iconTypeValue = "map"
         addSubview(mapButton)
 
+        calendarButton.backgroundColor = .clear
+        calendarButton.addTarget(self, action: #selector(onClickCalendar), for: .touchUpInside)
+        calendarButton.translatesAutoresizingMaskIntoConstraints = false
+        calendarButton.buttonSize = 36
+        calendarButton.iconSize = 13
+        calendarButton.iconTintColor = .white
+        calendarButton.iconTypeValue = AppIconType.calendar.rawValue
+        calendarButton.isHidden = true
+        addSubview(calendarButton)
+
+        titleToMapTrailingConstraint = titleLabel.trailingAnchor.constraint(
+            lessThanOrEqualTo: mapButton.leadingAnchor,
+            constant: -12
+        )
+        titleToCalendarTrailingConstraint = titleLabel.trailingAnchor.constraint(
+            lessThanOrEqualTo: calendarButton.leadingAnchor,
+            constant: -12
+        )
+        titleToMapTrailingConstraint?.isActive = true
+        titleToCalendarTrailingConstraint?.isActive = false
+
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 40),
 
@@ -121,7 +146,6 @@ final class LandingHeaderView: UIView {
 
             titleLabel.leadingAnchor.constraint(equalTo: avatarContainer.trailingAnchor, constant: 12),
             titleLabel.centerYAnchor.constraint(equalTo: avatarContainer.centerYAnchor),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: mapButton.leadingAnchor, constant: -12),
 
             profileButton.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
             profileButton.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 12),
@@ -131,7 +155,12 @@ final class LandingHeaderView: UIView {
             mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -13),
             mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             mapButton.widthAnchor.constraint(equalToConstant: 32),
-            mapButton.heightAnchor.constraint(equalToConstant: 32)
+            mapButton.heightAnchor.constraint(equalToConstant: 32),
+
+            calendarButton.trailingAnchor.constraint(equalTo: mapButton.leadingAnchor, constant: -12),
+            calendarButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            calendarButton.widthAnchor.constraint(equalToConstant: 32),
+            calendarButton.heightAnchor.constraint(equalToConstant: 32)
         ])
         
         if Utility.main.topViewController()?.navigationController?.navigationController == nil {
@@ -143,6 +172,17 @@ final class LandingHeaderView: UIView {
 
     func setMapHidden(_ hidden: Bool) {
         mapButton.isHidden = hidden
+    }
+
+    func setCalendarHidden(_ hidden: Bool) {
+        calendarButton.isHidden = hidden
+        titleToMapTrailingConstraint?.isActive = hidden
+        titleToCalendarTrailingConstraint?.isActive = !hidden
+    }
+
+    func setCalendarSelected(_ selected: Bool) {
+        calendarButton.buttonFillColor = selected ? .white : nil
+        calendarButton.iconTintColor = selected ? .black : .white
     }
 
     private func observeProfileUpdate() {
@@ -225,5 +265,10 @@ final class LandingHeaderView: UIView {
         AppHaptic.navigation()
         Navigate.to.gotoMapVC(currentVC)
 //        delegate?.landingHeaderDidTapMap(self)
+    }
+
+    @objc private func onClickCalendar() {
+        AppHaptic.navigation()
+        onCalendarTap?()
     }
 }

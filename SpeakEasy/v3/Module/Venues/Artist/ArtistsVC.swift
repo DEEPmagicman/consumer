@@ -33,6 +33,7 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateHeaderWidthIfNeeded()
+        updateScrollAvailability()
     }
 
     // MARK: - Segmented Scroll Source
@@ -200,18 +201,37 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
 
     private func reloadUI() {
         tableView.reloadData()
-        updateEmptyState()
         tableView.tableFooterView = makeFooterView()
+        tableView.layoutIfNeeded()
+        updateEmptyState()
+        updateScrollAvailability()
     }
 
     private func updateEmptyState() {
-        let hasScrollableContent = isInitialLoading || !artists.isEmpty
-        tableView.isScrollEnabled = hasScrollableContent
-        tableView.alwaysBounceVertical = hasScrollableContent
         tableView.backgroundView =
         !isInitialLoading && artists.isEmpty
         ? makeEmptyStateView()
         : nil
+    }
+
+    private func updateScrollAvailability() {
+        let topOffsetY = -tableView.adjustedContentInset.top
+        let visibleHeight = tableView.bounds.height
+        let verticalInset = tableView.adjustedContentInset.top + tableView.adjustedContentInset.bottom
+        let hasScrollableContent = isInitialLoading ||
+            tableView.contentSize.height + verticalInset > visibleHeight + 1
+
+        tableView.isScrollEnabled = true
+        tableView.alwaysBounceVertical = hasScrollableContent
+        tableView.bounces = hasScrollableContent
+
+        if !hasScrollableContent,
+           abs(tableView.contentOffset.y - topOffsetY) > 0.5 {
+            tableView.setContentOffset(
+                CGPoint(x: tableView.contentOffset.x, y: topOffsetY),
+                animated: false
+            )
+        }
     }
 
     private func makeEmptyStateView() -> UIView {

@@ -110,6 +110,7 @@ class EventDetailsVC: UIViewController {
     private let eventTitleMarqueeLabel = PremiumMarqueeLabel()
     private let youTubeShimmerView = ShimmerViewV3(frame: .zero, lighter: true)
     private var isYouTubePlayerReady = false
+    private var representedYouTubeVideoID: String?
     private var googleMapView: GMSMapView?
 
     var venueDetails: ClipVenue?
@@ -133,6 +134,7 @@ class EventDetailsVC: UIViewController {
     private var isDescriptionHeightUpdateInProgress = false
     private var shouldClearInlineRSVPSelectionOnReturn = false
     private var isInlineRSVPStockCheckInProgress = false
+    private var isCheckoutInProgress = false
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
@@ -143,6 +145,13 @@ class EventDetailsVC: UIViewController {
     private var isGuestListLoading = false
     private let attendeesPageSize = 10
     private var skeletonView: SkeletonOverlayView?
+    private lazy var interactionBlockerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     private var isLoading = false
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
@@ -270,6 +279,7 @@ class EventDetailsVC: UIViewController {
         checkOutBtnView.setButtonTitle("Continue to Checkout")
         applyWhiteLabelTheme()
         configureCheckoutBarInitialState()
+        setupInteractionBlockerView()
         registerSocketDelegate()
         updateCheckoutSummaryView()
 
@@ -284,6 +294,7 @@ class EventDetailsVC: UIViewController {
         super.viewDidAppear(animated)
         isBackNavigationInProgress = false
         leftEdgeBackGesture?.isEnabled = true
+        setCheckoutInProgress(false)
         startAutoScrollIfNeeded()
         enableInteractiveSwipeBack()
         setupLeftEdgeBackGestureIfNeeded()
@@ -498,6 +509,7 @@ class EventDetailsVC: UIViewController {
         playerView.removeFromSuperview()
         self.playerView = nil
         isYouTubePlayerReady = false
+        representedYouTubeVideoID = nil
     }
 
     private func tearDownGoogleMapView() {
@@ -863,7 +875,8 @@ class EventDetailsVC: UIViewController {
     }
 
     private func handleBackNavigation() {
-        guard !isBackNavigationInProgress,
+        guard !isCheckoutInProgress,
+              !isBackNavigationInProgress,
               !hasReleasedHeavyResources else {
             return
         }
@@ -916,8 +929,16 @@ class EventDetailsVC: UIViewController {
         youTubePlayerView.bringSubviewToFront(youTubeShimmerView)
     }
 
-    private func hideYouTubeShimmer() {
+    private func hideYouTubeShimmer(animated: Bool = true) {
         guard !youTubeShimmerView.isHidden else { return }
+
+        guard animated else {
+            youTubeShimmerView.stopShimmer()
+            youTubeShimmerView.layer.removeAllAnimations()
+            youTubeShimmerView.isHidden = true
+            youTubeShimmerView.alpha = 1
+            return
+        }
 
         UIView.animate(
             withDuration: 0.22,
@@ -1039,14 +1060,9 @@ class EventDetailsVC: UIViewController {
     
     
     private func setupMainImageStyle() {
-        imageShadowView.clipsToBounds = false
-        imageShadowView.layer.masksToBounds = false
         imageShadowView.layer.cornerRadius = 8
-
-        imageShadowView.layer.shadowColor = UIColor.white.cgColor
-        imageShadowView.layer.shadowOpacity = 0.35
-        imageShadowView.layer.shadowRadius = 18
-        imageShadowView.layer.shadowOffset = CGSize(width: 0, height: 12)
+        imageShadowView.layer.shadowOpacity = 0
+        imageShadowView.layer.shadowPath = nil
 
         mainImg.clipsToBounds = true
         mainImg.layer.masksToBounds = true
@@ -1055,11 +1071,19 @@ class EventDetailsVC: UIViewController {
     }
     
     
-    func updateLineUpView() {
+    func updateLineUpView(animated: Bool = true) {
         let shouldHide = artists.isEmpty
         lineUpCollectionView.collectionViewLayout.invalidateLayout()
         lineUpCollectionView.reloadData()
-        
+
+        guard animated else {
+            lineUpHiddenView.layer.removeAllAnimations()
+            lineUpHiddenView.alpha = shouldHide ? 0 : 1
+            lineUpHiddenView.transform = .identity
+            lineUpHiddenView.isHidden = shouldHide
+            return
+        }
+
         if shouldHide {
             UIView.animate(withDuration: 0.3, animations: {
                 self.lineUpHiddenView.alpha = 0
@@ -1081,6 +1105,14 @@ class EventDetailsVC: UIViewController {
     
     func updateAttendeesView(animated: Bool = true) {
         let shouldHide = attendees.isEmpty && !isGuestListLoading
+
+        guard animated else {
+            attendeesView.layer.removeAllAnimations()
+            attendeesView.alpha = shouldHide ? 0 : 1
+            attendeesView.transform = .identity
+            attendeesView.isHidden = shouldHide
+            return
+        }
         
         if shouldHide {
             guard !attendeesView.isHidden else { return }
@@ -1109,7 +1141,10 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    private func getEventDetail(showLoading: Bool = true) {
+    private func getEventDetail(
+        showLoading: Bool = true,
+        quietRefresh: Bool = false
+    ) {
         guard !isEventDetailAPICalled else { return }
 
         guard let eventId = self.event?.uniqueId ?? self.uniqueId else {
@@ -1139,7 +1174,7 @@ class EventDetailsVC: UIViewController {
                     self.promoteId = ""
                     self.promotionLinkUniqueCode = ""
                     self.isEventDetailAPICalled = false
-                    self.getEventDetail()
+                    self.getEventDetail(showLoading: showLoading, quietRefresh: quietRefresh)
                     return
                 }
 
@@ -1149,11 +1184,18 @@ class EventDetailsVC: UIViewController {
                 return
             }
 
-            self.applyEventDetailBundle(detail)
+            if quietRefresh {
+                UIView.performWithoutAnimation {
+                    self.applyEventDetailBundle(detail, quietRefresh: true)
+                    self.view.layoutIfNeeded()
+                }
+            } else {
+                self.applyEventDetailBundle(detail)
+            }
             if let show = self.event?.showEventAttendees {
 //                self.attendeesView.isHidden = !show
                 if show, self.attendees.isEmpty {
-                    self.getEventAttendees()
+                    self.getEventAttendees(animated: !quietRefresh)
                 }
             } else {
                 self.attendeesView.isHidden = true
@@ -1217,7 +1259,8 @@ class EventDetailsVC: UIViewController {
     }
 
     private func applyEventDetailBundle(
-        _ detail: EventDetailBundle
+        _ detail: EventDetailBundle,
+        quietRefresh: Bool = false
     ) {
 
         event = detail.event
@@ -1237,7 +1280,7 @@ class EventDetailsVC: UIViewController {
         isSaveLoading = false
         updateSaveUI()
         ticketLinks = detail.ticketLinks
-        setupTicketsButton()
+        setupTicketsButton(animated: !quietRefresh)
 
         eventTicketId =
         detail.event.eventTicket?
@@ -1260,18 +1303,19 @@ class EventDetailsVC: UIViewController {
             .filter { $0.artist.status == "ENABLED" } ?? []
 
         lineUpCollectionView.reloadData()
-        updateLineUpView()
+        updateLineUpView(animated: !quietRefresh)
 
         applyAttendees(
             detail.attendees,
             total: detail.totalAttendees,
-            totalTicketSold: detail.totalTicketSold ?? detail.event.totalTicketSold
+            totalTicketSold: detail.totalTicketSold ?? detail.event.totalTicketSold,
+            animated: !quietRefresh
         )
 
-        setupData()
+        setupData(animated: !quietRefresh)
         hideSkeleton()
-        showContinueBtn()
-        loadInitialSeatingAreas()
+        showContinueBtn(animated: !quietRefresh)
+        loadInitialSeatingAreas(quietRefresh: quietRefresh)
     }
 
     private func applyVenueWhiteLabelColorIfNeeded(from venue: ClipVenue?) {
@@ -1290,7 +1334,8 @@ class EventDetailsVC: UIViewController {
     private func applyAttendees(
         _ list: [Attendee]?,
         total: Int? = nil,
-        totalTicketSold: Int? = nil
+        totalTicketSold: Int? = nil,
+        animated: Bool = true
     ) {
         isGuestListLoading = false
 
@@ -1305,7 +1350,7 @@ class EventDetailsVC: UIViewController {
             attendeesHasMore = false
             guestListTitleLbl.text = ""
             guestListCollectionView.reloadData()
-            updateAttendeesView()
+            updateAttendeesView(animated: animated)
             return
         }
 
@@ -1316,11 +1361,14 @@ class EventDetailsVC: UIViewController {
         self.totalTicketSold = totalTicketSold ?? self.totalTicketSold
         attendeesHasMore = totalAttendees > attendees.count
         guestListCollectionView.reloadData()
-        updateAttendeesView()
+        updateAttendeesView(animated: animated)
         updateGuestListTitle()
     }
 
-    private func setGuestListLoading(_ loading: Bool) {
+    private func setGuestListLoading(
+        _ loading: Bool,
+        animated: Bool = true
+    ) {
         guard isGuestListLoading != loading else { return }
 
         isGuestListLoading = loading
@@ -1335,7 +1383,7 @@ class EventDetailsVC: UIViewController {
         }
 
         guestListCollectionView.reloadData()
-        updateAttendeesView(animated: !loading)
+        updateAttendeesView(animated: !loading && animated)
     }
 
     private func updateGuestListTitle() {
@@ -1426,7 +1474,7 @@ class EventDetailsVC: UIViewController {
         showCheckoutBar()
     }
     
-    private func showContinueBtn() {
+    private func showContinueBtn(animated: Bool = true) {
         guard !shouldHideBottomTicketButton() else {
             hideBottomTicketButton()
             return
@@ -1440,6 +1488,13 @@ class EventDetailsVC: UIViewController {
             }
 
             buyNowBtnSuperView.isHidden = false
+
+            guard animated else {
+                buyNowBtnSuperView.layer.removeAllAnimations()
+                buyNowBtnSuperView.alpha = 1
+                buyNowBtnSuperView.transform = .identity
+                return
+            }
 
             UIView.animate(
                 withDuration: 0.3,
@@ -1479,9 +1534,9 @@ class EventDetailsVC: UIViewController {
         hideCheckoutBarImmediately()
     }
 
-    private func applyDisabledBottomTicketButtonVisibility() {
+    private func applyDisabledBottomTicketButtonVisibility(animated: Bool = true) {
         if shouldShowDisabledTicketButton {
-            showContinueBtn()
+            showContinueBtn(animated: animated)
         } else {
             hideBottomTicketButton()
         }
@@ -1544,6 +1599,27 @@ class EventDetailsVC: UIViewController {
             y: 120
         )
         checkOutBtnView.isHidden = true
+    }
+
+    private func setupInteractionBlockerView() {
+        guard interactionBlockerView.superview == nil else { return }
+
+        view.addSubview(interactionBlockerView)
+        NSLayoutConstraint.activate([
+            interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
+            interactionBlockerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            interactionBlockerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interactionBlockerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setCheckoutInProgress(_ inProgress: Bool) {
+        isCheckoutInProgress = inProgress
+        interactionBlockerView.isHidden = !inProgress
+
+        if inProgress {
+            view.bringSubviewToFront(interactionBlockerView)
+        }
     }
 
     private func clearInlineRSVPSelectionIfNeeded() {
@@ -1646,13 +1722,27 @@ class EventDetailsVC: UIViewController {
         seatingAreasFilteredOut = filtered.visible
     }
 
-    private func loadInitialSeatingAreas() {
+    private func loadInitialSeatingAreas(quietRefresh: Bool = false) {
         guard event != nil else { return }
+
+        if quietRefresh, hasLoadedSeatingAreas {
+            fetchSeatingAreas { [weak self] success, _, _ in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    guard success else { return }
+
+                    self.hasLoadedSeatingAreas = true
+                    self.didLoadSeatingAreasSuccessfully = true
+                    self.setupData(animated: false)
+                }
+            }
+            return
+        }
 
         hasLoadedSeatingAreas = false
         didLoadSeatingAreasSuccessfully = false
         applySeatingAreas([])
-        setupData()
+        setupData(animated: !quietRefresh)
 
         fetchSeatingAreas { [weak self] success, _, list in
             DispatchQueue.main.async {
@@ -1665,7 +1755,7 @@ class EventDetailsVC: UIViewController {
                     self.applySeatingAreas([])
                 }
 
-                self.setupData()
+                self.setupData(animated: !quietRefresh)
             }
         }
     }
@@ -1695,14 +1785,14 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    private func getEventAttendees() {
+    private func getEventAttendees(animated: Bool = true) {
         guard let eventId = self.event?.uniqueId else {
             return
         }
 
         guard !isFetchingMoreAttendees else { return }
         isFetchingMoreAttendees = true
-        setGuestListLoading(true)
+        setGuestListLoading(true, animated: animated)
 
         eventService.fetchEventAttendees(
             eventId: eventId,
@@ -1716,11 +1806,12 @@ class EventDetailsVC: UIViewController {
                 self.applyAttendees(
                     data,
                     total: total,
-                    totalTicketSold: totalTicketSold
+                    totalTicketSold: totalTicketSold,
+                    animated: animated
                 )
                 self.attendeesHasMore = hasMore || self.totalAttendees > self.attendees.count
             } else {
-                self.setGuestListLoading(false)
+                self.setGuestListLoading(false, animated: animated)
             }
         }
     }
@@ -2242,7 +2333,7 @@ class EventDetailsVC: UIViewController {
     }
     
 
-    private func setupData() {
+    private func setupData(animated: Bool = true) {
         guard let event = event else { return }
 
         disabledTicketIds.removeAll()
@@ -2292,9 +2383,9 @@ class EventDetailsVC: UIViewController {
         additionalButtonsTableView.reloadData()
         additionalButtonsTableView.layoutIfNeeded()
         additionalButtonsTableHeight.constant = additionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
-        setSection(webSiteView, hidden: additionalButtons.isEmpty)
+        setSection(webSiteView, hidden: additionalButtons.isEmpty, animated: animated)
         
-        configureVIPTablesView()
+        configureVIPTablesView(animated: animated)
         setupGalleryGrid()
 
         let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
@@ -2320,16 +2411,25 @@ class EventDetailsVC: UIViewController {
             youTubeSuperView.isHidden = false
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
-                showYouTubeShimmer()
-                playerView?.load(
-                    withVideoId: id,
-                    playerVars: youtubePlayerVars()
-                )
+                let shouldLoadVideo =
+                animated ||
+                !isYouTubePlayerReady ||
+                representedYouTubeVideoID != id
+
+                if shouldLoadVideo {
+                    representedYouTubeVideoID = id
+                    showYouTubeShimmer()
+                    playerView?.load(
+                        withVideoId: id,
+                        playerVars: youtubePlayerVars()
+                    )
+                }
             } else {
-                hideYouTubeShimmer()
+                representedYouTubeVideoID = nil
+                hideYouTubeShimmer(animated: animated)
             }
         } else {
-            hideYouTubeShimmer()
+            hideYouTubeShimmer(animated: animated)
             tearDownYouTubePlayer()
             youTubeSuperView.isHidden = true
         }
@@ -2350,7 +2450,7 @@ class EventDetailsVC: UIViewController {
         if let imageUrlString = venueDetails?.logo?.key.imageURL,
            let url = URL(string: imageUrlString) {
 
-            let shouldAnimate = (venueLogo.image == nil)
+            let shouldAnimate = animated && (venueLogo.image == nil)
             let navLogoSize = CGSize(
                 width: max(venueLogo.bounds.width, 72) * logoScale,
                 height: max(venueLogo.bounds.height, 72) * logoScale
@@ -2572,7 +2672,7 @@ class EventDetailsVC: UIViewController {
     
     
     
-    private func setupTicketsButton() {
+    private func setupTicketsButton(animated: Bool = true) {
         guard let event = event else { return }
 
         let settings = event.eventTicketSettings
@@ -2599,7 +2699,7 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.saleEnded.uppercased()
-            applyDisabledBottomTicketButtonVisibility()
+            applyDisabledBottomTicketButtonVisibility(animated: animated)
             return
 
         case .status(.soldOut):
@@ -2611,7 +2711,7 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.soldOut.uppercased()
-            applyDisabledBottomTicketButtonVisibility()
+            applyDisabledBottomTicketButtonVisibility(animated: animated)
             return
 
         case .status(.salePaused):
@@ -2620,7 +2720,7 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.salePaused.uppercased()
-            applyDisabledBottomTicketButtonVisibility()
+            applyDisabledBottomTicketButtonVisibility(animated: animated)
             return
 
         case .unlock:
@@ -2641,7 +2741,7 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.salePaused.uppercased()
-            applyDisabledBottomTicketButtonVisibility()
+            applyDisabledBottomTicketButtonVisibility(animated: animated)
             return
         }
 
@@ -2656,7 +2756,7 @@ class EventDetailsVC: UIViewController {
         soldOutView.isHidden = true
     }
     
-    private func configureVIPTablesView() {
+    private func configureVIPTablesView(animated: Bool = true) {
         
         let isOnlineTablesEnabled = event?.isEnableOnlineTables
         let isReservationRequestEnabled = event?.isEnableReservationRequest
@@ -2668,12 +2768,12 @@ class EventDetailsVC: UIViewController {
             isEventDetailAPICalled,
             hasLoadedSeatingAreas
         else {
-            setVIPTablesView(hidden: true)
+            setVIPTablesView(hidden: true, animated: animated)
             return
         }
 
         if isReservationRequestEnabled ?? false {
-            setVIPTablesView(hidden: false)
+            setVIPTablesView(hidden: false, animated: animated)
             configureVIPTablesText(defaultSubtitle: (
                 is3DMapEnabled ?? false && hasSeatingAreas
             )
@@ -2686,7 +2786,7 @@ class EventDetailsVC: UIViewController {
             didLoadSeatingAreasSuccessfully,
             hasAnySeatingAreas
         else {
-            setVIPTablesView(hidden: true)
+            setVIPTablesView(hidden: true, animated: animated)
             return
         }
         
@@ -2699,7 +2799,7 @@ class EventDetailsVC: UIViewController {
             return false
         }()
         
-        setVIPTablesView(hidden: !shouldShowVIPTablesView)
+        setVIPTablesView(hidden: !shouldShowVIPTablesView, animated: animated)
         
         // MARK: - Subtitle
 
@@ -3163,6 +3263,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC?) {
+        guard !isCheckoutInProgress else { return }
         guard !isTicketDisabledByLink(ticket) else { return }
         checkInlineRSVPStock(ticket: ticket, cell: cell) { [weak self, weak cell] in
             self?.continueInlineRSVP(ticket: ticket, cell: cell)
@@ -3245,6 +3346,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func handleGroupRSVP(ticket: EventTicket, cell: TicketsTVC?) {
+        guard !isCheckoutInProgress else { return }
         guard !isTicketDisabledByLink(ticket) else { return }
         checkInlineRSVPStock(ticket: ticket, cell: cell) { [weak self, weak cell] in
             self?.continueInlineRSVP(ticket: ticket, cell: cell)
@@ -3276,6 +3378,7 @@ class EventDetailsVC: UIViewController {
         isInlineRSVPStockCheckInProgress = true
         hideCheckoutBarImmediately()
         cell?.showRSVPLoader()
+        setCheckoutInProgress(true)
 
         let payload: [[String: Any]] = [
             [
@@ -3300,10 +3403,13 @@ class EventDetailsVC: UIViewController {
 
                 guard isAvailable else {
                     cell?.hideRSVPLoader()
+                    self.setCheckoutInProgress(false)
                     self.hideCheckoutBarImmediately()
                     Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                     return
                 }
+
+                completion()
             }
         }
     }
@@ -3313,12 +3419,17 @@ class EventDetailsVC: UIViewController {
               let selectedTicket = selectOnlyInlineTicket(
                 ticket,
                 shouldUpdateCheckoutBar: false
-              ) else { return }
+              ) else {
+            cell?.hideRSVPLoader()
+            setCheckoutInProgress(false)
+            return
+        }
 
         shouldClearInlineRSVPSelectionOnReturn = true
 
         if hasVisibleAddOnOptions(for: event) {
             cell?.hideRSVPLoader()
+            setCheckoutInProgress(false)
             Navigate.to.ticketSelectionVc(
                 self,
                 event: event,
@@ -3438,6 +3549,7 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickInlineContinue(_ sender: Any) {
+        guard !isCheckoutInProgress else { return }
         guard let event else { return }
 
      
@@ -3476,6 +3588,8 @@ class EventDetailsVC: UIViewController {
         } else {
             checkOutBtnView.hideLoader()
         }
+
+        setCheckoutInProgress(false)
     }
 
     private func createInlineOrderBookingAndCheckout(
@@ -3483,6 +3597,7 @@ class EventDetailsVC: UIViewController {
         rsvpCell: TicketsTVC? = nil
     ) {
         guard LoginRequiredCoordinator.isAuthenticated else {
+            stopInlineBookingLoader(rsvpCell: rsvpCell)
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.createInlineOrderBookingAndCheckout(
                     selectedTickets: selectedTickets,
@@ -3493,11 +3608,15 @@ class EventDetailsVC: UIViewController {
         }
 
         guard let user = UserDefault.shared.user,
-              let event else { return }
+              let event else {
+            stopInlineBookingLoader(rsvpCell: rsvpCell)
+            return
+        }
 
         if rsvpCell == nil {
             checkOutBtnView.showLoader()
         }
+        setCheckoutInProgress(true)
 
         let payload: [[String: Any]] = selectedTickets.map {
             [
@@ -3550,6 +3669,8 @@ class EventDetailsVC: UIViewController {
     }
 
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
+        guard !isCheckoutInProgress else { return }
+
         guard LoginRequiredCoordinator.isAuthenticated else {
             LoginRequiredCoordinator.presentLogin(from: self) { [weak self] in
                 self?.createInlineBookingAndCheckout(selectedTickets: selectedTickets)
@@ -3561,6 +3682,7 @@ class EventDetailsVC: UIViewController {
         guard let event = event else { return }
 
         checkOutBtn.showLoader(userInteraction: false)
+        setCheckoutInProgress(true)
 
         let ticketsPayload = selectedTickets.map {
             [
@@ -3583,6 +3705,7 @@ class EventDetailsVC: UIViewController {
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
             self.checkOutBtn.hideLoader()
+            self.setCheckoutInProgress(false)
 
 
             if isSuccess {
@@ -3658,6 +3781,8 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickBuyNow(_ sender: Any) {
+        guard !isCheckoutInProgress else { return }
+
         if let event = self.event {
             AppHaptic.primaryAction()
             Navigate.to.ticketSelectionVc(
@@ -5184,12 +5309,14 @@ extension EventDetailsVC: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer === navigationController?.interactivePopGestureRecognizer {
-            return (navigationController?.viewControllers.count ?? 0) > 1
+            return !isCheckoutInProgress &&
+                (navigationController?.viewControllers.count ?? 0) > 1
         }
 
         if let leftEdgeBackGesture,
            gestureRecognizer === leftEdgeBackGesture {
             return isPresentedAsRootNavigationScreen &&
+                !isCheckoutInProgress &&
                 !isBackNavigationInProgress &&
                 !hasReleasedHeavyResources
         }
@@ -6176,6 +6303,7 @@ extension EventGalleryVC: UICollectionViewDelegate, UICollectionViewDataSource, 
 extension EventDetailsVC: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
+        guard !isCheckoutInProgress else { return }
 
         guard LoginRequiredCoordinator.isAuthenticated else {
             AppHaptic.warning()
@@ -6216,6 +6344,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
         }
 
         checkOutBtnView.showLoader()
+        setCheckoutInProgress(true)
 
         let payload: [[String: Any]] = selectedTickets.map {
             ["ticketId": $0.id ?? "", "ticketQuantity": $0.selectedTicketCount ?? 0, "ticketPrice": $0.price ?? 0]
@@ -6234,6 +6363,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
             guard let self else { return }
 
             self.checkOutBtnView.hideLoader()
+            self.setCheckoutInProgress(false)
             if isSuccess {
                 AppHaptic.success()
                 self.shouldClearInlineRSVPSelectionOnReturn = true
@@ -6279,7 +6409,7 @@ private extension EventDetailsVC {
 
     func refreshEventDetailFromSocket() {
         isEventDetailAPICalled = false
-        getEventDetail(showLoading: false)
+        getEventDetail(showLoading: false, quietRefresh: true)
     }
 
     func registerSocketDelegate() {

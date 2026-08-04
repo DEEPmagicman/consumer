@@ -8,6 +8,7 @@
 import UIKit
 
 enum DiscoverSectionType {
+    case trendingEvents
     case tonightEvents
     case venues
     case allEvents
@@ -116,6 +117,10 @@ final class DiscoverSectionView: UIView {
         : resolvedCity
 
         switch type {
+
+        case .trendingEvents:
+
+            titleLabel.text = "Trending in \(displayCity)"
 
         case .tonightEvents:
 
@@ -262,7 +267,8 @@ private extension DiscoverSectionView {
         case .venues:
             return DiscoverSectionLayout.venueItemHeight
 
-        case .tonightEvents,
+        case .trendingEvents,
+             .tonightEvents,
              .allEvents,
              .premiumExperiences:
             return DiscoverSectionLayout.eventItemHeight

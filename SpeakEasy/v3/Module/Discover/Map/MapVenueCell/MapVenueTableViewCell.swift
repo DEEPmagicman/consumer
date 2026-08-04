@@ -43,7 +43,7 @@ class MapVenueTableViewCell: UITableViewCell {
             .joined(separator: ", ")
 
         actionLabel.text = "See Events"
-        badgeLabel.text = "Premium Available"
+        badgeLabel.text = "PREMIUM AVAILABLE"
         badgeView.isHidden = venue.isPremium != true
 
         let imageKey = venue.venueAttachment?.first?.key ?? venue.logo?.key ?? ""

@@ -22,7 +22,9 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var scrollView: UIScrollView!
 
+    private let trendingEventsView = DiscoverSectionView()
     private var todaysEvents = [Event]()
+    private var trendingEvents = [Event]()
     private var allEvents = [Event]()
     private var venues = [ClipVenue]()
 
@@ -69,12 +71,59 @@ final class DiscoverAllVC: UIViewController {
 private extension DiscoverAllVC {
 
     func setupSections() {
+        setupTrendingSection()
         configureSections()
         setupActions()
         setupPremiumExperienceTap()
     }
 
+    func setupTrendingSection() {
+        guard let stackView = todaysEventsView.superview as? UIStackView else {
+            return
+        }
+
+        trendingEventsView.translatesAutoresizingMaskIntoConstraints = false
+        trendingEventsView.backgroundColor = .clear
+        if trendingEventsView.superview == nil {
+            trendingEventsView.heightAnchor.constraint(equalToConstant: 258).isActive = true
+        }
+
+        [
+            trendingEventsView,
+            premiumExperiencesView,
+            todaysEventsView,
+            allEventsView,
+            venuesView
+        ].forEach {
+            stackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+            stackView.addArrangedSubview($0)
+        }
+
+        trendingEventsView.isHidden = true
+    }
+
     func setupActions() {
+
+        trendingEventsView.onTapSeeAll = { [weak self] in
+            guard let self else { return }
+
+            Navigate.to.eventsListVC(
+                self,
+                mode: .trending
+            )
+        }
+
+        trendingEventsView.onTapEvent = { [weak self] event, _ in
+            guard let self else { return }
+
+            self.navigateToDiscoverItem { sender in
+                Navigate.eventDetailsVC(
+                    sender,
+                    event: event
+                )
+            }
+        }
 
         todaysEventsView.onTapSeeAll = { [weak self] in
             guard let self else { return }
@@ -214,11 +263,18 @@ private extension DiscoverAllVC {
 
     func configureSections(
         city: String? = nil,
+        trendingEvents: [Event] = [],
         tonightEvents: [Event] = [],
         venues: [ClipVenue] = [],
         allEvents: [Event] = []
     ) {
         let city = city ?? selectedCity
+
+        trendingEventsView.configure(
+            type: .trendingEvents,
+            data: .events(trendingEvents),
+            city: city
+        )
 
         todaysEventsView.configure(
             type: .tonightEvents,
@@ -240,6 +296,7 @@ private extension DiscoverAllVC {
     }
 
     func clearSectionContent() {
+        trendingEvents.removeAll()
         todaysEvents.removeAll()
         allEvents.removeAll()
         venues.removeAll()
@@ -247,16 +304,19 @@ private extension DiscoverAllVC {
     }
 
     func applyDiscoverData(_ data: DiscoverHomeData) {
+        trendingEvents = data.trendingEvents
         todaysEvents = data.eventsTonight
         allEvents = data.events
         venues = data.venues
 
+        trendingEventsView.isHidden = data.trendingEvents.isEmpty
         todaysEventsView.isHidden = data.eventsTonight.isEmpty
         allEventsView.isHidden = data.events.isEmpty
         venuesView.isHidden = data.venues.isEmpty
 
         configureSections(
             city: selectedCity,
+            trendingEvents: data.trendingEvents,
             tonightEvents: data.eventsTonight,
             venues: data.venues,
             allEvents: data.events
@@ -381,6 +441,7 @@ private extension DiscoverAllVC {
     }
 
     func showNoInternetView() {
+        trendingEventsView.isHidden = true
         todaysEventsView.isHidden = true
         allEventsView.isHidden = true
         venuesView.isHidden = true
@@ -398,6 +459,7 @@ private extension DiscoverAllVC {
     func updateEmptyStateVisibility() {
         let shouldShow =
         noInternetView.isHidden &&
+        trendingEvents.isEmpty &&
         todaysEvents.isEmpty &&
         allEvents.isEmpty &&
         venues.isEmpty
@@ -436,6 +498,7 @@ extension DiscoverAllVC {
         selectedCity = nextCity
 
         let hasContent =
+            !trendingEvents.isEmpty ||
             !todaysEvents.isEmpty ||
             !allEvents.isEmpty ||
             !venues.isEmpty

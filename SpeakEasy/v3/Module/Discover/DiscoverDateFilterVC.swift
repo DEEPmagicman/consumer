@@ -13,6 +13,8 @@ final class DiscoverDateFilterVC: UIViewController {
 
     var selectedDates = [String]()
     private var selectedAPIDates = [String]()
+    private var selectedRangeStartAPIDate: String?
+    private var selectedRangeEndAPIDate: String?
 
     private var selectedDateIndex = 0
 
@@ -55,6 +57,8 @@ final class DiscoverDateFilterVC: UIViewController {
 
         selectedDates = dates
         selectedAPIDates = apiDates ?? dates
+        selectedRangeStartAPIDate = selectedAPIDates.first
+        selectedRangeEndAPIDate = selectedAPIDates.last ?? selectedRangeStartAPIDate
         selectedCity = city
         selectedDateIndex = 0
 
@@ -149,11 +153,12 @@ final class DiscoverDateFilterVC: UIViewController {
         if let heightConstraint = dateCollectionView.constraints.first(where: {
             $0.firstAttribute == .height
         }) {
-            heightConstraint.constant = 40
+            heightConstraint.constant = 0
         }
-        collectionViewTopConstraint.constant = -30
-        dateCollectionView.layer.zPosition = 1
-        view.bringSubviewToFront(dateCollectionView)
+        dateCollectionView.isHidden = true
+        dateCollectionView.isUserInteractionEnabled = false
+        dateCollectionView.alpha = 0
+        collectionViewTopConstraint.constant = 0
     }
 
     // MARK: - Fetch Events
@@ -205,7 +210,7 @@ final class DiscoverDateFilterVC: UIViewController {
             skip: skip,
             timeWindow: selectedDateTimeWindow(),
             eventListType: .eventsInCity,
-            timeZone: TimeZone.current.identifier
+            timeZone: Constant.venueTimeZone?.identifier ?? TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
 
             guard let self else {
@@ -269,15 +274,18 @@ final class DiscoverDateFilterVC: UIViewController {
     }
 
     private func selectedDateTimeWindow() -> DiscoverEventTimeWindow {
-        let apiDate: String
-
-        if selectedAPIDates.indices.contains(selectedDateIndex) {
-            apiDate = selectedAPIDates[selectedDateIndex]
-        } else if selectedDates.indices.contains(selectedDateIndex) {
-            apiDate = selectedDates[selectedDateIndex]
-        } else {
-            apiDate = Date().string(format: .YYYYMMDD, isUTC: false)
+        if let startDate = selectedRangeStartAPIDate,
+           let endDate = selectedRangeEndAPIDate {
+            return .selectedRange(
+                startDateString: startDate,
+                endDateString: endDate
+            )
         }
+
+        let apiDate =
+        selectedAPIDates.first ??
+        selectedDates.first ??
+        Date().string(format: .YYYYMMDD, isUTC: false)
 
         return .selectedDay(apiDate)
     }
@@ -399,7 +407,7 @@ UICollectionViewDelegateFlowLayout {
     ) -> Int {
 
         if collectionView == dateCollectionView {
-            return selectedDates.count
+            return 0
         }
 
         if isInitialLoading {
@@ -601,32 +609,17 @@ extension DiscoverDateFilterVC: DiscoverHeaderScrollable {
     }
 
     var discoverHeaderAdditionalTopInset: CGFloat {
-        40
+        0
     }
 
     func discoverHeaderDidUpdate(
         collapseOffset: CGFloat,
         baseTopInset: CGFloat
     ) {
-        dateCollectionView.transform = CGAffineTransform(
-            translationX: 0,
-            y: baseTopInset - collapseOffset
-        )
-
-        let parentSafeTop = parent?.view.safeAreaInsets.top ?? view.safeAreaInsets.top
-        let transformedFrame = dateCollectionView.convert(
-            dateCollectionView.bounds,
-            to: parent?.view ?? view
-        )
-        let shouldHideDateStrip = transformedFrame.minY <= parentSafeTop + 1
-
-        dateCollectionView.alpha = shouldHideDateStrip ? 0 : 1
-        dateCollectionView.isHidden = shouldHideDateStrip
-        dateCollectionView.isUserInteractionEnabled = !shouldHideDateStrip
-
-        if !shouldHideDateStrip {
-            view.bringSubviewToFront(dateCollectionView)
-        }
+        dateCollectionView.transform = .identity
+        dateCollectionView.alpha = 0
+        dateCollectionView.isHidden = true
+        dateCollectionView.isUserInteractionEnabled = false
     }
 }
 

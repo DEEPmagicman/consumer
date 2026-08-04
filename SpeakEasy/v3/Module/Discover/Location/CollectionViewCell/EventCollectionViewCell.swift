@@ -108,7 +108,7 @@ private extension EventCollectionViewCell {
         eventDate.lineBreakMode = .byTruncatingTail
         eventDate.setContentCompressionResistancePriority(.required, for: .vertical)
         eventDate.font = Constant.Font.geistMedium(size: 11)
-        premiumBadgeLabel.text = "Premium Available"
+        premiumBadgeLabel.text = "PREMIUM AVAILABLE"
         premiumBadgeView.layer.cornerRadius = 7
         premiumBadgeView.clipsToBounds = true
         premiumBadgeView.isHidden = true

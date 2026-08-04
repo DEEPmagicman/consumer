@@ -21,6 +21,7 @@ final class DiscoverVC: UIViewController {
         static let chipIconSpacing: CGFloat = 6
         static let cityIconSpacing: CGFloat = 4
         static let cityCloseWidth: CGFloat = 20
+        static let dateCloseSpacing: CGFloat = 6
     }
 
     @IBOutlet var segmentViewContainer: [UIView]!
@@ -39,10 +40,17 @@ final class DiscoverVC: UIViewController {
     private var cityLabelTrailingConstraint: NSLayoutConstraint?
     private var cityChipWidthConstraint: NSLayoutConstraint?
     private var dateChipWidthConstraint: NSLayoutConstraint?
+    private var dateLabelDefaultTrailingConstraints = [NSLayoutConstraint]()
+    private let dateCloseButton = UIButton(type: .system)
     private var viewControllers = [UIViewController]()
     private var cancellables = Set<AnyCancellable>()
     var startDate: String?
     var endDate: String?
+    private var venueCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = Constant.venueTimeZone ?? .current
+        return calendar
+    }
     private var shimmerDidFinish = false
     private var filterCity: String?
     private var appliedGradientBounds: CGRect = .zero
@@ -97,6 +105,11 @@ final class DiscoverVC: UIViewController {
 
     private func setupLandingHeader() {
         landingHeaderView.setMapHidden(false)
+        landingHeaderView.setCalendarHidden(false)
+        landingHeaderView.setCalendarSelected(false)
+        landingHeaderView.onCalendarTap = { [weak self] in
+            self?.presentDateRangeSelection()
+        }
         landingHeaderView.translatesAutoresizingMaskIntoConstraints = false
         landingHeaderView.isHidden = true
         view.addSubview(landingHeaderView)
@@ -142,6 +155,10 @@ final class DiscoverVC: UIViewController {
     }
 
     private func setupDateChipLayout() {
+        dateView.isHidden = true
+        calendarIcon.image = UIImage(named: "discoverCaledarIcon") ?? UIImage(named: "calendarIcon")
+        calendarIcon.tintColor = .white
+        configureDateCloseButton()
         dateLbl.setContentHuggingPriority(.required, for: .horizontal)
         dateLbl.setContentCompressionResistancePriority(.required, for: .horizontal)
 
@@ -149,6 +166,44 @@ final class DiscoverVC: UIViewController {
         widthConstraint.priority = .required
         widthConstraint.isActive = true
         dateChipWidthConstraint = widthConstraint
+    }
+
+    private func configureDateCloseButton() {
+        guard let contentView = dateLbl.superview,
+              dateCloseButton.superview == nil else {
+            return
+        }
+
+        dateLabelDefaultTrailingConstraints = contentView.constraints.filter {
+            ($0.secondItem as? UIView) === dateLbl
+            && $0.firstAttribute == .trailing
+            && $0.secondAttribute == .trailing
+        }
+        dateLabelDefaultTrailingConstraints.forEach {
+            $0.isActive = false
+        }
+
+        dateCloseButton.setImage(UIImage(named: "closeIcon"), for: .normal)
+        dateCloseButton.tintColor = .white
+        dateCloseButton.backgroundColor = .clear
+        dateCloseButton.translatesAutoresizingMaskIntoConstraints = false
+        dateCloseButton.addTarget(
+            self,
+            action: #selector(onClickDateCross(_:)),
+            for: .touchUpInside
+        )
+        contentView.addSubview(dateCloseButton)
+
+        NSLayoutConstraint.activate([
+            dateCloseButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            dateCloseButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            dateCloseButton.widthAnchor.constraint(equalToConstant: 16),
+            dateCloseButton.heightAnchor.constraint(equalToConstant: 16),
+            dateLbl.trailingAnchor.constraint(
+                lessThanOrEqualTo: dateCloseButton.leadingAnchor,
+                constant: -Layout.dateCloseSpacing
+            )
+        ])
     }
 
     private func setupSkeletonView() {
@@ -189,16 +244,6 @@ final class DiscoverVC: UIViewController {
 
     private func updateDateSelectionUI() {
 
-        let startDate = self.startDate?.convertDateFormat(
-            from: .YYYYMMDD,
-            to: .MMMD
-        )
-
-        let endDate = self.endDate?.convertDateFormat(
-            from: .YYYYMMDD,
-            to: .MMMD
-        )
-
         let dateText = selectedDateDisplayText(
             startDate: startDate,
             endDate: endDate
@@ -206,7 +251,10 @@ final class DiscoverVC: UIViewController {
 
         self.dateLbl.text = self.isDateSelected
         ? dateText
-        : "All Dates"
+        : ""
+        self.dateView.isHidden = !self.isDateSelected
+        self.dateCloseButton.isHidden = !self.isDateSelected
+        self.landingHeaderView.setCalendarSelected(self.isDateSelected)
 
         UIView.performWithoutAnimation {
 
@@ -216,12 +264,13 @@ final class DiscoverVC: UIViewController {
 
                 self.dateView.alpha = 1
                 self.dateView.layer.opacity = 1
-                self.dateView.isOpaque = true
-                dateView.overrideBackgroundColor = .white
+                self.dateView.isOpaque = false
+                self.dateView.overrideBackgroundColor = nil
                 self.dateView.borderWidth = 0
 
-                self.dateLbl.textColor = .black
-                self.calendarIcon.tintColor = .black
+                self.dateLbl.textColor = .white
+                self.calendarIcon.tintColor = .white
+                self.dateCloseButton.tintColor = .white
             } else {
 
                 // MARK: Default State
@@ -231,7 +280,8 @@ final class DiscoverVC: UIViewController {
                 self.dateView.isOpaque = false
                 self.dateLbl.textColor = .white
                 self.calendarIcon.tintColor = .white
-                dateView.overrideBackgroundColor = nil
+                self.dateCloseButton.tintColor = .white
+                self.dateView.overrideBackgroundColor = nil
             }
         }
 
@@ -256,17 +306,14 @@ final class DiscoverVC: UIViewController {
     }
 
     @IBAction func onClickDate(_ sender: Any) {
-        if isDateSelected {
-            isDateSelected = false
-        } else {
-            Navigate.to.dateRangeSelectionVC(self)
-        }
-
+        presentDateRangeSelection()
     }
 
     @IBAction func onClickDateCross(_ sender: Any) {
+        startDate = nil
+        endDate = nil
         showSegmentView(0)
-        isDateSelected.toggle()
+        isDateSelected = false
     }
 
     @IBAction func onClickCityCloseBtn(_ sender: Any) {
@@ -439,16 +486,53 @@ final class DiscoverVC: UIViewController {
         startDate: String?,
         endDate: String?
     ) -> String {
-        let startDate = startDate ?? ""
-        let endDate = endDate ?? ""
+        let startDate = startDate?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let endDate = endDate?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         guard !startDate.isEmpty else {
             return ""
         }
 
-        return endDate.isEmpty
-        ? startDate
-        : "\(startDate) - \(endDate)"
+        guard let start = dateFromAPIDate(startDate) else {
+            return endDate.isEmpty ? startDate : "\(startDate) to \(endDate)"
+        }
+
+        let displayFormatter = DateFormatter()
+        displayFormatter.locale = Locale(identifier: "en_US_POSIX")
+        displayFormatter.timeZone = Constant.venueTimeZone ?? .current
+        displayFormatter.dateFormat = "MMM d"
+
+        guard !endDate.isEmpty,
+              let end = dateFromAPIDate(endDate),
+              !venueCalendar.isDate(start, inSameDayAs: end) else {
+            return displayFormatter.string(from: start)
+        }
+
+        return "\(displayFormatter.string(from: start))- \(displayFormatter.string(from: end))"
+    }
+
+    private func dateFromAPIDate(_ value: String?) -> Date? {
+        guard let value = value?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = Constant.venueTimeZone ?? .current
+        formatter.dateFormat = DateFormat.YYYYMMDD.rawValue
+        return formatter.date(from: value)
+    }
+
+    private func presentDateRangeSelection() {
+        Navigate.to.dateRangeSelectionVC(
+            self,
+            initialStartDate: dateFromAPIDate(startDate),
+            initialEndDate: dateFromAPIDate(endDate ?? startDate)
+        )
     }
 
     private func applyCityFilter(
@@ -538,14 +622,16 @@ final class DiscoverVC: UIViewController {
 
     private func updateDateChipWidth() {
         let text = dateLbl.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? "All Dates"
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let font = dateLbl.font ?? Constant.Font.geistMedium(size: 12)
         let textWidth = ceil((text as NSString).size(withAttributes: [.font: font]).width)
         let width =
         (Layout.chipHorizontalPadding * 2) +
         Layout.chipIconWidth +
         Layout.chipIconSpacing +
-        textWidth
+        textWidth +
+        Layout.dateCloseSpacing +
+        Layout.cityCloseWidth
 
         dateChipWidthConstraint?.constant = min(
             max(width, Layout.dateChipMinWidth),

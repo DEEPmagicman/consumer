@@ -585,10 +585,18 @@ final class Navigate {
         return vc
     }
     
-    func dateRangeSelectionVC(_ sender: UIViewController) {
+    @discardableResult
+    func dateRangeSelectionVC(
+        _ sender: UIViewController,
+        initialStartDate: Date? = nil,
+        initialEndDate: Date? = nil
+    ) -> DateRangeSelectionVC {
         let vc = DateRangeSelectionVC(nibName: "DateRangeSelectionVC", bundle: nil)
         vc.dateDelegate = sender as? SelectedDateDelegate
+        vc.initialStartDate = initialStartDate
+        vc.initialEndDate = initialEndDate
         sender.presentVC(vc)
+        return vc
     }
     
     func tables3DMapVC(_ sender: UIViewController) {

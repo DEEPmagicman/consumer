@@ -43,6 +43,7 @@ final class VenueExperiencesVC: UIViewController,
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         refreshCollectionLayoutIfNeeded()
+        updateScrollAvailability()
     }
 
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
@@ -187,6 +188,7 @@ extension VenueExperiencesVC {
             collectionView.reloadData()
             collectionView.layoutIfNeeded()
         }
+        updateScrollAvailability()
     }
 
     private func insertEventItems(_ indexPaths: [IndexPath]) {
@@ -197,6 +199,7 @@ extension VenueExperiencesVC {
                 guard let self else { return }
                 self.isPaginating = false
                 self.invalidateFooter()
+                self.updateScrollAvailability()
             }
         }
     }
@@ -222,6 +225,27 @@ extension VenueExperiencesVC {
         UIView.performWithoutAnimation {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
+        }
+        updateScrollAvailability()
+    }
+
+    private func updateScrollAvailability() {
+        let topOffsetY = -collectionView.adjustedContentInset.top
+        let visibleHeight = collectionView.bounds.height
+        let verticalInset = collectionView.adjustedContentInset.top + collectionView.adjustedContentInset.bottom
+        let hasScrollableContent = isInitialLoading ||
+            collectionView.contentSize.height + verticalInset > visibleHeight + 1
+
+        collectionView.isScrollEnabled = true
+        collectionView.alwaysBounceVertical = hasScrollableContent
+        collectionView.bounces = hasScrollableContent
+
+        if !hasScrollableContent,
+           abs(collectionView.contentOffset.y - topOffsetY) > 0.5 {
+            collectionView.setContentOffset(
+                CGPoint(x: collectionView.contentOffset.x, y: topOffsetY),
+                animated: false
+            )
         }
     }
 
@@ -318,6 +342,7 @@ extension VenueExperiencesVC {
                     guard !indexPaths.isEmpty else {
                         self.isPaginating = false
                         self.invalidateFooter()
+                        self.updateScrollAvailability()
                         return
                     }
 
@@ -327,6 +352,7 @@ extension VenueExperiencesVC {
                     self.isInitialLoading = false
                     self.isPaginating = false
                     self.invalidateFooter()
+                    self.updateScrollAvailability()
                     self.showsNoInternetView =
                         V3NoInternetView.isNoInternet(errMsg)
 

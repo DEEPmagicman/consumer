@@ -8,6 +8,7 @@
 import Foundation
 
 struct DiscoverHomeData {
+    let trendingEvents: [Event]
     let eventsTonight: [Event]
     let events: [Event]
     let venues: [ClipVenue]
@@ -42,7 +43,7 @@ struct DiscoverEventTimeWindow {
         let day = Self.dayDate(from: dateString) ?? Date()
         let start = Self.eightAM(on: day)
         let end =
-        Calendar.current.date(
+        Self.calendar.date(
             byAdding: .day,
             value: 1,
             to: start
@@ -53,9 +54,31 @@ struct DiscoverEventTimeWindow {
             endDateTime: Self.apiString(from: end)
         )
     }
+
+    static func selectedRange(
+        startDateString: String,
+        endDateString: String
+    ) -> DiscoverEventTimeWindow {
+        let startDay = Self.dayDate(from: startDateString) ?? Date()
+        let endDay = Self.dayDate(from: endDateString) ?? startDay
+        let start = Self.eightAM(on: min(startDay, endDay))
+        let endDayEightAM = Self.eightAM(on: max(startDay, endDay))
+        let end =
+        Self.calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: endDayEightAM
+        ) ?? endDayEightAM
+
+        return DiscoverEventTimeWindow(
+            startDateTime: Self.apiString(from: start),
+            endDateTime: Self.apiString(from: end)
+        )
+    }
 }
 
 enum DiscoverEventListType: String {
+    case trendingEvents = "TRENDING_EVENTS"
     case eventsTonight = "EVENTS_TONIGHT"
     case eventsInCity = "EVENTS_IN_CITY"
 }
@@ -86,6 +109,9 @@ final class DiscoverService {
             let eventsTonightPage =
             responseDic["eventsTonight"] as? [String: Any]
 
+            let trendingEventsPage =
+            responseDic["trendingEvents"] as? [String: Any]
+
             let eventsPage =
             responseDic["eventsInCity"] as? [String: Any]
 
@@ -95,6 +121,9 @@ final class DiscoverService {
             let eventsTonightList =
             eventsTonightPage?["list"] as? [[String: Any]] ?? []
 
+            let trendingEventsList =
+            trendingEventsPage?["list"] as? [[String: Any]] ?? []
+
             let eventsList =
             eventsPage?["list"] as? [[String: Any]] ?? []
 
@@ -102,6 +131,7 @@ final class DiscoverService {
             venuesPage?["list"] as? [[String: Any]] ?? []
 
             guard
+                let trendingEvents = Self.parseEvents(trendingEventsList),
                 let eventsTonight = Self.parseEvents(eventsTonightList),
                 let events = Self.parseEvents(eventsList),
                 let venues = Self.parseVenues(venuesList)
@@ -111,6 +141,7 @@ final class DiscoverService {
             }
 
             let data = DiscoverHomeData(
+                trendingEvents: trendingEvents,
                 eventsTonight: eventsTonight,
                 events: events,
                 venues: venues
@@ -607,10 +638,20 @@ private extension DiscoverService {
 
 private extension DiscoverEventTimeWindow {
 
+    static var timeZone: TimeZone {
+        Constant.venueTimeZone ?? .current
+    }
+
+    static var calendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        return calendar
+    }
+
     static func apiString(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = .current
+        formatter.timeZone = timeZone
         formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
         return formatter.string(from: date)
     }
@@ -620,7 +661,7 @@ private extension DiscoverEventTimeWindow {
 
         let apiFormatter = DateFormatter()
         apiFormatter.locale = Locale(identifier: "en_US_POSIX")
-        apiFormatter.timeZone = .current
+        apiFormatter.timeZone = timeZone
         apiFormatter.dateFormat = DateFormat.YYYYMMDD.rawValue
 
         if let date = apiFormatter.date(from: trimmed) {
@@ -629,17 +670,14 @@ private extension DiscoverEventTimeWindow {
 
         let displayFormatter = DateFormatter()
         displayFormatter.locale = Locale(identifier: "en_US_POSIX")
-        displayFormatter.timeZone = .current
+        displayFormatter.timeZone = timeZone
         displayFormatter.dateFormat = "yyyy MMM dd"
 
-        let year = Calendar.current.component(.year, from: Date())
+        let year = calendar.component(.year, from: Date())
         return displayFormatter.date(from: "\(year) \(trimmed)")
     }
 
     static func eightAM(on date: Date) -> Date {
-        var calendar = Calendar.current
-        calendar.timeZone = .current
-
         var components =
         calendar.dateComponents(
             [.year, .month, .day],
@@ -654,9 +692,6 @@ private extension DiscoverEventTimeWindow {
     }
 
     static func nextDayEightAM(after date: Date) -> Date {
-        var calendar = Calendar.current
-        calendar.timeZone = .current
-
         let tomorrow =
         calendar.date(
             byAdding: .day,

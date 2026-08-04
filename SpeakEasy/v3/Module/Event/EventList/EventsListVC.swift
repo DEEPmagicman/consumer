@@ -9,6 +9,7 @@ import UIKit
 
 enum EventsListMode {
     case cityEvents
+    case trending
     case tonight
     case venueSearch
 }
@@ -332,6 +333,8 @@ final class EventsListVC: UIViewController {
 
     private func eventListType() -> DiscoverEventListType {
         switch listMode {
+        case .trending:
+            return .trendingEvents
         case .cityEvents:
             return .eventsInCity
         case .tonight:
@@ -378,6 +381,14 @@ final class EventsListVC: UIViewController {
 
     private func updateCityTitle() {
         switch listMode {
+        case .trending:
+            titleLbl.text = "Trending in \(resolvedCity())"
+            cityTitleLbl.text = ""
+            cityTitleLbl.isHidden = true
+            self.topTitleView.cornerRadius = 20
+            topViewLeftSideConstraint.constant = 20
+            topViewRightSideConstraint.constant = 20
+
         case .cityEvents:
             titleLbl.text = "Events in \(resolvedCity())"
             cityTitleLbl.text = ""

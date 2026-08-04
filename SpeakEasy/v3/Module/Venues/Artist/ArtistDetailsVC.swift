@@ -69,6 +69,7 @@ final class ArtistDetailsVC: UIViewController {
     private let socialIconsView = UIView()
     private let spotifyIconView = UIView()
     private let spotifyMarkView = SpotifyMarkView()
+    private let navArtistNameLabel = PremiumMarqueeLabel()
     private let tabView = UIView()
     private let glassSegment = GlassSegmentView(titles: ["Upcoming events", "Past events"])
     private let pageVC = UIPageViewController(
@@ -86,6 +87,15 @@ final class ArtistDetailsVC: UIViewController {
     private var registeredPanScrollIDs = Set<ObjectIdentifier>()
     private var isUpdatingChildScrollOffset = false
     private var isFollowing = false
+    private lazy var shortContentPanGesture: UIPanGestureRecognizer = {
+        let gesture = UIPanGestureRecognizer(
+            target: self,
+            action: #selector(handleShortContentPan(_:))
+        )
+        gesture.cancelsTouchesInView = false
+        gesture.delegate = self
+        return gesture
+    }()
 
     private let tabTopPadding: CGFloat = 370
     private let stickySegmentTopSpacing: CGFloat = 64
@@ -93,6 +103,8 @@ final class ArtistDetailsVC: UIViewController {
     private let headerExpansionStartTolerance: CGFloat = 12
     private let headerFadeStartProgress: CGFloat = 0.12
     private let headerFadeEndProgress: CGFloat = 0.44
+    private let navTitleFadeStartProgress: CGFloat = 0.52
+    private let navTitleFadeEndProgress: CGFloat = 0.82
     private let headerSnapThresholdProgress: CGFloat = 0.5
     private let headerSnapVelocityThreshold: CGFloat = 160
 
@@ -101,6 +113,7 @@ final class ArtistDetailsVC: UIViewController {
 
         hideLegacyArtistLayout()
         setupLayout()
+        setupNavTitleView()
         setupHeader()
         setupTabs()
     }
@@ -174,8 +187,8 @@ final class ArtistDetailsVC: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
 
             tabView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: tabTopPadding),
-            tabView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
-            tabView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14),
+            tabView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            tabView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             tabView.heightAnchor.constraint(equalToConstant: 45)
         ])
 
@@ -301,6 +314,7 @@ final class ArtistDetailsVC: UIViewController {
 
     private func setupHeader() {
         artistNameLabel.text = artist?.name ?? "Artist"
+        updateNavTitleText()
 
         guard let imageURL = artist?.imageURL,
               let url = URL(string: imageURL) else {
@@ -343,6 +357,7 @@ final class ArtistDetailsVC: UIViewController {
         pageVC.didMove(toParent: self)
         pageVC.dataSource = self
         pageVC.delegate = self
+        pageVC.view.addGestureRecognizer(shortContentPanGesture)
         pageVC.setViewControllers([upcomingVC], direction: .forward, animated: false)
         resetTrackedOffset(for: upcomingVC)
 
@@ -406,6 +421,39 @@ final class ArtistDetailsVC: UIViewController {
         )
     }
 
+    private func setupNavTitleView() {
+        navArtistNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        navArtistNameLabel.alpha = 0
+        navArtistNameLabel.isUserInteractionEnabled = false
+        navArtistNameLabel.font = Constant.Font.geistMedium(size: 20)
+        navArtistNameLabel.textColor = .white
+        navArtistNameLabel.animationSpeed = 25
+        navArtistNameLabel.animationDelay = 1.2
+        navArtistNameLabel.trailingSpacing = 48
+        navArtistNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        navArtistNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.addSubview(navArtistNameLabel)
+
+        NSLayoutConstraint.activate([
+            navArtistNameLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            navArtistNameLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 36),
+            navArtistNameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 72),
+            navArtistNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72),
+            navArtistNameLabel.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -144),
+            navArtistNameLabel.heightAnchor.constraint(equalToConstant: 24)
+        ])
+
+        view.bringSubviewToFront(navArtistNameLabel)
+        view.subviews
+            .filter { $0 is AppIconButton }
+            .forEach { view.bringSubviewToFront($0) }
+    }
+
+    private func updateNavTitleText() {
+        navArtistNameLabel.setText(artist?.name ?? "Artist")
+        navArtistNameLabel.setNeedsLayout()
+    }
+
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
@@ -432,6 +480,20 @@ extension ArtistDetailsVC: ChildScrollDelegate {
         let topOffsetY = topContentOffsetY(for: scrollView)
 
         childScrollOffsets[scrollID] = currentOffsetY
+
+        guard hasVisibleScrollContent(scrollView) else {
+            if abs(currentOffsetY - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+            return
+        }
+
+        guard hasVerticallyScrollableContent(scrollView) else {
+            if abs(currentOffsetY - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+            return
+        }
 
         guard abs(deltaY) > 0.1 else { return }
 
@@ -466,6 +528,7 @@ extension ArtistDetailsVC: ChildScrollDelegate {
         artistNameLabel.alpha = visibleAlpha
         followContainer.alpha = visibleAlpha
         socialIconsView.alpha = visibleAlpha
+        navArtistNameLabel.alpha = navTitleAlpha(for: progress)
 
         let updates = {
             self.view.layoutIfNeeded()
@@ -491,6 +554,14 @@ extension ArtistDetailsVC: ChildScrollDelegate {
         )
     }
 
+    private func navTitleAlpha(for progress: CGFloat) -> CGFloat {
+        return smoothProgress(
+            progress,
+            start: navTitleFadeStartProgress,
+            end: navTitleFadeEndProgress
+        )
+    }
+
     private func smoothProgress(_ value: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
         guard end > start else { return value >= end ? 1 : 0 }
 
@@ -501,6 +572,9 @@ extension ArtistDetailsVC: ChildScrollDelegate {
     private func resetTrackedOffset(for viewController: UIViewController) {
         guard let scrollView = observedScrollView(for: viewController) else { return }
         let scrollID = ObjectIdentifier(scrollView)
+        if !hasVerticallyScrollableContent(scrollView) {
+            set(scrollView, contentOffsetY: topContentOffsetY(for: scrollView), scrollID: scrollID)
+        }
         childScrollOffsets[scrollID] = scrollView.contentOffset.y
         childPanTranslations.removeValue(forKey: scrollID)
         registerPanHandlerIfNeeded(for: scrollView, scrollID: scrollID)
@@ -514,6 +588,26 @@ extension ArtistDetailsVC: ChildScrollDelegate {
         }
 
         return nil
+    }
+
+    private func currentObservedScrollView() -> UIScrollView? {
+        guard tabControllers.indices.contains(selectedIndex) else { return nil }
+        return observedScrollView(for: tabControllers[selectedIndex])
+    }
+
+    private func shouldBeginShortContentPan(_ gesture: UIPanGestureRecognizer) -> Bool {
+        guard maxHeaderCollapseOffset > 0,
+              let scrollView = currentObservedScrollView(),
+              hasVisibleScrollContent(scrollView),
+              !hasVerticallyScrollableContent(scrollView)
+        else {
+            return false
+        }
+
+        let velocity = gesture.velocity(in: view)
+        guard abs(velocity.y) > abs(velocity.x) else { return false }
+
+        return velocity.y > 0 && headerCollapseOffset > 0.5
     }
 
     private func consumeUpwardScroll(
@@ -561,6 +655,20 @@ extension ArtistDetailsVC: ChildScrollDelegate {
 
     private func topContentOffsetY(for scrollView: UIScrollView) -> CGFloat {
         return -scrollView.adjustedContentInset.top
+    }
+
+    private func hasVerticallyScrollableContent(_ scrollView: UIScrollView) -> Bool {
+        let verticalInset = scrollView.adjustedContentInset.top + scrollView.adjustedContentInset.bottom
+        return scrollView.contentSize.height + verticalInset > scrollView.bounds.height + 1
+    }
+
+    private func hasVisibleScrollContent(_ scrollView: UIScrollView) -> Bool {
+        guard let collectionView = scrollView as? UICollectionView else {
+            return scrollView.contentSize.height > 1
+        }
+
+        return (0..<collectionView.numberOfSections)
+            .contains { collectionView.numberOfItems(inSection: $0) > 0 }
     }
 
     private func settleHeaderAfterScrollEnds(
@@ -620,26 +728,46 @@ extension ArtistDetailsVC: ChildScrollDelegate {
 
         let currentTranslationY = gesture.translation(in: view).y
         let topOffsetY = topContentOffsetY(for: scrollView)
+        let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
+        let deltaY = currentTranslationY - previousTranslationY
+
+        childPanTranslations[scrollID] = currentTranslationY
+
+        guard hasVisibleScrollContent(scrollView) else {
+            if abs(scrollView.contentOffset.y - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+            return
+        }
+
+        guard hasVerticallyScrollableContent(scrollView) else {
+            if abs(scrollView.contentOffset.y - topOffsetY) > 0.5 {
+                set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+            }
+
+            if deltaY > 0, headerCollapseOffset > 0 {
+                consumeDownwardScroll(
+                    deltaY * headerExpansionDragMultiplier,
+                    from: scrollView,
+                    scrollID: scrollID,
+                    topOffsetY: topOffsetY
+                )
+            }
+            return
+        }
 
         guard headerCollapseOffset > 0 else {
-            childPanTranslations[scrollID] = currentTranslationY
             return
         }
 
         switch gesture.state {
         case .began:
-            childPanTranslations[scrollID] = currentTranslationY
+            break
 
         case .changed:
             guard scrollView.contentOffset.y <= topOffsetY + headerExpansionStartTolerance else {
-                childPanTranslations[scrollID] = currentTranslationY
                 return
             }
-
-            let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
-            let deltaY = currentTranslationY - previousTranslationY
-
-            childPanTranslations[scrollID] = currentTranslationY
 
             guard deltaY > 0 else { return }
 
@@ -653,6 +781,71 @@ extension ArtistDetailsVC: ChildScrollDelegate {
         default:
             childPanTranslations.removeValue(forKey: scrollID)
         }
+    }
+
+    @objc private func handleShortContentPan(_ gesture: UIPanGestureRecognizer) {
+        guard let scrollView = currentObservedScrollView() else { return }
+        guard hasVisibleScrollContent(scrollView) else { return }
+
+        let scrollID = ObjectIdentifier(scrollView)
+        let topOffsetY = topContentOffsetY(for: scrollView)
+
+        if gesture.state == .ended ||
+            gesture.state == .cancelled ||
+            gesture.state == .failed {
+            settleHeaderAfterScrollEnds(
+                for: scrollView,
+                scrollID: scrollID,
+                velocityY: gesture.velocity(in: view).y
+            )
+            childPanTranslations.removeValue(forKey: scrollID)
+            return
+        }
+
+        guard !isUpdatingChildScrollOffset else { return }
+
+        if abs(scrollView.contentOffset.y - topOffsetY) > 0.5 {
+            set(scrollView, contentOffsetY: topOffsetY, scrollID: scrollID)
+        }
+
+        let currentTranslationY = gesture.translation(in: view).y
+        let previousTranslationY = childPanTranslations[scrollID] ?? currentTranslationY
+        let deltaY = currentTranslationY - previousTranslationY
+
+        childPanTranslations[scrollID] = currentTranslationY
+
+        guard gesture.state == .changed else { return }
+
+        if deltaY > 0, headerCollapseOffset > 0 {
+            consumeDownwardScroll(
+                deltaY * headerExpansionDragMultiplier,
+                from: scrollView,
+                scrollID: scrollID,
+                topOffsetY: topOffsetY
+            )
+        }
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension ArtistDetailsVC: UIGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer === shortContentPanGesture,
+           let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            return shouldBeginShortContentPan(panGesture)
+        }
+
+        return true
+    }
+
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return gestureRecognizer === shortContentPanGesture ||
+            otherGestureRecognizer === shortContentPanGesture
     }
 }
 
@@ -728,6 +921,7 @@ final class ArtistEventsListVC: UIViewController {
     private let artist: ArtistDetailsContext?
     private let timeVersion: ArtistEventTimeVersion
     private let discoverService = DiscoverService()
+    private let emptyStateView = V3EmptyStateView(style: .venueEvents)
     private var events: [Event] = []
     private var skip = 0
     private var hasMore = true
@@ -760,6 +954,7 @@ final class ArtistEventsListVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         refreshCollectionLayoutIfNeeded()
+        updateScrollAvailability()
     }
 
     private func setupCollectionView() {
@@ -774,7 +969,8 @@ final class ArtistEventsListVC: UIViewController {
         collectionView.layer.masksToBounds = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.alwaysBounceVertical = true
+        collectionView.alwaysBounceVertical = false
+        collectionView.bounces = false
         collectionView.contentInsetAdjustmentBehavior = .never
 
         collectionView.register(
@@ -800,9 +996,9 @@ final class ArtistEventsListVC: UIViewController {
         layout.numberOfColumns = 2
         layout.sectionInsets = UIEdgeInsets(
             top: 22,
-            left: 32,
+            left: 22,
             bottom: 34,
-            right: 16
+            right: 22
         )
         layout.interItemSpacing = 14
         layout.lineSpacing = 16
@@ -877,6 +1073,7 @@ final class ArtistEventsListVC: UIViewController {
                     } else {
                         self.invalidateFooter()
                         self.updateEmptyState()
+                        self.updateScrollAvailability()
                     }
                     if let errMsg {
                         Alert.showToast(errMsg)
@@ -917,6 +1114,7 @@ final class ArtistEventsListVC: UIViewController {
                     self.isPaginating = false
                     self.invalidateFooter()
                     self.updateEmptyState()
+                    self.updateScrollAvailability()
                     return
                 }
 
@@ -932,6 +1130,7 @@ final class ArtistEventsListVC: UIViewController {
             collectionView.layoutIfNeeded()
         }
         updateEmptyState()
+        updateScrollAvailability()
     }
 
     private func insertEventItems(_ indexPaths: [IndexPath]) {
@@ -943,6 +1142,7 @@ final class ArtistEventsListVC: UIViewController {
                 self.isPaginating = false
                 self.invalidateFooter()
                 self.updateEmptyState()
+                self.updateScrollAvailability()
             }
         }
     }
@@ -953,38 +1153,40 @@ final class ArtistEventsListVC: UIViewController {
             : nil
     }
 
+    private func updateScrollAvailability() {
+        let topOffsetY = -collectionView.adjustedContentInset.top
+        let visibleHeight = collectionView.bounds.height
+        let verticalInset = collectionView.adjustedContentInset.top + collectionView.adjustedContentInset.bottom
+        let hasScrollableContent = isInitialLoading ||
+            collectionView.contentSize.height + verticalInset > visibleHeight + 1
+
+        collectionView.isScrollEnabled = true
+        collectionView.alwaysBounceVertical = false
+        collectionView.bounces = false
+
+        if !hasScrollableContent,
+           abs(collectionView.contentOffset.y - topOffsetY) > 0.5 {
+            collectionView.setContentOffset(
+                CGPoint(x: collectionView.contentOffset.x, y: topOffsetY),
+                animated: false
+            )
+        }
+    }
+
     private func makeEmptyStateView() -> UIView {
         let container = UIView(frame: collectionView.bounds)
         container.backgroundColor = .clear
 
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "No events found"
-        titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 18)
-        titleLabel.textAlignment = .center
-
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.text = timeVersion.emptySubtitle
-        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.numberOfLines = 0
-
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 8
-
-        container.addSubview(stackView)
+        emptyStateView.removeFromSuperview()
+        emptyStateView.configure(style: .venueEvents)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(emptyStateView)
 
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -40),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+            emptyStateView.topAnchor.constraint(equalTo: container.topAnchor),
+            emptyStateView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            emptyStateView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            emptyStateView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         ])
 
         return container
@@ -1012,6 +1214,7 @@ final class ArtistEventsListVC: UIViewController {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
         }
+        updateScrollAvailability()
     }
 
     private func loadNextPageIfNeeded() {

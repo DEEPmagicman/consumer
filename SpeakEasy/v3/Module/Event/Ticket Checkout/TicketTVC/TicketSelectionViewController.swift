@@ -1077,6 +1077,8 @@ class TicketSelectionViewController: UIViewController {
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        guard !isCheckoutInProgress else { return }
+
         AppHaptic.navigation()
         Navigate.to.back(self)
     }
@@ -1163,6 +1165,8 @@ class TicketSelectionViewController: UIViewController {
         } else {
             continueToCheckOutView.hideLoader()
         }
+
+        setCheckoutInProgress(false)
     }
 
     private func createBooking(
@@ -1183,7 +1187,6 @@ class TicketSelectionViewController: UIViewController {
 
             guard isAvailable else {
                 self.stopBookingLoader(rsvpCell: rsvpCell)
-                self.setCheckoutInProgress(false)
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                 return
             }
@@ -1192,7 +1195,8 @@ class TicketSelectionViewController: UIViewController {
                 event: event,
                 user: user,
                 tickets: tickets,
-                payload: payload
+                payload: payload,
+                rsvpCell: rsvpCell
             )
         }
     }
@@ -1265,7 +1269,8 @@ class TicketSelectionViewController: UIViewController {
         event: Event,
         user: User,
         tickets: [EventTicket],
-        payload: [[String: Any]]
+        payload: [[String: Any]],
+        rsvpCell: TicketsTVC? = nil
     ) {
 
         paymentService.createEventBooking(
@@ -1279,7 +1284,7 @@ class TicketSelectionViewController: UIViewController {
             promotionLinkUniqueCode: promotionLinkUniqueCode
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
-            self.continueToCheckOutView.hideLoader()
+            self.stopBookingLoader(rsvpCell: rsvpCell)
             if isSuccess {
                 AppHaptic.success()
 //                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
@@ -1294,7 +1299,6 @@ class TicketSelectionViewController: UIViewController {
                     promotionLinkUniqueCode: promotionLinkUniqueCode
                 )
             } else {
-                self.setCheckoutInProgress(false)
                 AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
