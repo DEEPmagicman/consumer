@@ -23,6 +23,7 @@ final class ProfileMenuVC: UIViewController {
     private let profileCard = ProfileCardView()
     private let settingsCard = ProfileCardView()
     private let logoutCard = ProfileCardView()
+    private let deleteAccountBtn = UIButton(type: .system)
     private var versionLabel = UILabel()
     private let backgroundBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let backgroundDimView = UIView()
@@ -194,6 +195,7 @@ final class ProfileMenuVC: UIViewController {
         contentView.addSubview(profileCard)
         contentView.addSubview(settingsCard)
         contentView.addSubview(logoutCard)
+        contentView.addSubview(deleteAccountBtn)
 
         addRows(
             to: profileCard,
@@ -219,10 +221,15 @@ final class ProfileMenuVC: UIViewController {
         addRows(
             to: logoutCard,
             rows: [
-                ProfileMenuRow(title: "Log Out", icon: UIImage(resource: .logOutIc), action: #selector(onClickLogOut)),
-                ProfileMenuRow(title: "Delete Account", icon: UIImage(systemName: "trash"), action: #selector(onClickDelete))
+                ProfileMenuRow(title: "Log Out", icon: UIImage(resource: .logOutIc), action: #selector(onClickLogOut))
             ]
         )
+
+        deleteAccountBtn.setTitle("Delete account", for: .normal)
+        deleteAccountBtn.setTitleColor(UIColor(hex: "#FF453A"), for: .normal)
+        deleteAccountBtn.titleLabel?.font = Constant.Font.geistRegular(size: 16)
+        deleteAccountBtn.addTarget(self, action: #selector(onClickDelete), for: .touchUpInside)
+        deleteAccountBtn.translatesAutoresizingMaskIntoConstraints = false
 
         let versionLabelText = "Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")"
         versionLabel = Utility.main.makeLabel(versionLabelText, font: Constant.Font.geistRegular(size: 12))
@@ -294,9 +301,13 @@ final class ProfileMenuVC: UIViewController {
             logoutCard.topAnchor.constraint(equalTo: settingsCard.bottomAnchor, constant: 10),
             logoutCard.leadingAnchor.constraint(equalTo: topActionsCard.leadingAnchor),
             logoutCard.trailingAnchor.constraint(equalTo: topActionsCard.trailingAnchor),
-            logoutCard.heightAnchor.constraint(equalToConstant: 114),
+            logoutCard.heightAnchor.constraint(equalToConstant: 67),
 
-            versionLabel.topAnchor.constraint(equalTo: logoutCard.bottomAnchor, constant: 44),
+            deleteAccountBtn.topAnchor.constraint(equalTo: logoutCard.bottomAnchor, constant: 40),
+            deleteAccountBtn.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            deleteAccountBtn.heightAnchor.constraint(equalToConstant: 24),
+
+            versionLabel.topAnchor.constraint(equalTo: deleteAccountBtn.bottomAnchor, constant: 18),
             versionLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             versionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])

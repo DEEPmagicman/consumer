@@ -52,14 +52,14 @@ final class PremiumInfoPillView: UIView {
         addSubview(iconView)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = Constant.Font.geistMedium(size: 10)
+        titleLabel.font = Constant.Font.geistMedium(size: 12)
         titleLabel.textColor = UIColor.white
         titleLabel.numberOfLines = 1
         addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
             
-            heightAnchor.constraint(equalToConstant: 22),
+            heightAnchor.constraint(equalToConstant: 24),
             
             glassView.topAnchor.constraint(equalTo: topAnchor),
             glassView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -68,8 +68,8 @@ final class PremiumInfoPillView: UIView {
             
             iconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: 10),
-            iconView.heightAnchor.constraint(equalToConstant: 10),
+            iconView.widthAnchor.constraint(equalToConstant: 12),
+            iconView.heightAnchor.constraint(equalToConstant: 12),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 5),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),

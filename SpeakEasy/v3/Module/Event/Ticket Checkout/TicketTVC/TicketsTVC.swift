@@ -59,6 +59,9 @@ class TicketsTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        bgView.layer.cornerRadius = 20
+        bgView.layer.cornerCurve = .continuous
+        bgView.clipsToBounds = true
         setupTicketBackgroundGradient()
         rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
     }
@@ -151,7 +154,9 @@ class TicketsTVC: UITableViewCell {
         viewMoreBtnView.isHidden = true
         viewMoreBtn.setTitle("View More", for: .normal)
 
-        bgView.layer.cornerRadius = 10
+        bgView.layer.cornerRadius = 20
+        bgView.layer.cornerCurve = .continuous
+        bgView.clipsToBounds = true
         updateTicketBackgroundGradientFrame()
         topConstraint.constant = 12
         topSapraterView.isHidden = true

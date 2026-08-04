@@ -104,7 +104,7 @@ final class PremiumExperienceCell: UICollectionViewCell {
         contentView.addSubview(guestIconView)
 
         guestLabel.textColor = AppColor.primaryWhiteColor
-        guestLabel.font = Constant.Font.geistRegular(size: 9)
+        guestLabel.font = Constant.Font.geistRegular(size: 12)
         guestLabel.numberOfLines = 1
         guestLabel.adjustsFontSizeToFitWidth = true
         guestLabel.minimumScaleFactor = 0.82
@@ -142,8 +142,8 @@ final class PremiumExperienceCell: UICollectionViewCell {
 
             guestIconView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             guestIconView.leadingAnchor.constraint(equalTo: venueLabel.leadingAnchor),
-            guestIconView.widthAnchor.constraint(equalToConstant: 10),
-            guestIconView.heightAnchor.constraint(equalToConstant: 10),
+            guestIconView.widthAnchor.constraint(equalToConstant: 12),
+            guestIconView.heightAnchor.constraint(equalToConstant: 12),
 
             guestLabel.centerYAnchor.constraint(equalTo: guestIconView.centerYAnchor),
             guestLabel.leadingAnchor.constraint(equalTo: guestIconView.trailingAnchor, constant: 4),

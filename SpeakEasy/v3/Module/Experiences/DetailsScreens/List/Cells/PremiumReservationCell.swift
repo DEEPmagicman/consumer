@@ -255,13 +255,13 @@ final class PremiumReservationCell: UITableViewCell {
             
             guestView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             guestView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            guestView.heightAnchor.constraint(equalToConstant: 22),
+            guestView.heightAnchor.constraint(equalToConstant: 24),
             
             // MARK: Time
             
             timeView.centerYAnchor.constraint(equalTo: guestView.centerYAnchor),
             timeView.leadingAnchor.constraint(equalTo: guestView.trailingAnchor, constant: 8),
-            timeView.heightAnchor.constraint(equalToConstant: 22),
+            timeView.heightAnchor.constraint(equalToConstant: 24),
             timeView.trailingAnchor.constraint(lessThanOrEqualTo: cardView.trailingAnchor, constant: -18),
             
             // MARK: Description

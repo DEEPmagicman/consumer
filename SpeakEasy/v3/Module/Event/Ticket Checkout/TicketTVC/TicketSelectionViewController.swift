@@ -153,7 +153,7 @@ class TicketSelectionViewController: UIViewController {
     private func setupPosterBackground() {
         guard posterHeaderView.superview == nil else { return }
 
-        posterHeaderView.applyBackgroundStyle(.softColorWash)
+        posterHeaderView.applyBackgroundStyle(.ticketOptionsBlur)
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
 

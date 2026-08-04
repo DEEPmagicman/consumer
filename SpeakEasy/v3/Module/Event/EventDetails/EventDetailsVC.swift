@@ -5495,6 +5495,7 @@ final class EventPosterHeaderView: UIView {
         case standard
         case abstractColorWash
         case softColorWash
+        case ticketOptionsBlur
     }
 
     private let screenBackgroundColor = UIColor(hex: "#121212")
@@ -5517,6 +5518,8 @@ final class EventPosterHeaderView: UIView {
             return 0.78
         case .softColorWash:
             return 0.92
+        case .ticketOptionsBlur:
+            return 0.82
         }
     }
 
@@ -5528,6 +5531,8 @@ final class EventPosterHeaderView: UIView {
             return 1.0
         case .softColorWash:
             return 0.82
+        case .ticketOptionsBlur:
+            return 0.96
         }
     }
 
@@ -5539,6 +5544,8 @@ final class EventPosterHeaderView: UIView {
             return 0.46
         case .softColorWash:
             return 0.22
+        case .ticketOptionsBlur:
+            return 0.32
         }
     }
 
@@ -5623,6 +5630,14 @@ final class EventPosterHeaderView: UIView {
                 UIColor.black.cgColor
             ]
             bottomGradientLayer.locations = [0.0, 0.48, 0.78, 1.0]
+        case .ticketOptionsBlur:
+            bottomGradientLayer.colors = [
+                UIColor.black.withAlphaComponent(0.10).cgColor,
+                UIColor.black.withAlphaComponent(0.34).cgColor,
+                UIColor.black.withAlphaComponent(0.82).cgColor,
+                UIColor.black.cgColor
+            ]
+            bottomGradientLayer.locations = [0.0, 0.42, 0.74, 1.0]
         case .abstractColorWash:
             bottomGradientLayer.colors = [
                 UIColor.clear.cgColor,
@@ -5700,6 +5715,11 @@ final class EventPosterHeaderView: UIView {
             targetSize = CGSize(
                 width: 32,
                 height: 56
+            )
+        case .ticketOptionsBlur:
+            targetSize = CGSize(
+                width: 20,
+                height: 36
             )
         }
 

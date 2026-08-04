@@ -69,6 +69,7 @@ final class AccountInfoVC: UIViewController {
         emailBox.textField.isUserInteractionEnabled = true
         emailBox.textField.returnKeyType = .done
         emailBox.textField.delegate = self
+        emailBox.emptyValuePlaceholder = "Add email address"
 
         phoneBox.textField.keyboardType = .phonePad
         phoneBox.textField.isUserInteractionEnabled = false

@@ -23,6 +23,12 @@ final class FloatingInputView: UIControl {
         }
     }
 
+    var emptyValuePlaceholder: String? {
+        didSet {
+            updateState()
+        }
+    }
+
     var text: String? {
         get { textField.text }
         set {
@@ -92,13 +98,15 @@ final class FloatingInputView: UIControl {
 
         let value = cleanText(textField.text) ?? ""
         let hasValue = !value.isEmpty
+        let placeholder = cleanText(emptyValuePlaceholder)
+        let showsEmptyValuePlaceholder = !hasValue && placeholder != nil
 
         textField.text = value
 
-        titleLabel.isHidden = !hasValue
+        titleLabel.isHidden = !hasValue && !showsEmptyValuePlaceholder
 
-        valueTopConstraint.isActive = hasValue
-        valueCenterConstraint.isActive = !hasValue
+        valueTopConstraint.isActive = hasValue || showsEmptyValuePlaceholder
+        valueCenterConstraint.isActive = !hasValue && !showsEmptyValuePlaceholder
 
         if hasValue {
 
@@ -107,7 +115,7 @@ final class FloatingInputView: UIControl {
         } else {
 
             textField.attributedPlaceholder = NSAttributedString(
-                string: title,
+                string: placeholder ?? title,
                 attributes: [
                     .foregroundColor: AppColor.primaryWhiteColor.withAlphaComponent(0.35),
                     .font: Constant.Font.geistRegular(size: 18)
