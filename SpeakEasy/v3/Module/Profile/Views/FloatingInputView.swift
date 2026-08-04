@@ -97,30 +97,49 @@ final class FloatingInputView: UIControl {
     private func updateState() {
 
         let value = cleanText(textField.text) ?? ""
-        let hasValue = !value.isEmpty
         let placeholder = cleanText(emptyValuePlaceholder)
-        let showsEmptyValuePlaceholder = !hasValue && placeholder != nil
+        let state = DisplayState(
+            hasValue: !value.isEmpty,
+            emptyValuePlaceholder: placeholder
+        )
 
         textField.text = value
 
-        titleLabel.isHidden = !hasValue && !showsEmptyValuePlaceholder
+        titleLabel.isHidden = !state.showsTitle
 
-        valueTopConstraint.isActive = hasValue || showsEmptyValuePlaceholder
-        valueCenterConstraint.isActive = !hasValue && !showsEmptyValuePlaceholder
+        valueTopConstraint.isActive = state.usesFloatingValuePosition
+        valueCenterConstraint.isActive = !state.usesFloatingValuePosition
 
-        if hasValue {
+        if state.hasValue {
 
             textField.attributedPlaceholder = nil
 
         } else {
 
             textField.attributedPlaceholder = NSAttributedString(
-                string: placeholder ?? title,
+                string: state.placeholderText(fallback: title),
                 attributes: [
                     .foregroundColor: AppColor.primaryWhiteColor.withAlphaComponent(0.35),
                     .font: Constant.Font.geistRegular(size: 18)
                 ]
             )
+        }
+    }
+
+    private struct DisplayState {
+        let hasValue: Bool
+        let emptyValuePlaceholder: String?
+
+        var showsTitle: Bool {
+            hasValue || emptyValuePlaceholder != nil
+        }
+
+        var usesFloatingValuePosition: Bool {
+            hasValue || emptyValuePlaceholder != nil
+        }
+
+        func placeholderText(fallback: String) -> String {
+            emptyValuePlaceholder ?? fallback
         }
     }
 

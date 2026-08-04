@@ -10,6 +10,14 @@ import SDWebImage
 
 final class ProfileMenuVC: UIViewController {
 
+    private enum Metrics {
+        static let menuHorizontalInset: CGFloat = 24
+        static let deleteAccountTopSpacing: CGFloat = 40
+        static let deleteAccountHeight: CGFloat = 24
+        static let versionTopSpacing: CGFloat = 18
+        static let deleteAccountColor = UIColor(hex: "#FF453A")
+    }
+
     private let backBtn = AppIconButton()
     private let avatarContainer = UIView()
     private let imageView = UIImageView()
@@ -226,7 +234,7 @@ final class ProfileMenuVC: UIViewController {
         )
 
         deleteAccountBtn.setTitle("Delete account", for: .normal)
-        deleteAccountBtn.setTitleColor(UIColor(hex: "#FF453A"), for: .normal)
+        deleteAccountBtn.setTitleColor(Metrics.deleteAccountColor, for: .normal)
         deleteAccountBtn.titleLabel?.font = Constant.Font.geistRegular(size: 16)
         deleteAccountBtn.addTarget(self, action: #selector(onClickDelete), for: .touchUpInside)
         deleteAccountBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -284,8 +292,8 @@ final class ProfileMenuVC: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
             topActionsCard.topAnchor.constraint(equalTo: contentView.topAnchor),
-            topActionsCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            topActionsCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            topActionsCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.menuHorizontalInset),
+            topActionsCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.menuHorizontalInset),
             topActionsCard.heightAnchor.constraint(equalToConstant: 120),
 
             profileCard.topAnchor.constraint(equalTo: topActionsCard.bottomAnchor, constant: 10),
@@ -303,11 +311,11 @@ final class ProfileMenuVC: UIViewController {
             logoutCard.trailingAnchor.constraint(equalTo: topActionsCard.trailingAnchor),
             logoutCard.heightAnchor.constraint(equalToConstant: 67),
 
-            deleteAccountBtn.topAnchor.constraint(equalTo: logoutCard.bottomAnchor, constant: 40),
+            deleteAccountBtn.topAnchor.constraint(equalTo: logoutCard.bottomAnchor, constant: Metrics.deleteAccountTopSpacing),
             deleteAccountBtn.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            deleteAccountBtn.heightAnchor.constraint(equalToConstant: 24),
+            deleteAccountBtn.heightAnchor.constraint(equalToConstant: Metrics.deleteAccountHeight),
 
-            versionLabel.topAnchor.constraint(equalTo: deleteAccountBtn.bottomAnchor, constant: 18),
+            versionLabel.topAnchor.constraint(equalTo: deleteAccountBtn.bottomAnchor, constant: Metrics.versionTopSpacing),
             versionLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             versionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])

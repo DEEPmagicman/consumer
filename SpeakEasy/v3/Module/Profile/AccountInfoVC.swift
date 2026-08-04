@@ -93,11 +93,11 @@ final class AccountInfoVC: UIViewController {
     
     private func setupButton() {
         saveBtn.configure(title: "Save Changes", fontSize: 18, cornerRadius: 16)
-           saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
+        saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
 
-           view.addSubview(saveBtn)
+        view.addSubview(saveBtn)
 
-           updateSaveButtonState()
+        updateSaveButtonState()
     }
 
     private func updateSaveButtonState() {

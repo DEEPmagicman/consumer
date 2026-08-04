@@ -5539,6 +5539,41 @@ final class EventPosterHeaderView: UIView {
         case abstractColorWash
         case softColorWash
         case ticketOptionsBlur
+
+        fileprivate var appearance: BackgroundAppearance {
+            switch self {
+            case .standard:
+                return BackgroundAppearance(
+                    imageAlpha: 0.75,
+                    blurAlpha: 0.90,
+                    overlayAlpha: 0.35
+                )
+            case .abstractColorWash:
+                return BackgroundAppearance(
+                    imageAlpha: 0.78,
+                    blurAlpha: 1.0,
+                    overlayAlpha: 0.46
+                )
+            case .softColorWash:
+                return BackgroundAppearance(
+                    imageAlpha: 0.92,
+                    blurAlpha: 0.82,
+                    overlayAlpha: 0.22
+                )
+            case .ticketOptionsBlur:
+                return BackgroundAppearance(
+                    imageAlpha: 0.82,
+                    blurAlpha: 0.96,
+                    overlayAlpha: 0.32
+                )
+            }
+        }
+    }
+
+    fileprivate struct BackgroundAppearance {
+        let imageAlpha: CGFloat
+        let blurAlpha: CGFloat
+        let overlayAlpha: CGFloat
     }
 
     private let screenBackgroundColor = UIColor(hex: "#121212")
@@ -5554,42 +5589,15 @@ final class EventPosterHeaderView: UIView {
     private var backgroundStyle: BackgroundStyle = .abstractColorWash
 
     private var imageAlpha: CGFloat {
-        switch backgroundStyle {
-        case .standard:
-            return 0.75
-        case .abstractColorWash:
-            return 0.78
-        case .softColorWash:
-            return 0.92
-        case .ticketOptionsBlur:
-            return 0.82
-        }
+        backgroundStyle.appearance.imageAlpha
     }
 
     private var blurAlpha: CGFloat {
-        switch backgroundStyle {
-        case .standard:
-            return 0.90
-        case .abstractColorWash:
-            return 1.0
-        case .softColorWash:
-            return 0.82
-        case .ticketOptionsBlur:
-            return 0.96
-        }
+        backgroundStyle.appearance.blurAlpha
     }
 
     private var overlayAlpha: CGFloat {
-        switch backgroundStyle {
-        case .standard:
-            return 0.35
-        case .abstractColorWash:
-            return 0.46
-        case .softColorWash:
-            return 0.22
-        case .ticketOptionsBlur:
-            return 0.32
-        }
+        backgroundStyle.appearance.overlayAlpha
     }
 
     override init(frame: CGRect) {

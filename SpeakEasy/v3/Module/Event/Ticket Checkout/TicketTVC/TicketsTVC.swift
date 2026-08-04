@@ -10,6 +10,16 @@ import MHLoadingButton
 
 class TicketsTVC: UITableViewCell {
 
+    private enum Metrics {
+        static let cardCornerRadius: CGFloat = 20
+        static let cardGradientColors = [
+            UIColor(hex: "#282828", alpha: 0.37).cgColor,
+            UIColor(hex: "#000000", alpha: 0.25).cgColor
+        ]
+        static let defaultTopSpacing: CGFloat = 12
+        static let comingSoonCornerRadius: CGFloat = 18
+    }
+
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var priceLbl: UILabel!
     @IBOutlet weak var quantityLbl: UILabel!
@@ -47,7 +57,6 @@ class TicketsTVC: UITableViewCell {
     // MARK: - Private State
 
     private var currentTicket: EventTicket?
-    private let descriptionPreviewLimitLines = 2
     private let collapsedDescriptionVisibleLines = 3
     private var isDescriptionExpanded = false
     private var currentDescriptionText = ""
@@ -66,9 +75,7 @@ class TicketsTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        bgView.layer.cornerRadius = 20
-        bgView.layer.cornerCurve = .continuous
-        bgView.clipsToBounds = true
+        configureCardShape()
         setupTicketBackgroundGradient()
         configureDescriptionTypography()
         rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
@@ -156,7 +163,7 @@ class TicketsTVC: UITableViewCell {
         soldOutView.isHidden = true
         comingSoonView.isHidden = true
         comingSoonView.backgroundColor = UIColor.white.withAlphaComponent(0.12)
-        comingSoonView.layer.cornerRadius = 18
+        comingSoonView.layer.cornerRadius = Metrics.comingSoonCornerRadius
         comingSoonView.layer.borderWidth = 1
         comingSoonView.layer.borderColor = UIColor.white.withAlphaComponent(0.10).cgColor
         configureComingSoonLabel()
@@ -171,12 +178,16 @@ class TicketsTVC: UITableViewCell {
         viewMoreBtnView.isHidden = true
         viewMoreBtn.setTitle("View more", for: .normal)
 
-        bgView.layer.cornerRadius = 20
+        configureCardShape()
+        updateTicketBackgroundGradientFrame()
+        topConstraint.constant = Metrics.defaultTopSpacing
+        topSapraterView.isHidden = true
+    }
+
+    private func configureCardShape() {
+        bgView.layer.cornerRadius = Metrics.cardCornerRadius
         bgView.layer.cornerCurve = .continuous
         bgView.clipsToBounds = true
-        updateTicketBackgroundGradientFrame()
-        topConstraint.constant = 12
-        topSapraterView.isHidden = true
     }
 
     private func setupTicketBackgroundGradient() {
@@ -188,10 +199,7 @@ class TicketsTVC: UITableViewCell {
 
         bgView.backgroundColor = .clear
 
-        ticketBackgroundGradientLayer.colors = [
-            UIColor(hex: "#282828", alpha: 0.37).cgColor,
-            UIColor(hex: "#000000", alpha: 0.25).cgColor
-        ]
+        ticketBackgroundGradientLayer.colors = Metrics.cardGradientColors
         ticketBackgroundGradientLayer.locations = [0, 1]
         ticketBackgroundGradientLayer.startPoint = CGPoint(x: 0, y: 0)
         ticketBackgroundGradientLayer.endPoint = CGPoint(x: 1, y: 1)
@@ -229,7 +237,7 @@ class TicketsTVC: UITableViewCell {
 
     func applyGroupTicketSpacing(isFirst: Bool) {
         isFromGroupTicket = true
-        topConstraint.constant = isFirst ? 0 : 12
+        topConstraint.constant = isFirst ? 0 : Metrics.defaultTopSpacing
         topSapraterView.isHidden = true
     }
 
@@ -388,9 +396,7 @@ class TicketsTVC: UITableViewCell {
             context: nil
         )
 
-        let previewLimitHeight = ceil(
-            font.lineHeight * CGFloat(descriptionPreviewLimitLines)
-        )
+        let previewLimitHeight = ceil(font.lineHeight * CGFloat(collapsedDescriptionVisibleLines))
         return ceil(rect.height) > previewLimitHeight + 0.5
     }
 
