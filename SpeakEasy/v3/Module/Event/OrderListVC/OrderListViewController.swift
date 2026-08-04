@@ -203,7 +203,7 @@ final class OrderListViewController: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: event?.resolvedWhiteLabelColor(venue: venueDetails) ?? Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
 
     private func applyWhiteLabelTheme() {
@@ -452,7 +452,7 @@ final class OrderListViewController: UIViewController {
             posterHeaderView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
-        posterHeaderView.loadImage(from: (event?.flyer?.key ?? "").imageURL)
+        posterHeaderView.loadImage(from: event?.resolvedBackgroundImageURL(venue: venueDetails) ?? "")
     }
 
     private func setupHeaderData() {

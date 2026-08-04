@@ -76,6 +76,7 @@ final class CoverTicketListVC: UIViewController {
     private var currentStep: FlowStep = .coverTickets
     private var tableViewHeightObserver: NSKeyValueObservation?
     private var lastTableContentHeight: CGFloat = 0
+    private var isDescriptionHeightUpdateInProgress = false
     private var isFreeBookingInProgress = false
     private var isSocketRefreshInProgress = false
 
@@ -800,7 +801,9 @@ private extension CoverTicketListVC {
             options: [.new]
         ) { [weak self] _, _ in
             DispatchQueue.main.async {
-                self?.updateTableViewHeight(animated: true)
+                guard let self else { return }
+                guard !self.isDescriptionHeightUpdateInProgress else { return }
+                self.updateTableViewHeight(animated: true)
             }
         }
     }
@@ -828,6 +831,21 @@ private extension CoverTicketListVC {
             updates()
             normalizeScrollInsets()
         }
+    }
+
+    func updateDescriptionRowHeight() {
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        isDescriptionHeightUpdateInProgress = true
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        tableView.layoutIfNeeded()
+        updateTableViewHeight(animated: false)
+        CATransaction.commit()
+        isDescriptionHeightUpdateInProgress = false
+        UIView.setAnimationsEnabled(animationsEnabled)
     }
 
     func normalizeScrollInsets() {
@@ -1507,7 +1525,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )
 
-            cell.onDescriptionToggle = { [weak self] in
+            cell.onDescriptionToggle = { [weak self, weak cell] in
                 guard let self else { return }
                 let id = ticket.id
                 if self.expandedIndexSet.contains(id) {
@@ -1515,8 +1533,8 @@ extension CoverTicketListVC: UITableViewDataSource {
                 } else {
                     self.expandedIndexSet.insert(id)
                 }
-                self.tableView.beginUpdates()
-                self.tableView.endUpdates()
+                self.updateDescriptionRowHeight()
+                cell?.removeDescriptionToggleControlAnimations()
             }
 
         case .addOns:
@@ -1538,7 +1556,7 @@ extension CoverTicketListVC: UITableViewDataSource {
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )
 
-            cell.onDescriptionToggle = { [weak self] in
+            cell.onDescriptionToggle = { [weak self, weak cell] in
                 guard let self else { return }
                 let id = ticket.id
                 if self.expandedIndexSet.contains(id) {
@@ -1546,8 +1564,8 @@ extension CoverTicketListVC: UITableViewDataSource {
                 } else {
                     self.expandedIndexSet.insert(id)
                 }
-                self.tableView.beginUpdates()
-                self.tableView.endUpdates()
+                self.updateDescriptionRowHeight()
+                cell?.removeDescriptionToggleControlAnimations()
             }
         }
 

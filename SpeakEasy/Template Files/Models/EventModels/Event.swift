@@ -600,6 +600,36 @@ extension Event {
         displayVenueName.isEmpty ? fallback : displayVenueName
     }
 
+    func resolvedWhiteLabelColor(venue fallbackVenue: ClipVenue? = nil, fallback: String = "#FFFFFF") -> String {
+        Self.normalizedHexColor(
+            whiteLabelColor,
+            venue?.venueSettings?.whiteLabelColor,
+            fallbackVenue?.venueSettings?.whiteLabelColor,
+            fallback: fallback
+        )
+    }
+
+    func resolvedBackgroundImageURL(venue fallbackVenue: ClipVenue? = nil) -> String {
+        Self.resolvedBackgroundImageURL(event: self, venue: fallbackVenue)
+    }
+
+    static func resolvedBackgroundImageURL(event: Event?, venue fallbackVenue: ClipVenue? = nil) -> String {
+        let key = [
+            event?.flyer?.key,
+            fallbackVenue?.venueAttachment?.first?.key,
+            event?.venue?.venueAttachment?.first?.key,
+            fallbackVenue?.logo?.key,
+            event?.venue?.logo?.key
+        ]
+            .compactMap {
+                $0?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .first { !$0.isEmpty } ?? ""
+
+        return key.isEmpty ? "" : "\(SharedURL.amazonStorage)\(key)"
+    }
+
     func eventCardDateText(
         timezone: String? = nil,
         includeCustomText: Bool = true

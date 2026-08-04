@@ -47,12 +47,19 @@ class TicketsTVC: UITableViewCell {
     // MARK: - Private State
 
     private var currentTicket: EventTicket?
-    private let collapsedLines = 3
+    private let descriptionPreviewLimitLines = 2
+    private let collapsedDescriptionVisibleLines = 3
     private var isDescriptionExpanded = false
+    private var currentDescriptionText = ""
+    private var lastDescriptionMeasurementWidth: CGFloat = 0
+    private var lastDescriptionMeasurementText = ""
+    private var needsDescriptionMeasurement = false
+    private var cachedDescriptionNeedsToggle = false
     private var isLinkDisabled = false
     private var isCoverTicketMode = false
     private var backgroundOverrideColor: UIColor?
     private let ticketBackgroundGradientLayer = CAGradientLayer()
+    private let descriptionFadeMaskLayer = CAGradientLayer()
 
     // MARK: - Lifecycle
 
@@ -63,6 +70,7 @@ class TicketsTVC: UITableViewCell {
         bgView.layer.cornerCurve = .continuous
         bgView.clipsToBounds = true
         setupTicketBackgroundGradient()
+        configureDescriptionTypography()
         rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
     }
 
@@ -70,6 +78,8 @@ class TicketsTVC: UITableViewCell {
         super.layoutSubviews()
 
         updateTicketBackgroundGradientFrame()
+        updateDescriptionToggleVisibilityIfNeeded()
+        updateDescriptionFadeMaskFrame()
     }
 
     override func prepareForReuse() {
@@ -96,6 +106,11 @@ class TicketsTVC: UITableViewCell {
         onCoverMinusTap = nil
 
         isDescriptionExpanded = false
+        currentDescriptionText = ""
+        lastDescriptionMeasurementWidth = 0
+        lastDescriptionMeasurementText = ""
+        needsDescriptionMeasurement = false
+        cachedDescriptionNeedsToggle = false
         isLinkDisabled = false
         isCoverTicketMode = false
         isFromGroupTicket = false
@@ -148,11 +163,13 @@ class TicketsTVC: UITableViewCell {
         contentView.alpha = 1.0
 
         discriptionLbl.text = nil
-        discriptionLbl.numberOfLines = collapsedLines
+        discriptionLbl.numberOfLines = collapsedDescriptionVisibleLines
+        discriptionLbl.lineBreakMode = .byTruncatingTail
+        discriptionLbl.layer.mask = nil
         discriptionLbl.isHidden = true
 
         viewMoreBtnView.isHidden = true
-        viewMoreBtn.setTitle("View More", for: .normal)
+        viewMoreBtn.setTitle("View more", for: .normal)
 
         bgView.layer.cornerRadius = 20
         bgView.layer.cornerCurve = .continuous
@@ -191,6 +208,25 @@ class TicketsTVC: UITableViewCell {
         ticketBackgroundGradientLayer.cornerRadius = bgView.layer.cornerRadius
     }
 
+    private func configureDescriptionTypography() {
+        discriptionLbl.font = Constant.Font.geistRegular(size: 12)
+        discriptionLbl.textColor = UIColor(hex: "#D2D5DB")
+
+        viewMoreBtn.titleLabel?.font = Constant.Font.geistMedium(size: 12)
+        viewMoreBtn.setTitleColor(UIColor(hex: "#D2D5DB"), for: .normal)
+        viewMoreBtn.contentHorizontalAlignment = .leading
+        viewMoreBtn.contentEdgeInsets = .zero
+
+        descriptionFadeMaskLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        descriptionFadeMaskLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        descriptionFadeMaskLayer.colors = [
+            UIColor.black.cgColor,
+            UIColor.black.cgColor,
+            UIColor.black.withAlphaComponent(0).cgColor
+        ]
+        descriptionFadeMaskLayer.locations = [0, 0.72, 1]
+    }
+
     func applyGroupTicketSpacing(isFirst: Bool) {
         isFromGroupTicket = true
         topConstraint.constant = isFirst ? 0 : 12
@@ -215,6 +251,11 @@ class TicketsTVC: UITableViewCell {
 
     private func setupDescription(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        currentDescriptionText = trimmed
+        lastDescriptionMeasurementWidth = 0
+        lastDescriptionMeasurementText = ""
+        needsDescriptionMeasurement = !trimmed.isEmpty
+        cachedDescriptionNeedsToggle = false
 
         guard !trimmed.isEmpty else {
             discriptionLbl.isHidden = true
@@ -224,23 +265,133 @@ class TicketsTVC: UITableViewCell {
 
         discriptionLbl.isHidden = false
         discriptionLbl.text = trimmed
-        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
-        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
+        applyDescriptionExpansionState()
+        viewMoreBtnView.isHidden = true
+        setNeedsLayout()
+        updateDescriptionToggleVisibilityIfNeeded(force: true)
+    }
 
-        layoutIfNeeded()
+    private func applyDescriptionExpansionState() {
+        discriptionLbl.numberOfLines = isDescriptionExpanded
+            ? 0
+            : collapsedDescriptionVisibleLines
+        discriptionLbl.lineBreakMode = isDescriptionExpanded ? .byWordWrapping : .byTruncatingTail
+        viewMoreBtn.setTitle(isDescriptionExpanded ? "View less" : "View more", for: .normal)
+        updateDescriptionFadeMask()
+    }
 
-        let fullHeight = discriptionLbl.sizeThatFits(
-            CGSize(width: discriptionLbl.frame.width, height: .greatestFiniteMagnitude)
-        ).height
+    private func updateDescriptionToggleVisibilityIfNeeded(force: Bool = false) {
+        guard !currentDescriptionText.isEmpty, !discriptionLbl.isHidden else { return }
 
-        let collapsedHeight = discriptionLbl.font.lineHeight * CGFloat(collapsedLines)
-
-        if fullHeight > collapsedHeight {
-            viewMoreBtnView.isHidden = false
-        } else {
-            viewMoreBtnView.isHidden = true
-            discriptionLbl.numberOfLines = 0
+        let width = discriptionLbl.bounds.width
+        guard width > 1 else {
+            needsDescriptionMeasurement = true
+            return
         }
+
+        if !force,
+           !needsDescriptionMeasurement,
+           abs(width - lastDescriptionMeasurementWidth) < 0.5,
+           lastDescriptionMeasurementText == currentDescriptionText {
+            return
+        }
+
+        let needsToggle = descriptionNeedsToggle(
+            text: currentDescriptionText,
+            width: width
+        )
+
+        cachedDescriptionNeedsToggle = needsToggle
+        needsDescriptionMeasurement = false
+        lastDescriptionMeasurementWidth = width
+        lastDescriptionMeasurementText = currentDescriptionText
+
+        viewMoreBtnView.isHidden = !needsToggle
+        if needsToggle {
+            applyDescriptionExpansionState()
+        } else {
+            discriptionLbl.numberOfLines = 0
+            discriptionLbl.lineBreakMode = .byWordWrapping
+            viewMoreBtn.setTitle("View more", for: .normal)
+            updateDescriptionFadeMask()
+        }
+    }
+
+    private func updateDescriptionFadeMask() {
+        let shouldFade =
+            cachedDescriptionNeedsToggle &&
+            !isDescriptionExpanded &&
+            !discriptionLbl.isHidden
+
+        guard shouldFade else {
+            discriptionLbl.layer.mask = nil
+            return
+        }
+
+        if discriptionLbl.layer.mask !== descriptionFadeMaskLayer {
+            discriptionLbl.layer.mask = descriptionFadeMaskLayer
+        }
+        updateDescriptionFadeMaskFrame()
+    }
+
+    private func updateDescriptionFadeMaskFrame() {
+        guard discriptionLbl.layer.mask === descriptionFadeMaskLayer else { return }
+        descriptionFadeMaskLayer.frame = discriptionLbl.bounds
+    }
+
+    func removeDescriptionToggleControlAnimations() {
+        [
+            priceLbl,
+            inclFeesLbl,
+            ticketLeftLbl,
+            quantityLbl,
+            minusView,
+            plusView,
+            rsvpBtnView,
+            soldOutView,
+            comingSoonView
+        ].forEach {
+            removeAnimationsRecursively(from: $0)
+        }
+        removeAnimationsRecursively(from: bgView)
+    }
+
+    private func removeAnimationsRecursively(from view: UIView?) {
+        guard let view else { return }
+        view.layer.removeAllAnimations()
+        view.subviews.forEach {
+            removeAnimationsRecursively(from: $0)
+        }
+    }
+
+    private func descriptionNeedsToggle(
+        text: String,
+        width: CGFloat
+    ) -> Bool {
+        let font = discriptionLbl.font ?? Constant.Font.geistRegular(size: 13)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineBreakMode = .byWordWrapping
+
+        let rect = (text as NSString).boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: font,
+                .paragraphStyle: paragraphStyle
+            ],
+            context: nil
+        )
+
+        let previewLimitHeight = ceil(
+            font.lineHeight * CGFloat(descriptionPreviewLimitLines)
+        )
+        return ceil(rect.height) > previewLimitHeight + 0.5
     }
 
     // MARK: - Cover Ticket Configure
@@ -531,10 +682,18 @@ class TicketsTVC: UITableViewCell {
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        guard cachedDescriptionNeedsToggle || !viewMoreBtnView.isHidden else { return }
         AppHaptic.selectionChanged()
         isDescriptionExpanded.toggle()
-        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
-        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
+        removeDescriptionToggleControlAnimations()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        UIView.performWithoutAnimation {
+            applyDescriptionExpansionState()
+            layoutIfNeeded()
+        }
+        CATransaction.commit()
+        removeDescriptionToggleControlAnimations()
         onDescriptionToggle?()
     }
 }

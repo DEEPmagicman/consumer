@@ -42,7 +42,7 @@ class TicketConfirmationVC: UIViewController {
     private let paymentService = PaymentService()
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: event?.resolvedWhiteLabelColor(venue: venueDetails) ?? Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
     
     override func viewDidLoad() {
@@ -90,19 +90,15 @@ class TicketConfirmationVC: UIViewController {
 //            with: URL(string: (event?.flyer?.key ?? "").imageURL),
 //            placeholderImage: Constant.Icon.uploadImage
 //        )
-        if let imageUrlString = event?.flyer?.key?.imageURL {
-            
-            ticketCardView.setImage(named: "demo venue")
-            if let url = URL(string: imageUrlString) {
-                SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
-                    [weak self] image, _, _, _, _, _ in
-                    guard let self else { return }
-                    DispatchQueue.main.async {
-                        self.ticketCardView.setImage(image ?? UIImage(named: "newSpeakeasy"))
-                    }
+        ticketCardView.setImage(named: "newSpeakeasy")
+        let imageUrlString = event?.resolvedBackgroundImageURL(venue: venueDetails) ?? ""
+        if let url = URL(string: imageUrlString), !imageUrlString.isEmpty {
+            SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
+                [weak self] image, _, _, _, _, _ in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    self.ticketCardView.setImage(image ?? UIImage(named: "newSpeakeasy"))
                 }
-            } else {
-                ticketCardView.setImage(named: "newSpeakeasy")
             }
         }
         

@@ -116,13 +116,7 @@ final class PaymentVC: UIViewController {
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
 
-        let imageURLString: String
-        if let eventFlyerKey = event?.flyer?.key, !eventFlyerKey.isEmpty {
-            imageURLString = eventFlyerKey.imageURL
-        } else {
-            imageURLString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
-        }
-        posterHeaderView.loadImage(from: imageURLString)
+        posterHeaderView.loadImage(from: Event.resolvedBackgroundImageURL(event: event, venue: venueDetails))
     }
 
     private func setupNav() {

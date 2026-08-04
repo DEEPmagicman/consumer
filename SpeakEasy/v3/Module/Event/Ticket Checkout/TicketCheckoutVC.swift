@@ -55,6 +55,7 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var feesAndTaxesParentTableView: UIView!
     
     private let paymentService = PaymentService()
+    private let posterHeaderView = EventPosterHeaderView()
     
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
@@ -134,7 +135,7 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: event?.resolvedWhiteLabelColor(venue: venueDetails) ?? Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
 
     private var paymentSheet: PaymentSheet?
@@ -170,6 +171,7 @@ final class TicketCheckoutVC: UIViewController {
         if let venue = event?.venue {
             self.venueDetails = venue
         }
+        setupPosterBackground()
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -1027,6 +1029,24 @@ final class TicketCheckoutVC: UIViewController {
                 AppHaptic.error()
             }
         }
+    }
+
+    private func setupPosterBackground() {
+        guard posterHeaderView.superview == nil else { return }
+
+        posterHeaderView.applyBackgroundStyle(.softColorWash)
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        posterHeaderView.isUserInteractionEnabled = false
+        view.insertSubview(posterHeaderView, at: 0)
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        posterHeaderView.loadImage(from: event?.resolvedBackgroundImageURL(venue: venueDetails) ?? "")
     }
 
     private func showPurchaseButtonLoader() {

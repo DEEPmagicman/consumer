@@ -130,6 +130,7 @@ class EventDetailsVC: UIViewController {
     private var expandedTicketDescriptions: Set<String> = []
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
+    private var isDescriptionHeightUpdateInProgress = false
     private var shouldClearInlineRSVPSelectionOnReturn = false
     private var isInlineRSVPStockCheckInProgress = false
 
@@ -617,24 +618,11 @@ class EventDetailsVC: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: event?.resolvedWhiteLabelColor(venue: venueDetails) ?? Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
 
     private var eventBackgroundImageURLString: String {
-        let key = [
-            event?.flyer?.key,
-            venueDetails?.venueAttachment?.first?.key,
-            event?.venue?.venueAttachment?.first?.key,
-            venueDetails?.logo?.key,
-            event?.venue?.logo?.key
-        ]
-            .compactMap {
-                $0?
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-            .first { !$0.isEmpty } ?? ""
-
-        return key.imageURL
+        event?.resolvedBackgroundImageURL(venue: venueDetails) ?? ""
     }
 
     private func reloadPosterBackground() {
@@ -659,6 +647,7 @@ class EventDetailsVC: UIViewController {
 
         ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
+            guard !self.isDescriptionHeightUpdateInProgress else { return }
             self.ticketTableHeightConstraint.constant =
             tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
@@ -670,6 +659,7 @@ class EventDetailsVC: UIViewController {
 
         groupTableObserver = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
+            guard !self.isDescriptionHeightUpdateInProgress else { return }
             self.groupTableViewHeight.constant =
             tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
@@ -1287,10 +1277,14 @@ class EventDetailsVC: UIViewController {
     private func applyVenueWhiteLabelColorIfNeeded(from venue: ClipVenue?) {
         guard Event.normalizedHexColor(event?.whiteLabelColor, fallback: "").isEmpty else { return }
 
-//        let venueColor = Event.normalizedHexColor(venue?.venueSettings?.whiteLabelColor, fallback: "")
-//        guard !venueColor.isEmpty else { return }
-//
-//        event?.whiteLabelColor = venueColor
+        let venueColor = Event.normalizedHexColor(
+            venue?.venueSettings?.whiteLabelColor,
+            venueDetails?.venueSettings?.whiteLabelColor,
+            fallback: ""
+        )
+        guard !venueColor.isEmpty else { return }
+
+        event?.whiteLabelColor = venueColor
     }
 
     private func applyAttendees(
@@ -1795,15 +1789,39 @@ class EventDetailsVC: UIViewController {
         return TimeZone.current.identifier
     }
 
-    private func venueNow() -> Date {
-        Date.venueNow(timezone: venueTimezoneIdentifier())
+    private func venueComparableDate(from date: Date) -> Date? {
+        let timezone = TimeZone(identifier: venueTimezoneIdentifier()) ?? .current
+        let venueFormatter = DateFormatter()
+        venueFormatter.locale = Locale(identifier: "en_US_POSIX")
+        venueFormatter.timeZone = timezone
+        venueFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+
+        let comparableFormatter = DateFormatter()
+        comparableFormatter.locale = Locale(identifier: "en_US_POSIX")
+        comparableFormatter.timeZone = TimeZone(identifier: "UTC")
+        comparableFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+
+        return comparableFormatter.date(from: venueFormatter.string(from: date))
     }
 
-    private func ticketDate(_ value: String?) -> Date? {
+    private func venueNow() -> Date {
+        venueComparableDate(from: Date()) ?? Date()
+    }
+
+    private func utcDate(_ value: String?) -> Date? {
         guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
         }
-        return value.toVenueDate(timezone: venueTimezoneIdentifier())
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        return formatter.date(from: value)
+    }
+
+    private func ticketDate(_ value: String?) -> Date? {
+        guard let utcDate = utcDate(value) else { return nil }
+        return venueComparableDate(from: utcDate)
     }
 
     private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
@@ -2842,6 +2860,34 @@ class EventDetailsVC: UIViewController {
         groupTableView.layoutIfNeeded()
         groupTableViewHeight.constant =
         groupTableView.isHidden ? 0 : groupTableView.contentSize.height
+    }
+
+    private func updateDescriptionRowHeight(
+        in tableView: UITableView
+    ) {
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        isDescriptionHeightUpdateInProgress = true
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        tableView.layoutIfNeeded()
+
+        if tableView === ticketTableView {
+            ticketTableHeightConstraint.constant = ticketTableView.isHidden
+                ? 0
+                : ceil(ticketTableView.contentSize.height)
+        } else if tableView === groupTableView {
+            groupTableViewHeight.constant = groupTableView.isHidden
+                ? 0
+                : ceil(groupTableView.contentSize.height)
+        }
+
+        view.layoutIfNeeded()
+        CATransaction.commit()
+        isDescriptionHeightUpdateInProgress = false
+        UIView.setAnimationsEnabled(animationsEnabled)
     }
 
     private func refreshGroupTicketRow(
@@ -4722,7 +4768,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 ticket: ticket,
                 currency: currency,
                 currencyPosition: currencyPosition,
-                whiteLabelColor: event?.whiteLabelColor,
+                whiteLabelColor: event?.resolvedWhiteLabelColor(venue: venueDetails),
                 eventTicketSetting: event?.eventTicketSettings,
                 isDescriptionExpanded: isExpanded,
                 isLinkDisabled: isTicketDisabledByLink(ticket)
@@ -4740,7 +4786,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 self?.handleRSVP(ticket: ticket, cell: cell)
             }
 
-            cell.onDescriptionToggle = { [weak self] in
+            cell.onDescriptionToggle = { [weak self, weak cell] in
                 guard let self = self, let id = ticket.id else { return }
 
                 if self.expandedTicketDescriptions.contains(id) {
@@ -4749,9 +4795,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                     self.expandedTicketDescriptions.insert(id)
                 }
 
-                tableView.beginUpdates()
-                tableView.endUpdates()
-                self.updateTicketTableHeight()
+                self.updateDescriptionRowHeight(in: tableView)
+                cell?.removeDescriptionToggleControlAnimations()
             }
 
             return cell
@@ -4774,7 +4819,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 tickets: item.tickets,
                 currency: currency,
                 currencyPosition: currencyPosition,
-                whiteLabelColor: event?.whiteLabelColor,
+                whiteLabelColor: event?.resolvedWhiteLabelColor(venue: venueDetails),
                 eventTicketSetting: event?.eventTicketSettings,
                 expandedTicketDescriptions: expandedTicketDescriptions,
                 disabledTicketIds: disabledTicketIds,
@@ -4809,10 +4854,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                     self.expandedTicketDescriptions.insert(id)
                 }
 
-                self.groupTableView.beginUpdates()
-                self.groupTableView.endUpdates()
-                self.groupTableView.layoutIfNeeded()
-                self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+                self.updateDescriptionRowHeight(in: self.groupTableView)
+                cell.visibleTicketCell(for: id)?.removeDescriptionToggleControlAnimations()
             }
 
             cell.onExpandChanged = { [weak self] isExpanded in
@@ -4861,7 +4904,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.selectionStyle = .none
 
-            let tintColor = UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+            let tintColor = whiteLabelAccentColor
 
             cell.configure(with: item, tintColor: tintColor)
             cell.onTap = { [weak self] in

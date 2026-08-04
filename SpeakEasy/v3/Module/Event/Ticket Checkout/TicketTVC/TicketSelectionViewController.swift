@@ -66,6 +66,7 @@ class TicketSelectionViewController: UIViewController {
 
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var groupListHeightObservation: NSKeyValueObservation?
+    private var isDescriptionHeightUpdateInProgress = false
     private var eventTicketId = [String]()
     private let groupRowSpacing: CGFloat = 12
 
@@ -164,7 +165,7 @@ class TicketSelectionViewController: UIViewController {
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
 
-        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        let imageURLString = event?.resolvedBackgroundImageURL(venue: venueDetails) ?? ""
         posterHeaderView.loadImage(from: imageURLString)
     }
 
@@ -245,11 +246,13 @@ class TicketSelectionViewController: UIViewController {
     private func setupTableViewObservers() {
         ticketListHeightObservation = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
             guard let self else { return }
+            guard !self.isDescriptionHeightUpdateInProgress else { return }
             self.updateTicketTableHeight()
         }
 
         groupListHeightObservation = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
             guard let self else { return }
+            guard !self.isDescriptionHeightUpdateInProgress else { return }
             self.updateGroupTableHeightFromContent()
         }
     }
@@ -380,7 +383,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(event?.whiteLabelColor))
+        UIColor(hex: event?.resolvedWhiteLabelColor(venue: venueDetails) ?? Event.normalizedHexColor(venueDetails?.venueSettings?.whiteLabelColor))
     }
 
     private func applyWhiteLabelTheme() {
@@ -423,13 +426,63 @@ class TicketSelectionViewController: UIViewController {
         iconView.tintColor = nil
     }
 
-    private func ticketDate(_ value: String?) -> Date? {
-        guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
+    private func venueTimezoneIdentifier() -> String {
+        if let timezone = event?.venue?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        if let timezone = event?.venue?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        if let timezone = venueDetails?.timezone?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !timezone.isEmpty {
+            return timezone
+        }
+
+        let useTimezone = venueDetails?.useTimezone.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let useTimezone, !useTimezone.isEmpty {
+            return useTimezone
+        }
+
+        return TimeZone.current.identifier
+    }
+
+    private func venueComparableDate(from date: Date) -> Date? {
+        let timezone = TimeZone(identifier: venueTimezoneIdentifier()) ?? .current
+        let venueFormatter = DateFormatter()
+        venueFormatter.locale = Locale(identifier: "en_US_POSIX")
+        venueFormatter.timeZone = timezone
+        venueFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+
+        let comparableFormatter = DateFormatter()
+        comparableFormatter.locale = Locale(identifier: "en_US_POSIX")
+        comparableFormatter.timeZone = TimeZone(identifier: "UTC")
+        comparableFormatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+
+        return comparableFormatter.date(from: venueFormatter.string(from: date))
+    }
+
+    private func venueNow() -> Date {
+        venueComparableDate(from: Date()) ?? Date()
+    }
+
+    private func utcDate(_ value: String?) -> Date? {
+        guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
         formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
         return formatter.date(from: value)
+    }
+
+    private func ticketDate(_ value: String?) -> Date? {
+        guard let utcDate = utcDate(value) else { return nil }
+        return venueComparableDate(from: utcDate)
     }
 
     private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
@@ -442,18 +495,21 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func isTicketSaleStarted(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
         guard let startSaleDate = ticketDate(ticket.beginSale) else { return true }
-        return Date() >= startSaleDate
+        return now >= startSaleDate
     }
 
     private func isTicketSaleNotEnded(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
         guard let endSaleDate = ticketDate(ticket.endSale) else { return true }
-        return Date() <= endSaleDate
+        return now <= endSaleDate
     }
 
     private func isTicketSaleEnded(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
         guard let endSaleDate = ticketDate(ticket.endSale) else { return false }
-        return Date() > endSaleDate
+        return now > endSaleDate
     }
 
     private func isTicketAvailableForDisplay(_ ticket: EventTicket) -> Bool {
@@ -572,6 +628,17 @@ class TicketSelectionViewController: UIViewController {
         groupedNormalTickets = split.grouped
         let validGroupIds = Set(groupedNormalTickets.map { $0.groupId })
         expandedGroupIds = expandedGroupIds.intersection(validGroupIds)
+        let validTicketIds = Set(
+            (
+                split.nonGrouped +
+                split.grouped.flatMap { $0.tickets } +
+                filteredAddOn +
+                filteredProtectedAddOn
+            )
+            .compactMap { $0.id }
+        )
+        expandedTicketDescriptions =
+            expandedTicketDescriptions.intersection(validTicketIds)
         addOnTickets = filteredAddOn
         hasVisibleAddOnOptionsCache = !filteredAddOn.isEmpty || !filteredProtectedAddOn.isEmpty
 
@@ -763,6 +830,33 @@ class TicketSelectionViewController: UIViewController {
         updateGroupTableHeightFromContent()
         view.layoutIfNeeded()
         updateScrollBottomInset()
+    }
+
+    private func updateDescriptionRowHeight(
+        in tableView: UITableView
+    ) {
+        let animationsEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        isDescriptionHeightUpdateInProgress = true
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        tableView.layoutIfNeeded()
+
+        if tableView === ticketTableView {
+            ticketTableViewHeight.constant = ceil(ticketTableView.contentSize.height)
+        } else if tableView === groupTableView {
+            groupTableViewHeight.constant = groupTableView.isHidden
+                ? 0
+                : ceil(groupTableView.contentSize.height)
+        }
+
+        updateScrollBottomInset()
+        view.layoutIfNeeded()
+        CATransaction.commit()
+        isDescriptionHeightUpdateInProgress = false
+        UIView.setAnimationsEnabled(animationsEnabled)
     }
 
     private func refreshGroupTicketRow(
@@ -1683,7 +1777,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             ticket: ticket,
             currency: currency,
             currencyPosition: currencyPosition,
-            whiteLabelColor: event?.whiteLabelColor,
+            whiteLabelColor: event?.resolvedWhiteLabelColor(venue: venueDetails),
             eventTicketSetting: event?.eventTicketSettings,
             isDescriptionExpanded: isExpanded,
             isLinkDisabled: isTicketDisabledByLink(ticket)
@@ -1692,15 +1786,15 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         cell.onPlusTap = { [weak self] ticket in self?.handlePlus(ticket: ticket) }
         cell.onMinusTap = { [weak self] ticket in self?.handleMinus(ticket: ticket) }
         cell.onRSVPTap = { [weak self] ticket, cell in self?.handleRSVP(ticket: ticket, cell: cell) }
-        cell.onDescriptionToggle = { [weak self] in
+        cell.onDescriptionToggle = { [weak self, weak cell] in
             guard let self, let id = ticket.id else { return }
             if self.expandedTicketDescriptions.contains(id) {
                 self.expandedTicketDescriptions.remove(id)
             } else {
                 self.expandedTicketDescriptions.insert(id)
             }
-            tableView.beginUpdates()
-            tableView.endUpdates()
+            self.updateDescriptionRowHeight(in: tableView)
+            cell?.removeDescriptionToggleControlAnimations()
         }
 
         return cell
@@ -1725,7 +1819,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             tickets: item.tickets,
             currency: currency,
             currencyPosition: currencyPosition,
-            whiteLabelColor: event?.whiteLabelColor,
+            whiteLabelColor: event?.resolvedWhiteLabelColor(venue: venueDetails),
             eventTicketSetting: event?.eventTicketSettings,
             expandedTicketDescriptions: expandedTicketDescriptions,
             disabledTicketIds: disabledTicketIds,
@@ -1746,10 +1840,8 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 self.expandedTicketDescriptions.insert(id)
             }
-            self.groupTableView.beginUpdates()
-            self.groupTableView.endUpdates()
-            self.groupTableView.layoutIfNeeded()
-            self.updateGroupTableHeightFromContent()
+            self.updateDescriptionRowHeight(in: self.groupTableView)
+            cell.visibleTicketCell(for: id)?.removeDescriptionToggleControlAnimations()
         }
 
         cell.onExpandChanged = { [weak self] isExpanded in

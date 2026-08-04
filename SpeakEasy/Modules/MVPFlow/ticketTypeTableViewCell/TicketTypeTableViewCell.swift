@@ -19,5 +19,24 @@ class TicketTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var hotVenueLbl: UILabel!
     @IBOutlet weak var lblExtraFeesValue: UILabel!
     @IBOutlet weak var bgView: UIView!
-    
+
+    func removeTicketControlAnimations() {
+        [
+            ticketPriceLbl,
+            lblExtraFeesValue,
+            hotVenueLbl,
+            totalTicketLbl,
+            ticketPlusMinusView
+        ].forEach {
+            removeAnimationsRecursively(from: $0)
+        }
+    }
+
+    private func removeAnimationsRecursively(from view: UIView?) {
+        guard let view else { return }
+        view.layer.removeAllAnimations()
+        view.subviews.forEach {
+            removeAnimationsRecursively(from: $0)
+        }
+    }
 }

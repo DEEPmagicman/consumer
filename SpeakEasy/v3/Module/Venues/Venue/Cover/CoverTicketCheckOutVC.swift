@@ -813,7 +813,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     // MARK: - Actions
     @IBAction func onClickBackBtn(_ sender: Any) {
         guard !isPaymentInitiated else { return }
-        showCancelTransactionPrompt()
+        cancelCheckoutAndReturnToCoverFlow()
     }
     
     @IBAction func onClickTermsBtn(_ sender: UIButton) {
@@ -842,7 +842,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     @objc private func handleBackSwipe() {
-        showCancelTransactionPrompt()
+        cancelCheckoutAndReturnToCoverFlow()
     }
 
     func onClickContinueToCheckout() {
@@ -1199,50 +1199,15 @@ extension CoverTicketCheckOutVC {
         }
     }
 
-    private func cancelBooking(cancelPrompt: TransactionCancelPopupVC? = nil) {
+    private func cancelCheckoutAndReturnToCoverFlow() {
         guard !isCancellingTransaction else { return }
         countdownTimer?.invalidate()
         isCancellingTransaction = true
         setScreenInteractionBlocked(true)
 
-        let finishAndReturn: () -> Void = { [weak self] in
-            guard let self else { return }
-            self.isCancellingTransaction = false
-            self.setScreenInteractionBlocked(false)
-
-            let returnAction = { [weak self] in
-                guard let self else { return }
-                self.returnToCoverFlow(animated: false)
-            }
-
-            if let cancelPrompt {
-                cancelPrompt.finishCancelTransaction(afterDismiss: returnAction)
-            } else {
-                returnAction()
-            }
-        }
-
-        guard !bookingId.isEmpty else {
-            finishAndReturn()
-            return
-        }
-        paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
-            DispatchQueue.main.async {
-                guard let self else { return }
-                finishAndReturn()
-            }
-        }
-    }
-
-    private func showCancelTransactionPrompt() {
-        guard !isPaymentInitiated, !isCancellingTransaction else { return }
-        presentTransactionCancelConfirmation { [weak self] cancelPrompt in
-            guard let self else {
-                cancelPrompt.finishCancelTransaction()
-                return
-            }
-            self.cancelBooking(cancelPrompt: cancelPrompt)
-        }
+        isCancellingTransaction = false
+        setScreenInteractionBlocked(false)
+        returnToCoverFlow(animated: false)
     }
 
     private func handlePaymentCanceled() {
@@ -1810,7 +1775,7 @@ extension CoverTicketCheckOutVC {
             guard let self else { return }
             self.countdownTimer?.invalidate()
             self.updateDelegate?.update()
-            self.cancelBooking()
+            self.cancelCheckoutAndReturnToCoverFlow()
         }
         Alert.showAlertSheet(
             style: .alert,

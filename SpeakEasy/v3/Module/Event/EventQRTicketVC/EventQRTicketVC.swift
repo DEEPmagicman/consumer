@@ -86,7 +86,13 @@ class EventQRTicketVC: UIViewController {
     private var previousInteractivePopEnabled: Bool?
 
     private var whiteLabelAccentColor: UIColor {
-        UIColor(hex: Event.normalizedHexColor(booking?.event?.whiteLabelColor, sourceEvent?.whiteLabelColor))
+        UIColor(hex: Event.normalizedHexColor(
+            booking?.event?.whiteLabelColor,
+            sourceEvent?.whiteLabelColor,
+            booking?.venueObject?.venueSettings?.whiteLabelColor,
+            booking?.event?.venue?.venueSettings?.whiteLabelColor,
+            sourceEvent?.venue?.venueSettings?.whiteLabelColor
+        ))
     }
 
     private var currency: String {
@@ -288,7 +294,10 @@ class EventQRTicketVC: UIViewController {
     }
 
     private func refreshPosterBackground() {
-        let imageURLString = (booking?.event?.flyer?.key ?? "").imageURL
+        let imageURLString =
+            booking?.event?.resolvedBackgroundImageURL(venue: booking?.venueObject)
+            ?? sourceEvent?.resolvedBackgroundImageURL(venue: booking?.venueObject)
+            ?? ""
         posterHeaderView.loadImage(from: imageURLString)
     }
 
@@ -901,8 +910,12 @@ class EventQRTicketVC: UIViewController {
         introOverlayView = overlay
         introTicketCardView = ticketCard
 
-        if let imageUrlString = booking?.event?.flyer?.key?.imageURL,
-           let url = URL(string: imageUrlString) {
+        let imageUrlString =
+            booking?.event?.resolvedBackgroundImageURL(venue: booking?.venueObject)
+            ?? sourceEvent?.resolvedBackgroundImageURL(venue: booking?.venueObject)
+            ?? ""
+
+        if let url = URL(string: imageUrlString), !imageUrlString.isEmpty {
             SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
                 [weak ticketCard] image, _, _, _, _, _ in
                 DispatchQueue.main.async {
