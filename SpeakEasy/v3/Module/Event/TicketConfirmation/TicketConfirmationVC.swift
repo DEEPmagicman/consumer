@@ -439,27 +439,6 @@ final class TicketCardView: UIView {
         applyPerspective()
     }
     
-    private func playShineAnimation(delay: TimeInterval = 0.55) {
-        shineLayer.removeAnimation(forKey: "shineAnimation")
-
-        shineLayer.opacity = 1
-        shineLayer.transform = CATransform3DMakeRotation(CGFloat(18 * Double.pi / 180), 0, 0, 1)
-
-        let animation = CABasicAnimation(keyPath: "position.x")
-        animation.fromValue = -bounds.width
-        animation.toValue = bounds.width * 2
-        animation.duration = 0.85
-        animation.beginTime = CACurrentMediaTime() + delay
-        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        animation.fillMode = .removed
-
-        shineLayer.add(animation, forKey: "shineAnimation")
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay + 0.85) { [weak self] in
-            self?.shineLayer.opacity = 0
-        }
-    }
-    
     func playEntryAnimation(delay: TimeInterval = 0.15) {
         layoutIfNeeded()
 

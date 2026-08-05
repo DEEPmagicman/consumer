@@ -78,29 +78,6 @@ class AdditionalButtonsTableViewCell: UITableViewCell {
         }
     }
 
-    private func readableLink(from link: String) -> String {
-        let trimmed = link.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard let url = URL(string: normalizedLink(trimmed)),
-              let host = url.host,
-              !host.isEmpty else {
-            return trimmed
-        }
-
-        return host.replacingOccurrences(of: "www.", with: "")
-    }
-
-    private func normalizedLink(_ link: String) -> String {
-        guard !link.isEmpty else { return link }
-
-        if link.lowercased().hasPrefix("http://") ||
-            link.lowercased().hasPrefix("https://") {
-            return link
-        }
-
-        return "https://\(link)"
-    }
-
     @objc private func handleTap() {
         onTap?()
     }

@@ -89,7 +89,6 @@ class EventDetailsVC: UIViewController {
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
-    private let faqCount = 5
     private var playerView: YTPlayerView?
     private var isExpanded = false
     private var isPolicyLblExpanded = false
@@ -756,13 +755,6 @@ class EventDetailsVC: UIViewController {
         scrollView.isScrollEnabled = true
     }
 
-    private func setupTicketTable() {
-        ticketTableView.delegate = self
-        ticketTableView.dataSource = self
-        ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
-        ticketTableView.isScrollEnabled = false
-    }
-    
     private func setupUI() {
         savedEventId = savedEventIdentifier(from: event)
         isSaved = eventIsSaved(event)
@@ -1406,53 +1398,10 @@ class EventDetailsVC: UIViewController {
     }
     
     private func updateCheckoutSummaryView() {
-
-        let selectedNormalTickets =
-        normalTickets.filter {
-            ($0.selectedTicketCount ?? 0) > 0
-        }
-
-        let selectedGroupedTickets =
-        groupedNormalTickets
-            .flatMap { $0.tickets }
-            .filter {
-                ($0.selectedTicketCount ?? 0) > 0
-            }
-
-        let selectedTickets =
-        selectedNormalTickets + selectedGroupedTickets
-
-        let totalCount =
-        selectedTickets.reduce(0) {
-            $0 + ($1.selectedTicketCount ?? 0)
-        }
-
-        guard totalCount > 0 else {
+        guard totalSelectedTickets > 0 else {
 
             hideCheckoutBar()
             return
-        }
-
-        let subtotal =
-        selectedTickets.reduce(0.0) {
-
-            $0 +
-            (
-                Double($1.selectedTicketCount ?? 0)
-                *
-                ($1.price ?? 0)
-            )
-        }
-
-        let fees =
-        selectedTickets.reduce(0.0) {
-
-            $0 +
-            (
-                ($1.extraFees ?? 0)
-                *
-                Double($1.selectedTicketCount ?? 0)
-            )
         }
 
         let currency =
@@ -1462,9 +1411,9 @@ class EventDetailsVC: UIViewController {
         checkOutBtnView.updateSummary(
             currency: currency,
             currencyPosition: currencyPosition,
-            count: totalCount,
-            subtotal: subtotal ,
-            fees: fees
+            count: totalSelectedTickets,
+            subtotal: checkoutSubtotal,
+            fees: checkoutFees
         )
 
         checkOutBtnView.setButtonTitle(
@@ -4387,14 +4336,6 @@ class EventDetailsVC: UIViewController {
         }
 
         return normalizedAdditionalButtonURL(from: rawLink.trimmingCharacters(in: .whitespacesAndNewlines))
-    }
-
-    private func checkIfTextNeedsExpansion() {
-        updateDescriptionExpansionVisibility()
-    }
-
-    private func checkIfPolicyTextNeedsExpansion() {
-        updatePolicyExpansionVisibility()
     }
 
     private func updateDescriptionExpansionVisibility() {

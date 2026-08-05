@@ -48,7 +48,6 @@ final class AuthOTPInputView: UIView {
     }
 
     func configure(phone: String, countryCode: String) {
-//        phoneNumLbl.text = "Enter the 6 digits code sent to \(countryCode)...\(phone.suffix(2))"
         phoneNumLbl.text = "Enter the 6 digits code sent to \(countryCode) \(phone)"
     }
 
@@ -97,7 +96,6 @@ final class AuthOTPInputView: UIView {
         stack.addArrangedSubview(phoneNumLbl)
         stack.addArrangedSubview(makeSpacer(16))
 
-//        let otpSize = min(58, floor(((UIScreen.main.bounds.width - 32 - 36) - (7 * 5)) / 6))
         otpFieldView.translatesAutoresizingMaskIntoConstraints = false
         otpFieldView.heightAnchor.constraint(equalToConstant: otpSize + 10).isActive = true
         stack.addArrangedSubview(otpFieldView)
@@ -146,18 +144,14 @@ final class AuthOTPInputView: UIView {
         otpFieldView.displayType = .roundedCorner
         otpFieldView.shouldAllowIntermediateEditing = false
 
-//        let availableWidth = UIScreen.main.bounds.width - 32 - 36
         let spacing: CGFloat = 7
-//        let calculatedSize = floor((CGFloat(availableWidth) - spacing * 5) / 6)
 
         otpFieldView.fieldSize = min(58, otpSize)
         otpFieldView.separatorSpace = spacing
         otpFieldView.initializeUI()
-        print("-1-1-1\(self.otpFieldView.subviews.count)")
         
         DispatchQueue.main.async {
             self.otpFieldView.subviews.forEach { view in
-                print("-1-1-1-1-1- \(self.otpFieldView.subviews.count)")
                 guard let textField = view as? UITextField else { return }
                 textField.textColor = AuthTheme.title
                 textField.font = Constant.Font.geistRegular(size: 26)

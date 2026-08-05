@@ -58,8 +58,6 @@ final class PaymentVC: UIViewController {
 
     // MARK: - State
 
-    private var isApplePaySelected = false
-    private var isCardSelected     = true
     private var isSaveCard         = false
     
     var event: Event?

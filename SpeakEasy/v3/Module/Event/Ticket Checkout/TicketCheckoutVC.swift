@@ -21,7 +21,6 @@ final class TicketCheckoutVC: UIViewController {
 
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
-//    @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var venueName2: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
@@ -243,15 +242,12 @@ final class TicketCheckoutVC: UIViewController {
 
     deinit {
         countdownTimer?.invalidate()
+        questionHeightObservation?.invalidate()
         tableView.removeObserver(self, forKeyPath: "contentSize")
         feesAndTaxesTableView.removeObserver(self, forKeyPath: "contentSize")
     }
 
     private func setupHeaderData() {
-//        venueLogoImg.sd_setImage(
-//            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
-//            placeholderImage: Constant.Icon.uploadImage
-//        )
         if isFreeTicket {
             promoCodeParentView.isHidden = true
             feesAndTaxesParentTableView.isHidden = true
@@ -480,7 +476,7 @@ final class TicketCheckoutVC: UIViewController {
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         let ticketText = totalTickets == 1 ? "Ticket" : "Tickets"
         purchaseTicketBtn.setTitle(
-            hasOnlyFreeSelectedTickets ? "Redeem \(ticketText)" : "Purchase \(ticketText)",
+            isFreeTicket || hasOnlyFreeSelectedTickets ? "Redeem \(ticketText)" : "Purchase \(ticketText)",
             for: .normal
         )
     }
@@ -510,6 +506,7 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func startCountdown() {
+        countdownTimer?.invalidate()
         updateTimerLabel()
 
         countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -580,19 +577,34 @@ final class TicketCheckoutVC: UIViewController {
                 completion?(isSuccess)
             }
 
-            guard isSuccess, let clientSecret else {
+            guard isSuccess else {
                 AppHaptic.error()
                 Alert.showToast(errMsg ?? "Something went wrong")
                 return
             }
 
             self.isFreeTicket = isFreeTicket
-            self.paymentIntentClientSecret = clientSecret
             self.paymentHistoryId = paymentHistoryId
             self.ephemeralKey = ephemeralKey
             self.paymentDetail = paymentDetail
 
             self.updateUIWithPaymentDetail(paymentDetail)
+            self.updatePurchaseButtonTitle()
+
+            guard !isFreeTicket else {
+                self.paymentIntentClientSecret = ""
+                self.paymentSheet = nil
+                self.updatePurchaseButtonAvailability()
+                return
+            }
+
+            guard let clientSecret, !clientSecret.isEmpty else {
+                AppHaptic.error()
+                Alert.showToast(errMsg ?? "Something went wrong")
+                return
+            }
+
+            self.paymentIntentClientSecret = clientSecret
             self.setupStripePaymentSheet(clientSecret: clientSecret, ephemeralKey: self.ephemeralKey)
 
             self.updatePurchaseButtonAvailability()
@@ -718,6 +730,14 @@ final class TicketCheckoutVC: UIViewController {
             return
         }
 
+        guard let user = UserDefault.shared.user else {
+            isPaymentInitiated = false
+            hidePurchaseButtonLoader()
+            setScreenInteractionBlocked(false)
+            Alert.showToast("Missing user information.")
+            return
+        }
+
         let ticketsPayload: [[String: Any]] = selectedTickets.map {
             [
                 "ticketId": $0.id ?? "",
@@ -726,14 +746,12 @@ final class TicketCheckoutVC: UIViewController {
             ]
         }
 
-        let user = UserDefault.shared.user
-
         paymentService.checkEventTicketStock(
             eventId: eventId,
-            code: user?.code ?? "+1",
-            phone: user?.phone ?? "",
-            gender: user?.gender ?? "UNASSIGNED",
-            userId: user?.id ?? "",
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
             tickets: ticketsPayload
         ) { [weak self] isAvailable, errMsg in
             guard let self = self else { return }
@@ -746,19 +764,21 @@ final class TicketCheckoutVC: UIViewController {
                 return
             }
 
-            self.paymentService.createEventBooking(
+            self.paymentService.createEventFreeBooking(
                 eventId: eventId,
-                code: user?.code ?? "+1",
-                phone: user?.phone ?? "",
-                gender: user?.gender ?? "UNASSIGNED",
-                userId: user?.id ?? "",
+                phone: user.phone,
+                userId: user.id,
                 tickets: ticketsPayload,
+                bookingId: self.bookingId,
                 promotionLinkId: self.promotionLinkId,
-                promotionLinkUniqueCode: self.promotionLinkUniqueCode
+                promotionLinkUniqueCode: self.promotionLinkUniqueCode,
+                optedPolicy: self.checkBox.isHidden ? nil : self.checkBox.isSelected
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }
                 if isSuccess, let id = id {
                     self.hidePurchaseButtonLoader()
+                    self.isPaymentInitiated = false
+                    self.setScreenInteractionBlocked(false)
                     AppHaptic.success()
                     self.countdownTimer?.invalidate()
                     NotificationCenter.default.postOrdersRefresh(.tickets)
@@ -811,8 +831,8 @@ final class TicketCheckoutVC: UIViewController {
 
     private func handlePaymentCanceled() {
         isPaymentInitiated = false
+        setScreenInteractionBlocked(false)
         AppHaptic.warning()
-        cancelBookingAndReturnToEventDetails()
     }
 
     private func cancelBookingAndReturnToEventDetails(
@@ -877,14 +897,6 @@ final class TicketCheckoutVC: UIViewController {
                 self.isSubmittingQuestions = false
                 self.isEventQueAnsCollected = true
                 self.customQuestionTableView.reloadData()
-
-//                if self.isFreeTicket {
-//                    self.paymentMethodView.isHidden = true
-//                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
-//                } else {
-//                    self.paymentMethodView.isHidden = false
-//                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
-//                }
 
                 self.isPaymentInitiated = false
                 self.onClickPurchaseTicket(UIButton())

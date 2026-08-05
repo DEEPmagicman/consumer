@@ -129,14 +129,6 @@ final class DiscoverVC: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         viewControllers.append(segue.destination)
-        switch segue.destination {
-        case is DiscoverAllVC:
-            print("DiscoverAllVC prepared")
-        case is DiscoverDateFilterVC:
-            print("DiscoverDateFilterVC prepared")
-        default:
-            break
-        }
     }
 }
 

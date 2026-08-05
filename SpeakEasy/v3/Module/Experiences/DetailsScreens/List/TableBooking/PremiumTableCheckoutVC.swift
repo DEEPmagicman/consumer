@@ -1368,6 +1368,7 @@ private extension PremiumTableCheckoutVC {
 private extension PremiumTableCheckoutVC {
 
     func startTimer() {
+        timer?.invalidate()
         timerBanner.update(seconds: timerSeconds)
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self else { return }
@@ -1942,7 +1943,7 @@ private extension PremiumTableCheckoutVC {
     func applyPromo(_ code: String) {
         guard let eventId   = event?.id,
               let venueId   = event?.venue?.id,
-              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else {
+              !activeTableBookingId.isEmpty else {
             Alert.showToast("Booking details not found")
             return
         }
@@ -1950,7 +1951,7 @@ private extension PremiumTableCheckoutVC {
         promoRow.setSubmitting(true)
         tableService.applyPromoCode(
             eventId: eventId,
-            tableBookingId: bookingId,
+            tableBookingId: activeTableBookingId,
             code: code,
             venueId: venueId
         ) { [weak self] success, message, data in
@@ -1986,14 +1987,14 @@ private extension PremiumTableCheckoutVC {
 
     func removePromo() {
         guard let venueId   = event?.venue?.id,
-              let bookingId = booking?.content?.tableBooking?.id ?? (currentBookingId.isEmpty ? nil : currentBookingId) else {
+              !activeTableBookingId.isEmpty else {
             Alert.showToast("Booking details not found")
             return
         }
 
         promoRow.setSubmitting(true)
         tableService.removePromoCode(
-            tableBookingId: bookingId,
+            tableBookingId: activeTableBookingId,
             venueId: venueId
         ) { [weak self] success, message, data in
             DispatchQueue.main.async {
@@ -2085,7 +2086,7 @@ private extension PremiumTableCheckoutVC {
         guard let eventId = event?.id,
               let queueId,
               let venueId = event?.venue?.id,
-              !currentBookingId.isEmpty else {
+              !activeTableBookingId.isEmpty else {
             isPaymentInitiated = false
             setBuyLoading(false)
             AppHaptic.error()
@@ -2098,7 +2099,7 @@ private extension PremiumTableCheckoutVC {
         tableService.confirmTableBooking(
             eventId: eventId,
             queueId: queueId,
-            tableBookingId: currentBookingId,
+            tableBookingId: activeTableBookingId,
             consumerUserId: UserDefault.shared.user?.id ?? "",
             optedPolicy: venueMessageView.isHidden ? termsAgreementView.isChecked : venueMessageView.isChecked,
             notes: notes,
@@ -2128,7 +2129,7 @@ private extension PremiumTableCheckoutVC {
         let vc = PremiumTableReservationConfirmationVC()
         vc.reservation = reservation
         vc.reservationUniqueId = reservation?.uniqueId
-        vc.tableBookingId = reservation?.tableBookingId ?? currentBookingId
+        vc.tableBookingId = reservation?.tableBookingId ?? activeTableBookingId
         vc.event = event
 
         if let navigationController {

@@ -11,8 +11,8 @@ class FiltersViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private let filters = ["Free entrance", "VIP", "Rooftops", "VIP Tables", "VIP Tables"]
-    private var selectedIndexes: Set<Int> = [0] // First item selected by default
+    private let filters = ["Free entrance", "VIP", "Rooftops", "VIP Tables"]
+    private var selectedIndexes: Set<Int> = [0]
 
     // MARK: - Lifecycle
     
@@ -33,11 +33,9 @@ class FiltersViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
-        // Register XIB-based DateSelectionCVC
         let nib = UINib(nibName: "DateSelectionCVC", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "DateSelectionCVC")
 
-        // Left-aligned layout with auto-sizing
         let layout = LeftAlignedFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 12
@@ -59,8 +57,6 @@ class FiltersViewController: UIViewController {
 
     @IBAction func applyFiltersTapped(_ sender: UIButton) {
         AppHaptic.success()
-        let selected = selectedIndexes.map { filters[$0] }
-        print("Applied filters: \(selected)")
         dismiss(animated: true)
     }
 }
@@ -100,7 +96,6 @@ extension FiltersViewController: UICollectionViewDelegate {
         } else {
             selectedIndexes.insert(indexPath.item)
         }
-        // Reload only the tapped cell for smooth animation
         collectionView.reloadItems(at: [indexPath])
     }
 }
@@ -113,14 +108,12 @@ final class LeftAlignedFlowLayout: UICollectionViewFlowLayout {
 
         guard let attributes = super.layoutAttributesForElements(in: rect) else { return nil }
 
-        // Deep-copy to avoid mutating cached attributes (required per Apple docs)
         let copied = attributes.map { $0.copy() as! UICollectionViewLayoutAttributes }
 
         var leftEdge: CGFloat = sectionInset.left
         var prevMaxY: CGFloat = -1
 
         for attr in copied where attr.representedElementCategory == .cell {
-            // New row detected when Y changes
             if attr.frame.minY > prevMaxY {
                 leftEdge = sectionInset.left
             }

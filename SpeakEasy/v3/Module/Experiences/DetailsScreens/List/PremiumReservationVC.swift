@@ -20,10 +20,6 @@ final class PremiumReservationVC: UIViewController {
 
     private let emptyView = UIView()
 
-    private let emptyTitleLabel = UILabel()
-
-    private let emptySubtitleLabel = UILabel()
-
     // MARK: Data
 
     var event: Event? {

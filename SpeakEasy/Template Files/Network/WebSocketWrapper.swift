@@ -171,9 +171,9 @@ final class WebSocketWrapper: NSObject {
         let normalizedVenueId = venueId?.trimmingCharacters(in: .whitespacesAndNewlines)
         let nextVenueId = normalizedVenueId?.isEmpty == false ? normalizedVenueId : nil
 
-        let venueId = UserDefaults.standard.string(forKey: "selectedVenueId") ?? ""
-        guard venueId != nextVenueId else { return }
+        guard currentVenueId != nextVenueId else { return }
 
+        currentVenueId = nextVenueId
         UserDefaults.standard.set(nextVenueId, forKey: "selectedVenueId")
         disConnect()
         connect()
