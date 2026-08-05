@@ -42,8 +42,7 @@ struct DiscoverEventTimeWindow {
     static func selectedDay(_ dateString: String) -> DiscoverEventTimeWindow {
         let day = Self.dayDate(from: dateString) ?? Date()
         let start = Self.eightAM(on: day)
-        let end =
-        Self.calendar.date(
+        let end = Self.calendar.date(
             byAdding: .day,
             value: 1,
             to: start
@@ -63,8 +62,7 @@ struct DiscoverEventTimeWindow {
         let endDay = Self.dayDate(from: endDateString) ?? startDay
         let start = Self.eightAM(on: min(startDay, endDay))
         let endDayEightAM = Self.eightAM(on: max(startDay, endDay))
-        let end =
-        Self.calendar.date(
+        let end = Self.calendar.date(
             byAdding: .day,
             value: 1,
             to: endDayEightAM
@@ -217,8 +215,8 @@ final class DiscoverService {
             headers: Header.header(timeZone: timeZone)
         ) { response in
 
-            guard let responseDic = response as? [String: Any],
-                  let list = responseDic["list"] as? [[String: Any]],
+            guard let pageDic = Self.pageDictionary(from: response),
+                  let list = pageDic["list"] as? [[String: Any]],
                   let events = Self.parseEvents(list) else {
 
                 completion(false, "Invalid Response", nil)
@@ -230,9 +228,11 @@ final class DiscoverService {
                 nil,
                 DiscoverPage(
                     list: events,
-                    hasMore: responseDic["hasMany"] as? Bool ?? false,
-                    total: responseDic["total"] as? Int ?? events.count,
-                    count: responseDic["count"] as? Int ?? events.count
+                    hasMore: Self.boolValue(pageDic["hasMany"])
+                        ?? Self.boolValue(pageDic["hasMore"])
+                        ?? false,
+                    total: Self.intValue(pageDic["total"]) ?? events.count,
+                    count: Self.intValue(pageDic["count"]) ?? events.count
                 )
             )
 
@@ -277,7 +277,6 @@ final class DiscoverService {
         if checkIsPremium {
             params["checkIsPremium"] = "true"
         }
-        print(params)
 
         AFWrapper.getRequest(
             APIBuilder.discoverVenuesURL,
@@ -285,8 +284,8 @@ final class DiscoverService {
             headers: Header.header(timeZone: timeZone)
         ) { response in
 
-            guard let responseDic = response as? [String: Any],
-                  let list = responseDic["list"] as? [[String: Any]],
+            guard let pageDic = Self.pageDictionary(from: response),
+                  let list = pageDic["list"] as? [[String: Any]],
                   let venues = Self.parseVenues(list) else {
 
                 completion(false, "Invalid Response", nil)
@@ -298,9 +297,11 @@ final class DiscoverService {
                 nil,
                 DiscoverPage(
                     list: venues,
-                    hasMore: responseDic["hasMany"] as? Bool ?? false,
-                    total: responseDic["total"] as? Int ?? venues.count,
-                    count: responseDic["count"] as? Int ?? venues.count
+                    hasMore: Self.boolValue(pageDic["hasMany"])
+                        ?? Self.boolValue(pageDic["hasMore"])
+                        ?? false,
+                    total: Self.intValue(pageDic["total"]) ?? venues.count,
+                    count: Self.intValue(pageDic["count"]) ?? venues.count
                 )
             )
 
@@ -363,8 +364,8 @@ final class DiscoverService {
             headers: Header.header(timeZone: timeZone)
         ) { response in
 
-            guard let responseDic = response as? [String: Any],
-                  let list = responseDic["list"] as? [[String: Any]],
+            guard let pageDic = Self.pageDictionary(from: response),
+                  let list = pageDic["list"] as? [[String: Any]],
                   let events = Self.parseEvents(list) else {
 
                 completion(false, "Invalid Response", nil)
@@ -376,9 +377,11 @@ final class DiscoverService {
                 nil,
                 DiscoverPage(
                     list: events,
-                    hasMore: responseDic["hasMany"] as? Bool ?? false,
-                    total: responseDic["total"] as? Int ?? events.count,
-                    count: responseDic["count"] as? Int ?? events.count
+                    hasMore: Self.boolValue(pageDic["hasMany"])
+                        ?? Self.boolValue(pageDic["hasMore"])
+                        ?? false,
+                    total: Self.intValue(pageDic["total"]) ?? events.count,
+                    count: Self.intValue(pageDic["count"]) ?? events.count
                 )
             )
 
@@ -428,8 +431,8 @@ final class DiscoverService {
             headers: Header.header(timeZone: timeZone)
         ) { response in
 
-            guard let responseDic = response as? [String: Any],
-                  let list = responseDic["list"] as? [[String: Any]],
+            guard let pageDic = Self.pageDictionary(from: response),
+                  let list = pageDic["list"] as? [[String: Any]],
                   let artists = Self.parseArtists(list) else {
 
                 completion(false, "Invalid Response", nil)
@@ -441,9 +444,11 @@ final class DiscoverService {
                 nil,
                 DiscoverPage(
                     list: artists,
-                    hasMore: responseDic["hasMany"] as? Bool ?? false,
-                    total: responseDic["total"] as? Int ?? artists.count,
-                    count: responseDic["count"] as? Int ?? artists.count
+                    hasMore: Self.boolValue(pageDic["hasMany"])
+                        ?? Self.boolValue(pageDic["hasMore"])
+                        ?? false,
+                    total: Self.intValue(pageDic["total"]) ?? artists.count,
+                    count: Self.intValue(pageDic["count"]) ?? artists.count
                 )
             )
 
@@ -462,6 +467,33 @@ final class DiscoverService {
 }
 
 private extension DiscoverService {
+
+    static func pageDictionary(from response: Any?) -> [String: Any]? {
+        if let list = response as? [[String: Any]] {
+            return ["list": list]
+        }
+
+        guard let dictionary = response as? [String: Any] else {
+            return nil
+        }
+
+        if dictionary["list"] is [[String: Any]] {
+            return dictionary
+        }
+
+        for key in ["data", "result", "response"] {
+            if let page = dictionary[key] as? [String: Any],
+               page["list"] is [[String: Any]] {
+                return page
+            }
+
+            if let list = dictionary[key] as? [[String: Any]] {
+                return ["list": list]
+            }
+        }
+
+        return nil
+    }
 
     static func parseEvents(
         _ list: [[String: Any]]
@@ -581,8 +613,6 @@ private extension DiscoverService {
 
             venue["venueAttachment"] =
             attachments.map { normalizedMedia($0) }
-        } else if let logo = venue["logo"] as? [String: Any] {
-//            venue["venueAttachment"] = [normalizedMedia(logo)]
         }
 
         return venue
@@ -618,7 +648,35 @@ private extension DiscoverService {
             return value
         }
 
+        if let value {
+            return "\(value)"
+        }
+
         return fallback
+    }
+
+    static func boolValue(_ value: Any?) -> Bool? {
+        if let value = value as? Bool {
+            return value
+        }
+
+        if let value = value as? String {
+            return Bool(value)
+        }
+
+        return nil
+    }
+
+    static func intValue(_ value: Any?) -> Int? {
+        if let value = value as? Int {
+            return value
+        }
+
+        if let value = value as? String {
+            return Int(value)
+        }
+
+        return nil
     }
 
     static func normalizedMedia(
@@ -678,8 +736,7 @@ private extension DiscoverEventTimeWindow {
     }
 
     static func eightAM(on date: Date) -> Date {
-        var components =
-        calendar.dateComponents(
+        var components = calendar.dateComponents(
             [.year, .month, .day],
             from: date
         )
@@ -692,8 +749,7 @@ private extension DiscoverEventTimeWindow {
     }
 
     static func nextDayEightAM(after date: Date) -> Date {
-        let tomorrow =
-        calendar.date(
+        let tomorrow = calendar.date(
             byAdding: .day,
             value: 1,
             to: date

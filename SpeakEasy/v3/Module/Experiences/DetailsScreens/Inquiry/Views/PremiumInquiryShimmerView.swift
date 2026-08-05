@@ -40,6 +40,20 @@ final class PremiumInquiryShimmerView: UIView {
 
         card.glassCornerRadius = 22
     }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+
+            stopShimmer()
+
+        } else {
+
+            startShimmer()
+        }
+    }
 }
 
 private extension PremiumInquiryShimmerView {
@@ -195,17 +209,4 @@ private extension PremiumInquiryShimmerView {
         }
     }
 
-    internal override func willMove(toWindow newWindow: UIWindow?) {
-
-        super.willMove(toWindow: newWindow)
-
-        if newWindow == nil {
-
-            stopShimmer()
-
-        } else {
-
-            startShimmer()
-        }
-    }
 }

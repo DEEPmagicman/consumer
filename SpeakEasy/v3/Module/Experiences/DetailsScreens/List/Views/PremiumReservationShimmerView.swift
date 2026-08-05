@@ -41,6 +41,20 @@ final class PremiumReservationShimmerView: UIView {
 
         card.glassCornerRadius = 20
     }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+
+            stopShimmer()
+
+        } else {
+
+            startShimmer()
+        }
+    }
 }
 
 private extension PremiumReservationShimmerView {
@@ -183,17 +197,4 @@ private extension PremiumReservationShimmerView {
         }
     }
 
-    internal override func willMove(toWindow newWindow: UIWindow?) {
-
-        super.willMove(toWindow: newWindow)
-
-        if newWindow == nil {
-
-            stopShimmer()
-
-        } else {
-
-            startShimmer()
-        }
-    }
 }

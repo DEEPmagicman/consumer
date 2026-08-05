@@ -9,6 +9,12 @@ import Foundation
 
 final class PremiumExperienceService {
 
+    private struct ParsedResponse {
+        let didParse: Bool
+        let items: [PremiumExperienceItem]
+        let hasMore: Bool
+    }
+
     func fetchPremiumExperiences(
         skip: Int,
         take: Int = 10,
@@ -59,37 +65,55 @@ final class PremiumExperienceService {
 
     private static func parseResponse(
         _ response: Any?
-    ) -> (
-        didParse: Bool,
-        items: [PremiumExperienceItem],
-        hasMore: Bool
-    ) {
+    ) -> ParsedResponse {
         if let dict = response as? [String: Any] {
             if let list = dict["list"] as? [[String: Any]] {
-                return (
-                    true,
-                    list.compactMap(PremiumExperienceItem.init(dictionary:)),
-                    dict["hasMany"] as? Bool ?? false
+                return ParsedResponse(
+                    didParse: true,
+                    items: list.compactMap(PremiumExperienceItem.init(dictionary:)),
+                    hasMore: dict["hasMany"] as? Bool ?? false
                 )
             }
 
             if let list = dict["data"] as? [[String: Any]] {
-                return (
-                    true,
-                    list.compactMap(PremiumExperienceItem.init(dictionary:)),
-                    dict["hasMany"] as? Bool ?? dict["hasMore"] as? Bool ?? false
+                return ParsedResponse(
+                    didParse: true,
+                    items: list.compactMap(PremiumExperienceItem.init(dictionary:)),
+                    hasMore: dict["hasMany"] as? Bool ?? dict["hasMore"] as? Bool ?? false
+                )
+            }
+
+            if let page = pageDictionary(from: dict),
+               let list = page["list"] as? [[String: Any]] {
+                return ParsedResponse(
+                    didParse: true,
+                    items: list.compactMap(PremiumExperienceItem.init(dictionary:)),
+                    hasMore: page["hasMany"] as? Bool ?? page["hasMore"] as? Bool ?? false
                 )
             }
         }
 
         if let list = response as? [[String: Any]] {
-            return (
-                true,
-                list.compactMap(PremiumExperienceItem.init(dictionary:)),
-                false
+            return ParsedResponse(
+                didParse: true,
+                items: list.compactMap(PremiumExperienceItem.init(dictionary:)),
+                hasMore: false
             )
         }
 
-        return (false, [], false)
+        return ParsedResponse(didParse: false, items: [], hasMore: false)
+    }
+
+    private static func pageDictionary(
+        from response: [String: Any]
+    ) -> [String: Any]? {
+        for key in ["data", "result", "response"] {
+            if let page = response[key] as? [String: Any],
+               page["list"] is [[String: Any]] {
+                return page
+            }
+        }
+
+        return nil
     }
 }
