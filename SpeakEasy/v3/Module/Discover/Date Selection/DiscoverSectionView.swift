@@ -129,6 +129,8 @@ final class DiscoverSectionView: UIView {
         case .venues:
 
             titleLabel.text = "Partners in \(displayCity)"
+            accessibilityIdentifier = "discover.partners.section"
+            collectionView.accessibilityIdentifier = "discover.partners.collection"
 
         case .allEvents:
 

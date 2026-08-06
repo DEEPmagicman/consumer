@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0000013000000000000001 /* CoverTicketPurchaseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0000033000000000000001 /* CoverTicketPurchaseUITests.swift */; };
 		0408FBF52F63ECB9003F5563 /* GroupTicketTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408FBF32F63ECB9003F5563 /* GroupTicketTVC.swift */; };
 		0408FBF62F63ECB9003F5563 /* GroupTicketTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */; };
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
@@ -611,6 +612,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7A0000023000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE486716286F2CB000FD277E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE48671D286F2CB000FD277E;
+			remoteInfo = "SpeakEasy-Consumer";
+		};
 		2966E33A2980F86000B5E103 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE486716286F2CB000FD277E /* Project object */;
@@ -635,6 +643,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7A0000033000000000000001 /* CoverTicketPurchaseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverTicketPurchaseUITests.swift; sourceTree = "<group>"; };
+		7A0000043000000000000001 /* SpeakEasyConsumerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeakEasyConsumerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A00000D3000000000000001 /* SpeakEasyConsumerUITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SpeakEasyConsumerUITests.xctestplan; sourceTree = "<group>"; };
 		0408FBF32F63ECB9003F5563 /* GroupTicketTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTicketTVC.swift; sourceTree = "<group>"; };
 		0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupTicketTVC.xib; sourceTree = "<group>"; };
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
@@ -1181,6 +1192,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7A0000053000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2966E3252980F85E00B5E103 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1222,6 +1240,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A0000063000000000000001 /* SpeakEasyConsumerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7A0000033000000000000001 /* CoverTicketPurchaseUITests.swift */,
+				7A00000D3000000000000001 /* SpeakEasyConsumerUITests.xctestplan */,
+			);
+			path = SpeakEasyConsumerUITests;
+			sourceTree = "<group>";
+		};
 		0408FBF22F63EC7C003F5563 /* GroupTicketTVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -2532,6 +2559,7 @@
 			children = (
 				CE486720286F2CB000FD277E /* SpeakEasy */,
 				2966E3292980F85E00B5E103 /* SpeakEasyClip */,
+				7A0000063000000000000001 /* SpeakEasyConsumerUITests */,
 				CE48671F286F2CB000FD277E /* Products */,
 				BEDF67A11CBEC68B40496025 /* Pods */,
 				2618555335F8CF7D7AAA33CF /* Frameworks */,
@@ -2544,6 +2572,7 @@
 			children = (
 				CE48671E286F2CB000FD277E /* Speakeasy.app */,
 				2966E3282980F85E00B5E103 /* SpeakEasyClip.app */,
+				7A0000043000000000000001 /* SpeakEasyConsumerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3216,6 +3245,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7A0000073000000000000001 /* SpeakEasyConsumerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A00000C3000000000000001 /* Build configuration list for PBXNativeTarget "SpeakEasyConsumerUITests" */;
+			buildPhases = (
+				7A0000083000000000000001 /* Sources */,
+				7A0000053000000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A0000093000000000000001 /* PBXTargetDependency */,
+			);
+			name = SpeakEasyConsumerUITests;
+			productName = SpeakEasyConsumerUITests;
+			productReference = 7A0000043000000000000001 /* SpeakEasyConsumerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		2966E3272980F85E00B5E103 /* SpeakEasyClip */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2966E3402980F86000B5E103 /* Build configuration list for PBXNativeTarget "SpeakEasyClip" */;
@@ -3251,7 +3297,6 @@
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
-				04C0C3D02C04B50F00DF2970 /* ShellScript */,
 				CED54E422C3E585500D3A942 /* Upload dSYM */,
 				025033172CA5E7C9B84CD8A3 /* [CP] Copy Pods Resources */,
 			);
@@ -3294,6 +3339,10 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					7A0000073000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = CE48671D286F2CB000FD277E;
+					};
 					2966E3272980F85E00B5E103 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
@@ -3335,6 +3384,7 @@
 			targets = (
 				CE48671D286F2CB000FD277E /* SpeakEasy-Consumer */,
 				2966E3272980F85E00B5E103 /* SpeakEasyClip */,
+				7A0000073000000000000001 /* SpeakEasyConsumerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -3538,28 +3588,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		04C0C3D02C04B50F00DF2970 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
-				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
-				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed\"\nfi\n";
-		};
 		088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3624,6 +3652,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7A0000083000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A0000013000000000000001 /* CoverTicketPurchaseUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2966E3242980F85E00B5E103 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4058,6 +4094,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		7A0000093000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE48671D286F2CB000FD277E /* SpeakEasy-Consumer */;
+			targetProxy = 7A0000023000000000000001 /* PBXContainerItemProxy */;
+		};
 		2966E33B2980F86000B5E103 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2966E3272980F85E00B5E103 /* SpeakEasyClip */;
@@ -4102,6 +4143,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7A00000A3000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 843432T6P5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "SpeakEasy-Consumer";
+			};
+			name = Debug;
+		};
+		7A00000B3000000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 843432T6P5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "SpeakEasy-Consumer";
+			};
+			name = Release;
+		};
 		2966E33E2980F86000B5E103 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4497,6 +4582,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7A00000C3000000000000001 /* Build configuration list for PBXNativeTarget "SpeakEasyConsumerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A00000A3000000000000001 /* Debug */,
+				7A00000B3000000000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2966E3402980F86000B5E103 /* Build configuration list for PBXNativeTarget "SpeakEasyClip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

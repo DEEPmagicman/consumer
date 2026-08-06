@@ -15,7 +15,10 @@ final class SelectLocationTVC: UITableViewCell {
     func configure(with city: MVPCity, isSelected: Bool) {
         cityName.text = city.value
         selectedCityImage.image = isSelected ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
-        
+        isAccessibilityElement = true
+        accessibilityIdentifier = "location.city.\(city.value.lowercased())"
+        accessibilityLabel = city.value
+        accessibilityTraits = isSelected ? [.button, .selected] : .button
     }
 
     override func prepareForReuse() {

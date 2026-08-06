@@ -60,6 +60,10 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        qrImageView.isAccessibilityElement = false
+        qrImageView.accessibilityIdentifier = "coverPurchase.qrCode"
+        qrImageView.accessibilityLabel = "Cover ticket QR code"
+
         setupCardHeightConstraint()
         applyCardMasking()
         setupQRCodeLogo()
@@ -173,6 +177,7 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         clearQRCodeBorders()
         applyQRCodeBackgroundColor(venue: venue)
         qrImageView.image = qrImage
+        qrImageView.isAccessibilityElement = qrImage != nil
         qrLogoContainerView.isHidden = qrImage == nil
         ticketsTableView.contentOffset = .zero
         applyTicketSizing(for: currentTicketCount())

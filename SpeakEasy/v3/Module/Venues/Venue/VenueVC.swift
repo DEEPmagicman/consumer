@@ -113,6 +113,10 @@ final class VenueVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        coverTicketView.isAccessibilityElement = true
+        coverTicketView.accessibilityIdentifier = "venue.buyLiveCover"
+        coverTicketView.accessibilityLabel = "Buy Now"
+        coverTicketView.accessibilityTraits = .button
         captureContainerTopConstraint()
         setupFollowButtonAnimation()
         setupNavTitleView()
@@ -187,6 +191,7 @@ final class VenueVC: UIViewController {
 
     private func setUpData() {
         venueName.text = displayVenueName
+        venueName.accessibilityIdentifier = "venue.current.name"
         updateNavTitleText()
         syncFollowState()
         updateFollowUI(animated: false)

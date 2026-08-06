@@ -62,6 +62,8 @@ class CheckoutBarView: UIView {
     func setButtonTitle(_ title: String) {
         applyActionButtonFont(for: title)
         actionBtn.setTitle(title, for: .normal)
+        actionBtn.accessibilityIdentifier = "checkout.action"
+        actionBtn.accessibilityLabel = title
     }
 
     func applyAccentColor(_ color: UIColor?) {

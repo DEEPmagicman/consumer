@@ -222,6 +222,13 @@ private extension SelectLocationVC {
 
     func setupUI() {
 
+        searchTextfeild.accessibilityIdentifier = "location.search"
+        editSearchTextFeild.accessibilityIdentifier = "location.search.edit"
+        applyBtn.isAccessibilityElement = true
+        applyBtn.accessibilityIdentifier = "location.apply"
+        applyBtn.accessibilityLabel = "Apply"
+        applyBtn.accessibilityTraits = .button
+
         switch mode {
 
         case .selectCity:

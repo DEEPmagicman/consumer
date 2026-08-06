@@ -132,6 +132,10 @@ final class DiscoverVC: UIViewController {
         guard let chipView = selectedLocationName.superview else { return }
 
         cityChipView = chipView
+        chipView.isAccessibilityElement = true
+        chipView.accessibilityIdentifier = "discover.location.button"
+        chipView.accessibilityLabel = "Selected location"
+        chipView.accessibilityTraits = .button
         cityCloseContainer = cityClosebtn.superview
 
         if let cityCloseContainer {
@@ -576,6 +580,7 @@ final class DiscoverVC: UIViewController {
     }
 
     private func refreshCityChipLayout() {
+        cityChipView?.accessibilityValue = selectedLocationName.text
         updateCityChipWidth()
         selectedLocationName.invalidateIntrinsicContentSize()
         selectedLocationName.superview?.invalidateIntrinsicContentSize()

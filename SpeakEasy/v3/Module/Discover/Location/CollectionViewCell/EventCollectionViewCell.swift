@@ -181,6 +181,10 @@ private extension EventCollectionViewCell {
         eventDate.isHidden = true
         premiumBadgeView.isHidden = true
         venueName.text = venue.name
+        isAccessibilityElement = true
+        accessibilityIdentifier = "discover.venue.\(venue.name.lowercased())"
+        accessibilityLabel = venue.name
+        accessibilityTraits = .button
 
         let logoKey = venue.logo?.key ?? ""
         let logoUrl = URL(string: "\(SharedURL.amazonStorage)\(logoKey)")

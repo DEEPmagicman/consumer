@@ -435,6 +435,13 @@ class TicketsTVC: UITableViewCell {
 
         // Title
         titleLbl.text = coverTicketName
+        let accessibilityName = coverTicketName
+            .lowercased()
+            .replacingOccurrences(of: " ", with: ".")
+        plusBtn.accessibilityIdentifier = "coverTicket.\(accessibilityName).increment"
+        plusBtn.accessibilityLabel = "Add \(coverTicketName)"
+        minusBtn.accessibilityIdentifier = "coverTicket.\(accessibilityName).decrement"
+        minusBtn.accessibilityLabel = "Remove \(coverTicketName)"
 
         // Price + selection UI
         if price == 0 {

@@ -8,13 +8,7 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:speakeasygo.com</string>
-		<string>applinks:stage-consumer.speakeasygo.com</string>
-		<string>applinks:speakeasy-stag-appclip.vercel.app</string>
-		<string>applinks:dev.speakeasygo.com</string>
-		<string>applinks:production.speakeasygo.com</string>
 		<string>applinks:dev-consumer.speakeasygo.com</string>
-		<string>applinks:production-consumer.speakeasygo.com</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>

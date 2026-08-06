@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "7A00000E-3000-0000-0000-000000000001",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SpeakEasy-Consumer.xcodeproj",
+      "identifier" : "CE48671D286F2CB000FD277E",
+      "name" : "SpeakEasy-Consumer"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:SpeakEasy-Consumer.xcodeproj",
+        "identifier" : "7A0000073000000000000001",
+        "name" : "SpeakEasyConsumerUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
